@@ -1,0 +1,414 @@
+        function getVrItemWebbingPricingInfo(vr_section_ref_name, selected_webbing_value) {
+            var c1 = 0;
+            var results = {"item_uom":"", "item_unit_price":""};
+
+            if (selected_webbing_value.toLowerCase() == 'yes') {
+                for (c1 = 0; c1 < vr_items_list.length; c1++) {
+                    if (vr_items_list[c1]['section_ref_name'] == vr_section_ref_name && 
+                        vr_items_list[c1]['subsection_ref_name'] == 'Beam Fixings' && 
+                        vr_items_list[c1]['item_display_name'].toLowerCase().indexOf('webbing') != -1) {
+                        /*vr_items_list[c1]['item_display_name'] == 'C beam open webbing'*/
+                        results['item_uom'] = vr_items_list[c1]['item_uom'];
+                        results['item_unit_price'] = vr_items_list[c1]['item_unit_price'];
+                    }
+                }
+            }
+
+            return results;
+        }
+
+
+        function getVrItemFinishPricingInfo(vr_section_ref_name, selected_finish_value) {
+            var c1 = 0;
+            var results = {"item_uom":"", "item_unit_price":""};
+
+            for (c1 = 0; c1 < vr_items_list.length; c1++) {
+                if (vr_items_list[c1]['section_ref_name'] == vr_section_ref_name && 
+                    vr_items_list[c1]['subsection_ref_name'] == 'Finish' && 
+                    vr_items_list[c1]['item_display_name'].toLowerCase() == selected_finish_value.toLowerCase()) {
+                    results['item_uom'] = vr_items_list[c1]['item_uom'];
+                    results['item_unit_price'] = vr_items_list[c1]['item_unit_price'];
+                }
+            }
+
+            return results;
+        }
+
+
+        function setVrFormItemDataEntryRowValues(vr_item_config_internal_ref_name, row_values) {
+            var c1 = 0;
+            var c2 = 0;
+
+            for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                if (vr_form_items_data_entry[c1]['vr_item_config_internal_ref_name'] == vr_item_config_internal_ref_name) {
+                    for (c2 = 0; c2 < row_values.length; c2++) {
+                        document.getElementById(row_values[c2]['form_item_name'] + '_' + c1).value = row_values[c2]['col_value'];
+                        vr_form_items_data_entry[c1][row_values[c2]['variable_name']] = row_values[c2]['col_value'];
+                    }
+                }
+            }
+        }
+
+
+        function getVrFormItemDataEntryRowValues(vr_item_config_internal_ref_name) {
+            var c1 = 0;
+            var results = {
+                "type_ref_name":"", 
+                "type_display_name":"", 
+                "section_ref_name":"", 
+                "section_display_name":"", 
+                "subsection_ref_name":"", 
+                "subsection_display_name":"", 
+                "item_ref_name":"", 
+                "item_display_name":"", 
+                "item_webbing":"", 
+                "item_colour":"", 
+                "item_finish":"", 
+                "item_uom":"", 
+                "item_unit_price":"", 
+                "item_qty":"", 
+                "item_length_feet":"", 
+                "item_length_inch":"", 
+                "item_rrp":""
+            };
+
+            for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                if (vr_form_items_data_entry[c1]['vr_item_config_internal_ref_name'] == vr_item_config_internal_ref_name) {
+                    results['type_ref_name'] = document.getElementById('vr_type_data_entry_ref_name_' + c1).value;
+                    results['type_display_name'] = document.getElementById('vr_type_data_entry_display_name_' + c1).value;
+                    results['section_ref_name'] = document.getElementById('vr_section_data_entry_ref_name_' + c1).value;
+                    results['section_display_name'] = document.getElementById('vr_section_data_entry_display_name_' + c1).value;
+                    results['subsection_ref_name'] = document.getElementById('vr_subsection_data_entry_ref_name_' + c1).value;
+                    results['subsection_display_name'] = document.getElementById('vr_subsection_data_entry_display_name_' + c1).value;
+                    results['item_ref_name'] = document.getElementById('vr_item_data_entry_ref_name_' + c1).value;
+                    results['item_display_name'] = document.getElementById('vr_item_data_entry_display_name_' + c1).value;
+                    results['item_webbing'] = document.getElementById('vr_item_data_entry_webbing_' + c1).value;
+                    results['item_colour'] = document.getElementById('vr_item_data_entry_colour_' + c1).value;
+                    results['item_finish'] = document.getElementById('vr_item_data_entry_finish_' + c1).value;
+                    results['item_uom'] = document.getElementById('vr_item_data_entry_uom_' + c1).value;
+                    results['item_unit_price'] = document.getElementById('vr_item_data_entry_unit_price_' + c1).value;
+                    results['item_qty'] = document.getElementById('vr_item_data_entry_qty_' + c1).value;
+                    results['item_length_feet'] = document.getElementById('vr_item_data_entry_length_feet_' + c1).value;
+                    results['item_length_inch'] = document.getElementById('vr_item_data_entry_length_inch_' + c1).value;
+                    results['item_rrp'] = document.getElementById('vr_item_data_entry_rrp_' + c1).value;
+                }
+            }
+
+            return results;
+        }
+
+
+        function formatOutputValue(output_type, output_value) {
+            var result;
+
+            switch (output_type) {
+                case 'integer':
+                    if (isNaN(output_value)) {
+                        result = 0;
+                    } else {
+                        result = parseInt(output_value);
+                    }
+                    break;
+                case 'float':
+                    if (isNaN(output_value)) {
+                        result = 0.0;
+                    } else {
+                        result = parseFloat(output_value).toFixed(2);
+                    }
+                    break;
+                case 'number':
+                    if (isNaN(output_value)) {
+                        result = '0';
+                    } else {
+                        result = output_value;
+                    }
+                    break;
+                case 'text':
+                    result = output_value;
+                    break;
+            }
+
+            return result;
+        }
+
+
+        function assignVrDimensionsToVrFormItemsDataEntry() {
+            switch (document.getElementById('vr_type_form_query').value) {
+                case 'VR1':
+                    assignVrDimensionsToVrFormItemsDataEntryVr1();
+                    break;
+                case 'VR2':
+                    assignVrDimensionsToVrFormItemsDataEntryVr2();
+                    break;
+                case 'VR3':
+                    assignVrDimensionsToVrFormItemsDataEntryVr3();
+                    break;
+                case 'VR3G':
+                    assignVrDimensionsToVrFormItemsDataEntryVr3G();
+                    break;
+                case 'VR4':
+                    assignVrDimensionsToVrFormItemsDataEntryVr4();
+                    break;
+                case 'VR5':
+                    assignVrDimensionsToVrFormItemsDataEntryVr5();
+                    break;
+                case 'VR6':
+                    assignVrDimensionsToVrFormItemsDataEntryVr6();
+                    break;
+                case 'VR7':
+                    assignVrDimensionsToVrFormItemsDataEntryVr7();
+                    break;
+                case 'VR8':
+                    assignVrDimensionsToVrFormItemsDataEntryVr8();
+                    break;
+                case 'VR9':
+                    assignVrDimensionsToVrFormItemsDataEntryVr9();
+                    break;
+            }
+        }
+
+
+        function assignSubtotalPriceToVrFormItemsDataEntry() {
+            var c1 = 0;
+            var length_unit_types = ['mtrs', 'inches'];
+            var current_item_length = 0.0;
+            var current_item_length_in_value_for_calculation = 0.0;
+            var current_item_length_feet = 0.0;
+            var current_item_length_feet_in_value_for_calculation = 0.0;
+            var current_item_length_inch = 0.0;
+            var current_item_length_inch_in_value_for_calculation = 0.0;
+            var current_item_unit_price = 0.0;
+            var current_item_rrp = 0.0;
+            var current_subtotal = 0.0;
+            var current_webbing_subtotal = 0.0;
+            var current_finish_subtotal = 0.0;
+            var webbing_pricing_info = {"item_uom":"", "item_unit_price":""};
+            var finish_pricing_info = {"item_uom":"", "item_unit_price":""};
+            var current_calculation_log = '';
+
+            for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                current_item_length_feet = vr_form_items_data_entry[c1]['vr_item_length_feet'];
+                current_item_length_inch = vr_form_items_data_entry[c1]['vr_item_length_inch'];
+                current_item_length = current_item_length_feet + '\'' + current_item_length_inch;
+                current_item_length_in_value_for_calculation = convertValueForCalculation(current_item_length);
+                current_item_unit_price = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']);
+
+                current_subtotal = 0.0;
+                if (length_unit_types.indexOf(vr_form_items_data_entry[c1]['vr_item_uom'].toLowerCase()) == -1) {
+                    current_subtotal = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                } else {
+                    current_subtotal = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                }
+
+                webbing_pricing_info = {"item_uom":"", "item_unit_price":""};
+                current_webbing_subtotal = 0.0;
+                if (vr_form_items_data_entry[c1]['vr_item_webbing_input_type'] == 'Select Box' && 
+                    vr_form_items_data_entry[c1]['vr_item_webbing'] != 'null') {
+                    webbing_pricing_info = getVrItemWebbingPricingInfo(vr_form_items_data_entry[c1]['vr_section_ref_name'], vr_form_items_data_entry[c1]['vr_item_webbing']);
+                    if (webbing_pricing_info['item_uom'] != '' && webbing_pricing_info['item_unit_price'] != '') {
+                        if (length_unit_types.indexOf(webbing_pricing_info['item_uom'].toLowerCase()) == -1) {
+                            current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                        } else {
+                            current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                        }
+                    }
+                }
+
+                finish_pricing_info = {"item_uom":"", "item_unit_price":""};
+                current_finish_subtotal = 0.0;
+                if (vr_form_items_data_entry[c1]['vr_item_finish_input_type'] == 'Select Box' && 
+                    vr_form_items_data_entry[c1]['vr_item_finish'] != 'null') {
+                    finish_pricing_info = getVrItemFinishPricingInfo(vr_form_items_data_entry[c1]['vr_section_ref_name'], vr_form_items_data_entry[c1]['vr_item_finish']);
+                    if (finish_pricing_info['item_uom'] != '' && finish_pricing_info['item_unit_price'] != '') {
+                        if (length_unit_types.indexOf(finish_pricing_info['item_uom'].toLowerCase()) == -1) {
+                            current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                        } else {
+                            current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                        }
+                    }
+                }
+
+                current_item_rrp = (current_subtotal + current_webbing_subtotal + current_finish_subtotal).toFixed(2);
+                vr_form_items_data_entry[c1]['vr_item_rrp'] = current_item_rrp;
+                document.getElementById('vr_item_data_entry_rrp_' + c1).value = formatOutputValue('float', current_item_rrp);
+
+                current_calculation_log = '' + 
+                                            'item length(in): ' + formatOutputValue('float', current_item_length_in_value_for_calculation) + '<br />' + 
+                                            'item unit price: ' + formatOutputValue('float', current_item_unit_price) + '<br />' + 
+                                            'webbing uom: ' + webbing_pricing_info['item_uom'] + '<br />' + 
+                                            'webbing unit price: ' + webbing_pricing_info['item_unit_price'] + '<br />' + 
+                                            'finish uom: ' + finish_pricing_info['item_uom'] + '<br />' + 
+                                            'finish unit price: ' + finish_pricing_info['item_unit_price'] + '<br />' + 
+                                            'item subtotal: ' + formatOutputValue('float', current_subtotal) + '<br />' + 
+                                            'webbing subtotal: ' + formatOutputValue('float', current_webbing_subtotal) + '<br />' + 
+                                            'finish subtotal: ' + formatOutputValue('float', current_finish_subtotal);
+                document.getElementById('vr_item_data_entry_rrp_log_' + c1).innerHTML = current_calculation_log;
+            }
+        }
+
+
+        function assignVrFormBillingInfo() {
+            var c1 = 0;
+            var total_payment_vr_items_rrp = 0.0;
+            var total_payment_vergola = 0.0;
+            var total_payment_disbursement_sub_total = 0.0;
+            var total_payment_sub_total = 0.0;
+            var total_payment_tax = 0.0;
+            var total_payment_total = 0.0;
+
+            var total_payment_deposit = 0.0;
+            var total_payment_progress_payment = 0.0;
+            var total_payment_final_payment = 0.0;
+
+            var total_commission_sales_commission = 0.0;
+            var total_commission_pay1 = 0.0;
+            var total_commission_pay2 = 0.0;
+            var total_commission_final = 0.0;
+            var total_commission_installer_payment = 0.0;
+
+            for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                if (vr_form_items_data_entry[c1]['vr_section_ref_name'] != 'Disbursements') {
+                    total_payment_vr_items_rrp += parseFloat(vr_form_items_data_entry[c1]['vr_item_rrp']);
+                }
+                if (vr_form_items_data_entry[c1]['vr_section_ref_name'] == 'Disbursements') {
+                    total_payment_disbursement_sub_total += parseFloat(vr_form_items_data_entry[c1]['vr_item_rrp']);
+                }
+            }
+            total_payment_vergola = (total_payment_vr_items_rrp - total_payment_disbursement_sub_total) / vr_form_system_info['payment_vergola_commission_percentage'];
+
+            total_payment_sub_total = total_payment_vergola + total_payment_disbursement_sub_total;
+            total_payment_tax = total_payment_sub_total * vr_form_system_info['payment_tax_percentage'];
+            total_payment_total = total_payment_sub_total + total_payment_tax;
+
+            total_payment_deposit = total_payment_total * vr_form_system_info['payment_deposit_percentage'];
+            if (total_payment_deposit < vr_form_system_info['payment_deposit_minimum']) {
+                total_payment_deposit = vr_form_system_info['payment_deposit_minimum'];
+            }
+            total_payment_progress_payment = total_payment_total * vr_form_system_info['payment_progress_payment_percentage'];
+            total_payment_final_payment = total_payment_total - total_payment_deposit - total_payment_progress_payment;
+
+            total_commission_sales_commission = total_payment_vergola * vr_form_system_info['commission_sales_commission_percentage'];
+            total_commission_pay1 = total_commission_sales_commission * vr_form_system_info['commission_pay1_percentage'];
+            total_commission_pay2 = total_commission_sales_commission * vr_form_system_info['commission_pay2_percentage'];
+            total_commission_final = total_commission_sales_commission * vr_form_system_info['commission_final_percentage'];
+            total_commission_installer_payment = total_payment_vergola * vr_form_system_info['commission_installer_payment_percentage'];
+
+            document.getElementById('vr_payment_vergola_form_billing').value = formatOutputValue('float', total_payment_vergola);
+            document.getElementById('vr_payment_vr_items_rrp_form_billing').value = formatOutputValue('float', total_payment_vr_items_rrp);
+
+            document.getElementById('vr_payment_disbursement_sub_total_form_billing').value = formatOutputValue('float', total_payment_disbursement_sub_total);
+            document.getElementById('vr_payment_sub_total_form_billing').value = formatOutputValue('float', total_payment_sub_total);
+            document.getElementById('vr_payment_tax_form_billing').value = formatOutputValue('float', total_payment_tax);
+            document.getElementById('vr_payment_total_form_billing').value = formatOutputValue('float', total_payment_total);
+
+            document.getElementById('vr_payment_deposit_form_billing').value = formatOutputValue('float', total_payment_deposit);
+            document.getElementById('vr_payment_progress_payment_form_billing').value = formatOutputValue('float', total_payment_progress_payment);
+            document.getElementById('vr_payment_final_payment_form_billing').value = formatOutputValue('float', total_payment_final_payment);
+
+            document.getElementById('vr_commission_sales_commission_form_billing').value = formatOutputValue('float', total_commission_sales_commission);
+            document.getElementById('vr_commission_pay1_form_billing').value = formatOutputValue('float', total_commission_pay1);
+            document.getElementById('vr_commission_pay2_form_billing').value = formatOutputValue('float', total_commission_pay2);
+            document.getElementById('vr_commission_final_form_billing').value = formatOutputValue('float', total_commission_final);
+            document.getElementById('vr_commission_installer_payment_form_billing').value = formatOutputValue('float', total_commission_installer_payment);
+        }
+
+
+        function calculateVrFormItemsDataEntryValues(process_option) {
+            if (vr_form_system_info['access_mode'] != 'quote_view' && vr_form_system_info['access_mode'] != 'contract_bom_edit') {
+                switch (process_option) {
+                    case 1:
+                        copyVrFormItemsDataEntryFormValue();
+                        extractVrFormItemDataEntryPropertiesName();
+                        assignVrDimensionsToVrFormItemsDataEntry();
+                        assignSubtotalPriceToVrFormItemsDataEntry();
+                        assignVrFormBillingInfo();
+                        break;
+                    case 2:
+                        copyVrFormItemsDataEntryFormValue();
+                        extractVrFormItemDataEntryPropertiesName();
+                        assignSubtotalPriceToVrFormItemsDataEntry();
+                        assignVrFormBillingInfo();
+                        break;
+                }
+            }
+        }
+
+
+        function separateFeetAndInchFromInputValue(input_value, delimiter) {
+            var results = {"feet":"0", "inch":"0"};
+            var temp_array = [];
+
+            temp_array = input_value.split(delimiter);
+            if (temp_array.length >= 2) {
+                results['feet'] = temp_array[0];
+                results['inch'] = temp_array[1];
+            } else if (temp_array.length == 1) {
+                results['feet'] = temp_array[0];
+                results['inch'] = 0;
+            } else {
+                results['feet'] = 0;
+                results['inch'] = 0;
+            }
+
+            if (results['feet'] == '' || results['feet'] == null || results['feet'] == 'null') {
+                results['feet'] = 0;
+            }
+            if (results['inch'] == '' || results['inch'] == null || results['inch'] == 'null') {
+                results['inch'] = 0;
+            }
+
+            return results;
+        }
+
+
+        function separateWholeAndFractionalNumbersFromInputValue(input_value, delimiter) {
+            var results = {"whole_number":"0", "fractional_number":"0"};
+            var temp_array = [];
+
+            temp_array = input_value.split(delimiter);
+            if (temp_array.length >= 2) {
+                results['whole_number'] = temp_array[0];
+                results['fractional_number'] = temp_array[1];
+            } else if (temp_array.length == 1) {
+                results['whole_number'] = temp_array[0];
+                results['fractional_number'] = 0;
+            } else {
+                results['whole_number'] = 0;
+                results['fractional_number'] = 0;
+            }
+
+            if (results['whole_number'] == '' || results['whole_number'] == null || results['whole_number'] == 'null') {
+                results['whole_number'] = 0;
+            }
+            if (results['fractional_number'] == '' || results['fractional_number'] == null || results['fractional_number'] == 'null') {
+                results['fractional_number'] = 0;
+            }
+
+            return results;
+        }
+
+
+        function convertValueForCalculation(input_value) {
+            var result = 0.0;
+
+            if (application_region == 'LA') {
+                result = formulaConvertFeetAndInchToInch(input_value);
+            } else {
+                result = parseFloat(input_value);
+            }
+
+            return result;
+        }
+
+
+        function revertValueForCalculation(input_value) {
+            var result = '';
+
+            if (application_region == 'LA') {
+                result = formulaConvertInchToFeetAndInch(input_value);
+            } else {
+                result = String(input_value);
+            }
+
+            return result;
+        }

@@ -1,0 +1,318 @@
+        function jsonDecodeVrFormItemsConfig() {
+            var vr_type_form_query_value = document.getElementById('vr_type_form_query').value;
+            var temp_text = '';
+            var json_encoded_output = '';
+
+            if (vr_type_form_query_value != 'null') {
+                if (vr_item_config_saved_data_list[vr_type_form_query_value].length == 0) {
+                    vr_item_config_saved_data_list[vr_type_form_query_value] = vr_item_config_list[vr_type_form_query_value];
+                }
+
+                json_encoded_output = vr_item_config_saved_data_list[vr_type_form_query_value];
+
+                if (json_encoded_output.length > 0) {
+                    vr_form_items_data_entry = json_encoded_output;
+                } else {
+                    vr_form_items_data_entry = [];
+                }
+            } else {
+                vr_form_items_data_entry = [];
+            }
+        }
+
+
+        function jsonEncodeVrFormItemsDataEntry() {
+            var c1 = 0;
+            var c2 = 0;
+            var items_list_json = '';
+            var new_line_code = '<br />';
+            var indentation_code = '&nbsp;&nbsp;&nbsp;&nbsp;';
+
+            items_list_json += '[';
+            items_list_json += new_line_code;
+            for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                items_list_json += indentation_code;
+                items_list_json += '{';
+                for (c2 = 0; c2 < vr_form_item_data_entry_property_names.length; c2++) {
+                    items_list_json += '"' + vr_form_item_data_entry_property_names[c2] + '":' + JSON.stringify(vr_form_items_data_entry[c1][vr_form_item_data_entry_property_names[c2]]);
+                    if (c2 < vr_form_item_data_entry_property_names.length - 1) {
+                        items_list_json += ', ';
+                    }
+                }
+                items_list_json += '}';
+                if (c1 < vr_form_items_data_entry.length - 1) {
+                    items_list_json += ', ';
+                }
+                items_list_json += new_line_code;
+            }
+            items_list_json += ']';
+
+            vr_form_items_data_entry_in_string = items_list_json;
+        }
+
+
+        function processRetrieveResult(results) {
+            if (results['error'] == 'null') {
+                console.log('processRetrieveResult > results:');
+                console.log(results);
+
+                document.getElementById('vr_framework_type_form_query').value = results['data']['vr_form_queries_info']['vr_framework_type'];
+                document.getElementById('vr_type_form_query').value = results['data']['vr_form_items_data_entry'][0]['vr_type_ref_name'];
+                document.getElementById('vr_project_name_form_query').value = results['data']['vr_form_queries_info']['vr_project_name'];
+                document.getElementById('vr_default_colour_form_query').value = results['data']['vr_form_queries_info']['vr_default_colour'];
+
+                vr_item_config_saved_data_list[document.getElementById('vr_type_form_query').value] = results['data']['vr_form_items_data_entry'];
+
+                processVrDimensionFormQueries();
+                processVrFrameworkTypeFormQueries();
+
+                if (document.getElementById('vr_type_form_query').value == 'VR8' || 
+                    document.getElementById('vr_type_form_query').value == 'VR9') {
+                    document.getElementById('vr_run_feet_form_query').value = results['data']['vr_form_queries_info']['vr_run_feet'];
+                    document.getElementById('vr_run_inch_form_query').value = results['data']['vr_form_queries_info']['vr_run_inch'];
+                    document.getElementById('vr_rise_feet_form_query').value = results['data']['vr_form_queries_info']['vr_rise_feet'];
+                    document.getElementById('vr_rise_inch_form_query').value = results['data']['vr_form_queries_info']['vr_rise_inch'];
+                }
+
+                var c1 = 0;
+                var vr_type_info = getVrTypeInfo();
+                for (c1 = 0; c1 < parseInt(vr_type_info['number_of_bay']); c1++) {
+                    document.getElementById('vr_length_feet_form_query_' + c1).value = results['data']['vr_form_queries_info']['vr_length_info']['vr_lengths_feet'][c1];
+                    document.getElementById('vr_length_inch_form_query_' + c1).value = results['data']['vr_form_queries_info']['vr_length_info']['vr_lengths_inch'][c1];
+                }
+
+                if (document.getElementById('vr_width_feet_form_query') && 
+                    document.getElementById('vr_width_inch_form_query')) {
+                    document.getElementById('vr_width_feet_form_query').value = results['data']['vr_form_queries_info']['vr_width_feet'];
+                    document.getElementById('vr_width_inch_form_query').value = results['data']['vr_form_queries_info']['vr_width_inch'];
+                }
+
+                vr_form_queries_info = results['data']['vr_form_queries_info'];
+                vr_form_queries_info['vr_type'] = document.getElementById('vr_type_form_query').value;
+
+
+                var billing_info_fields = [
+                    'vr_payment_vergola', 
+                    'vr_payment_vr_items_rrp', 
+                    'vr_payment_disbursement_sub_total', 
+                    'vr_payment_sub_total', 
+                    'vr_payment_tax', 
+                    'vr_payment_total', 
+                    'vr_payment_deposit', 
+                    'vr_payment_progress_payment', 
+                    'vr_payment_final_payment', 
+                    'vr_commission_sales_commission', 
+                    'vr_commission_pay1', 
+                    'vr_commission_pay2', 
+                    'vr_commission_final', 
+                    'vr_commission_installer_payment'
+                ];
+                for (c1 = 0; c1 < billing_info_fields.length; c1++) {
+                    document.getElementById(billing_info_fields[c1] + '_form_billing').value = results['data']['vr_form_billing_info'][billing_info_fields[c1]];
+                }
+                vr_form_billing_info = results['data']['vr_form_billing_info'];
+
+                document.getElementById('project_name_form_bom').innerHTML = vr_form_queries_info['vr_project_name'];
+                document.getElementById('contract_id_form_bom').innerHTML = vr_form_system_info['project_id'];
+
+
+                if (vr_form_system_info['access_mode'] == 'quote_view') {
+                    disableVrFormItemsDataEntryMode();
+                }
+            } else {
+                console.log('processRetrieveResult > results:');
+                console.log(results);
+            }
+        }
+
+
+        function retrieveVrFormData() {
+            var url = window.location.href + '&api_mode=1';
+            var request_data = {
+                "vr_form_operation":"retrieve", 
+                "access_mode":vr_form_system_info['access_mode'], 
+                "quote_id":vr_form_system_info['quote_id'], 
+                "project_id":vr_form_system_info['project_id'], 
+                "sales_rep_id":vr_form_system_info['sales_rep_id']
+            };
+
+            requestAjaxCall(url, request_data, 'processRetrieveResult');
+            console.log('request_data:');
+            console.log(request_data);
+        }
+
+
+        function processDeleteResult(results) {
+            if (results['error'] == 'null') {
+                window.location = vr_form_url_info['previous'] + '&uc=' + vr_form_url_info['unique_code'];
+            } else {
+                console.log('processDeleteResult > results:');
+                console.log(results);
+            }
+        }
+
+
+        function deleteVrFormData() {
+            var url = window.location.href + '&api_mode=1';
+            var request_data = {
+                "vr_form_operation":"delete", 
+                "access_mode":vr_form_system_info['access_mode'], 
+                "quote_id":vr_form_system_info['quote_id'], 
+                "project_id":vr_form_system_info['project_id'], 
+                "sales_rep_id":vr_form_system_info['sales_rep_id']
+            };
+
+            requestAjaxCall(url, request_data, 'processDeleteResult');
+            console.log('request_data:');
+            console.log(request_data);
+        }
+
+
+        function processSaveResult(results) {
+            if (results['error'] == 'null') {
+                window.location = vr_form_url_info['previous'] + '&uc=' + vr_form_url_info['unique_code'];
+            } else {
+                console.log('processSaveResult > results:');
+                console.log(results);
+            }
+        }
+
+
+        function saveVrFormData(save_option) {
+            copyVrFormItemsDataEntryFormValue();
+            extractVrFormItemDataEntryPropertiesName();
+            jsonEncodeVrFormItemsDataEntry();
+            copyVrFormQueriesInfoFormValue();
+            copyVrFormBillingInfoFormValue();
+
+            var url = window.location.href + '&api_mode=1';
+            var request_data = {
+                "vr_form_system_info":vr_form_system_info, 
+                "vr_form_queries_info":vr_form_queries_info, 
+                "vr_form_items_data_entry":vr_form_items_data_entry, 
+                "vr_form_billing_info":vr_form_billing_info, 
+                "vr_form_report_info":getReportFromVrFormAllInfo()
+            };
+            request_data['vr_form_operation'] = 'save';
+            if (vr_form_system_info['access_mode'] == 'quote_edit' || 
+                vr_form_system_info['access_mode'] == 'contract_bom_edit') {
+                request_data['vr_form_operation'] = 'update';
+            }
+            if (save_option == 'duplicate') {
+                request_data['vr_form_operation'] = 'save';
+            }
+
+            requestAjaxCall(url, request_data, 'processSaveResult');
+            console.log('url:');
+            console.log(url);
+            console.log('request_data:');
+            console.log(request_data);
+        }
+
+
+        function cancelVrFormData() {
+            window.location = vr_form_url_info['previous'] + '&uc=' + vr_form_url_info['unique_code'];
+        }
+
+
+        function downloadVrFormData() {
+            window.location = vr_form_url_info['download_pdf'] + '&uc=' + vr_form_url_info['unique_code'];
+        }
+
+
+        function processSaveResultBomFormItemDimensionData(results) {
+            if (results['error'] == 'null') {
+                hideBomFormItemDimensionPopup();
+            } else {
+                console.log('processSaveResultBomFormItemDimensionData > results:');
+                console.log(results);
+            }
+        }
+
+
+        function saveBomFormItemDimensionData() {
+            copyBomFormDimensionInfoFormValue();
+
+            var url = window.location.href + '&api_mode=1';
+            var request_data = {
+                "vr_form_operation":"update", 
+                "access_mode":"contract_bom_item_dimension_update", 
+                "quote_id":vr_form_system_info['quote_id'], 
+                "project_id":vr_form_system_info['project_id'], 
+                "bom_form_item_dimensions_info":bom_form_item_dimensions_info
+            };
+
+            requestAjaxCall(url, request_data, 'processSaveResultBomFormItemDimensionData');
+            console.log('request_data:');
+            console.log(request_data);
+        }
+
+
+        function processDeleteResultBomFormData(results) {
+            if (results['error'] == 'null') {
+                window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
+            } else {
+                console.log('processDeleteResultBomFormData > results:');
+                console.log(results);
+            }
+        }
+
+
+        function deleteBomFormData(cancel_order_by_vr_section_display_name) {
+            copyVrFormItemsDataEntryFormValue();
+            extractVrFormItemDataEntryPropertiesName();
+            jsonEncodeVrFormItemsDataEntry();
+            copyVrFormQueriesInfoFormValue();
+
+            var url = window.location.href + '&api_mode=1';
+            var request_data = {
+                "vr_form_operation":"delete", 
+                "access_mode":"contract_bom_delete", 
+                "quote_id":vr_form_system_info['quote_id'], 
+                "project_id":vr_form_system_info['project_id'], 
+                "vr_framework_type":vr_form_queries_info['vr_framework_type'], 
+                "vr_form_items_data_entry":vr_form_items_data_entry, 
+                "cancel_order_by_vr_section_display_name":cancel_order_by_vr_section_display_name
+            };
+
+            requestAjaxCall(url, request_data, 'processDeleteResultBomFormData');
+            console.log('url:');
+            console.log(url);
+            console.log('request_data:');
+            console.log(request_data);
+        }
+
+
+        function processSaveResultBomFormData(results) {
+            if (results['error'] == 'null') {
+                window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
+            } else {
+                console.log('processSaveResultBomFormData > results:');
+                console.log(results);
+            }
+        }
+
+
+        function saveBomFormData(process_order_by_vr_section_display_name) {
+            copyVrFormItemsDataEntryFormValue();
+            extractVrFormItemDataEntryPropertiesName();
+            jsonEncodeVrFormItemsDataEntry();
+            copyVrFormQueriesInfoFormValue();
+
+            var url = window.location.href + '&api_mode=1';
+            var request_data = {
+                "vr_form_operation":"save", 
+                "access_mode":"contract_bom_save", 
+                "quote_id":vr_form_system_info['quote_id'], 
+                "project_id":vr_form_system_info['project_id'], 
+                "vr_framework_type":vr_form_queries_info['vr_framework_type'], 
+                "vr_form_items_data_entry":vr_form_items_data_entry, 
+                "process_order_by_vr_section_display_name":process_order_by_vr_section_display_name
+            };
+
+            requestAjaxCall(url, request_data, 'processSaveResultBomFormData');
+            console.log('url:');
+            console.log(url);
+            console.log('request_data:');
+            console.log(request_data);
+        }
