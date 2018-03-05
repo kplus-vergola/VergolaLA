@@ -1,0 +1,7 @@
+# ignore folder(s)
+/cache/
+/logs/
+/tmp/
+
+# ignore file(s)
+configuration.php
