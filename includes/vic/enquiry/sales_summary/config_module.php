@@ -117,26 +117,6 @@ if (isset($_SERVER['SERVER_NAME'])) {
         }
     }
 
-    /*
-    $local_server_name_prefix = 'vergola.contract-system';
-    $local_server_name_suffix = '.dev';
-    $current_server_name_prefix = substr(strtolower($_SERVER['SERVER_NAME']), 0, strlen($local_server_name_prefix));
-    $current_server_name_suffix = substr(strtolower($_SERVER['SERVER_NAME']), strlen($_SERVER['SERVER_NAME']) - strlen($local_server_name_suffix), strlen($local_server_name_suffix));
-    $input_data = array();
-
-    if ($current_server_name_prefix == $local_server_name_prefix && 
-        $current_server_name_suffix == $local_server_name_suffix) {
-        $temp_array1 = explode('.', $_SERVER['SERVER_NAME']);
-        if (isset($temp_array1[1])) {
-            $current_server_domain_name = $temp_array1[1];
-            $temp_array2 = explode('-', $current_server_domain_name);
-            if (isset($temp_array2[3])) {
-                $current_vergola_server_region_name = $temp_array2[3];
-                $input_data['server_mode'] = 'local';
-                $input_data['vergola_region'] = $current_vergola_server_region_name;
-            }
-        }
-    */
     if ($is_server_mode_local == true) {
         $input_data['server_mode'] = 'local';
         $input_data['vergola_region'] = $server_mode_local_region_name;

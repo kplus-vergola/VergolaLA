@@ -25,7 +25,7 @@ if (isset($_GET['fc']) && in_array($_GET['fc'], $valid_function_codes)) {
             define("GIT_USER_EMAIL", "git.dev@knowledgeplus.net.au");
             define("GIT_USER_NAME", "git.dev");
             define("OUTPUT_PROCESSING_STATUS", false);
-            define("PAUSE_FOR_PROCESSING_IN_SECS", 15);
+            define("PAUSE_FOR_PROCESSING_IN_SECS", 10);
             if (updateCodeBase() == false) {
                 echo 'Failed Operation';
                 echo '<br />';

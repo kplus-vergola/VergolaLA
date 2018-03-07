@@ -2,12 +2,6 @@
 function updateCodeBase() {
     $result = false;
 
-    echo 'Loading...';
-    echo '<br />';
-    echo '<br />';
-    ob_flush();
-    flush();
-
     $command_responses = array();
 
     chdir(LOCAL_GIT_REPO_PATH);
