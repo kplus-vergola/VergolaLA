@@ -8,11 +8,15 @@ $config = array(
     'vergola_server' => array(
         'la' => array(
             'local' => array(
-                array('name' => 'vergola.contract-system-v4-la.dev', 'port' => '80') 
+                array('name' => 'vergola.contract-system-v4-la.dev', 'port' => '80'), 
+                array('name' => 'la.vergola.com', 'port' => '80'), 
+                array('name' => 'la.vergola.com', 'port' => '82') 
             ), 
             'preproduction' => array(
                 array('ip' => '192.168.0.9'), 
-                array('name' => 'vglla.knowledgeplus.net.au', 'port' => '9000') 
+                array('name' => 'vglla.knowledgeplus.net.au', 'port' => '9000'), 
+                array('name' => 'la.vergola.com', 'port' => '80'), 
+                array('name' => 'la.vergola.com', 'port' => '82') 
             ), 
             'live' => array(
                 array('ip' => '192.168.0.14'), 
@@ -22,11 +26,15 @@ $config = array(
         ), 
         'sa' => array(
             'local' => array(
-                array('name' => 'vergola.contract-system-v3-sa.dev', 'port' => '80') 
+                array('name' => 'vergola.contract-system-v3-sa.dev', 'port' => '80'), 
+                array('name' => 'sa.vergola.com', 'port' => '80'), 
+                array('name' => 'sa.vergola.com', 'port' => '82') 
             ), 
             'preproduction' => array(
                 array('ip' => '192.168.0.5'), 
-                array('name' => 'vglsa.knowledgeplus.net.au', 'port' => '5000') 
+                array('name' => 'vglsa.knowledgeplus.net.au', 'port' => '5000'), 
+                array('name' => 'sa.vergola.com', 'port' => '80'), 
+                array('name' => 'sa.vergola.com', 'port' => '82') 
             ), 
             'live' => array(
                 array('ip' => '192.168.0.7'), 
@@ -36,11 +44,15 @@ $config = array(
         ), 
         'vic' => array(
             'local' => array(
-                array('name' => 'vergola.contract-system-v3-vic.dev', 'port' => '80') 
+                array('name' => 'vergola.contract-system-v3-vic.dev', 'port' => '80'), 
+                array('name' => 'vic.vergola.com', 'port' => '80'), 
+                array('name' => 'vic.vergola.com', 'port' => '82') 
             ), 
             'preproduction' => array(
                 array('ip' => '192.168.0.3'), 
-                array('name' => 'vglvic.knowledgeplus.net.au', 'port' => '3000') 
+                array('name' => 'vglvic.knowledgeplus.net.au', 'port' => '3000'), 
+                array('name' => 'vic.vergola.com', 'port' => '80'), 
+                array('name' => 'vic.vergola.com', 'port' => '82') 
             ), 
             'live' => array(
                 array('ip' => '192.168.0.12'), 
@@ -90,6 +102,32 @@ if (isset($_SERVER['SERVER_NAME'])) {
     // --- when http call --- //
     $config['access_method'] = 'http';
 
+    $is_server_mode_local = false;
+    $server_mode_local_region_name = '';
+    foreach ($config['vergola_server'] as $region_name => $server_info) {
+        foreach ($server_info as $server_mode_name => $reference_info) {
+            foreach ($reference_info as $ref_key => $ref_values) {
+                if (strtolower($_SERVER['SERVER_NAME']) == strtolower($ref_values['name'])) {
+                    echo $region_name;
+                    echo '<br />';
+                    echo $server_mode_name;
+                    echo '<br />';
+                    echo $ref_values['name'];
+                    echo '<br />';
+                    if ($server_mode_name == 'local') {
+                        $is_server_mode_local = true;
+                        $server_mode_local_region_name = $region_name;
+                    }
+                }
+            }
+        }
+    }
+    exit;
+
+
+
+
+    /*
     $local_server_name_prefix = 'vergola.contract-system';
     $local_server_name_suffix = '.dev';
     $current_server_name_prefix = substr(strtolower($_SERVER['SERVER_NAME']), 0, strlen($local_server_name_prefix));
@@ -108,6 +146,10 @@ if (isset($_SERVER['SERVER_NAME'])) {
                 $input_data['vergola_region'] = $current_vergola_server_region_name;
             }
         }
+    */
+    if ($is_server_mode_local == true) {
+        $input_data['server_mode'] = 'local';
+        $input_data['vergola_region'] = $server_mode_local_region_name;
     } else {
         $server_config_info_found = false;
         foreach ($config['vergola_server'] as $region_name => $server_info) {
