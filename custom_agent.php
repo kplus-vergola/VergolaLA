@@ -24,7 +24,7 @@ if (isset($_GET['fc']) && in_array($_GET['fc'], $valid_function_codes)) {
             define("LOCAL_GIT_REPO_PATH", "C:\\xampp\htdocs\VergolaLA");
             define("GIT_USER_EMAIL", "git.dev@knowledgeplus.net.au");
             define("GIT_USER_NAME", "git.dev");
-            define("OUTPUT_PROCESSING_STATUS", false);
+            define("OUTPUT_PROCESSING_STATUS", true);
             define("PAUSE_FOR_PROCESSING_IN_SECS", 15);
             if (updateCodeBase() == false) {
                 echo 'Failed Operation';
