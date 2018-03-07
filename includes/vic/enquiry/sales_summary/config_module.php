@@ -109,12 +109,6 @@ if (isset($_SERVER['SERVER_NAME'])) {
             foreach ($reference_info as $ref_key => $ref_values) {
                 if (strtolower($_SERVER['SERVER_NAME']) == strtolower($ref_values['name'])) {
                     if ($server_mode_name == 'local') {
-                        echo $region_name;
-                        echo '<br />';
-                        echo $server_mode_name;
-                        echo '<br />';
-                        echo $ref_values['name'];
-                        echo '<br />';
                         $is_server_mode_local = true;
                         $server_mode_local_region_name = $region_name;
                     }
@@ -122,9 +116,6 @@ if (isset($_SERVER['SERVER_NAME'])) {
             }
         }
     }
-    echo '=====';
-    echo '<br />';
-    exit;
 
     /*
     $local_server_name_prefix = 'vergola.contract-system';
