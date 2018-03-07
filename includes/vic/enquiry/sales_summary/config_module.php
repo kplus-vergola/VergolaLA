@@ -108,13 +108,13 @@ if (isset($_SERVER['SERVER_NAME'])) {
         foreach ($server_info as $server_mode_name => $reference_info) {
             foreach ($reference_info as $ref_key => $ref_values) {
                 if (strtolower($_SERVER['SERVER_NAME']) == strtolower($ref_values['name'])) {
-                    echo $region_name;
-                    echo '<br />';
-                    echo $server_mode_name;
-                    echo '<br />';
-                    echo $ref_values['name'];
-                    echo '<br />';
                     if ($server_mode_name == 'local') {
+                        echo $region_name;
+                        echo '<br />';
+                        echo $server_mode_name;
+                        echo '<br />';
+                        echo $ref_values['name'];
+                        echo '<br />';
                         $is_server_mode_local = true;
                         $server_mode_local_region_name = $region_name;
                     }
