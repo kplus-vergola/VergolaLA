@@ -26,6 +26,7 @@ if (isset($_GET['fc']) && in_array($_GET['fc'], $valid_function_codes)) {
             define("GIT_USER_NAME", "git.dev");
             define("OUTPUT_PROCESSING_STATUS", true);
             define("PAUSE_FOR_PROCESSING_IN_SECS", 15);
+
             if (updateCodeBase() == false) {
                 echo 'Failed Operation';
                 echo '<br />';
