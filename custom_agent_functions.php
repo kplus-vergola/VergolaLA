@@ -12,10 +12,10 @@ function updateCodeBase() {
 
     chdir(LOCAL_GIT_REPO_PATH);
 
-    $command = 'git config --global user.email "trac@knowledgeplus.net.au"';
+    $command = 'git config --global user.email "' . GIT_USER_EMAIL . '"';
     exec($command, $command_responses[count($command_responses)]);
 
-    $command = 'git config --global user.name "trac"';
+    $command = 'git config --global user.name "' . GIT_USER_NAME . '"';
     exec($command, $command_responses[count($command_responses)]);
 
     $command = 'git pull';
