@@ -122,10 +122,6 @@ if (isset($_SERVER['SERVER_NAME'])) {
             }
         }
     }
-    exit;
-
-
-
 
     /*
     $local_server_name_prefix = 'vergola.contract-system';
