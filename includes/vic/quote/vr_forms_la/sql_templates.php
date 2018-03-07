@@ -107,6 +107,35 @@ $sql_template_insert_data_letters = "
 
 /*
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- insert data contract items  -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql_template_insert_data_contract_items = "
+    INSERT INTO ver_chronoforms_data_contract_items_vic 
+    (
+        quoteid,                        projectid,                  project_name, 
+        framework_type,                 framework,                  inventoryid, 
+        description,                    webbing,                    colour, 
+        finish,                         uom,                        cost, 
+        qty,                            length_feet,                length_inch, 
+        length_fraction,                rrp,                        is_additional, 
+        customisation_options,          created_at 
+    )
+    VALUES 
+    (
+        '[QUOTE_ID]',                   '[PROJECT_ID]',             '[PROJECT_NAME]', 
+        '[VR_FRAMEWORK_TYPE]',          '[VR_TYPE_DISPLAY_NAME]',   '[VR_ITEM_REF_NAME]', 
+        '[VR_ITEM_DISPLAY_NAME]',       '[VR_ITEM_WEBBING]',        '[VR_ITEM_COLOUR]', 
+        '[VR_ITEM_FINISH]',             '[VR_ITEM_UOM]',            '[VR_ITEM_UNIT_PRICE]', 
+        '[VR_ITEM_QTY]',                '[VR_ITEM_LENGTH_FEET]',    '[VR_ITEM_LENGTH_INCH]', 
+        '[VR_ITEM_LENGTH_FRACTION]',    '[VR_ITEM_RRP]',            '[VR_ITEM_ADHOC]', 
+        '[CUSTOMISATION_OPTIONS]',      NOW() 
+    );
+";
+
+
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ----- insert data contract bom meterial  -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
@@ -634,6 +663,27 @@ $sql_template_update_data_letters = "
 
 /*
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- update data contract items  -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql_template_update_data_contract_items = "
+    UPDATE ver_chronoforms_data_contract_items_vic SET  
+        project_name = '[PROJECT_NAME]',                    framework_type = '[VR_FRAMEWORK_TYPE]', 
+        framework = '[VR_TYPE_DISPLAY_NAME]',               inventoryid = '[VR_ITEM_REF_NAME]', 
+        description = '[VR_ITEM_DISPLAY_NAME]',             webbing = '[VR_ITEM_WEBBING]', 
+        colour = '[VR_ITEM_COLOUR]',                        finish = '[VR_ITEM_FINISH]', 
+        uom = '[VR_ITEM_UOM]',                              cost = '[VR_ITEM_UNIT_PRICE]', 
+        qty = '[VR_ITEM_QTY]',                              length_feet = '[VR_ITEM_LENGTH_FEET]', 
+        length_inch = '[VR_ITEM_LENGTH_INCH]',              length_fraction = '[VR_ITEM_LENGTH_FRACTION]', 
+        rrp = '[VR_ITEM_RRP]',                              is_additional = '[VR_ITEM_ADHOC]', 
+        customisation_options = '[CUSTOMISATION_OPTIONS]',  updated_at = NOW() 
+    WHERE projectid = '[PROJECT_ID]' 
+    AND cf_id = [VR_RECORD_INDEX];
+";
+
+
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ----- update data contract item dimensions  -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
@@ -675,6 +725,18 @@ $sql_template_delete_data_quote = "
 
 /*
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- delete data quote by record index  -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql_template_delete_data_quote_by_record_index = "
+    DELETE FROM ver_chronoforms_data_quote_vic 
+    WHERE projectid = '[PROJECT_ID]' 
+    AND cf_id = '[CF_ID]';
+";
+
+
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ----- delete data followup  -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
@@ -707,6 +769,16 @@ $sql_template_delete_data_letters = "
 ";
 
 
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- delete data contract items by record index -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql_template_delete_data_contract_items_by_record_index = "
+    DELETE FROM ver_chronoforms_data_contract_items_vic 
+    WHERE projectid = '[PROJECT_ID]' 
+    AND cf_id = '[CF_ID]';
+";
 
 
 /*

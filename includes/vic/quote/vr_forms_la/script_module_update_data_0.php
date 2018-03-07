@@ -22,7 +22,6 @@ $enable_updating = array(
     'data_followup' => true, 
     'data_measurement' => true, 
     'data_letters' => true, 
-    'data_contract_items' => false, 
     'data_contract_items_deminsions' => false
 );
 
@@ -33,18 +32,7 @@ if (isset($api_data['access_mode'])) {
             'data_followup' => false, 
             'data_measurement' => false, 
             'data_letters' => false, 
-            'data_contract_items' => false, 
             'data_contract_items_deminsions' => true
-        );
-    }
-    if ($api_data['access_mode'] == 'contract_bom_save') {
-        $enable_updating = array(
-            'data_quote' => false, 
-            'data_followup' => false, 
-            'data_measurement' => false, 
-            'data_letters' => false, 
-            'data_contract_items' => true, 
-            'data_contract_items_deminsions' => false
         );
     }
 }
@@ -52,48 +40,17 @@ if (isset($api_data['access_mode'])) {
 
 /*
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
------ update data quote / data contract items -----
+----- update data quote -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
-$target_data_source = 'data_quote';
-$target_sql_template_insert = $sql_template_insert_data_quote;
-$target_sql_template_update = $sql_template_update_data_quote;
-$target_sql_template_retrieve = $sql_template_retrieve_data_quote;
-$target_sql_template_delete = $sql_template_delete_data_quote_by_record_index;
-
-if (isset($api_data['access_mode'])) {
-    if ($api_data['access_mode'] == 'contract_bom_save') {
-        $target_data_source = 'data_contract_items';
-        $target_sql_template_insert = $sql_template_insert_data_contract_items;
-        $target_sql_template_update = $sql_template_update_data_contract_items;
-        $target_sql_template_retrieve = $sql_template_retrieve_data_contract_items;
-        $target_sql_template_delete = $sql_template_delete_data_contract_items_by_record_index;
-    }
-}
-
 $sql = '';
-$results_update_data[$target_data_source]['total_input'] = $number_of_items_data_entry;
-$results_update_data[$target_data_source]['total_success'] = 0;
-$results_update_data[$target_data_source]['total_failure'] = 0;
-$results_update_data[$target_data_source]['failure_indexes'] = array();
-$results_update_data[$target_data_source]['is_success'] = false;
+$results_update_data['data_quote']['total_input'] = $number_of_items_data_entry;
+$results_update_data['data_quote']['total_success'] = 0;
+$results_update_data['data_quote']['total_failure'] = 0;
+$results_update_data['data_quote']['failure_indexes'] = array();
+$results_update_data['data_quote']['is_success'] = false;
 
-if ($enable_updating[$target_data_source] == true) {
-    $previously_saved_vr_record_indexes = array();
-    $sql = str_replace(
-        array('[PROJECT_ID]'), 
-        array($api_data['vr_form_system_info']['project_id']), 
-        $target_sql_template_retrieve
-    );
-    $results = executeDbQuery($sql);
-    if ($results['error'] == 'null') {
-        while ($r1 = mysql_fetch_array($results['data'])) {
-            $previously_saved_vr_record_indexes[] = $r1['cf_id'];
-        }
-    }
-
-    $submitted_vr_record_indexes = array();
-
+if ($enable_updating['data_quote'] == true) {
     for ($c1 = 0; $c1 < $number_of_items_data_entry; $c1++) {
         $current_vr_item_adhoc = ($api_data['vr_form_items_data_entry'][$c1]['vr_item_adhoc'] == 'yes') ? 1 : 0;
 
@@ -121,7 +78,6 @@ if ($enable_updating[$target_data_source] == true) {
 
         if (strval($api_data['vr_form_items_data_entry'][$c1]['vr_record_index']) != '' && 
             strval($api_data['vr_form_items_data_entry'][$c1]['vr_record_index']) != '0') {
-            $submitted_vr_record_indexes[] = $api_data['vr_form_items_data_entry'][$c1]['vr_record_index'];
             // use update sql template
             $sql = str_replace(
                 array(
@@ -157,7 +113,7 @@ if ($enable_updating[$target_data_source] == true) {
                     addslashes($api_data['vr_form_system_info']['project_id']), 
                     addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_record_index']) 
                 ), 
-                $target_sql_template_update
+                $sql_template_update_data_quote 
             );
         } else {
             // use save sql template
@@ -192,33 +148,21 @@ if ($enable_updating[$target_data_source] == true) {
                     addslashes($current_vr_item_adhoc), 
                     addslashes($customisation_options_in_string)
                 ), 
-                $target_sql_template_insert
+                $sql_template_insert_data_quote
             );
         }
 
         $results = executeDbQuery($sql);
         if ($results['error'] == 'null') {
-            $results_update_data[$target_data_source]['total_success']++;
+            $results_update_data['data_quote']['total_success']++;
         } else {
-            $results_update_data[$target_data_source]['total_failure']++;
-            $results_update_data[$target_data_source]['failure_indexes'][] = $c1;
+            $results_update_data['data_quote']['total_failure']++;
+            $results_update_data['data_quote']['failure_indexes'][] = $c1;
         }
     }
 
-    if ($results_update_data[$target_data_source]['total_input'] == $results_update_data[$target_data_source]['total_success']) {
-        $results_update_data[$target_data_source]['is_success'] = true;
-    }
-
-    // clear removed items from table
-    foreach ($previously_saved_vr_record_indexes as $key1 => $vr_record_index) {
-        if (!in_array($vr_record_index, $submitted_vr_record_indexes)) {
-            $sql = str_replace(
-                array('[PROJECT_ID]', '[CF_ID]'), 
-                array($api_data['vr_form_system_info']['project_id'], $vr_record_index), 
-                $target_sql_template_delete
-            );
-            $results = executeDbQuery($sql);
-        }
+    if ($results_update_data['data_quote']['total_input'] == $results_update_data['data_quote']['total_success']) {
+        $results_update_data['data_quote']['is_success'] = true;
     }
 }
 
@@ -367,7 +311,7 @@ $results_update_data['data_letters']['failure_indexes'] = array();
 $results_update_data['data_letters']['is_success'] = false;
 
 if ($enable_updating['data_letters'] == true) {
-    if ($results_update_data[$target_data_source]['is_success'] == true && 
+    if ($results_update_data['data_quote']['is_success'] == true && 
         $results_update_data['data_followup']['is_success'] == true && 
         $results_update_data['data_measurement']['is_success'] == true) {
 
@@ -469,15 +413,15 @@ if ($enable_updating['data_contract_items_deminsions'] == true) {
 ----- process update data results -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
-$total_overall_input = $results_update_data[$target_data_source]['total_input'] + 
+$total_overall_input = $results_update_data['data_quote']['total_input'] + 
                             $results_update_data['data_followup']['total_input'] + 
                             $results_update_data['data_measurement']['total_input'] + 
                             $results_update_data['data_letters']['total_input'];
-$total_overall_success = $results_update_data[$target_data_source]['total_success'] + 
+$total_overall_success = $results_update_data['data_quote']['total_success'] + 
                             $results_update_data['data_followup']['total_success'] + 
                             $results_update_data['data_measurement']['total_success'] + 
                             $results_update_data['data_letters']['total_success'];
-$total_overall_failure = $results_update_data[$target_data_source]['total_failure'] + 
+$total_overall_failure = $results_update_data['data_quote']['total_failure'] + 
                             $results_update_data['data_followup']['total_failure'] + 
                             $results_update_data['data_measurement']['total_failure'] + 
                             $results_update_data['data_letters']['total_failure'];
@@ -487,11 +431,6 @@ if (isset($api_data['access_mode'])) {
         $total_overall_input = $results_update_data['data_contract_items_deminsions']['total_input'];
         $total_overall_success = $results_update_data['data_contract_items_deminsions']['total_success'];
         $total_overall_failure = $results_update_data['data_contract_items_deminsions']['total_failure'];
-    }
-    if ($api_data['access_mode'] == 'contract_bom_save') {
-        $total_overall_input = $results_update_data[$target_data_source]['total_input'];
-        $total_overall_success = $results_update_data[$target_data_source]['total_success'];
-        $total_overall_failure = $results_update_data[$target_data_source]['total_failure'];
     }
 }
 
@@ -506,17 +445,13 @@ $api_response['message'] = array(
     'total_overall_success' => $total_overall_success, 
     'total_overall_failure' => $total_overall_failure, 
     'failure_indexes' => array(
-        $target_data_source => $results_update_data[$target_data_source]['failure_indexes'], 
-        'data_followup' => $results_update_data['data_followup']['failure_indexes'], 
-        'data_measurement' => $results_update_data['data_measurement']['failure_indexes'], 
-        'data_letters' => $results_update_data['data_letters']['failure_indexes'], 
-        'data_contract_items_deminsions' => $results_update_data['data_contract_items_deminsions']['failure_indexes']
+        'data_quote' => $results_update_data['data_quote']['failure_indexes']
     ) 
 );
 
 $api_response['data'] = array();
 
-// if (! ($enable_updating[$target_data_source] == true && $results_update_data[$target_data_source]['is_success'] == true) && 
+// if (! ($enable_updating['data_quote'] == true && $results_update_data['data_quote']['is_success'] == true) && 
       // ($enable_updating['data_followup'] == true && $results_update_data['data_followup']['is_success'] == true) &&  
       // ($enable_updating['data_measurement'] == true && $results_update_data['data_measurement']['is_success'] == true)) {
     // mysql_query("ROLLBACK");

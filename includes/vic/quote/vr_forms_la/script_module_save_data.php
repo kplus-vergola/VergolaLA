@@ -21,6 +21,7 @@ if ($results['error'] == 'null') {
     $app_response['message'][] = $results['message'];
 }
 
+$submitted_project_id = $api_data['vr_form_system_info']['project_id'];
 $api_data['vr_form_system_info']['project_id'] = $next_project_id;
 
 $number_of_bay = 0;
@@ -52,6 +53,7 @@ if (isset($api_data['access_mode'])) {
             'data_contract_bom_meterial' => true, 
             'data_contract_bom' => true
         );
+        $api_data['vr_form_system_info']['project_id'] = $submitted_project_id;
     }
 }
 
@@ -346,7 +348,7 @@ if ($enable_saving['data_contract_bom_meterial'] == true) {
                     '[LENGTH_INCH]',    '[LENGTH_FRACTION]',    '[INVENTORY_ID]'
                 ), 
                 array(
-                    addslashes($api_data['project_id']), 
+                    addslashes($api_data['vr_form_system_info']['project_id']), 
                     addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_item_qty']), 
                     addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_item_length_feet']), 
                     addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_item_length_inch']), 
@@ -403,9 +405,9 @@ if ($enable_saving['data_contract_bom'] == true) {
                     '[VR_SUBSECTION_REF_NAME]',         '[SUPPLIER_ID]',                '[IS_REORDER]'
                 ), 
                 array(
-                    addslashes($api_data['quote_id']), 
-                    addslashes($api_data['project_id']), 
-                    addslashes($api_data['vr_framework_type']), 
+                    addslashes($api_data['vr_form_system_info']['quote_id']), 
+                    addslashes($api_data['vr_form_system_info']['project_id']), 
+                    addslashes($api_data['vr_form_queries_info']['vr_framework_type']), 
                     addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_type_display_name']), 
                     addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_item_display_name']), 
                     addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_item_ref_name']), 
@@ -465,7 +467,7 @@ $total_overall_failure = $results_save_data['data_quote']['total_failure'] +
 if (isset($api_data['access_mode'])) {
     if ($api_data['access_mode'] == 'contract_bom_save') {
         $total_overall_input = $results_save_data['data_contract_bom_meterial']['total_input'] + 
-                                    $results_save_data['data_contract_bom']['total_input'];
+                                $results_save_data['data_contract_bom']['total_input'];
         $total_overall_success = $results_save_data['data_contract_bom_meterial']['total_success'] + 
                                     $results_save_data['data_contract_bom']['total_success'];
         $total_overall_failure = $results_save_data['data_contract_bom_meterial']['total_failure'] + 
@@ -487,7 +489,9 @@ $api_response['message'] = array(
     'last_results' => $results, 
     'failure_indexes' => array(
         'data_quote' => $results_save_data['data_quote']['failure_indexes'], 
+        'data_followup' => $results_save_data['data_followup']['failure_indexes'], 
         'data_measurement' => $results_save_data['data_measurement']['failure_indexes'], 
+        'data_letters' => $results_save_data['data_letters']['failure_indexes'], 
         'data_contract_bom_meterial' => $results_save_data['data_contract_bom_meterial']['failure_indexes'], 
         'data_contract_bom' => $results_save_data['data_contract_bom']['failure_indexes'] 
     )

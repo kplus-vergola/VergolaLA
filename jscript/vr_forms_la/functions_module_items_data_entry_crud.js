@@ -283,17 +283,17 @@
         }
 
 
-        function processSaveResultBomFormData(results) {
+        function processSaveResultBomFormPoData(results) {
             if (results['error'] == 'null') {
-                window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
+                saveBomFormContractItemData();
             } else {
-                console.log('processSaveResultBomFormData > results:');
+                console.log('processSaveResultBomFormPoData > results:');
                 console.log(results);
             }
         }
 
 
-        function saveBomFormData(process_order_by_vr_section_display_name) {
+        function saveBomFormPoData(process_order_by_vr_section_display_name) {
             copyVrFormItemsDataEntryFormValue();
             extractVrFormItemDataEntryPropertiesName();
             jsonEncodeVrFormItemsDataEntry();
@@ -303,14 +303,46 @@
             var request_data = {
                 "vr_form_operation":"save", 
                 "access_mode":"contract_bom_save", 
-                "quote_id":vr_form_system_info['quote_id'], 
-                "project_id":vr_form_system_info['project_id'], 
-                "vr_framework_type":vr_form_queries_info['vr_framework_type'], 
+                "vr_form_system_info":vr_form_system_info, 
+                "vr_form_queries_info":vr_form_queries_info, 
                 "vr_form_items_data_entry":vr_form_items_data_entry, 
                 "process_order_by_vr_section_display_name":process_order_by_vr_section_display_name
             };
 
-            requestAjaxCall(url, request_data, 'processSaveResultBomFormData');
+            requestAjaxCall(url, request_data, 'processSaveResultBomFormPoData');
+            console.log('url:');
+            console.log(url);
+            console.log('request_data:');
+            console.log(request_data);
+        }
+
+
+        function processSaveResultBomFormContractItemData(results) {
+            if (results['error'] == 'null') {
+                window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
+            } else {
+                console.log('processSaveResultBomFormContractItemData > results:');
+                console.log(results);
+            }
+        }
+
+
+        function saveBomFormContractItemData() {
+            copyVrFormItemsDataEntryFormValue();
+            extractVrFormItemDataEntryPropertiesName();
+            jsonEncodeVrFormItemsDataEntry();
+            copyVrFormQueriesInfoFormValue();
+
+            var url = window.location.href + '&api_mode=1';
+            var request_data = {
+                "vr_form_operation":"update", 
+                "access_mode":"contract_bom_save", 
+                "vr_form_system_info":vr_form_system_info, 
+                "vr_form_queries_info":vr_form_queries_info, 
+                "vr_form_items_data_entry":vr_form_items_data_entry
+            };
+
+            requestAjaxCall(url, request_data, 'processSaveResultBomFormContractItemData');
             console.log('url:');
             console.log(url);
             console.log('request_data:');

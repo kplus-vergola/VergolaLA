@@ -389,7 +389,7 @@
                     vr_form_items_data_entry[c1]['vr_item_display_name'] = document.getElementById('vr_item_data_entry_display_name_' + c1).value;
                 }
 
-                if (vr_form_items_data_entry[c1]['vr_item_adhoc'] == 'yes') {
+                if (vr_form_items_data_entry[c1]['vr_item_adhoc'] == 'yes' && vr_form_items_data_entry[c1]['vr_record_index'] == '') {
                     vr_form_items_data_entry[c1]['vr_item_display_name_input_type'] = 'Select Box';
                 } else {
                     vr_form_items_data_entry[c1]['vr_item_display_name_input_type'] = document.getElementById('vr_item_data_entry_display_name_input_type_' + c1).value;
@@ -639,7 +639,7 @@
             var template_vr_form_add_item_button = '' +
                 '<input type="button" class="vr_form_field_button_1" id="button_add_vr_form_item_data_entry_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" name="button_add_vr_form_item_data_entry_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" value="Add [VR_SECTION_DISPLAY_NAME] Item" onclick="addBomFormItemAdhocDataEntry(\'[VR_SECTION_DISPLAY_NAME]\')" />';
             var template_vr_form_process_order_button = '' +
-                '<input type="button" class="bom_form_field_button_1" id="button_process_order_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" name="button_process_order_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" value="Process Order" onclick="saveBomFormData(\'[VR_SECTION_DISPLAY_NAME]\')" />'
+                '<input type="button" class="bom_form_field_button_1" id="button_process_order_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" name="button_process_order_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" value="Process Order" onclick="saveBomFormPoData(\'[VR_SECTION_DISPLAY_NAME]\')" />'
             var template_vr_form_cancel_order_button = '' +
                 '<input type="button" class="bom_form_field_button_1" id="button_cancel_order_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" name="button_cancel_order_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" value="Cancel Order" onclick="deleteBomFormData(\'[VR_SECTION_DISPLAY_NAME]\')" />'
 
@@ -1268,8 +1268,9 @@
 
                             /* --- begin column action --- */
                             temp_text = '';
-                            if (vr_form_items_data_entry[c12]['vr_item_adhoc'] == 'yes' || 
-                                vr_form_system_info['access_mode'] == 'contract_bom_edit') {
+                            if ((vr_form_items_data_entry[c12]['vr_item_adhoc'] == 'yes' || 
+                                vr_form_system_info['access_mode'] == 'contract_bom_edit') && 
+                                vr_form_system_info['access_mode'] != 'quote_view') {
                                 temp_text = replaceSubstringInText(
                                     ['[INDEX_NUMBER]'], 
                                     [c12], 
