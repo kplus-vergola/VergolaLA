@@ -5,7 +5,6 @@ function updateCodeBase() {
     echo 'Loading...';
     echo '<br />';
     echo '<br />';
-
     ob_flush();
     flush();
 
