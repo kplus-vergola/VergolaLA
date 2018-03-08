@@ -164,10 +164,10 @@ while ($bm = mysql_fetch_assoc($qbm)) {
  
 ?>  
 	<tr>
-		 <th><?php if($i==0) echo "Inventory"; ?></th><th> Qty </th><th> Length </th> </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th> 
+		 <th><?php if($i==0) echo "Inventory"; ?></th><th> Qty </th><th> Length </th> <th> Fracs </th> </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th> 
 	</tr>
 	
-	<tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td><td><?php if($bm['uom']=="Mtrs" && METRIC_SYSTEM == "inch") {echo get_feet_value($bm['length']);}else if($bm['uom']=="Mtrs"){echo $bm['length'];} ?></td><td><?php echo $bm['uom']; ?></td><td> &nbsp; </td><td> &nbsp; </td><td> </td></tr>
+	<tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td><td><?php if($bm['uom']=="Mtrs" && METRIC_SYSTEM == "inch") {echo get_feet_value($bm['length']);}else if($bm['uom']=="Mtrs"){echo $bm['length'];} ?></td><td><?php echo $bm['length_fraction']; ?><td><?php echo $bm['uom']; ?></td><td> &nbsp; </td><td> &nbsp; </td><td> </td></tr>
 
 	<tr>
 		 <th  colspan='7'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Raw Materials</th> 
@@ -220,6 +220,7 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
 					<td ><?php echo number_format($m_qty); ?></td>
 					<td ><?php if($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Mtrs") echo $m_length; ?></td> 
+					<td><?php echo $m['length_fraction']; ?></td> 
 					<td><?php echo $m['uom']; ?></td> 
 					<td> $<?php echo number_format($m['raw_cost'],2); ?> </td>
 					<td ><?php echo $m['company_name']; ?></td> 
