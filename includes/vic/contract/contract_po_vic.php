@@ -154,7 +154,7 @@ if($cat['section']=="Frame"){
 					//$order_by = "";
 				}
  
-$sql = "SELECT *, i.rrp AS bom_rrp FROM ver_chronoforms_data_contract_bom_vic AS i LEFT JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=i.inventoryid  WHERE  i.projectid = '$projectid' AND inv.section='{$cat['section']}' AND i.is_reorder=0  {$order_by}  "; 
+$sql = "SELECT *, i.rrp AS bom_rrp, inv.rrp AS rrp FROM ver_chronoforms_data_contract_bom_vic AS i LEFT JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=i.inventoryid  WHERE  i.projectid = '$projectid' AND inv.section='{$cat['section']}' AND i.is_reorder=0  {$order_by}  "; 
 //error_log("BM: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');  
 
 $qbm = mysql_query ($sql) or die ('request "Could not execute SQL query" '.$sql);
@@ -164,10 +164,13 @@ while ($bm = mysql_fetch_assoc($qbm)) {
  
 ?>  
 	<tr>
-		 <th><?php if($i==0) echo "Inventory"; ?></th><th> Qty </th><th> Length </th> <th> Fracs </th> </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th> 
-	</tr>
-	
-	<tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td><td><?php if($bm['uom']=="Mtrs" && METRIC_SYSTEM == "inch") {echo get_feet_value($bm['length']);}else if($bm['uom']=="Mtrs"){echo $bm['length'];} ?></td><td><?php echo $bm['length_fraction']; ?><td><?php echo $bm['uom']; ?></td><td> &nbsp; </td><td> &nbsp; </td><td> </td></tr>
+		 <th><?php if($i==0) echo "Inventory"; ?></th><th> Qty </th><th> Length </th> <th> Fracs </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th> 
+	</tr>	
+	<tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td>
+		<td><?php echo number_format($bm['length_feet'])."'".number_format($bm['length_inch']); ?></td>		
+		<td><?php if($bm['uom']=="Inches") {echo $bm['length_fraction'];} ?></td>
+		<!-- <td><?php echo $bm['uom']; ?></td><td> $<?php echo number_format($bm['rrp'],2); ?> </td> -->
+		<td>&nbsp; </td> <td> &nbsp; </td><td> </td></tr>
 
 	<tr>
 		 <th  colspan='7'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Raw Materials</th> 
@@ -175,7 +178,35 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 	<?php 
 		 
 			 
-	$sql = "SELECT bm.projectid, bm.inventoryid, bm.materialid, bm.raw_cost, m.qty, bm.supplierid, m.raw_description, m.uom, m.is_per_length, m.length_per_ea, s.company_name, m.length_per_ea_us FROM  ver_chronoforms_data_contract_bom_meterial_vic AS bm  JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=bm.materialid JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid  WHERE bm.projectid = '$ListProjectID' AND bm.inventoryid='{$bm['inventoryid']}' GROUP BY bm.inventoryid, bm.materialid ORDER BY m.cf_id  "; 
+	//$sql = "SELECT bm.projectid, bm.inventoryid, bm.materialid, bm.raw_cost, m.qty, bm.supplierid, m.raw_description, m.uom, m.is_per_length, m.length_per_ea, s.company_name, m.length_per_ea_us FROM  ver_chronoforms_data_contract_bom_meterial_vic AS bm  JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=bm.materialid JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid  WHERE bm.projectid = '$ListProjectID' AND bm.inventoryid='{$bm['inventoryid']}' GROUP BY bm.inventoryid, bm.materialid ORDER BY m.cf_id  "; 
+
+$sql = "SELECT
+bm.projectid,
+bm.inventoryid,
+bm.materialid,
+bm.raw_cost,
+m.qty,
+bm.supplierid,
+m.raw_description,
+m.uom,
+m.is_per_length,
+m.length_per_ea,
+s.company_name,
+m.length_per_ea_us,
+im.inv_extcost as raw_invcost,
+im.inv_qty as invqty
+FROM
+ver_chronoforms_data_contract_bom_meterial_vic AS bm
+JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = bm.materialid
+JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = m.supplierid
+JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid AND bm.materialid = im.materialid
+WHERE bm.projectid = '$ListProjectID' AND bm.inventoryid='{$bm['inventoryid']}'
+GROUP BY
+bm.inventoryid,
+bm.materialid
+ORDER BY
+m.cf_id ASC  "; 
+
 
 		//error_log("PO: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 	 
@@ -192,37 +223,57 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 				if($m['is_per_length']==1){
 					// $amount = $m['raw_cost'] * $m['qty'] * $bm['qty'] * floor($bm['length'] / $m['length_per_ea']);
 					if($m['uom']=="Ea" || $m['uom']=="$"){
-						$_qty = 0; 
-						$m_qty = $bm['qty'] * floor($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
-						$m_length = $bm['length'];
-						$amount = $m_qty * $m['raw_cost'];  
+						$m_qty = 0; 
+						//$bm['qty'] = $raw_qty;
+						$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
+						$m_qty = $m['invqty'] * floor($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));						
+						$amount = $m_qty * $m['raw_invcost'];  
+						$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length'];
 						//error_log("inventoryid:".$bm['inventoryid']."m_qty:".$m_qty."---- lpe:".((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])." bm-length:".$bm['length']." floor-".($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
+
 					}
 					else{
-						$m_qty = $bm['qty'];
-						$m_length = $bm['length'];// * floor($bm['length'] / $m['length_per_ea']); 
-						$amount = $m['raw_cost'] * $m_qty * $bm['length'];
+						//$bm['qty'] = $raw_qty;
+						$m_qty = $m['invqty'] * $bm['qty'];
+						$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
+						$m_fracs = number_format($bm['length_fraction']);
+						$m_length = $bm['length'] / $m['length_per_ea'];// * floor($bm['length'] / $m['length_per_ea']); 						
+						//$amount = $m['raw_cost'] * ((($bm['length_feet'] * 12) + $bm['length_inch']) + number_format($bm['length_fraction']));
+						$amount = $m['raw_invcost'] * $m_qty * ($bm['length'] + number_format($bm['length_fraction']));						
+						$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['lenght_feet']; 
 					}
+
 					
 				}else{
-					$amount = $m['raw_cost'] * $m['qty'] * $bm['qty']; 
-					$m_qty = $m['qty'] * $bm['qty'];
-					$m_length = $bm['length']; 
+					//$bm['qty'] = $raw_qty;
+					$amount = $m['raw_invcost'] * $m['invqty'] * $bm['qty']; 
+					$m_qty = $m['invqty'] * $bm['qty'];
+					$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length']; 
 
 					if($bm['inventoryid']=="IRV120"){
 					//error_log(print_r($m,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
 					//error_log("m_qty:".$m_qty." m-qty:".$m['qty']." bm-qty:".$bm['qty'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');  
-
 					}
-				}				
+					
+				}
+				//if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Inches") echo $m_length;
+				//echo $m_length;	
+				// $m_length = $bm['lenght_feet']."'".$bm['lenght_inch']; 
+				//$bm['length'] = $bm['length_feet']."'".$bm['length_inch']; //(($bm['length_feet'] * 12) + $bm['length_inch']);
+				//$m_qty = $m['inv_qty'];
+				//$amount = $m['inv_extcost']
+				//$m_fracs = floor($bm['length_fraction']);// - (int)$bm['length_fraction'];
+				//$x = 110 / 30;
+				//$decimal_part = $x - floor($x);
 			?>	
 				<tr> 
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
 					<td ><?php echo number_format($m_qty); ?></td>
-					<td ><?php if($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Mtrs") echo $m_length; ?></td> 
-					<td><?php echo $m['length_fraction']; ?></td> 
+					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($bm['length']); else if($m['uom']=="Inches") echo $m_length; ?></td>  
+					<!-- <td><?php echo $bm['length'] ; ?></td> -->
+					<td><?php if($m['uom']=="Inches") {echo $bm['length_fraction'];} ?></td> 
 					<td><?php echo $m['uom']; ?></td> 
-					<td> $<?php echo number_format($m['raw_cost'],2); ?> </td>
+					<td> $<?php echo number_format($m['raw_invcost'],2); ?> </td>
 					<td ><?php echo $m['company_name']; ?></td> 
 					<td> $<?php echo number_format($amount,2) ?> </td> 
 				</tr>  
@@ -248,7 +299,7 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 ?>  
 	<tr><td colspan="7" class="subheading" data-section='Reorders' >Reorders</td></tr>
 	<tr>
-		 <th>Inventory</th><th> Qty </th><th> Length </th> </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th> 
+		 <th>Inventory</th><th> Qty </th><th> Length </th> <th> Fracs </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th> 
 	</tr>
 
 	<tr>
@@ -276,7 +327,8 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 		</td>
 	</tr>
 	
-	<tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td><td><?php if($bm['uom']=="Mtrs") echo $bm['length']; ?></td><td><?php echo $bm['uom']; ?></td><td> &nbsp; </td><td> &nbsp; </td><td>$<?php echo $bm['rrp']; ?></td></tr>
+	<tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td><td><?php if($bm['uom']=="Inches") echo $bm['length']; ?></td>
+		<td><?php if($bm['length_fraction']!="null") {echo $bm['length_fraction'];} ?></td> <td><?php echo $bm['uom']; ?></td><td> &nbsp; </td><td> &nbsp; </td><td>$<?php echo $bm['rrp']; ?></td></tr>
 	<tr>
 		 <th  colspan='7'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Raw Materials</th> 
 	</tr>
@@ -321,7 +373,8 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 				<tr> 
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
 					<td ><?php echo number_format($m_qty); ?></td>
-					<td ><?php if($m['uom']=="Mtrs") echo $m_length; ?></td> 
+					<td ><?php if($m['uom']=="Inches") echo $m_length; ?></td> 
+					<td><?php if($m['length_fraction']!="null") {echo $m['length_fraction'];} ?></td> 
 					<td><?php echo $m['uom']; ?></td> 
 					<td> $<?php echo number_format($m['raw_cost'],2); ?> </td>
 					<td ><?php echo $m['company_name']; ?></td> 
