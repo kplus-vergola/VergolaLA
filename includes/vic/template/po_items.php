@@ -289,20 +289,37 @@ WHERE bm.projectid = '{$projectid}' AND b.projectid = '{$projectid}' AND b.is_re
 // JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid  
 // WHERE bm.projectid = '{$projectid}' AND b.projectid = '{$projectid}' AND b.is_reorder={$is_reorder}  ".($is_reorder==1?" AND b.inventoryid='{$inventoryid}' ":" AND inv.section='{$section}'")." AND m.supplierid='{$supplierid}' AND m.is_main_item=0 GROUP BY bm.materialid ORDER BY is_per_length DESC ";
 
-$sql2 = "SELECT bm.id,   m.qty, (m.qty*bm.qty) AS m_qty, SUM(m.qty*bm.qty) AS s_qty, 
-	CASE WHEN m.is_per_length=1 THEN CASE WHEN m.uom='Ea' THEN IF(1=".(METRIC_SYSTEM=="inch"?"1":"0").", SUM(bm.qty*floor(ROUND(bm.length/m.length_per_ea_us,3))), SUM(bm.qty*floor(ROUND(bm.length/m.length_per_ea,3)))) ELSE SUM(bm.qty*m.qty) END ELSE SUM(m.qty*bm.qty) END  AS ls_qty, 
+//----------Begin Old Query------------------------
+// $sql2 = "SELECT bm.id,   m.qty, (m.qty*bm.qty) AS m_qty, SUM(m.qty*bm.qty) AS s_qty, 
+// 	CASE WHEN m.is_per_length=1 THEN CASE WHEN m.uom='Ea' THEN IF(1=".(METRIC_SYSTEM=="inch"?"1":"0").", SUM(bm.qty*floor(ROUND(bm.length/m.length_per_ea_us,3))), SUM(bm.qty*floor(ROUND(bm.length/m.length_per_ea,3)))) ELSE SUM(bm.qty*m.qty) END ELSE SUM(m.qty*bm.qty) END  AS ls_qty, 
+//     CASE WHEN m.is_per_length=1 
+// 		THEN CASE WHEN m.uom='Ea' THEN SUM(m.raw_cost * floor(bm.length/m.length_per_ea)) 
+//         ELSE SUM(m.raw_cost * bm.qty) END
+// 	ELSE SUM(m.raw_cost * bm.qty)  END  AS ls_amount,
+//     bm.length, 
+//     CASE WHEN m.is_per_length=1 THEN SUM(bm.length) END AS s_length,
+//     bm.projectid, bm.inventoryid, bm.materialid, bm.raw_cost, bm.qty, bm.supplierid, m.raw_description, m.is_per_length, m.length_per_ea, m.uom, s.company_name 
+// FROM ver_chronoforms_data_contract_bom_meterial_vic AS bm   
+// JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=bm.inventoryid 				
+// JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=bm.materialid 
+// JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid
+// WHERE bm.projectid = '{$projectid}'  AND m.supplierid='{$supplierid}' AND m.is_main_item=0 GROUP BY bm.materialid ORDER BY is_per_length DESC ";
+//----------End Old Query------------------------
+$sql2 = "SELECT bm.id, m.qty, im.inv_qty,(im.inv_qty*bm.qty) AS m_qty,SUM(im.inv_qty*bm.qty) AS s_qty , im.inv_extcost, ((bm.length_feet * 12) + bm.length_inch) AS bm_length,
+	CASE WHEN m.is_per_length=1 THEN CASE WHEN m.uom='Ea' THEN IF(1=".(METRIC_SYSTEM=='inch'?'1':'0').", SUM(bm.qty*floor(ROUND((bm.length_feet * 12 + bm.length_inch)/m.length_per_ea_us,3))), SUM(bm.qty*floor(ROUND((bm.length_feet * 12 + bm.length_inch)/m.length_per_ea,3)))) ELSE SUM(bm.qty*im.inv_qty) END ELSE SUM(im.inv_qty*bm.qty) END  AS ls_qty, 
     CASE WHEN m.is_per_length=1 
-		THEN CASE WHEN m.uom='Ea' THEN SUM(m.raw_cost * floor(bm.length/m.length_per_ea)) 
-        ELSE SUM(m.raw_cost * bm.qty) END
-	ELSE SUM(m.raw_cost * bm.qty)  END  AS ls_amount,
+		THEN CASE WHEN m.uom='Ea' THEN SUM(im.inv_extcost * floor((bm.length_feet * 12 + bm.length_inch)/m.length_per_ea)) 
+        ELSE SUM(im.inv_extcost * bm.qty) END
+	ELSE SUM(im.inv_extcost * bm.qty)  END  AS ls_amount,
     bm.length, 
-    CASE WHEN m.is_per_length=1 THEN SUM(bm.length) END AS s_length,
-    bm.projectid, bm.inventoryid, bm.materialid, bm.raw_cost, bm.qty, bm.supplierid, m.raw_description, m.is_per_length, m.length_per_ea, m.uom, s.company_name 
+    CASE WHEN m.is_per_length=1 THEN SUM(bm.length_feet * 12 + bm.length_inch) END AS s_length,
+    bm.projectid, bm.inventoryid, bm.materialid, bm.raw_cost, bm.qty, bm.supplierid, m.raw_description, m.is_per_length, m.length_per_ea, m.uom, s.company_name
 FROM ver_chronoforms_data_contract_bom_meterial_vic AS bm   
 JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=bm.inventoryid 				
-JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=bm.materialid 
-JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid  
-WHERE bm.projectid = '{$projectid}'  AND m.supplierid='{$supplierid}' AND m.is_main_item=0 GROUP BY bm.materialid ORDER BY is_per_length DESC ";
+JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=bm.materialid
+JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid
+JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid=inv.inventoryid AND im.materialid=bm.materialid
+WHERE bm.projectid = '{$projectid}'  AND m.supplierid='{$supplierid}' GROUP BY im.materialid, bm.inventoryid ORDER BY is_per_length DESC ";
 
  				$totalRrp = 0;
 				 
@@ -313,13 +330,15 @@ WHERE bm.projectid = '{$projectid}'  AND m.supplierid='{$supplierid}' AND m.is_m
 					$totalRrp += $m['ls_amount']; 
 				?>  
 					<tr> 
+
 						<td colspan="2"><?php echo $m['raw_description']; ?></td>  
-						<td style="text-align:right;"><?php echo number_format($m['m_qty']); ?></td>
-						<td style="text-align:right;"><?php echo ($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Mtrs"?$m['length']:"")); ?></td>
+						<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td>
+						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Inches"?$m['length']:"")); ?></td>
 						<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 						<td><?php echo $m['colour']; ?></td>
 						<td><?php echo $m['finish']; ?></td>
-						<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>
+						<!-- <td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td> -->
+						<td style="text-align:right;">$<?php echo number_format($m['inv_extcost'],2); ?></td>
 						<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td>
 					</tr>  
 
@@ -399,7 +418,7 @@ WHERE bm.projectid = '{$projectid}'  AND m.supplierid='{$supplierid}' AND m.is_m
 						<tr> 
 							<td colspan="2"><?php echo $m['raw_description']; ?></td>  
 							<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td>
-							<td style="text-align:right;"><?php echo ($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Mtrs"?$m['length']:"")); ?></td>
+							<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Inches"?$m['length']:"")); ?></td>
 							<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 							<td> &nbsp; </td>
 							<td> &nbsp; </td>

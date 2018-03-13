@@ -256,22 +256,12 @@ m.cf_id ASC  ";
 					}
 					
 				}
-				//if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Inches") echo $m_length;
-				//echo $m_length;	
-				// $m_length = $bm['lenght_feet']."'".$bm['lenght_inch']; 
-				//$bm['length'] = $bm['length_feet']."'".$bm['length_inch']; //(($bm['length_feet'] * 12) + $bm['length_inch']);
-				//$m_qty = $m['inv_qty'];
-				//$amount = $m['inv_extcost']
-				//$m_fracs = floor($bm['length_fraction']);// - (int)$bm['length_fraction'];
-				//$x = 110 / 30;
-				//$decimal_part = $x - floor($x);
 			?>	
 				<tr> 
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
 					<td ><?php echo number_format($m_qty); ?></td>
-					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($bm['length']); else if($m['uom']=="Inches") echo $m_length; ?></td>  
-					<!-- <td><?php echo $bm['length'] ; ?></td> -->
-					<td><?php if($m['uom']=="Inches") {echo $bm['length_fraction'];} ?></td> 
+					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($bm['length']); else if($m['uom']=="Inches") echo $m_length; ?></td>  					
+					<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> 
 					<td><?php echo $m['uom']; ?></td> 
 					<td> $<?php echo number_format($m['raw_invcost'],2); ?> </td>
 					<td ><?php echo $m['company_name']; ?></td> 
@@ -352,7 +342,9 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 				if($m['is_per_length']==1){
 					// $amount = $m['raw_cost'] * $m['qty'] * $bm['qty'] * floor($bm['length'] / $m['length_per_ea']);
 					if($m['uom']=="Ea" || $m['uom']=="$"){
+						//$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
 						$m_qty = $bm['qty'] * floor($bm['length'] /  ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
+						//$m_qty = $bm['qty'];// * floor($bm['length'] /  ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
 						$m_length = $bm['length'];
 						$amount = $m_qty * $m['raw_cost'];  
 						
@@ -426,7 +418,12 @@ $(document).ready(function() {
 
  
 
-
+function convertToDecimal ($fraction)
+    {
+        $numbers=explode("/",$fraction);
+        return round($numbers[0]/$numbers[1],6);
+    }
+    
 function create_pdf(categoryPOCreate,titleIDHolder){
 
 
