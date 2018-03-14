@@ -67,7 +67,7 @@ if(isset($_REQUEST["print_id"])){
  	<table class="listing-table ">
     <thead>
     	<tr>
-    		<td colspan="9" class="subheading" data-section='Frame' >
+    		<td colspan="7" class="subheading" data-section='Frame' >
 				PURCHASE ORDER
     		</td>
     	</tr>
@@ -112,9 +112,9 @@ if(isset($_REQUEST["print_id"])){
 	while ($cat = mysql_fetch_assoc($qcat)) {	
 
 ?>
-<tr><td colspan="7" class="subheading" data-section='Frame' > <?php if($cat['section']=="Frame"){ echo "Framework"; }else if($cat['section']=="Fixings"){ echo "Flashings"; }else{ echo $cat['section']; } ?>   </td></tr>
+<tr><td colspan="8" class="subheading" data-section='Frame' > <?php if($cat['section']=="Frame"){ echo "Framework"; }else if($cat['section']=="Fixings"){ echo "Flashings"; }else{ echo $cat['section']; } ?>   </td></tr>
 <tr>
-		<td colspan="7" style="font-weight:bold">
+		<td colspan="8" style="font-weight:bold">
 			 
 				<?php   
 				$titleID = $ListProjectID."_"."frame"."_".mt_rand();
@@ -217,6 +217,13 @@ m.cf_id ASC  ";
  
 			<?php  
  
+ 				//Convert fraction to decimal
+				$input = $bm['length_fraction'];				
+				if (strpos($input, '/') === FALSE) { $result = $input;
+				} else { $fraction = array('whole' => 0);
+					preg_match('/^((?P<whole>\d+)(?=\s))?(\s*)?(?P<numerator>\d+)\/(?P<denominator>\d+)$/', $input, $fraction);
+				    $result = $fraction['whole']; if ($fraction['denominator'] > 0) $result += $fraction['numerator'] / $fraction['denominator']; }
+				
 				//while ($row = mysql_fetch_assoc($result)){
 				$amount = 0;
 				$m_qty = 1; $m_length = 1;
@@ -239,12 +246,13 @@ m.cf_id ASC  ";
 						$m_fracs = number_format($bm['length_fraction']);
 						$m_length = $bm['length'] / $m['length_per_ea'];// * floor($bm['length'] / $m['length_per_ea']); 						
 						//$amount = $m['raw_cost'] * ((($bm['length_feet'] * 12) + $bm['length_inch']) + number_format($bm['length_fraction']));
-						$amount = $m['raw_invcost'] * $m_qty * ($bm['length'] + number_format($bm['length_fraction']));						
+						$amount = $m['raw_invcost'] * $m_qty * ($bm['length'] + $result);						
 						$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['lenght_feet']; 
 					}
 
 					
 				}else{
+					$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
 					//$bm['qty'] = $raw_qty;
 					$amount = $m['raw_invcost'] * $m['invqty'] * $bm['qty']; 
 					$m_qty = $m['invqty'] * $bm['qty'];
@@ -256,11 +264,13 @@ m.cf_id ASC  ";
 					}
 					
 				}
+
+
 			?>	
 				<tr> 
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
 					<td ><?php echo number_format($m_qty); ?></td>
-					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($bm['length']); else if($m['uom']=="Inches") echo $m_length; ?></td>  					
+					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($bm['length']); else if($m['uom']=="Inches") echo $m_length; ?></td>  										
 					<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> 
 					<td><?php echo $m['uom']; ?></td> 
 					<td> $<?php echo number_format($m['raw_invcost'],2); ?> </td>
@@ -287,13 +297,13 @@ $i=0;
 while ($bm = mysql_fetch_assoc($qbm)) {
  
 ?>  
-	<tr><td colspan="7" class="subheading" data-section='Reorders' >Reorders</td></tr>
+	<tr><td colspan="8" class="subheading" data-section='Reorders' >Reorders</td></tr>
 	<tr>
 		 <th>Inventory</th><th> Qty </th><th> Length </th> <th> Fracs </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th> 
 	</tr>
 
 	<tr>
-		<td colspan="7" style="font-weight:bold">
+		<td colspan="8" style="font-weight:bold">
 			 
 				<?php   
 				$titleID = $ListProjectID."_"."frame"."_".mt_rand();
@@ -318,7 +328,8 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 	</tr>
 	
 	<tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td><td><?php if($bm['uom']=="Inches") echo $bm['length']; ?></td>
-		<td><?php if($bm['length_fraction']!="null") {echo $bm['length_fraction'];} ?></td> <td><?php echo $bm['uom']; ?></td><td> &nbsp; </td><td> &nbsp; </td><td>$<?php echo $bm['rrp']; ?></td></tr>
+		<td><?php if($bm['length_fraction']!="null") {echo $bm['length_fraction'];} ?></td> <td><?php echo $bm['uom']; ?></td>
+		<td> &nbsp; </td><td> &nbsp; </td><td>$<?php echo $bm['rrp']; ?></td></tr>
 	<tr>
 		 <th  colspan='7'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Raw Materials</th> 
 	</tr>
@@ -366,7 +377,8 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
 					<td ><?php echo number_format($m_qty); ?></td>
 					<td ><?php if($m['uom']=="Inches") echo $m_length; ?></td> 
-					<td><?php if($m['length_fraction']!="null") {echo $m['length_fraction'];} ?></td> 
+					<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> 
+					<!-- <td><?php if($m['length_fraction']!="null") {echo $m['length_fraction'];} ?></td>  -->
 					<td><?php echo $m['uom']; ?></td> 
 					<td> $<?php echo number_format($m['raw_cost'],2); ?> </td>
 					<td ><?php echo $m['company_name']; ?></td> 
