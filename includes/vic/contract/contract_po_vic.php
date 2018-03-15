@@ -232,7 +232,7 @@ m.cf_id ASC  ";
 					if($m['uom']=="Ea" || $m['uom']=="$"){
 						$m_qty = 0; 
 						//$bm['qty'] = $raw_qty;
-						$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
+						$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']) + $result;
 						$m_qty = $m['invqty'] * floor($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));						
 						$amount = $m_qty * $m['raw_invcost'];  
 						$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length'];
@@ -242,7 +242,7 @@ m.cf_id ASC  ";
 					else{
 						//$bm['qty'] = $raw_qty;
 						$m_qty = $m['invqty'] * $bm['qty'];
-						$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
+						$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']) + $result;
 						$m_fracs = number_format($bm['length_fraction']);
 						$m_length = $bm['length'] / $m['length_per_ea'];// * floor($bm['length'] / $m['length_per_ea']); 						
 						//$amount = $m['raw_cost'] * ((($bm['length_feet'] * 12) + $bm['length_inch']) + number_format($bm['length_fraction']));
@@ -252,7 +252,7 @@ m.cf_id ASC  ";
 
 					
 				}else{
-					$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
+					$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']) + $result;
 					//$bm['qty'] = $raw_qty;
 					$amount = $m['raw_invcost'] * $m['invqty'] * $bm['qty']; 
 					$m_qty = $m['invqty'] * $bm['qty'];
@@ -270,7 +270,8 @@ m.cf_id ASC  ";
 				<tr> 
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
 					<td ><?php echo number_format($m_qty); ?></td>
-					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($bm['length']); else if($m['uom']=="Inches") echo $m_length; ?></td>  										
+					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($bm['length']); else if($m['uom']=="Inches") echo $m_length; ?></td>  										 
+					<!-- <td><?php echo $result; ?></td>  -->
 					<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> 
 					<td><?php echo $m['uom']; ?></td> 
 					<td> $<?php echo number_format($m['raw_invcost'],2); ?> </td>

@@ -273,6 +273,7 @@ $supplier = mysql_fetch_array($qSupplier);
 // JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid AND bm.materialid = im.materialid
 // WHERE bm.projectid = '{$projectid}' AND b.projectid = '{$projectid}' AND b.is_reorder={$is_reorder}  ".($is_reorder==1?" AND b.inventoryid='{$inventoryid}' ":" AND inv.section='{$section}'")." AND m.supplierid='{$supplierid}' AND m.is_main_item=1 GROUP BY b.cf_id ORDER BY is_per_length DESC, bm.id, b.length DESC, b.qty DESC ";
 
+//Modiefied SQL QUERY for Main item of a raw material that should display first like beam and post.
 $sql = "SELECT
 		bm.id,
 		b.qty,
@@ -308,8 +309,11 @@ $sql = "SELECT
 		bm.inventoryid,
 		bm.materialid,
 		(bm.raw_cost * im.inv_qty) AS raw_cost,
+		(bm.qty * im.inv_qty) AS invqty,
 		bm.qty,
 		bm.supplierid,
+		bm.length_fraction,
+		CONCAT('1 ', m.raw_description) AS rawdesc,
 		m.raw_description,
 		m.is_per_length,
 		m.length_per_ea,
@@ -361,17 +365,20 @@ $sql = "SELECT
 // JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid
 // WHERE bm.projectid = '{$projectid}'  AND m.supplierid='{$supplierid}' AND m.is_main_item=0 GROUP BY bm.materialid ORDER BY is_per_length DESC ";
 //----------End Old Query------------------------
+
+//SQL for raw materials secondary items
 $sql2 = "SELECT
-	bm.id, m.is_main_item, m.qty, ( im.inv_qty * bm.qty ) AS m_qty, SUM( im.inv_qty * bm.qty ) AS s_qty , 
-	( bm.length_feet * 12 ) + bm.length_inch  AS bm_length, 
+	bm.id, m.is_main_item, m.qty, im.inv_qty, ( im.inv_qty * bm.qty ) AS m_qty, SUM( im.inv_qty * bm.qty ) AS s_qty, im.inv_extcost, 
+	( ( bm.length_feet * 12 ) + bm.length_inch ) AS bm_length,
 CASE
 	
 	WHEN m.is_per_length = 1 THEN
 CASE
 	
 	WHEN m.uom = 'Ea' THEN
-IF 
-	(1=".(METRIC_SYSTEM=="inch"?"1":"0").",
+IF
+	(
+	1 = ".(METRIC_SYSTEM=="inch"?1:0).",
 SUM( bm.qty * floor( ROUND( ( bm.length_feet * 12 ) + bm.length_inch / m.length_per_ea_us, 3 ) ) ),
 	SUM( bm.qty * floor( ROUND( ( bm.length_feet * 12 ) + bm.length_inch / m.length_per_ea, 3 ) ) ) 
 	) ELSE SUM( bm.qty * im.inv_qty ) 
@@ -390,7 +397,7 @@ CASE
 CASE
 		
 		WHEN m.is_per_length = 1 THEN
-		SUM( bm.length_feet * 12  + bm.length_inch ) 
+		SUM( ( bm.length_feet * 12 ) + bm.length_inch ) 
 	END AS s_length,
 	bm.projectid,
 	bm.inventoryid,
@@ -398,6 +405,7 @@ CASE
 	bm.raw_cost,
 	bm.qty,
 	bm.supplierid,
+	CONCAT('2 ', m.raw_description) AS rawdesc,
 	m.raw_description,
 	m.is_per_length,
 	m.length_per_ea,
@@ -418,30 +426,80 @@ GROUP BY
 ORDER BY
 is_per_length DESC ";
 
+//Display Main item of a raw material that should display first like beam and post.
  				$totalRrp = 0;
 				 
 				//error_log("sql 2: ". $sql2, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 				$item_result = mysql_query ($sql);
 				
 				while ($m = mysql_fetch_assoc($item_result)){ 
-					$totalRrp += $m['ls_amount']; 					
-					$m_length = (($m['length_feet'] * 12) + $m['length_inch']);
-					$m_feetlength = $m['length_feet']."'".$m['length_inch'];
-					$m_rawcost = number_format($m['raw_cost'],2);
-					$m_extcost = number_format($m['inv_extcost'],2);
+					$totalRrp += $m['ls_amount'];
+
+				//Convert fraction to decimal
+				$input = $m['length_fraction'];				
+				if (strpos($input, '/') === FALSE) { $result = $input;
+				} else { $fraction = array('whole' => 0);
+					preg_match('/^((?P<whole>\d+)(?=\s))?(\s*)?(?P<numerator>\d+)\/(?P<denominator>\d+)$/', $input, $fraction);
+				    $result = $fraction['whole']; if ($fraction['denominator'] > 0) $result += $fraction['numerator'] / $fraction['denominator']; }
+				
+				//while ($row = mysql_fetch_assoc($result)){
+				$amount = 0;
+				$m_qty = 1; $m_length = 1;
+				if($m['is_per_length']==1){
+					// $amount = $m['raw_cost'] * $m['qty'] * $bm['qty'] * floor($bm['length'] / $m['length_per_ea']);
+					if($m['uom']=="Ea"){
+						$m_qty = 0; 
+						$mlength = (($m['length_feet'] * 12) + $m['length_inch']);
+						$m_qty = $m['invqty'] * floor($m['s_length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));						
+						$amount = $m_qty * $m['raw_invcost'];  
+						//$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length'];
+						//error_log("inventoryid:".$bm['inventoryid']."m_qty:".$m_qty."---- lpe:".((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])." bm-length:".$bm['length']." floor-".($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
+
+					}
+					else{
+						//$bm['qty'] = $raw_qty;
+						$m_qty = $m['invqty'] * $bm['qty'];
+						$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
+						$m_fracs = number_format($bm['length_fraction']);
+						$m_length = $bm['length'] / $m['length_per_ea'];// * floor($bm['length'] / $m['length_per_ea']); 						
+						//$amount = $m['raw_cost'] * ((($bm['length_feet'] * 12) + $bm['length_inch']) + number_format($bm['length_fraction']));
+						$amount = $m['inv_extcost'] * ($m['invqty'] * ($m['s_length'] + $result));						
+						$amount1 = 150;
+						$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['lenght_feet']; 
+					}
+
+					
+				}else{
+					$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
+					//$bm['qty'] = $raw_qty;
+					$amount = $m['raw_invcost'] * $m['invqty'] * $bm['qty']; 
+					$m_qty = $m['invqty'] * $bm['qty'];
+					$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length']; 
+
+					$amount = $m['inv_extcost'] * $m['invqty'] * ($m['s_length'] + $result);						
+					//$amount = 50;
+					if($bm['inventoryid']=="IRV120"){
+					//error_log(print_r($m,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
+					//error_log("m_qty:".$m_qty." m-qty:".$m['qty']." bm-qty:".$bm['qty'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');  
+					}
+					
+				}
+
 				?>  
 					<tr> 
-
-						<td colspan="2"><?php echo $m['raw_description']; ?></td>  
-						<td style="text-align:right;"><?php echo $m['s_qty']; ?></td>
-						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"? get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td> 
-						<!-- <td style="text-align:right;"><?php echo get_feet_value($m['s_length']); ?></td>  -->
+						
+						<td colspan="2"><?php echo $m['rawdesc']; ?></td>  <!-- <td colspan="2"><?php echo $m['raw_description']; ?></td>   -->
+						<td style="text-align:right;"><?php echo $m['invqty']; ?></td> 
+						<!-- <td style="text-align:right;"><?php echo $m['l_qty']; ?></td> -->
+						<!-- <td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"? get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>  -->
+						<td style="text-align:right;"><?php echo ($m['s_length'] + $result); ?></td>  
 						<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 						<td><?php echo $m['colour']; ?></td>
 						<td><?php echo $m['finish']; ?></td>
 						<td style="text-align:right;">$<?php echo number_format($m['inv_extcost'],2); ?></td>  
-						<!-- <td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>  --> 
-						<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td>
+						<!-- <td style="text-align:right;">$<?php echo number_format($m['inv_extcost'],2); ?></td>  --> 
+						<td> $<?php echo $amount; ?> </td>
+						<!-- <td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td> -->
 					</tr>  
 
 				<?php
@@ -518,7 +576,7 @@ is_per_length DESC ";
 						$totalRrp += $m['ls_amount']; 
 					?>  
 						<tr> 
-							<td colspan="2"><?php echo $m['raw_description']; ?></td>  
+							<td colspan="2"><?php echo $m['rawdesc']; ?></td>  <!-- <td colspan="2"><?php echo $m['raw_description']; ?></td>   -->
 							<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td>
 							<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>
 							<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
