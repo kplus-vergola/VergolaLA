@@ -227,65 +227,74 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 				    $result = $fraction['whole']; if ($fraction['denominator'] > 0) $result += $fraction['numerator'] / $fraction['denominator']; }
 				
 				//while ($row = mysql_fetch_assoc($result)){
-				$amount = 0;
-				$m_qty = 1;//($m['invqty'] == 0) ? 1 : $m['invqty']; $m_length = 1;				
-				$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']) + $result;
+				$amount = 0; $m_qty = 1; $m_length = 1;	
+				//($m['invqty'] == 0) ? 1 : $m['invqty']; 
+				//$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);// + $result;
 				//$m_qty = $m['invqty'] * $bm['qty'];
 				//$m['raw_cost'] == $m['raw_cost'] * $m['invqty'];
+				
+				//--===Need to check whether to pull quantity on $m['qty'] OR $m['inv_qty'] ===--
 				if($m['is_per_length']==1){
-					// $amount = $m['raw_cost'] * $m['qty'] * $bm['qty'] * floor($bm['length'] / $m['length_per_ea']);
 					if($m['uom']=="Ea" || $m['uom']=="$"){
 						$m_qty = 0; 
-						//$bm['qty'] = $raw_qty;						
-						$m_qty = ((($m['invqty'] == 0) ? 1 : $m['invqty']) * (($bm['length']==0)?1:floor($bm['length']) / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']))) * $bm['qty'];
-						$amount = ((($m['invqty'] == 0) ? 1 : $m['invqty'] * $m['raw_cost'])) * floor($bm['length']==0)?1:$bm['length'];  
-						$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length'];
-						//error_log("inventoryid:".$bm['inventoryid']."m_qty:".$m_qty."---- lpe:".((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])." bm-length:".$bm['length']." floor-".($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
-						//$m_qty = (($m['invqty'] == 0) ? 1 : $m['invqty']) * $bm['qty'];
-						//$amount = $bm['qty'] * $m['raw_invcost'];
-						$amount = (($m['raw_cost'] * (($m['invqty'] == 0) ? 1 : $m['invqty'])) * (($bm['length']==0)?1:$bm['length'])) * $bm['qty'];
+						$m_qty = $bm['qty'] * floor(($bm['length'] + $result) / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
+						$m_length = ($bm['length_feet'] * 12) + $bm['length_inch'];
+						$amount = $m_qty * $m['raw_cost'];
+
+
+						// //$bm['qty'] = $raw_qty;											
+						// // $m_qty = ((($m['invqty'] == 0) ? 1 : $m['invqty']) * (($bm['length']==0)?1:floor($bm['length']) / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']))) * $bm['qty'];
+						// $amount = ((($m['invqty'] == 0) ? 1 : $m['invqty'] * $m['raw_cost'])) * floor($bm['length']==0)?1:$bm['length'];  
+						// $m_length = $bm['length'] / $m['length_per_ea'];
+						// $m_fracs = number_format($bm['length_fraction']);
+						// //$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length'];
+						// //error_log("inventoryid:".$bm['inventoryid']."m_qty:".$m_qty."---- lpe:".((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])." bm-length:".$bm['length']." floor-".($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
+						// //$m_qty = (($m['invqty'] == 0) ? 1 : $m['invqty']) * $bm['qty'];
+						// //$amount = $bm['qty'] * $m['raw_invcost'];
+						// $amount = (($m['raw_cost'] * (($m['invqty'] == 0) ? 1 : $m['invqty'])) * (($bm['length']==0)?1:$bm['length'])) * $bm['qty'];
+						echo 'Test';
 					}
-					else{
+					else{						
+						$m_qty = (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']);// * $bm['qty'];
+						$m_length = ($bm['length_feet'] * 12) + $bm['length_inch'];
+						$amount = $m['raw_cost']  * $m_qty * (($bm['length_feet'] * 12) + $bm['length_inch']); 
+
 						//$bm['qty'] = $raw_qty;
-						$m_qty = (($m['invqty'] == 0) ? 1 : $m['invqty']) * $bm['qty'];
+						//$m_qty = (($m['invqty'] == 0) ? 1 : $m['invqty']) * $bm['qty'];
 						//$m['invqty'] * $bm['qty'];
 						//$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']) + $result;
-						$m_fracs = number_format($bm['length_fraction']);
-						$m_length = $bm['length'] / $m['length_per_ea'];// * floor($bm['length'] / $m['length_per_ea']); 						
+						//$m_fracs = number_format($bm['length_fraction']);
+						//$m_length = $bm['length'] / $m['length_per_ea'];
+						// * floor($bm['length'] / $m['length_per_ea']); 						
 						//$amount = $m['raw_cost'] * ((($bm['length_feet'] * 12) + $bm['length_inch']) + number_format($bm['length_fraction']));
 						//$amount = $m['raw_invcost'] * $m_qty * ($bm['length'] + $result);						
 						//$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['lenght_feet']; 
-						$amount = (($m['raw_cost'] * (($m['invqty'] == 0) ? 1 : $m['invqty'])) * (($bm['length']==0)?1:$bm['length'])) * $bm['qty'];						
-						//$m_qty = 200;
+						//$amount = (($m['raw_cost'] * (($m['invqty'] == 0) ? 1 : $m['invqty'])) * (($bm['length']==0)?1:$bm['length'])) * $bm['qty'];						
+						$m_qty = 200;
 						//$amount = $bm['qty'] * ($m['bmlength'] * $m['raw_invcost']);
 					}
 
 					
 				}else{
-					$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']) + $result;
+					$m_qty = (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']) * $bm['qty'];
+					//$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']) + $result;
 					//$bm['qty'] = $raw_qty;
-					$amount = $m['raw_invcost'] * $m['invqty'] * $bm['qty'];
-					$m_qty = $m['invqty'] * $bm['qty'];
-					$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length']; 
+					$m_length = ($bm['length_feet'] * 12) + $bm['length_inch'];
+					$amount = $m['raw_cost'] * (($m['invqty'] == 0 || $m['invqty'] == null) ?  $m['qty'] : $m['invqty']) * $bm['qty'];
+					//$m_qty = $m['invqty'] * $bm['qty'];
+					//$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length']; 
 
 					if($bm['inventoryid']=="IRV120"){
-					//error_log(print_r($m,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
-					//error_log("m_qty:".$m_qty." m-qty:".$m['qty']." bm-qty:".$bm['qty'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');  
-					
-					//$amount = $bm['qty'] * ($m['bmlength'] * $m['raw_invcost']);
 					}	
-					//$m_qty = $m['invqty'] * floor($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));			
-					$m_qty = 300;
 				}?>	
 				<tr> 
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
 					<td ><?php echo number_format($m_qty); ?></td>
-					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($bm['length']); else if($m['uom']=="Inches") echo $m_length; ?></td>  										 
-					<!-- <td><?php echo $result; ?></td>  -->
+					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Inches") echo $m_length; ?></td> 
 					<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> 
 					<td><?php echo $m['uom']; ?></td> 
-					<td> $<?php echo number_format($m['extended_cost'],2); ?> </td>  
-					<!-- <td> $<?php echo number_format($m['raw_cost'],2); ?> </td>  -->
+					<!-- <td> $<?php echo number_format($m['extended_cost'],2); ?> </td>  --> 
+					<td> $<?php echo number_format($m['raw_cost'],2); ?> </td> 
 					<td ><?php echo $m['company_name']; ?></td> 
 					<td> $<?php echo number_format($amount,2) ?> </td> 
 				</tr>  
@@ -359,15 +368,13 @@ while ($bm = mysql_fetch_assoc($qbm)) {
  
 			<?php  
  
-				//while ($row = mysql_fetch_assoc($result)){
 				$amount = 0;
 				$m_qty = 1; $m_length = 1;
-				$blength = (($bm['length_feet'] * 12) + $bm['length_inch']);
 				if($m['is_per_length']==1){
 					// $amount = $m['raw_cost'] * $m['qty'] * $bm['qty'] * floor($bm['length'] / $m['length_per_ea']);
 					if($m['uom']=="Ea" || $m['uom']=="$"){
 						//$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
-						$m_qty = (($bm['qty'] * ($blength==0?1:$blength)) /  ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
+						$m_qty = $bm['qty'] * floor($bm['length'] /  ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
 						//$m_qty = $bm['qty'];// * floor($bm['length'] /  ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
 						$m_length = $bm['length'];
 						$amount = $m_qty * $m['raw_cost'];  
@@ -375,19 +382,15 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 					}
 					else{
 						$m_qty = $bm['qty'];
-						$m_length = ($bm['length_feet'] * 12) + $bm['length_inch'];// * floor($bm['length'] / $m['length_per_ea']); 
+						$m_length = $bm['length'];// * floor($bm['length'] / $m['length_per_ea']); 
 						$amount = $m['raw_cost'] * $m_qty * $bm['length'];
 					}
 					  
 				}else{
 					$amount = $m['raw_cost'] * $bm['qty']; 
 					$m_qty = $m['qty'] * $bm['qty'];
-					$m_length = ($bm['length_feet'] * 12) + $bm['length_inch']; 
-					 
-				}	
-				//$amount = 10.20;		
-					//$m_length == 0 ? 1 : $m_length;
-					//$m_qty = 70;
+					$m_length = $bm['length']; 					 
+				}
 			?>	
 				<tr> 
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
