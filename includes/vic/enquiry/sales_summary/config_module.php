@@ -56,8 +56,8 @@ $config = array(
             ), 
             'live' => array(
                 array('ip' => '192.168.0.12'), 
-                array('name' => 'vglvictoria.vergola.com'), 
-                array('name' => 'vglvictoria.vergola.com', 'port' => '3000') 
+                array('name' => 'vglvic.vergola.com'), 
+                array('name' => 'vglvic.vergola.com', 'port' => '3000') 
             ) 
         )
     ), 
