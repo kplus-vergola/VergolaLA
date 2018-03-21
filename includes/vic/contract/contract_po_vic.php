@@ -236,8 +236,8 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 				//--===Need to check whether to pull quantity on $m['qty'] OR $m['inv_qty'] ===--
 				if($m['is_per_length']==1){
 					if($m['uom']=="Ea" || $m['uom']=="$"){
-						$m_qty = 0; 
-						$m_qty = $bm['qty'] * floor(($bm['length'] + $result) / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
+						//$m_qty = 0; 
+						$m_qty = $bm['qty'] * ($m['qty'] * floor((($bm['length_feet'] * 12) + $bm['length_inch'] + $result)) / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
 						$m_length = ($bm['length_feet'] * 12) + $bm['length_inch'];
 						$amount = $m_qty * $m['raw_cost'];
 
@@ -252,12 +252,16 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 						// //$m_qty = (($m['invqty'] == 0) ? 1 : $m['invqty']) * $bm['qty'];
 						// //$amount = $bm['qty'] * $m['raw_invcost'];
 						// $amount = (($m['raw_cost'] * (($m['invqty'] == 0) ? 1 : $m['invqty'])) * (($bm['length']==0)?1:$bm['length'])) * $bm['qty'];
-						echo 'Test';
+						//echo 'Test';
+						//$m_qty = ($bm['length_feet'] * 12) + $bm['length_inch'] + $result;//$m['inv_qty'];
+						//$amount = 101;
 					}
 					else{						
-						$m_qty = (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']);// * $bm['qty'];
+						$m_qty = (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']) * $bm['qty'];
 						$m_length = ($bm['length_feet'] * 12) + $bm['length_inch'];
-						$amount = $m['raw_cost']  * $m_qty * (($bm['length_feet'] * 12) + $bm['length_inch']); 
+						//$amount = $m['raw_cost']  * $m_qty * (($bm['length_feet'] * 12) + $bm['length_inch']); 
+
+						$amount = ($m['raw_cost'] * (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']))  * ($m_length + $result) * $bm['qty']; 
 
 						//$bm['qty'] = $raw_qty;
 						//$m_qty = (($m['invqty'] == 0) ? 1 : $m['invqty']) * $bm['qty'];
@@ -270,8 +274,9 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 						//$amount = $m['raw_invcost'] * $m_qty * ($bm['length'] + $result);						
 						//$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['lenght_feet']; 
 						//$amount = (($m['raw_cost'] * (($m['invqty'] == 0) ? 1 : $m['invqty'])) * (($bm['length']==0)?1:$bm['length'])) * $bm['qty'];						
-						$m_qty = 200;
+						//$m_qty = 200;
 						//$amount = $bm['qty'] * ($m['bmlength'] * $m['raw_invcost']);
+						//$amount = 20000;
 					}
 
 					
@@ -283,7 +288,7 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 					$amount = $m['raw_cost'] * (($m['invqty'] == 0 || $m['invqty'] == null) ?  $m['qty'] : $m['invqty']) * $bm['qty'];
 					//$m_qty = $m['invqty'] * $bm['qty'];
 					//$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length']; 
-
+					//$amount = 50000;
 					if($bm['inventoryid']=="IRV120"){
 					}	
 				}?>	
