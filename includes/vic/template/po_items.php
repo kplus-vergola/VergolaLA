@@ -29,8 +29,34 @@ if(isset($_POST['add']))
     //echo('<script language="Javascript">alert(opener.window.location.href);</script>');
     //var url = opener.window.location.href+'&section=frame';
     $titleID=$_POST['title'] ;
+	
+   	// header("Content-disposition: attachment; filename= huge_document.pdf");
+    // header("Content-type: application/pdf");
+    // readfile("huge_document.pdf");
+
+    // echo ('<a href="huge_document.php">Download my huge document (PDF)</a>');
+
+
+ //    $_GET['section'] = 'frame'; 
+	// header("Location: ". JURI::base() . $_SERVER['REDIRECT_URI'] . '?' . http_build_query($_GET)); 		
+     //echo('<script language="Javascript">opener.window.location.reload(false); window.close();</script>');
+     //echo('<script language="Javascript">alert(opener.window.location.href);</script>');
+ 	 //var url = opener.window.location.href + "&titleID='.$titleID.'";
+
+    
+  
+	
+	//$file1=opener.window.location.href + "&titleID='.$titleID.'";
+	//$file2=".$template_content.";
+	$file='index.php?&titleID='.$titleID.'&option=com_chronoforms&tmpl=component&chronoform=Download-PDF';
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename='.$file.'.pdf');
+	readfile($file.'.pdf');
+	
+	//echo('<script language="Javascript">alert('.$file.');</script>');
+	//echo('<script language="Javascript">window.opener = opener.window.location.href + "&titleID='.$titleID.'"; </script>');
+	//echo('<a href='.$file.'></a>');
 	echo('<script language="Javascript">window.opener.parent.location.href = opener.window.location.href + "&titleID='.$titleID.'"; window.close();</script>');
-	 
 }
 
 
@@ -91,7 +117,10 @@ if(isset($_POST['add']))
 				function submitForm() { 
 				    document.getElementById("add").click();
 				}
+				//window.location = "test.php";
+				//window.open = opener.window.location.href + "&titleID='.$titleID.'";
 				window.onload = submitForm;
+
 
 				</script>
 <style>
@@ -656,6 +685,13 @@ NOTE: all folds are 90&deg; unless otherwise stated
 </textarea>
 <input type="submit" class="btn" name="add" id="add1" value="Download PDF"> <input class="btn" type="button" value="Close" onClick="window.opener=null; window.close(); return false;">
 
+<!-- <input class="btn" type="submit" value="Save" onClick="window.location=window.location=location.window.location.href + "&titleID='.$titleID.'";  return true;">
+<a href='<?php echo 'index.php?&titleID='.$titleID.'&option=com_chronoforms&tmpl=component&chronoform=Download-PDF'; ?>'>
+    Download it!
+</a> -->
+
+
+
 </form>
 </body>
 </html>
@@ -677,5 +713,6 @@ function get_feet_inch($inches){
 	return floor($inches % 12);
      
 }
+
  
 ?> 

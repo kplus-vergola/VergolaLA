@@ -88,3 +88,8 @@ Header append Vary User-Agent
 #php_flag display_errors on
 #php_flag html_errors on
 #php_flag  log_errors on
+
+<FilesMatch "\.(?i:pdf)$">
+    ForceType application/octet-stream
+    Header set Content-Disposition attachment
+</FilesMatch>

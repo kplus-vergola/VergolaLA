@@ -15,6 +15,8 @@ if (!$result)
 
 if(isset($_POST['save']))
 {	
+	echo 'test';
+	exit;
 	//$template_title = $_POST['title'];
 	$template_content = $_POST['htmlcontent'];
 	$cf_id = $_POST['cf_id'];
