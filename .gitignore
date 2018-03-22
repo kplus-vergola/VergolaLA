@@ -4,6 +4,5 @@
 /tmp/
 
 # ignore file(s)
-configuration.php
 custom_agent.php
 custom_agent_functions.php
