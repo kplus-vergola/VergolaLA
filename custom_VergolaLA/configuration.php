@@ -57,8 +57,10 @@ class JConfig {
 	public $sef_suffix = '0';
 	public $unicodeslugs = '0';
 	public $feed_limit = '100';
-	public $log_path = 'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\logs';
-	public $tmp_path = 'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\tmp';
+	// public $log_path = 'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\logs';
+	// public $tmp_path = 'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\tmp';
+	public $log_path = 'C:\\xampp\htdocs\\VergolaLA\\logs';
+	public $tmp_path = 'C:\\xampp\htdocs\\VergolaLA\\tmp';
 	public $lifetime = '180';
 	public $session_handler = 'database';
 	public $MetaRights = '';
