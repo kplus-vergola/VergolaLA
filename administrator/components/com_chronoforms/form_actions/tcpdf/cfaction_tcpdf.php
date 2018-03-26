@@ -138,11 +138,17 @@ class CfactionTcpdfHelper{
 				$form->debug[] = $PDF_file_path.' has been uploaded OK.';
 			}
 		}else{
-			$pdf->Output($PDF_file_name.".pdf", $PDF_view);
+			//$pdf->Output($PDF_file_name.".pdf", $PDF_view);
+			$pdf->Output($PDF_file_name.".pdf", 'D');
+			//$pdf->Output('offerte.pdf', 'F'); 
 		}
 		if($PDF_view != 'F'){
-			$mainframe =& JFactory::getApplication();
-			$mainframe->close();
+			if ( $PDF_view == 'I' || $PDF_view == 'FI' ) {
+			  $mainframe =& JFactory::getApplication();
+			  $mainframe->close();
+			}
+			// $mainframe =& JFactory::getApplication();
+			// $mainframe->close();
 		}
 	}
 }

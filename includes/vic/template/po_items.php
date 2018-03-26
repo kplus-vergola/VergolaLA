@@ -11,6 +11,7 @@ if(isset($_REQUEST['pid']))
 $QuoteIDAlpha = substr($QuoteID, 0, 3);
 $current_date = date('Y-m-d H:i:s');
 
+//administrator\components\com_chronoforms\form_actions\tcpdf
 //error_log($QuoteIDAlpha, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 if(isset($_POST['add']))
 {	
@@ -30,33 +31,14 @@ if(isset($_POST['add']))
     //var url = opener.window.location.href+'&section=frame';
     $titleID=$_POST['title'] ;
 	
-   	// header("Content-disposition: attachment; filename= huge_document.pdf");
-    // header("Content-type: application/pdf");
-    // readfile("huge_document.pdf");
-
-    // echo ('<a href="huge_document.php">Download my huge document (PDF)</a>');
-
-
- //    $_GET['section'] = 'frame'; 
-	// header("Location: ". JURI::base() . $_SERVER['REDIRECT_URI'] . '?' . http_build_query($_GET)); 		
-     //echo('<script language="Javascript">opener.window.location.reload(false); window.close();</script>');
-     //echo('<script language="Javascript">alert(opener.window.location.href);</script>');
- 	 //var url = opener.window.location.href + "&titleID='.$titleID.'";
-
-    
-  
+	// $file=$template_title;
+	// header('Content-type: application/pdf');
+	// header('Content-Disposition: attachment; filename='.$file.'');
+	// readfile($file);
 	
-	//$file1=opener.window.location.href + "&titleID='.$titleID.'";
-	//$file2=".$template_content.";
-	$file='index.php?&titleID='.$titleID.'&option=com_chronoforms&tmpl=component&chronoform=Download-PDF';
-	header('Content-type: application/pdf');
-	header('Content-Disposition: attachment; filename='.$file.'.pdf');
-	readfile($file.'.pdf');
-	
-	//echo('<script language="Javascript">alert('.$file.');</script>');
-	//echo('<script language="Javascript">window.opener = opener.window.location.href + "&titleID='.$titleID.'"; </script>');
-	//echo('<a href='.$file.'></a>');
+
 	echo('<script language="Javascript">window.opener.parent.location.href = opener.window.location.href + "&titleID='.$titleID.'"; window.close();</script>');
+	 
 }
 
 
@@ -520,8 +502,8 @@ is_per_length DESC ";
 						<td colspan="2"><?php echo $m['rawdesc']; ?></td>  <!-- <td colspan="2"><?php echo $m['raw_description']; ?></td>   -->
 						<td style="text-align:right;"><?php echo $m['invqty']; ?></td> 
 						<!-- <td style="text-align:right;"><?php echo $m['l_qty']; ?></td> -->
-						<!-- <td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"? get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>  -->
-						<td style="text-align:right;"><?php echo ($m['s_length'] + $result); ?></td>  
+						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"? get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>
+						<!-- <td style="text-align:right;"><?php echo ($m['s_length'] + $result); ?></td>   -->
 						<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 						<td><?php echo $m['colour']; ?></td>
 						<td><?php echo $m['finish']; ?></td>
