@@ -139,7 +139,7 @@ class CfactionTcpdfHelper{
 			}
 		}else{
 			//$pdf->Output($PDF_file_name.".pdf", $PDF_view);
-			$pdf->Output($PDF_file_name.".pdf", 'D');
+			$pdf->Output($PDF_file_name.".pdf", 'FD');
 			//$pdf->Output('offerte.pdf', 'F'); 
 		}
 		if($PDF_view != 'F'){

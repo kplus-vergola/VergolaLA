@@ -321,14 +321,15 @@ $sql = "SELECT
 		bm.materialid,
 		(bm.raw_cost * im.inv_qty) AS raw_cost,
 		(bm.qty * im.inv_qty) AS invqty,
-		bm.qty,
+		bm.qty AS bm_qty,
 		bm.supplierid,
 		bm.length_fraction,
-		CONCAT('1 ', m.raw_description) AS rawdesc,
+		m.raw_description AS rawdesc,
 		m.raw_description,
 		m.is_per_length,
 		m.length_per_ea,
 		m.uom,		
+		m.raw_cost,
 		im.inv_extcost,
 		im.inv_qty,
 		s.company_name,
@@ -380,7 +381,7 @@ $sql = "SELECT
 //SQL for raw materials secondary items
 $sql2 = "SELECT
 	bm.id, m.is_main_item, m.qty, im.inv_qty, ( im.inv_qty * bm.qty ) AS m_qty, SUM( im.inv_qty * bm.qty ) AS s_qty, im.inv_extcost, 
-	( ( bm.length_feet * 12 ) + bm.length_inch ) AS bm_length,
+	( ( bm.length_feet * 12 ) + bm.length_inch ) AS bm_length, bm.qty AS bm_qty,
 CASE
 	
 	WHEN m.is_per_length = 1 THEN
@@ -413,10 +414,9 @@ CASE
 	bm.projectid,
 	bm.inventoryid,
 	bm.materialid,
-	bm.raw_cost,
-	bm.qty,
+	m.raw_cost,	
 	bm.supplierid,
-	CONCAT('2 ', m.raw_description) AS rawdesc,
+	m.raw_description AS rawdesc,
 	m.raw_description,
 	m.is_per_length,
 	m.length_per_ea,
@@ -475,8 +475,10 @@ is_per_length DESC ";
 						$m_length = $bm['length'] / $m['length_per_ea'];// * floor($bm['length'] / $m['length_per_ea']); 						
 						//$amount = $m['raw_cost'] * ((($bm['length_feet'] * 12) + $bm['length_inch']) + number_format($bm['length_fraction']));
 						$amount = $m['inv_extcost'] * ($m['invqty'] * ($m['s_length'] + $result));						
-						$amount1 = 150;
+						//$amount = 150;
 						$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['lenght_feet']; 
+						$amount = ($m['raw_cost'] * (($m['inv_qty'] == 0 || $m['inv_qty'] == null) ?  1 : $m['inv_qty']))  * ($m['s_length'] + $result) * $m['bm_qty']; 
+						//$amount = $m['qty'];
 					}
 
 					
@@ -502,12 +504,12 @@ is_per_length DESC ";
 						<td colspan="2"><?php echo $m['rawdesc']; ?></td>  <!-- <td colspan="2"><?php echo $m['raw_description']; ?></td>   -->
 						<td style="text-align:right;"><?php echo $m['invqty']; ?></td> 
 						<!-- <td style="text-align:right;"><?php echo $m['l_qty']; ?></td> -->
-						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"? get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>
+						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"? get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>  -->
 						<!-- <td style="text-align:right;"><?php echo ($m['s_length'] + $result); ?></td>   -->
 						<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 						<td><?php echo $m['colour']; ?></td>
 						<td><?php echo $m['finish']; ?></td>
-						<td style="text-align:right;">$<?php echo number_format($m['inv_extcost'],2); ?></td>  
+						<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>  
 						<!-- <td style="text-align:right;">$<?php echo number_format($m['inv_extcost'],2); ?></td>  --> 
 						<td> $<?php echo $amount; ?> </td>
 						<!-- <td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td> -->
@@ -584,16 +586,20 @@ is_per_length DESC ";
 					$item_result2 = mysql_query ($sql2);
 					
 					while ($m = mysql_fetch_assoc($item_result2)){ 
+						$m['ls_amount'] = ($m['raw_cost'] * (($m['inv_qty'] == 0 || $m['inv_qty'] == null) ?  1 : $m['inv_qty']))  * ($m['s_length'] + $result) * $m['bm_qty']; 
 						$totalRrp += $m['ls_amount']; 
+						$m_qty = (($m['inv_qty'] == 0 || $m['inv_qty'] == null) ?  1 : $m['inv_qty']) * $m['bm_qty'];
+						//$m['ls_amount'] = 
 					?>  
 						<tr> 
 							<td colspan="2"><?php echo $m['rawdesc']; ?></td>  <!-- <td colspan="2"><?php echo $m['raw_description']; ?></td>   -->
-							<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td>
+							<!-- <td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td> -->
+							<td style="text-align:right;"><?php echo $m_qty; ?></td> 
 							<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>
 							<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 							<td> &nbsp; </td>
 							<td> &nbsp; </td>
-							<td style="text-align:right;">$<?php echo number_format($m['inv_extcost'],2); ?></td>
+							<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>
 							<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td> 
 						</tr> 
 
