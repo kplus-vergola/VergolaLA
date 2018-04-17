@@ -262,8 +262,9 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 						$m_length = ($bm['length_feet'] * 12) + $bm['length_inch'];
 						//$amount = $m['raw_cost']  * $m_qty * (($bm['length_feet'] * 12) + $bm['length_inch']); 
 
-						$amount = ($m['raw_cost'] * (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']))
-								  * ((($m_length != 0 || $m_length != null) ?: 1) + $result) * $bm['qty'];
+						$amount = ($m['raw_cost'] * (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty'])) 
+								  	* ((($m_length == 0 || $m_length == null) ? 1:$m_length) + $result)
+									* $bm['qty'];
 
 						//$amount = 10;	
 						//$bm['qty'] = $raw_qty;
