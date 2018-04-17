@@ -114,5 +114,4 @@ if(isset($_POST['cancel']))
 <input name="cf_id" id="cf_id" value="<?php echo $cf_id; ?>" type="hidden" />
 <textarea name="htmlcontent" id="htmlcontent" class="mce_editable" style="width:100%;height:100%;"><?php echo $htmlcontent; ?></textarea>
 <input type="submit" name="save" value="Save" class="update-btn"  /> <input type="submit" name="delete" value="Delete" class="update-btn" /> <input type="submit" name="cancel" value="Cancel" class="update-btn" onclick="window.opener=null; window.close(); return false;"/>
-<input type="submit" name="save" value="Testing" class="update-btn"  />
 </form>

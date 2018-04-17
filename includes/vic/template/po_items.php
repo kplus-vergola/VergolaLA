@@ -465,7 +465,7 @@ is_per_length DESC ";
 						$amount = $m_qty * $m['raw_invcost'];  
 						//$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length'];
 						//error_log("inventoryid:".$bm['inventoryid']."m_qty:".$m_qty."---- lpe:".((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])." bm-length:".$bm['length']." floor-".($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
-
+						$amount = ($m['raw_cost'] * (($m['inv_qty'] == 0 || $m['inv_qty'] == null) ?  1 : $m['inv_qty']))  * $m['bm_qty']; 
 					}
 					else{
 						//$bm['qty'] = $raw_qty;

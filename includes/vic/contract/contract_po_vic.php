@@ -163,14 +163,13 @@ $i=0;
 while ($bm = mysql_fetch_assoc($qbm)) {
  
 ?>  
-	<tr>
-		 <th><?php if($i==0) echo "Inventory"; ?></th><th> Qty </th><th> Length </th> <th> Fracs </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th> 
+	<tr style="background-color: #bddfff;">
+		 <th ><?php if($i==0) echo "Inventory"; ?></th><th> Qty </th><th> Length </th> <th> Fracs </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th> 
 	</tr>	
 	<tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td>
 		<td><?php echo number_format($bm['length_feet'])."'".number_format($bm['length_inch']); ?></td>		
-		<td><?php if($bm['uom']=="Inches") {echo $bm['length_fraction'];} ?></td>
-		<!-- <td><?php echo $bm['uom']; ?></td><td> $<?php echo number_format($bm['rrp'],2); ?> </td> -->
-		<td>&nbsp; </td> <td> &nbsp; </td><td> </td></tr>
+		<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> 
+		<td>&nbsp; </td> <td> &nbsp; </td><td> &nbsp; </td><td> </td></tr>
 
 	<tr>
 		 <th  colspan='7'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Raw Materials</th> 
@@ -237,10 +236,11 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 				if($m['is_per_length']==1){
 					if($m['uom']=="Ea" || $m['uom']=="$"){
 						//$m_qty = 0; 
-						$m_qty = $bm['qty'] * ($m['qty'] * floor((($bm['length_feet'] * 12) + $bm['length_inch'] + $result)) / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));
+						$m_qty = ($bm['qty'] * ($m['qty'] * floor((($bm['length_feet'] * 12) + $bm['length_inch'] + $result)) / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']))) > 0 ?: $bm['qty'];
 						$m_length = ($bm['length_feet'] * 12) + $bm['length_inch'];
+						//$m_length = ((($bm['length_feet'] * 12) <= 0) ?: 1) + $bm['length_inch'];
 						$amount = $m_qty * $m['raw_cost'];
-
+						
 
 						// //$bm['qty'] = $raw_qty;											
 						// // $m_qty = ((($m['invqty'] == 0) ? 1 : $m['invqty']) * (($bm['length']==0)?1:floor($bm['length']) / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']))) * $bm['qty'];
@@ -257,12 +257,15 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 						//$amount = 101;
 					}
 					else{						
-						$m_qty = (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']) * $bm['qty'];
+						$m_qty = (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']) * $bm['qty'];						
+						//$m_length = ((($bm['length_feet'] * 12) <= 0) ?: 1) + $bm['length_inch'];
 						$m_length = ($bm['length_feet'] * 12) + $bm['length_inch'];
 						//$amount = $m['raw_cost']  * $m_qty * (($bm['length_feet'] * 12) + $bm['length_inch']); 
 
-						$amount = ($m['raw_cost'] * (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']))  * ($m_length + $result) * $bm['qty']; 
+						$amount = ($m['raw_cost'] * (($m['invqty'] == 0 || $m['invqty'] == null) ?  1 : $m['invqty']))
+								  * ((($m_length != 0 || $m_length != null) ?: 1) + $result) * $bm['qty'];
 
+						//$amount = 10;	
 						//$bm['qty'] = $raw_qty;
 						//$m_qty = (($m['invqty'] == 0) ? 1 : $m['invqty']) * $bm['qty'];
 						//$m['invqty'] * $bm['qty'];
@@ -289,6 +292,7 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 					//$m_qty = $m['invqty'] * $bm['qty'];
 					//$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length']; 
 					//$amount = 50000;
+
 					if($bm['inventoryid']=="IRV120"){
 					}	
 				}?>	
@@ -395,7 +399,7 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 					$amount = $m['raw_cost'] * $bm['qty']; 
 					$m_qty = $m['qty'] * $bm['qty'];
 					$m_length = $bm['length']; 					 
-				}
+				}					
 			?>	
 				<tr> 
 					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $m['raw_description']; ?></td> 
