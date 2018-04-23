@@ -791,12 +791,12 @@ echo '<tr>
 
       foreach ($fractions_list as $key1 => $value1) {
         $selected_tag = '';
-        if ($value1['display_name'] == $selected_value) {
+        if ($value1['ref_name'] == $selected_value) {
           $selected_tag = 'selected';
         }
         $html_select_box .= str_replace(
           array('[SELECTED_TAG]', '[OPTION_VALUE]', '[OPTION_TEXT]'), 
-          array($selected_tag, $value1['display_name'], $value1['display_name']), 
+          array($selected_tag, $value1['ref_name'], $value1['display_name']), 
           $html_select_box_option_template
         );
       }
