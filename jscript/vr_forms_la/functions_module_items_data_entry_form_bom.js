@@ -77,6 +77,8 @@
                     document.getElementById('item_dimension_girth_side_b_info_form_bom_area').style.display = 'none';
                 }
             }
+
+            calculateBomFormGirthValues();
         }
 
 
