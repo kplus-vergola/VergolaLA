@@ -778,6 +778,7 @@ echo '<tr>
       ]';
       $fractions_list = json_decode($fractions_list, true);
 
+
       $html_select_box_template = '
         <select id="[REF_NAME]" name="[REF_NAME]">
           <option value="">-- select --</option>
