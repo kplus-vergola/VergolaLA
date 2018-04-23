@@ -122,6 +122,10 @@
             "item_dimension_f_inch":"", 
             "item_dimension_f_fraction":"", 
             "item_dimension_p_inch":"", 
-            "item_dimension_p_fraction":""
+            "item_dimension_p_fraction":"", 
+            "item_dimension_girth_side_a_inch":"", 
+            "item_dimension_girth_side_a_fraction":"", 
+            "item_dimension_girth_side_b_inch":"", 
+            "item_dimension_girth_side_b_fraction":""
         };
 </script>

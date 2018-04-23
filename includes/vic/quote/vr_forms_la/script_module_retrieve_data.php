@@ -234,7 +234,11 @@ if ($enable_retrieve[$target_data_source] == true) {
                             'item_dimension_f_inch' => $r2['dimension_f_inch'], 
                             'item_dimension_f_fraction' => $r2['dimension_f_fraction'], 
                             'item_dimension_p_inch' => $r2['dimension_p_inch'], 
-                            'item_dimension_p_fraction' => $r2['dimension_p_fraction']
+                            'item_dimension_p_fraction' => $r2['dimension_p_fraction'], 
+                            'item_dimension_girth_side_a_inch' => $r2['girth_side_a_inch'], 
+                            'item_dimension_girth_side_a_fraction' => $r2['girth_side_a_fraction'], 
+                            'item_dimension_girth_side_b_inch' => $r2['girth_side_b_inch'], 
+                            'item_dimension_girth_side_b_fraction' => $r2['girth_side_b_fraction']
                         );
                     }
                 }

@@ -47,33 +47,33 @@
 
         var vr_fractions_list = [
             {"ref_name":"1/32", "display_name":"1/32", "display_order":"1"}, 
-            {"ref_name":"1/16", "display_name":"1/16", "display_order":"2"}, 
+            {"ref_name":"2/32", "display_name":"1/16", "display_order":"2"}, 
             {"ref_name":"3/32", "display_name":"3/32", "display_order":"3"}, 
-            {"ref_name":"1/8", "display_name":"1/8", "display_order":"4"}, 
+            {"ref_name":"4/32", "display_name":"1/8", "display_order":"4"}, 
             {"ref_name":"5/32", "display_name":"5/32", "display_order":"5"}, 
             {"ref_name":"6/32", "display_name":"6/32", "display_order":"6"}, 
             {"ref_name":"7/32", "display_name":"7/32", "display_order":"7"}, 
-            {"ref_name":"1/4", "display_name":"1/4", "display_order":"8"}, 
+            {"ref_name":"8/32", "display_name":"1/4", "display_order":"8"}, 
             {"ref_name":"9/32", "display_name":"9/32", "display_order":"9"}, 
             {"ref_name":"10/32", "display_name":"10/32", "display_order":"10"}, 
             {"ref_name":"11/32", "display_name":"11/32", "display_order":"11"}, 
-            {"ref_name":"3/8", "display_name":"3/8", "display_order":"12"}, 
+            {"ref_name":"12/32", "display_name":"3/8", "display_order":"12"}, 
             {"ref_name":"13/32", "display_name":"13/32", "display_order":"13"}, 
             {"ref_name":"14/32", "display_name":"14/32", "display_order":"14"}, 
             {"ref_name":"15/32", "display_name":"15/32", "display_order":"15"}, 
-            {"ref_name":"1/2", "display_name":"1/2", "display_order":"16"}, 
+            {"ref_name":"16/32", "display_name":"1/2", "display_order":"16"}, 
             {"ref_name":"17/32", "display_name":"17/32", "display_order":"17"}, 
             {"ref_name":"18/32", "display_name":"18/32", "display_order":"18"}, 
             {"ref_name":"19/32", "display_name":"19/32", "display_order":"19"}, 
-            {"ref_name":"5/8", "display_name":"5/8", "display_order":"20"}, 
+            {"ref_name":"20/32", "display_name":"5/8", "display_order":"20"}, 
             {"ref_name":"21/32", "display_name":"21/32", "display_order":"21"}, 
             {"ref_name":"22/32", "display_name":"22/32", "display_order":"22"}, 
             {"ref_name":"23/32", "display_name":"23/32", "display_order":"23"}, 
-            {"ref_name":"3/4", "display_name":"3/4", "display_order":"24"}, 
+            {"ref_name":"24/32", "display_name":"3/4", "display_order":"24"}, 
             {"ref_name":"25/32", "display_name":"25/32", "display_order":"25"}, 
             {"ref_name":"26/32", "display_name":"26/32", "display_order":"26"}, 
             {"ref_name":"27/32", "display_name":"27/32", "display_order":"27"}, 
-            {"ref_name":"7/8", "display_name":"7/8", "display_order":"28"}, 
+            {"ref_name":"28/32", "display_name":"7/8", "display_order":"28"}, 
             {"ref_name":"29/32", "display_name":"29/32", "display_order":"29"}, 
             {"ref_name":"30/32", "display_name":"30/32", "display_order":"30"}, 
             {"ref_name":"31/32", "display_name":"31/32", "display_order":"31"}
@@ -438,4 +438,7 @@
         );
         ?>
         var vr_total_process_order_items_by_section_list = <?php echo getResultsetInJson($sql); ?>;
+
+
+        var vr_item_default_dimensions_list = <?php echo $vr_item_default_dimensions_list; ?>;
 </script>

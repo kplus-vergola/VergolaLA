@@ -187,6 +187,47 @@ $sql_template_insert_data_contract_bom = "
 ";
 
 
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- insert data contract item dimensions  -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql_template_insert_data_contract_item_dimensions = "
+    INSERT INTO ver_chronoforms_data_contract_items_deminsions 
+    (
+        cf_id,                          quoteid,                    projectid, 
+        inventoryid, 
+        length_feet,                    length_inch,                length_fraction, 
+        dimension_a_inch,               dimension_a_fraction, 
+        dimension_b_inch,               dimension_b_fraction, 
+        dimension_c_inch,               dimension_c_fraction, 
+        dimension_d_inch,               dimension_d_fraction, 
+        dimension_e_inch,               dimension_e_fraction, 
+        dimension_f_inch,               dimension_f_fraction, 
+        dimension_p_inch,               dimension_p_fraction, 
+        girth_side_a_inch,              girth_side_a_fraction, 
+        girth_side_b_inch,              girth_side_b_fraction, 
+        created_at 
+    )
+    VALUES 
+    (
+        '[CF_ID]',                      '[QUOTE_ID]',               '[PROJECT_ID]', 
+        '[VR_ITEM_REF_NAME]', 
+        '[LENGTH_FEET]',                '[LENGTH_INCH]',            '[LENGTH_FRACTION]', 
+        '[DIMENSION_A_INCH]',           '[DIMENSION_A_FRACTION]', 
+        '[DIMENSION_B_INCH]',           '[DIMENSION_B_FRACTION]', 
+        '[DIMENSION_C_INCH]',           '[DIMENSION_C_FRACTION]', 
+        '[DIMENSION_D_INCH]',           '[DIMENSION_D_FRACTION]', 
+        '[DIMENSION_E_INCH]',           '[DIMENSION_E_FRACTION]', 
+        '[DIMENSION_F_INCH]',           '[DIMENSION_F_FRACTION]', 
+        '[DIMENSION_P_INCH]',           '[DIMENSION_P_FRACTION]', 
+        '[GIRTH_SIDE_A_INCH]',           '[GIRTH_SIDE_A_FRACTION]', 
+        '[GIRTH_SIDE_B_INCH]',           '[GIRTH_SIDE_B_FRACTION]', 
+        NOW() 
+    );
+";
+
+
 
 
 
@@ -265,6 +306,7 @@ $sql_template_retrieve_item_list = "
         ver_chronoforms_data_inventory_vic.cf_id AS 'item_display_order', 
         ver_chronoforms_data_inventory_vic.uom AS 'item_uom', 
         ver_chronoforms_data_inventory_vic.rrp AS 'item_unit_price', 
+        ver_chronoforms_data_inventory_vic.photo AS 'item_image', 
         IFNULL(ver_chronoforms_data_inventory_vic.customisation_options, '') AS 'item_customisation_options' 
     FROM ver_chronoforms_data_section_vic 
         LEFT JOIN ver_chronoforms_data_inventory_vic 
@@ -558,11 +600,23 @@ $sql_template_retrieve_data_contract_items = "
         iv.section, 
         iv.category, 
         iv.photo 
-    FROM ver_chronoforms_data_contract_items_vic dci 
+    FROM ver_chronoforms_data_section_vic ds 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
-            ON dci.inventoryid = iv.inventoryid 
+            ON ds.section = iv.section AND ds.category = iv.category 
+        LEFT JOIN ver_chronoforms_data_contract_items_vic dci 
+            ON iv.inventoryid = dci.inventoryid 
     WHERE dci.projectid = '[PROJECT_ID]' 
-    ORDER BY dci.cf_id; 
+    ORDER BY ds.section_display_order, dci.quoteid, dci.projectid, dci.cf_id;
+";
+
+
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- retrieve data contract item default dimensions  -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql_template_retrieve_data_contract_items_default_deminsions = "
+    SELECT * FROM ver_chronoforms_data_contract_items_default_deminsions;
 ";
 
 
@@ -577,6 +631,16 @@ $sql_template_retrieve_data_contract_item_dimensions = "
     AND projectid = '[PROJECT_ID]' 
     AND inventoryid = '[INVENTORY_ID]' 
     LIMIT 1;
+";
+
+
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- retrieve last insert id  -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql_template_retrieve_last_insert_id = "
+    SELECT LAST_INSERT_ID() AS 'last_insert_id';
 ";
 
 
@@ -697,7 +761,9 @@ $sql_template_update_data_contract_item_dimensions = "
         dimension_d_fraction = '[DIMENSION_D_FRACTION]', dimension_e_inch = '[DIMENSION_E_INCH]', 
         dimension_e_fraction = '[DIMENSION_E_FRACTION]', dimension_f_inch = '[DIMENSION_F_INCH]', 
         dimension_f_fraction = '[DIMENSION_F_FRACTION]', dimension_p_inch = '[DIMENSION_P_INCH]', 
-        dimension_p_fraction = '[DIMENSION_P_FRACTION]', 
+        dimension_p_fraction = '[DIMENSION_P_FRACTION]', girth_side_a_inch = '[GIRTH_SIDE_A_INCH]', 
+        girth_side_a_fraction = '[GIRTH_SIDE_A_FRACTION]', girth_side_b_inch = '[GIRTH_SIDE_B_INCH]', 
+        girth_side_b_fraction = '[GIRTH_SIDE_B_FRACTION]', 
         updated_at = NOW() 
     WHERE projectid = '[PROJECT_ID]' 
     AND id = [VR_RECORD_INDEX];

@@ -16,7 +16,9 @@ $config = array(
                 array('ip' => '192.168.0.9'), 
                 array('name' => 'vglla.knowledgeplus.net.au', 'port' => '9000'), 
                 array('name' => 'la.vergola.com', 'port' => '80'), 
-                array('name' => 'la.vergola.com', 'port' => '82') 
+                array('name' => 'la.vergola.com', 'port' => '82'), 
+                array('name' => 'vglla.knowledgeplus.net.au', 'port' => '5000'), 
+                array('name' => 'as-live.vglla.knowledgeplus.net.au', 'port' => '5000')
             ), 
             'live' => array(
                 array('ip' => '192.168.0.14'), 
@@ -52,7 +54,8 @@ $config = array(
                 array('ip' => '192.168.0.3'), 
                 array('name' => 'vglvic.knowledgeplus.net.au', 'port' => '3000'), 
                 array('name' => 'victoria.vergola.com', 'port' => '80'), 
-                array('name' => 'victoria.vergola.com', 'port' => '82') 
+                array('name' => 'victoria.vergola.com', 'port' => '82'), 
+                array('name' => 'vglvic.knowledgeplus.net.au', 'port' => '5000')
             ), 
             'live' => array(
                 array('ip' => '192.168.0.12'), 

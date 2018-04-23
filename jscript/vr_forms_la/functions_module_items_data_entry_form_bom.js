@@ -17,6 +17,7 @@
             var popup_display_time_in_seconds = 1000;
             var popup_display_timer;
             var info_field_name = '';
+            var target_vr_section_ref_name = vr_form_items_data_entry[bom_form_item_data_entry_index]['vr_section_ref_name'].toLowerCase();
 
             if (bom_form_item_dimension_current_popup_index > -1) {
                 hideBomFormItemDimensionPopup();
@@ -31,12 +32,27 @@
             } else {
                 document.getElementById('item_dimension_title_form_bom').innerHTML = document.getElementById('vr_item_data_entry_display_name_' + bom_form_item_data_entry_index).value;
             }
-            document.getElementById('item_image_form_bom').src = vr_form_url_info['base'] + 'images/inventory/' + vr_form_items_data_entry[bom_form_item_data_entry_index]['vr_item_image'];
+            document.getElementById('item_image_form_bom').src = document.getElementById('vr_item_data_entry_image_' + bom_form_item_data_entry_index).src;
 
             if (vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info']) {
                 for (info_field_name in bom_form_item_dimensions_info) {
                     if (document.getElementById(info_field_name + '_form_bom')) {
                         document.getElementById(info_field_name + '_form_bom').value = vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info'][info_field_name];
+                    }
+                }
+            } else {
+                vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info'] = {};
+                for (info_field_name in bom_form_item_dimensions_info) {
+                    vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info'][info_field_name] = vr_item_default_dimensions_list[document.getElementById('vr_item_data_entry_ref_name_' + bom_form_item_data_entry_index).value][info_field_name];
+                }
+
+                if (document.getElementById('vr_item_data_entry_ref_name_' + bom_form_item_data_entry_index)) {
+                    if (vr_item_default_dimensions_list[document.getElementById('vr_item_data_entry_ref_name_' + bom_form_item_data_entry_index).value]) {
+                        for (info_field_name in bom_form_item_dimensions_info) {
+                            if (document.getElementById(info_field_name + '_form_bom')) {
+                                document.getElementById(info_field_name + '_form_bom').value = vr_item_default_dimensions_list[document.getElementById('vr_item_data_entry_ref_name_' + bom_form_item_data_entry_index).value][info_field_name];
+                            }
+                        }
                     }
                 }
             }
@@ -51,6 +67,16 @@
                     popup_display_time_in_seconds
                 );
             }
+
+            if (target_vr_section_ref_name.search('gutter') >= 0) {
+                document.getElementById('item_dimension_girth_side_a_info_form_bom_area').style.display = 'block';
+                document.getElementById('item_dimension_girth_side_b_info_form_bom_area').style.display = 'block';
+            } else {
+                if (target_vr_section_ref_name.search('flashing') >= 0) {
+                    document.getElementById('item_dimension_girth_side_a_info_form_bom_area').style.display = 'block';
+                    document.getElementById('item_dimension_girth_side_b_info_form_bom_area').style.display = 'none';
+                }
+            }
         }
 
 
@@ -62,11 +88,48 @@
 
         function copyBomFormDimensionInfoFormValue() {
             var info_field_name = '';
+            var temp_text = '';
 
             for (info_field_name in bom_form_item_dimensions_info) {
                 if (document.getElementById(info_field_name + '_form_bom')) {
                     bom_form_item_dimensions_info[info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
+
                     vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
+
+/*
+                    if (vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info']) {
+console.log('copyBomFormDimensionInfoFormValue > vr_form_items_data_entry > bom_form_item_dimensions_info exists');
+                        if (vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name]) {
+console.log('copyBomFormDimensionInfoFormValue > vr_form_items_data_entry > bom_form_item_dimensions_info > info_field_name exists: ' + info_field_name);
+                            vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
+                        } else {
+console.log('copyBomFormDimensionInfoFormValue > vr_form_items_data_entry > bom_form_item_dimensions_info > info_field_name not exists: ' + info_field_name);
+                            // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'] = {
+                            //     info_field_name: document.getElementById(info_field_name + '_form_bom').value
+                            // };
+
+                            // temp_text = '{"' + info_field_name + '": "' + document.getElementById(info_field_name + '_form_bom').value + '"}';
+                            // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'] = eval('(' + temp_text + ')');
+
+                            // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'] = [];
+                            // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
+                        }
+                    } else {
+console.log('copyBomFormDimensionInfoFormValue > vr_form_items_data_entry > bom_form_item_dimensions_info not exists');
+                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index] = {
+                        //     "bom_form_item_dimensions_info": {
+                        //         info_field_name: document.getElementById(info_field_name + '_form_bom').value    
+                        //     }   
+                        // };
+
+                        // temp_text = '{"bom_form_item_dimensions_info": {"' + info_field_name + '": "' + document.getElementById(info_field_name + '_form_bom').value + '"}}';
+                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index] = eval('(' + temp_text + ')');
+
+                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index] = [];
+                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'] = [];
+                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
+                    }
+*/
                 }
             }
         }
@@ -139,10 +202,61 @@
                     temp_select_box
                 );
                 temp_select_box = replaceSubstringInText(
+                    ['onchange=""'], 
+                    ['onchange="calculateBomFormGirthValues()"'], 
+                    temp_select_box
+                );
+                temp_select_box = replaceSubstringInText(
                     ['-- select --'], 
                     ['Fracs'], 
                     temp_select_box
                 );
                 document.getElementById('item_dimension_' + dimension_types[c1] + '_fraction_form_bom_area').innerHTML = temp_select_box;
             }
+
+
+            temp_select_box = initHtmlSelectBox(
+                vr_fractions_list, 
+                'item_dimension_girth_side_a_fraction_form_bom', 
+                [], 
+                [], 
+                'ref_name', 
+                'display_name', 
+                '', 
+                true
+            );
+            temp_select_box = replaceSubstringInText(
+                ['class="vr_form_field_selectbox_2"'], 
+                ['class="vr_form_field_selectbox_fraction_1"'], 
+                temp_select_box
+            );
+            temp_select_box = replaceSubstringInText(
+                ['-- select --'], 
+                ['Fracs'], 
+                temp_select_box
+            );
+            document.getElementById('item_dimension_girth_side_a_fraction_form_bom_area').innerHTML = temp_select_box;
+
+
+            temp_select_box = initHtmlSelectBox(
+                vr_fractions_list, 
+                'item_dimension_girth_side_b_fraction_form_bom', 
+                [], 
+                [], 
+                'ref_name', 
+                'display_name', 
+                '', 
+                true
+            );
+            temp_select_box = replaceSubstringInText(
+                ['class="vr_form_field_selectbox_2"'], 
+                ['class="vr_form_field_selectbox_fraction_1"'], 
+                temp_select_box
+            );
+            temp_select_box = replaceSubstringInText(
+                ['-- select --'], 
+                ['Fracs'], 
+                temp_select_box
+            );
+            document.getElementById('item_dimension_girth_side_b_fraction_form_bom_area').innerHTML = temp_select_box;
         }

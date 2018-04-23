@@ -351,18 +351,64 @@ if(isset($_POST['save_dimension']))
 { 
   $id = mysql_real_escape_string($_POST['id']);
   $inventoryid = mysql_real_escape_string($_POST['inventoryid']);
-  $length = mysql_real_escape_string($_POST['length']);
-  $dimension_a = mysql_real_escape_string($_POST['dimension_a']);
-  $dimension_b = mysql_real_escape_string($_POST['dimension_b']);
-  $dimension_c = mysql_real_escape_string($_POST['dimension_c']);
-  $dimension_d = mysql_real_escape_string($_POST['dimension_d']);
-  $dimension_e = mysql_real_escape_string($_POST['dimension_e']);
-  $dimension_f = mysql_real_escape_string($_POST['dimension_f']);
-  $dimension_p = mysql_real_escape_string($_POST['dimension_p']);
+  $length_inch = mysql_real_escape_string($_POST['length_inch']);
+  $dimension_a_inch = mysql_real_escape_string($_POST['dimension_a_inch']);
+  $dimension_b_inch = mysql_real_escape_string($_POST['dimension_b_inch']);
+  $dimension_c_inch = mysql_real_escape_string($_POST['dimension_c_inch']);
+  $dimension_d_inch = mysql_real_escape_string($_POST['dimension_d_inch']);
+  $dimension_e_inch = mysql_real_escape_string($_POST['dimension_e_inch']);
+  $dimension_f_inch = mysql_real_escape_string($_POST['dimension_f_inch']);
+  $dimension_p_inch = mysql_real_escape_string($_POST['dimension_p_inch']);
 
-   $queryn = "UPDATE ver_chronoforms_data_contract_items_default_deminsions SET length={$length}, dimension_a={$dimension_a} , dimension_b={$dimension_b} , dimension_c={$dimension_c},
-               dimension_d={$dimension_d} ,dimension_e={$dimension_e} ,dimension_f={$dimension_f}, dimension_p={$dimension_p} WHERE id={$id} ";
-  //error_log($queryn, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+  $dimension_a_fraction = mysql_real_escape_string($_POST['dimension_a_fraction']);
+  $dimension_b_fraction = mysql_real_escape_string($_POST['dimension_b_fraction']);
+  $dimension_c_fraction = mysql_real_escape_string($_POST['dimension_c_fraction']);
+  $dimension_d_fraction = mysql_real_escape_string($_POST['dimension_d_fraction']);
+  $dimension_e_fraction = mysql_real_escape_string($_POST['dimension_e_fraction']);
+  $dimension_f_fraction = mysql_real_escape_string($_POST['dimension_f_fraction']);
+  $dimension_p_fraction = mysql_real_escape_string($_POST['dimension_p_fraction']);
+
+  if (isset($_POST['id']) && strlen($_POST['id']) > 0) {
+    $queryn = "UPDATE ver_chronoforms_data_contract_items_default_deminsions 
+      SET inventoryid='{$inventoryid}', 
+      length_inch={$length_inch}, 
+      dimension_a_inch={$dimension_a_inch}, 
+      dimension_b_inch={$dimension_b_inch}, 
+      dimension_c_inch={$dimension_c_inch}, 
+      dimension_d_inch={$dimension_d_inch}, 
+      dimension_e_inch={$dimension_e_inch}, 
+      dimension_f_inch={$dimension_f_inch}, 
+      dimension_p_inch={$dimension_p_inch}, 
+      dimension_a_fraction='{$dimension_a_fraction}', 
+      dimension_b_fraction='{$dimension_b_fraction}', 
+      dimension_c_fraction='{$dimension_c_fraction}', 
+      dimension_d_fraction='{$dimension_d_fraction}', 
+      dimension_e_fraction='{$dimension_e_fraction}', 
+      dimension_f_fraction='{$dimension_f_fraction}', 
+      dimension_p_fraction='{$dimension_p_fraction}' 
+      WHERE id={$id}
+    ";
+  } else {
+    $queryn = "INSERT INTO ver_chronoforms_data_contract_items_default_deminsions 
+      SET inventoryid='{$inventoryid}', 
+      length_inch={$length_inch}, 
+      dimension_a_inch={$dimension_a_inch}, 
+      dimension_b_inch={$dimension_b_inch}, 
+      dimension_c_inch={$dimension_c_inch}, 
+      dimension_d_inch={$dimension_d_inch}, 
+      dimension_e_inch={$dimension_e_inch}, 
+      dimension_f_inch={$dimension_f_inch}, 
+      dimension_p_inch={$dimension_p_inch}, 
+      dimension_a_fraction='{$dimension_a_fraction}', 
+      dimension_b_fraction='{$dimension_b_fraction}', 
+      dimension_c_fraction='{$dimension_c_fraction}', 
+      dimension_d_fraction='{$dimension_d_fraction}', 
+      dimension_e_fraction='{$dimension_e_fraction}', 
+      dimension_f_fraction='{$dimension_f_fraction}', 
+      dimension_p_fraction='{$dimension_p_fraction}'
+    ";
+  }
+
    mysql_query($queryn) or trigger_error("Insert failed: " . mysql_error());
    header('Location:'.JURI::base().'system-management-vic/inventory-listing-vic/inventory-updatelist-vic?inventoryid='.$inventoryid);
    //header('Content-Type: application/json'); 
@@ -567,7 +613,7 @@ function showdrop()
     if($inv_item["section"]=="Guttering" || $inv_item["section"]=="Flashings"){
     ?>
       <INPUT type="button" class="del-section" name="set_dimension" value="Set default dimension" onclick="$('#default_dimension_box').dialog({
-        minWidth: 600,maxWidth: 900,
+        minWidth: 790,maxWidth: 1090,
       });$('#default_dimension_box').dialog();" />
     <?php
     } 
@@ -696,6 +742,74 @@ echo '<tr>
 
 
  <?php
+    function generateFractionHTMLSelectBox($ref_name, $selected_value) {
+      $fractions_list = '[
+            {"ref_name":"1/32", "display_name":"1/32", "display_order":"1"}, 
+            {"ref_name":"2/32", "display_name":"1/16", "display_order":"2"}, 
+            {"ref_name":"3/32", "display_name":"3/32", "display_order":"3"}, 
+            {"ref_name":"4/32", "display_name":"1/8", "display_order":"4"}, 
+            {"ref_name":"5/32", "display_name":"5/32", "display_order":"5"}, 
+            {"ref_name":"6/32", "display_name":"6/32", "display_order":"6"}, 
+            {"ref_name":"7/32", "display_name":"7/32", "display_order":"7"}, 
+            {"ref_name":"8/32", "display_name":"1/4", "display_order":"8"}, 
+            {"ref_name":"9/32", "display_name":"9/32", "display_order":"9"}, 
+            {"ref_name":"10/32", "display_name":"10/32", "display_order":"10"}, 
+            {"ref_name":"11/32", "display_name":"11/32", "display_order":"11"}, 
+            {"ref_name":"12/32", "display_name":"3/8", "display_order":"12"}, 
+            {"ref_name":"13/32", "display_name":"13/32", "display_order":"13"}, 
+            {"ref_name":"14/32", "display_name":"14/32", "display_order":"14"}, 
+            {"ref_name":"15/32", "display_name":"15/32", "display_order":"15"}, 
+            {"ref_name":"16/32", "display_name":"1/2", "display_order":"16"}, 
+            {"ref_name":"17/32", "display_name":"17/32", "display_order":"17"}, 
+            {"ref_name":"18/32", "display_name":"18/32", "display_order":"18"}, 
+            {"ref_name":"19/32", "display_name":"19/32", "display_order":"19"}, 
+            {"ref_name":"20/32", "display_name":"5/8", "display_order":"20"}, 
+            {"ref_name":"21/32", "display_name":"21/32", "display_order":"21"}, 
+            {"ref_name":"22/32", "display_name":"22/32", "display_order":"22"}, 
+            {"ref_name":"23/32", "display_name":"23/32", "display_order":"23"}, 
+            {"ref_name":"24/32", "display_name":"3/4", "display_order":"24"}, 
+            {"ref_name":"25/32", "display_name":"25/32", "display_order":"25"}, 
+            {"ref_name":"26/32", "display_name":"26/32", "display_order":"26"}, 
+            {"ref_name":"27/32", "display_name":"27/32", "display_order":"27"}, 
+            {"ref_name":"28/32", "display_name":"7/8", "display_order":"28"}, 
+            {"ref_name":"29/32", "display_name":"29/32", "display_order":"29"}, 
+            {"ref_name":"30/32", "display_name":"30/32", "display_order":"30"}, 
+            {"ref_name":"31/32", "display_name":"31/32", "display_order":"31"}
+      ]';
+      $fractions_list = json_decode($fractions_list, true);
+
+      $html_select_box_template = '
+        <select id="[REF_NAME]" name="[REF_NAME]">
+          <option value="">-- select --</option>
+          [OPTIONS_LIST]
+        </select>
+      ';
+      $html_select_box_option_template = '<option [SELECTED_TAG] value="[OPTION_VALUE]">[OPTION_TEXT]</option>';
+      $html_select_box = '';
+      $selected_tag = '';
+
+      foreach ($fractions_list as $key1 => $value1) {
+        $selected_tag = '';
+        if ($value1['display_name'] == $selected_value) {
+          $selected_tag = 'selected';
+        }
+        $html_select_box .= str_replace(
+          array('[SELECTED_TAG]', '[OPTION_VALUE]', '[OPTION_TEXT]'), 
+          array($selected_tag, $value1['display_name'], $value1['display_name']), 
+          $html_select_box_option_template
+        );
+      }
+
+      $html_select_box = str_replace(
+        array('[REF_NAME]', '[OPTIONS_LIST]'), 
+        array($ref_name, $html_select_box), 
+        $html_select_box_template
+      );
+
+      return $html_select_box;
+    }
+
+
     $qitem = mysql_query("SELECT * FROM ver_chronoforms_data_contract_items_default_deminsions WHERE inventoryid = '$InventoryID' ");
     $item=mysql_fetch_assoc($qitem);
 
@@ -704,21 +818,40 @@ echo '<tr>
 <div id="default_dimension_box" style="display:none; width:100%;" title="Default Dimension">
 <form method="post" id="default_dimension_form" enctype="multipart/form-data">
 
-  <table style="margin:5px 0 10px 0;">
+  <table style="margin:5px 0 10px 0; width:760px" cellpadding="5" cellspacing="5">
   <tr><th> </th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>P</th></tr>
   <tr>
       <td>
         <?php
+          $default_dimension_length_inch = 0;
+          if (isset($item["length_inch"]) && is_numeric($item["length_inch"])) {
+            $default_dimension_length_inch = $item["length_inch"];
+          }
           echo "<input type='hidden' value='{$item["id"]}' name='id' />";
           echo "<input type='hidden' value='{$InventoryID}' name='inventoryid' />";
-          echo "<input type='text' name='length' value='{$item["length"]}' style='display:none;' /></td>
-                    <td><input type='text' name='dimension_a' value='{$item["dimension_a"]}' /></td>
-                    <td><input type='text' name='dimension_b' value='{$item["dimension_b"]}' /></td>
-                    <td><input type='text' name='dimension_c' value='{$item["dimension_c"]}' /></td>
-                    <td><input type='text' name='dimension_d' value='{$item["dimension_d"]}' /></td>
-                    <td><input type='text' name='dimension_e' value='{$item["dimension_e"]}' /></td>
-                    <td><input type='text' name='dimension_f' value='{$item["dimension_f"]}' /></td>
-                    <td><input type='text' name='dimension_p' value='{$item["dimension_p"]}' /></td>
+          echo "<input type='hidden' value='{$default_dimension_length_inch}' name='length_inch' />";
+          echo "<!-- <input type='text' name='length' value='{$item["length"]}' style='display:none;' /> --></td>
+                    <td><input type='text' name='dimension_a_inch' value='{$item["dimension_a_inch"]}' /></td>
+                    <td><input type='text' name='dimension_b_inch' value='{$item["dimension_b_inch"]}' /></td>
+                    <td><input type='text' name='dimension_c_inch' value='{$item["dimension_c_inch"]}' /></td>
+                    <td><input type='text' name='dimension_d_inch' value='{$item["dimension_d_inch"]}' /></td>
+                    <td><input type='text' name='dimension_e_inch' value='{$item["dimension_e_inch"]}' /></td>
+                    <td><input type='text' name='dimension_f_inch' value='{$item["dimension_f_inch"]}' /></td>
+                    <td><input type='text' name='dimension_p_inch' value='{$item["dimension_p_inch"]}' /></td>
+                ";
+        ?>
+      </tr>  
+  <tr>
+      <td>
+        <?php
+          echo "</td>
+                    <td>" . generateFractionHTMLSelectBox('dimension_a_fraction', $item["dimension_a_fraction"]) . "</td>
+                    <td>" . generateFractionHTMLSelectBox('dimension_b_fraction', $item["dimension_b_fraction"]) . "</td>
+                    <td>" . generateFractionHTMLSelectBox('dimension_c_fraction', $item["dimension_c_fraction"]) . "</td>
+                    <td>" . generateFractionHTMLSelectBox('dimension_d_fraction', $item["dimension_d_fraction"]) . "</td>
+                    <td>" . generateFractionHTMLSelectBox('dimension_e_fraction', $item["dimension_e_fraction"]) . "</td>
+                    <td>" . generateFractionHTMLSelectBox('dimension_f_fraction', $item["dimension_f_fraction"]) . "</td>
+                    <td>" . generateFractionHTMLSelectBox('dimension_p_fraction', $item["dimension_p_fraction"]) . "</td>
                 ";
         ?>
       </tr>  

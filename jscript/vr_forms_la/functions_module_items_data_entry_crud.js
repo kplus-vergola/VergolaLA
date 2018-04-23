@@ -222,6 +222,8 @@
 
         function processSaveResultBomFormItemDimensionData(results) {
             if (results['error'] == 'null') {
+                vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['vr_record_index'] = results['data']['last_insert_id_data_contract_items'];
+                vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info']['item_dimension_record_index'] = results['data']['last_insert_id_data_contract_items_deminsions'];
                 hideBomFormItemDimensionPopup();
             } else {
                 console.log('processSaveResultBomFormItemDimensionData > results:');
@@ -231,15 +233,22 @@
 
 
         function saveBomFormItemDimensionData() {
+            calculateBomFormGirthValues();
+            copyVrFormItemsDataEntryFormValue();
             copyBomFormDimensionInfoFormValue();
 
             var url = window.location.href + '&api_mode=1';
             var request_data = {
                 "vr_form_operation":"update", 
                 "access_mode":"contract_bom_item_dimension_update", 
+                "cf_id":vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['vr_record_index'], 
                 "quote_id":vr_form_system_info['quote_id'], 
                 "project_id":vr_form_system_info['project_id'], 
-                "bom_form_item_dimensions_info":bom_form_item_dimensions_info
+                "vr_project_name":vr_form_queries_info['vr_project_name'], 
+                "vr_framework_type":vr_form_queries_info['vr_framework_type'], 
+                "inventory_id":vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['vr_item_ref_name'], 
+                "bom_form_item_dimensions_info":bom_form_item_dimensions_info, 
+                "vr_form_items_data_entry": vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]
             };
 
             requestAjaxCall(url, request_data, 'processSaveResultBomFormItemDimensionData');

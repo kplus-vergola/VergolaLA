@@ -2,6 +2,8 @@
             var c1 = 0;
             var c2 = 0;
             var c3 = 0;
+            var obj1 = null;
+            var key1 = '';
             var webbing_info_found = false;
             var colour_info_found = false;
             var finish_info_found = false;
@@ -358,8 +360,25 @@
                     /* ----- properties: image ----- */
                     if (isVrFormItemTableColumnHidden('image') == true) {
                     } else {
-                        if (vr_items_list[c1]['item_image'] == '') {
-                            document.getElementById('vr_form_item_data_entry_table_column_image_' + vr_form_item_data_entry_index).innerHTML = '';
+                        current_vr_item_image_url = '';
+                        if (vr_items_list[c1]['item_image'] != '') {
+                            current_vr_item_image_url = vr_form_url_info['base'] + 'images/inventory/' + vr_items_list[c1]['item_image'];
+                        }
+                        document.getElementById('vr_item_data_entry_image_' + vr_form_item_data_entry_index).src = current_vr_item_image_url;
+
+                        is_required_default_dimension = false;
+                        for (key1 in vr_item_default_dimensions_list) {
+                            if (key1 == vr_items_list[c1]['item_ref_name']) {
+                                is_required_default_dimension = true;
+                            }
+                        }
+                        if (is_required_default_dimension == true) {
+                            document.getElementById('vr_item_data_entry_image_' + vr_form_item_data_entry_index).onclick = function() {
+                                showBomFormItemDimensionPopup(vr_form_item_data_entry_index, 'edit');
+                            }
+                        } else {
+                            document.getElementById('vr_item_data_entry_image_' + vr_form_item_data_entry_index).onclick = function() {
+                            }
                         }
                     }
 
@@ -684,6 +703,9 @@
                 vr_form_item_table_mode = 'bom';
             }
             var total_column_vr_form_item_table = vr_form_item_table_column_config[vr_form_item_table_mode].length;
+
+            var current_vr_item_image_url = '';
+            var current_template_vr_form_image = '';
 
             /* --- begin store ignored indexes of vr form item data entry --- */
             if (document.getElementById('vr_framework_type_form_query').value == 'Drop-In') {
@@ -1219,50 +1241,40 @@
 
                             /* --- begin column image --- */
                             temp_text = '';
+                            current_vr_item_image_url = '';
                             if (vr_form_items_data_entry[c12]['vr_item_image'] != '') {
-                                if (vr_form_items_data_entry[c12]['vr_item_image_input_type'] == 'Image With Popup Show') {
-                                    temp_text = replaceSubstringInText(
-                                        [
-                                            '[FIELD_NAME]', 
-                                            '[IMAGE_URL]', 
-                                            '[INDEX_NUMBER]'
-                                        ], 
-                                        [
-                                            'vr_item_data_entry_image_' + c12, 
-                                            vr_form_url_info['base'] + 'images/inventory/' + vr_form_items_data_entry[c12]['vr_item_image'], 
-                                            c12
-                                        ], 
-                                        template_vr_form_image_with_popup_show
-                                    );
-                                } else if (vr_form_items_data_entry[c12]['vr_item_image_input_type'] == 'Image With Popup Edit') {
-                                    temp_text = replaceSubstringInText(
-                                        [
-                                            '[FIELD_NAME]', 
-                                            '[IMAGE_URL]', 
-                                            '[INDEX_NUMBER]'
-                                        ], 
-                                        [
-                                            'vr_item_data_entry_image_' + c12, 
-                                            vr_form_url_info['base'] + 'images/inventory/' + vr_form_items_data_entry[c12]['vr_item_image'], 
-                                            c12
-                                        ], 
-                                        template_vr_form_image_with_popup_edit
-                                    );
-                                }
-                                vr_item_report_output_value_area['image'] = replaceSubstringInText(
-                                    [
-                                        '[FIELD_NAME]', 
-                                        '[IMAGE_URL]', 
-                                        '[INDEX_NUMBER]'
-                                    ], 
-                                    [
-                                        'vr_item_data_entry_image_' + c12, 
-                                        vr_form_url_info['base'] + 'images/inventory/' + vr_form_items_data_entry[c12]['vr_item_image'], 
-                                        c12
-                                    ], 
-                                    template_vr_form_image
-                                );
+                                current_vr_item_image_url = vr_form_url_info['base'] + 'images/inventory/' + vr_form_items_data_entry[c12]['vr_item_image'];
                             }
+                            current_template_vr_form_image = template_vr_form_image_with_popup_show;
+                            if (vr_form_items_data_entry[c12]['vr_item_image_input_type'] == 'Image With Popup Edit') {
+                                current_template_vr_form_image = template_vr_form_image_with_popup_edit;
+                            }
+                            temp_text = replaceSubstringInText(
+                                [
+                                    '[FIELD_NAME]', 
+                                    '[IMAGE_URL]', 
+                                    '[INDEX_NUMBER]'
+                                ], 
+                                [
+                                    'vr_item_data_entry_image_' + c12, 
+                                    current_vr_item_image_url, 
+                                    c12
+                                ], 
+                                current_template_vr_form_image
+                            );
+                            vr_item_report_output_value_area['image'] = replaceSubstringInText(
+                                [
+                                    '[FIELD_NAME]', 
+                                    '[IMAGE_URL]', 
+                                    '[INDEX_NUMBER]'
+                                ], 
+                                [
+                                    'vr_item_data_entry_image_' + c12, 
+                                    current_vr_item_image_url, 
+                                    c12
+                                ], 
+                                template_vr_form_image
+                            );
                             vr_item_data_entry_input_type_area['image'] = temp_text;
                             /* --- end column image --- */
 

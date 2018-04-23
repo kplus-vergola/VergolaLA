@@ -248,78 +248,96 @@
                                 <td colspan="2" class="bom_table_head_1"><span id="item_dimension_title_form_bom"></span></td>
                             <tr>
                             <tr>
-                                <td colspan="2" class="bom_table_head_1">Dimensions in inch</td>
-                            <tr>
-                            <tr>
-                                <td class="bom_table_head_1">Length:</td>
-                                <td class="bom_table_head_1">
-                                    <input type="text" class="vr_form_field_textbox_feet_1" id="item_dimension_length_feet_form_bom" name="item_dimension_length_feet_form_bom" placeholder="Feet" value="" />
-                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_length_inch_form_bom" name="item_dimension_length_inch_form_bom" placeholder="Inch" value="" />
-                                    <div id="item_dimension_length_fraction_form_bom_area" style="display: inline-block;">
-                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_length_fraction_form_bom" name="item_dimension_length_fraction_form_bom" onchange=""></select>
-                                    </div>
-                                </td>
+                                <td colspan="2" class="bom_table_head_1">Dimensions in inch &amp; fraction</td>
                             <tr>
                             <tr>
                                 <td class="bom_table_head_1">A:</td>
                                 <td class="bom_table_head_1">
-                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_a_inch_form_bom" name="item_dimension_a_inch_form_bom" placeholder="Inch" value="" />
+                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_a_inch_form_bom" name="item_dimension_a_inch_form_bom" placeholder="Inch" value="" onchange="calculateBomFormGirthValues()" />
                                     <div id="item_dimension_a_fraction_form_bom_area" style="display: inline-block;">
-                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_a_fraction_form_bom" name="item_dimension_a_fraction_form_bom" onchange=""></select>
+                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_a_fraction_form_bom" name="item_dimension_a_fraction_form_bom" onchange="calculateBomFormGirthValues()"></select>
                                     </div>
                                 </td>
                             <tr>
                             <tr>
                                 <td class="bom_table_head_1">B:</td>
                                 <td class="bom_table_head_1">
-                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_b_inch_form_bom" name="item_dimension_b_inch_form_bom" placeholder="Inch" value="" />
+                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_b_inch_form_bom" name="item_dimension_b_inch_form_bom" placeholder="Inch" value="" onchange="calculateBomFormGirthValues()" />
                                     <div id="item_dimension_b_fraction_form_bom_area" style="display: inline-block;">
-                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_b_fraction_form_bom" name="item_dimension_b_fraction_form_bom" onchange=""></select>
+                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_b_fraction_form_bom" name="item_dimension_b_fraction_form_bom" onchange="calculateBomFormGirthValues()"></select>
                                     </div>
                                 </td>
                             <tr>
                             <tr>
                                 <td class="bom_table_head_1">C:</td>
                                 <td class="bom_table_head_1">
-                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_c_inch_form_bom" name="item_dimension_c_inch_form_bom" placeholder="Inch" value="" />
+                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_c_inch_form_bom" name="item_dimension_c_inch_form_bom" placeholder="Inch" value="" onchange="calculateBomFormGirthValues()" />
                                     <div id="item_dimension_c_fraction_form_bom_area" style="display: inline-block;">
-                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_c_fraction_form_bom" name="item_dimension_c_fraction_form_bom" onchange=""></select>
+                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_c_fraction_form_bom" name="item_dimension_c_fraction_form_bom" onchange="calculateBomFormGirthValues()"></select>
                                     </div>
                                 </td>
                             <tr>
                             <tr>
                                 <td class="bom_table_head_1">D:</td>
                                 <td class="bom_table_head_1">
-                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_d_inch_form_bom" name="item_dimension_d_inch_form_bom" placeholder="Inch" value="" />
+                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_d_inch_form_bom" name="item_dimension_d_inch_form_bom" placeholder="Inch" value="" onchange="calculateBomFormGirthValues()" />
                                     <div id="item_dimension_d_fraction_form_bom_area" style="display: inline-block;">
-                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_d_fraction_form_bom" name="item_dimension_d_fraction_form_bom" onchange=""></select>
+                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_d_fraction_form_bom" name="item_dimension_d_fraction_form_bom" onchange="calculateBomFormGirthValues()"></select>
                                     </div>
                                 </td>
                             <tr>
                             <tr>
                                 <td class="bom_table_head_1">E:</td>
                                 <td class="bom_table_head_1">
-                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_e_inch_form_bom" name="item_dimension_e_inch_form_bom" placeholder="Inch" value="" />
+                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_e_inch_form_bom" name="item_dimension_e_inch_form_bom" placeholder="Inch" value="" onchange="calculateBomFormGirthValues()" />
                                     <div id="item_dimension_e_fraction_form_bom_area" style="display: inline-block;">
-                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_e_fraction_form_bom" name="item_dimension_e_fraction_form_bom" onchange=""></select>
+                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_e_fraction_form_bom" name="item_dimension_e_fraction_form_bom" onchange="calculateBomFormGirthValues()"></select>
                                     </div>
                                 </td>
                             <tr>
                             <tr>
                                 <td class="bom_table_head_1">F:</td>
                                 <td class="bom_table_head_1">
-                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_f_inch_form_bom" name="item_dimension_f_inch_form_bom" placeholder="Inch" value="" />
+                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_f_inch_form_bom" name="item_dimension_f_inch_form_bom" placeholder="Inch" value="" onchange="calculateBomFormGirthValues()" />
                                     <div id="item_dimension_f_fraction_form_bom_area" style="display: inline-block;">
-                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_f_fraction_form_bom" name="item_dimension_f_fraction_form_bom" onchange=""></select>
+                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_f_fraction_form_bom" name="item_dimension_f_fraction_form_bom" onchange="calculateBomFormGirthValues()"></select>
                                     </div>
                                 </td>
                             <tr>
                             <tr>
                                 <td class="bom_table_head_1">P:</td>
                                 <td class="bom_table_head_1">
-                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_p_inch_form_bom" name="item_dimension_p_inch_form_bom" placeholder="Inch" value="" />
+                                    <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_p_inch_form_bom" name="item_dimension_p_inch_form_bom" placeholder="Inch" value="" onchange="calculateBomFormGirthValues()" />
                                     <div id="item_dimension_p_fraction_form_bom_area" style="display: inline-block;">
-                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_p_fraction_form_bom" name="item_dimension_p_fraction_form_bom" onchange=""></select>
+                                        <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_p_fraction_form_bom" name="item_dimension_p_fraction_form_bom" onchange="calculateBomFormGirthValues()"></select>
+                                    </div>
+                                </td>
+                            <tr>
+                            <tr>
+                                <td class="bom_table_head_1">Girth:</td>
+                                <td class="bom_table_head_1">
+                                    <div id="item_dimension_length_info_form_bom_area" style="display: none;">
+                                        <input type="text" class="vr_form_field_textbox_feet_1" id="item_dimension_length_feet_form_bom" name="item_dimension_length_feet_form_bom" placeholder="Feet" value="" />
+                                        <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_length_inch_form_bom" name="item_dimension_length_inch_form_bom" placeholder="Inch" value="" />
+                                        <div id="item_dimension_length_fraction_form_bom_area" style="display: inline-block;">
+                                            <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_length_fraction_form_bom" name="item_dimension_length_fraction_form_bom" onchange=""></select>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <div id="item_dimension_girth_side_a_info_form_bom_area" style="display: inline-block;">
+                                        Side A:&nbsp;
+                                        <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_girth_side_a_inch_form_bom" name="item_dimension_girth_side_a_inch_form_bom" placeholder="Inch" value="" />
+                                        <div id="item_dimension_girth_side_a_fraction_form_bom_area" style="display: inline-block;">
+                                            <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_girth_side_a_fraction_form_bom" name="item_dimension_girth_side_a_fraction_form_bom" onchange=""></select>
+                                        </div>
+                                    </div>
+                                    <div id="item_dimension_girth_side_b_info_form_bom_area" style="display: inline-block;">
+                                        Side B:&nbsp;
+                                        <input type="text" class="vr_form_field_textbox_inch_1" id="item_dimension_girth_side_b_inch_form_bom" name="item_dimension_girth_side_b_inch_form_bom" placeholder="Inch" value="" />
+                                        <div id="item_dimension_girth_side_b_fraction_form_bom_area" style="display: inline-block;">
+                                            <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_girth_side_b_fraction_form_bom" name="item_dimension_girth_side_b_fraction_form_bom" onchange=""></select>
+                                        </div>
                                     </div>
                                 </td>
                             <tr>

@@ -412,3 +412,120 @@
 
             return result;
         }
+
+
+        function calculateBomFormDimensionValues(base_fraction_for_calulation, dimension_ref_ids) {
+            var results = {
+                "total_inch":0.0, 
+                "total_fraction_in_decimal":0.0, 
+                "total_fraction":""
+            };
+            var base_fraction_for_calulation_in_decimal = (1 / base_fraction_for_calulation);
+            var c1 = 0;
+            var temp_text = '';
+            var current_inch = 0.0;
+            var total_inch = 0.0;
+            var temp_array = [];
+            var current_fraction_in_decimal = 0.0;
+            var total_fraction_in_decimal = 0.0;
+            var total_fraction = '';
+
+            for (c1 = 0; c1 < dimension_ref_ids.length; c1++) {
+                temp_text = document.getElementById(dimension_ref_ids[c1] + '_form_bom').value;
+                if (dimension_ref_ids[c1].search('inch') >= 0) {
+                    if (!isNaN(temp_text)) {
+                        current_inch = Math.abs(temp_text);
+                        total_inch += current_inch;
+                    }
+                }
+                if (dimension_ref_ids[c1].search('fraction') >= 0) {
+                    temp_array = temp_text.split('/');
+                    if (temp_array.length == 2 && !isNaN(temp_array[0]) && !isNaN(temp_array[1])) {
+                        current_fraction_in_decimal = Math.abs(temp_array[0]) / Math.abs(temp_array[1]);
+                        total_fraction_in_decimal += current_fraction_in_decimal;
+                    }
+                }
+            }
+
+            temp_text = '' + total_fraction_in_decimal;
+            temp_array = temp_text.split('.');
+            if (temp_array.length == 2 && !isNaN(temp_array[0]) && !isNaN(temp_array[1])) {
+                total_inch += Math.abs(temp_array[0]);
+                if (Math.abs(temp_array[0]) > 0) {
+                    total_fraction_in_decimal = Math.abs('0.' + temp_array[1]);
+                }
+            }
+
+            total_fraction = '' + (total_fraction_in_decimal / base_fraction_for_calulation_in_decimal) + '/' + base_fraction_for_calulation;
+
+            results['total_inch'] = total_inch;
+            results['total_fraction_in_decimal'] = total_fraction_in_decimal;
+            results['total_fraction'] = total_fraction;
+
+            return results;
+        }
+
+
+        function calculateBomFormGirthValues() {
+            var girth_side_a_calculation_for_gutter_ref_ids = [
+                "item_dimension_f_inch", 
+                "item_dimension_f_fraction", 
+                "item_dimension_a_inch", 
+                "item_dimension_a_fraction", 
+                "item_dimension_p_inch", 
+                "item_dimension_p_fraction", 
+                "item_dimension_c_inch", 
+                "item_dimension_c_fraction", 
+                "item_dimension_e_inch", 
+                "item_dimension_e_fraction"
+            ];
+            var girth_side_b_calculation_for_gutter_ref_ids = [
+                "item_dimension_f_inch", 
+                "item_dimension_f_fraction", 
+                "item_dimension_b_inch", 
+                "item_dimension_b_fraction", 
+                "item_dimension_p_inch", 
+                "item_dimension_p_fraction", 
+                "item_dimension_d_inch", 
+                "item_dimension_d_fraction", 
+                "item_dimension_e_inch", 
+                "item_dimension_e_fraction"
+            ];
+            var girth_side_a_calculation_for_flashing_ref_ids = [
+                "item_dimension_a_inch", 
+                "item_dimension_a_fraction", 
+                "item_dimension_b_inch", 
+                "item_dimension_b_fraction", 
+                "item_dimension_c_inch", 
+                "item_dimension_c_fraction", 
+                "item_dimension_d_inch", 
+                "item_dimension_d_fraction", 
+                "item_dimension_e_inch", 
+                "item_dimension_e_fraction", 
+                "item_dimension_f_inch", 
+                "item_dimension_f_fraction", 
+                "item_dimension_p_inch", 
+                "item_dimension_p_fraction"
+            ];
+            var girth_side_b_calculation_for_flashing_ref_ids = [
+            ];
+            var target_vr_section_ref_name = vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['vr_section_ref_name'].toLowerCase();
+            var result1 = {};
+            var result2 = {};
+
+            if (target_vr_section_ref_name.search('gutter') >= 0) {
+                result1 = calculateBomFormDimensionValues(32, girth_side_a_calculation_for_gutter_ref_ids);
+                result2 = calculateBomFormDimensionValues(32, girth_side_b_calculation_for_gutter_ref_ids);
+            } else {
+                if (target_vr_section_ref_name.search('flashing') >= 0) {
+                    result1 = calculateBomFormDimensionValues(32, girth_side_a_calculation_for_flashing_ref_ids);
+                    result2 = calculateBomFormDimensionValues(32, girth_side_b_calculation_for_flashing_ref_ids);
+                }
+            }
+
+            document.getElementById('item_dimension_girth_side_a_inch_form_bom').value = result1['total_inch'];
+            document.getElementById('item_dimension_girth_side_a_fraction_form_bom').value = result1['total_fraction'];
+
+            document.getElementById('item_dimension_girth_side_b_inch_form_bom').value = result2['total_inch'];
+            document.getElementById('item_dimension_girth_side_b_fraction_form_bom').value = result2['total_fraction'];
+        }

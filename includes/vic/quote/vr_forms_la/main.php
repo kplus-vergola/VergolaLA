@@ -193,6 +193,48 @@ if (isset($_REQUEST['api_mode'])) {
     }
 
 
+    $vr_item_default_dimensions_list = array();
+    $sql = str_replace(
+        array(), 
+        array(), 
+        $sql_template_retrieve_data_contract_items_default_deminsions
+    );
+    $results = executeDbQuery($sql);
+    if ($results['error'] == 'null') {
+        while ($r1 = mysql_fetch_array($results['data'])) {
+                // 'item_dimension_record_index' => $r1['id'], 
+            $vr_item_default_dimensions_list[$r1['inventoryid']] = array(
+                'item_dimension_record_index' => '', 
+                'item_dimension_length_feet' => intval($r1['length_feet']), 
+                'item_dimension_length_inch' => intval($r1['length_inch']), 
+                'item_dimension_length_fraction' => $r1['length_fraction'], 
+                'item_dimension_a_inch' => $r1['dimension_a_inch'], 
+                'item_dimension_a_fraction' => $r1['dimension_a_fraction'], 
+                'item_dimension_b_inch' => $r1['dimension_b_inch'], 
+                'item_dimension_b_fraction' => $r1['dimension_b_fraction'], 
+                'item_dimension_c_inch' => $r1['dimension_c_inch'], 
+                'item_dimension_c_fraction' => $r1['dimension_c_fraction'], 
+                'item_dimension_d_inch' => $r1['dimension_d_inch'], 
+                'item_dimension_d_fraction' => $r1['dimension_d_fraction'], 
+                'item_dimension_e_inch' => $r1['dimension_e_inch'], 
+                'item_dimension_e_fraction' => $r1['dimension_e_fraction'], 
+                'item_dimension_f_inch' => $r1['dimension_f_inch'], 
+                'item_dimension_f_fraction' => $r1['dimension_f_fraction'], 
+                'item_dimension_p_inch' => $r1['dimension_p_inch'], 
+                'item_dimension_p_fraction' => $r1['dimension_p_fraction'], 
+                'item_dimension_girth_side_a_inch' => $r1['girth_side_a_inch'], 
+                'item_dimension_girth_side_a_fraction' => $r1['girth_side_a_fraction'], 
+                'item_dimension_girth_side_b_inch' => $r1['girth_side_b_inch'], 
+                'item_dimension_girth_side_b_fraction' => $r1['girth_side_b_fraction']
+            );
+        }
+    } else {
+        $app_response['error'][] = $results['error'];
+        $app_response['message'][] = $results['message'];
+    }
+    $vr_item_default_dimensions_list = json_encode($vr_item_default_dimensions_list);
+
+
     $vr_form_system_info['payment_deposit_percentage'] = 0.1;
     $vr_form_system_info['payment_deposit_minimum'] = 1000;
     $vr_form_system_info['payment_progress_payment_percentage'] = 0.65;
