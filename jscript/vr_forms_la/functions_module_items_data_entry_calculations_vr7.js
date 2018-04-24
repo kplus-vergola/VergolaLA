@@ -270,10 +270,10 @@
                         break;
                     /* --- vergola ---*/
                     case 'vergola_system_louvre_bay_1':
-                        total_louvre = Math.round(vr_width_in_value_for_calculation / minimum_inch_per_louvre);
+                        total_louvre = Math.ceil(vr_width_in_value_for_calculation / minimum_inch_per_louvre);
                         total_endcap = total_louvre * 2;
-                        total_pivot_strip = Math.round(total_endcap / 12);
-                        total_link_bar = Math.round(total_louvre / 12);
+                        total_pivot_strip = Math.ceil(total_endcap / 12);
+                        total_link_bar = Math.ceil(total_louvre / 12);
 
                         document.getElementById('vr_item_data_entry_length_feet_' + c1).value = vr_lengths_feet_in_value_for_display[0];
                         document.getElementById('vr_item_data_entry_length_inch_' + c1).value = vr_lengths_inch_in_value_for_display[0];
@@ -294,10 +294,10 @@
                         );
                         break;
                     case 'vergola_system_louvre_bay_2':
-                        total_louvre = Math.round(vr_width_in_value_for_calculation / minimum_inch_per_louvre);
+                        total_louvre = Math.ceil(vr_width_in_value_for_calculation / minimum_inch_per_louvre);
                         total_endcap = total_louvre * 2;
-                        total_pivot_strip = Math.round(total_endcap / 12);
-                        total_link_bar = Math.round(total_louvre / 12);
+                        total_pivot_strip = Math.ceil(total_endcap / 12);
+                        total_link_bar = Math.ceil(total_louvre / 12);
 
                         document.getElementById('vr_item_data_entry_length_feet_' + c1).value = vr_lengths_feet_in_value_for_display[1];
                         document.getElementById('vr_item_data_entry_length_inch_' + c1).value = vr_lengths_inch_in_value_for_display[1];
@@ -318,10 +318,10 @@
                         );
                         break;
                     case 'vergola_system_louvre_bay_3':
-                        total_louvre = Math.round(vr_width_in_value_for_calculation / minimum_inch_per_louvre);
+                        total_louvre = Math.ceil(vr_width_in_value_for_calculation / minimum_inch_per_louvre);
                         total_endcap = total_louvre * 2;
-                        total_pivot_strip = Math.round(total_endcap / 12);
-                        total_link_bar = Math.round(total_louvre / 12);
+                        total_pivot_strip = Math.ceil(total_endcap / 12);
+                        total_link_bar = Math.ceil(total_louvre / 12);
 
                         document.getElementById('vr_item_data_entry_length_feet_' + c1).value = vr_lengths_feet_in_value_for_display[2];
                         document.getElementById('vr_item_data_entry_length_inch_' + c1).value = vr_lengths_inch_in_value_for_display[2];
@@ -342,10 +342,10 @@
                         );
                         break;
                     case 'vergola_system_louvre_bay_4':
-                        total_louvre = Math.round(vr_width_in_value_for_calculation / minimum_inch_per_louvre);
+                        total_louvre = Math.ceil(vr_width_in_value_for_calculation / minimum_inch_per_louvre);
                         total_endcap = total_louvre * 2;
-                        total_pivot_strip = Math.round(total_endcap / 12);
-                        total_link_bar = Math.round(total_louvre / 12);
+                        total_pivot_strip = Math.ceil(total_endcap / 12);
+                        total_link_bar = Math.ceil(total_louvre / 12);
 
                         document.getElementById('vr_item_data_entry_length_feet_' + c1).value = vr_lengths_feet_in_value_for_display[3];
                         document.getElementById('vr_item_data_entry_length_inch_' + c1).value = vr_lengths_inch_in_value_for_display[3];
