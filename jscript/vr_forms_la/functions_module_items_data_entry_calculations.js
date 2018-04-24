@@ -454,6 +454,8 @@
                 if (Math.abs(temp_array[0]) > 0) {
                     total_fraction_in_decimal = Math.abs('0.' + temp_array[1]);
                 }
+            } else {
+                total_inch += Math.abs(total_fraction_in_decimal);
             }
 
             total_fraction = '' + (total_fraction_in_decimal / base_fraction_for_calulation_in_decimal) + '/' + base_fraction_for_calulation;

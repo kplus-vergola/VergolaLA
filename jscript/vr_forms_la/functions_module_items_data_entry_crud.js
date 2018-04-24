@@ -247,7 +247,6 @@
                 "vr_project_name":vr_form_queries_info['vr_project_name'], 
                 "vr_framework_type":vr_form_queries_info['vr_framework_type'], 
                 "inventory_id":vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['vr_item_ref_name'], 
-                "bom_form_item_dimensions_info":bom_form_item_dimensions_info, 
                 "vr_form_items_data_entry": vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]
             };
 

@@ -416,11 +416,85 @@ $results_update_data['data_contract_items_deminsions']['is_success'] = false;
 
 $last_insert_id_data_contract_items = '0';
 $last_insert_id_data_contract_items_deminsions = '0';
+$data_contract_items_deminsions_action = 'update';
 
 if ($enable_updating['data_contract_items_deminsions'] == true) {
-    if ($api_data['bom_form_item_dimensions_info']['item_dimension_record_index'] != '') {
+    $current_vr_item_adhoc = ($api_data['vr_form_items_data_entry']['vr_item_adhoc'] == 'yes') ? 1 : 0;
+
+    $customisation_options = array();
+    $customisation_options['vr_type_ref_name'] = $api_data['vr_form_items_data_entry']['vr_type_ref_name'];
+    $customisation_options['vr_section_display_name'] = $api_data['vr_form_items_data_entry']['vr_section_display_name'];
+    $customisation_options['vr_section_ref_name'] = $api_data['vr_form_items_data_entry']['vr_section_ref_name'];
+    $customisation_options['vr_subsection_display_name'] = $api_data['vr_form_items_data_entry']['vr_subsection_display_name'];
+    $customisation_options['vr_subsection_ref_name'] = $api_data['vr_form_items_data_entry']['vr_subsection_ref_name'];
+    $customisation_options['vr_item_display_name_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_display_name_input_type'];
+    $customisation_options['vr_item_webbing_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_webbing_input_type'];
+    $customisation_options['vr_item_colour_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_colour_input_type'];
+    $customisation_options['vr_item_finish_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_finish_input_type'];
+    $customisation_options['vr_item_uom_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_uom_input_type'];
+    $customisation_options['vr_item_unit_price_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_unit_price_input_type'];
+    $customisation_options['vr_item_qty_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_qty_input_type'];
+    $customisation_options['vr_item_length_feet_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_length_feet_input_type'];
+    $customisation_options['vr_item_length_inch_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_length_inch_input_type'];
+    $customisation_options['vr_item_length_fraction_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_length_fraction_input_type'];
+    $customisation_options['vr_item_rrp_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_rrp_input_type'];
+    $customisation_options['vr_item_image'] = $api_data['vr_form_items_data_entry']['vr_item_image'];
+    $customisation_options['vr_item_image_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_image_input_type'];
+    $customisation_options['vr_item_config_internal_ref_name'] = $api_data['vr_form_items_data_entry']['vr_item_config_internal_ref_name'];
+    $customisation_options_in_string = json_encode($customisation_options);
+
+    if ($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_record_index'] != '') {
+        $results_update_data['data_contract_items_deminsions']['total_input'] = 2;
+
         $sql = str_replace(
             array(
+                '[PROJECT_NAME]',           '[VR_FRAMEWORK_TYPE]', 
+                '[VR_TYPE_DISPLAY_NAME]',   '[VR_ITEM_REF_NAME]', 
+                '[VR_ITEM_DISPLAY_NAME]',   '[VR_ITEM_WEBBING]', 
+                '[VR_ITEM_COLOUR]',         '[VR_ITEM_FINISH]', 
+                '[VR_ITEM_UOM]',            '[VR_ITEM_UNIT_PRICE]', 
+                '[VR_ITEM_QTY]',            '[VR_ITEM_LENGTH_FEET]', 
+                '[VR_ITEM_LENGTH_INCH]',    '[VR_ITEM_LENGTH_FRACTION]', 
+                '[VR_ITEM_RRP]',            '[VR_ITEM_ADHOC]', 
+                '[CUSTOMISATION_OPTIONS]',  '[PROJECT_ID]', 
+                '[VR_RECORD_INDEX]'
+            ), 
+            array(
+                addslashes($api_data['vr_project_name']), 
+                addslashes($api_data['vr_framework_type']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_type_display_name']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_ref_name']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_display_name']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_webbing']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_colour']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_finish']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_uom']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_unit_price']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_qty']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_length_feet']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_length_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_length_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_item_rrp']), 
+                addslashes($current_vr_item_adhoc), 
+                addslashes($customisation_options_in_string), 
+                addslashes($api_data['project_id']), 
+                addslashes($api_data['vr_form_items_data_entry']['vr_record_index']) 
+            ), 
+            $sql_template_update_data_contract_items
+        );
+
+        $results = executeDbQuery($sql);
+        if ($results['error'] == 'null') {
+            $results_update_data['data_contract_items_deminsions']['total_success']++;
+        } else {
+            $results_update_data['data_contract_items_deminsions']['total_failure']++;
+        }
+        $last_insert_id_data_contract_items = $api_data['vr_form_items_data_entry']['vr_record_index'];
+
+        $data_contract_items_deminsions_action = 'update';
+        $sql = str_replace(
+            array(
+                '[VR_ITEM_REF_NAME]', 
                 '[LENGTH_FEET]', '[LENGTH_INCH]', 
                 '[LENGTH_FRACTION]', '[DIMENSION_A_INCH]', 
                 '[DIMENSION_A_FRACTION]', '[DIMENSION_B_INCH]', 
@@ -436,29 +510,30 @@ if ($enable_updating['data_contract_items_deminsions'] == true) {
                 '[VR_RECORD_INDEX]'
             ), 
             array(
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_length_feet']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_length_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_length_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_a_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_a_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_b_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_b_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_c_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_c_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_d_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_d_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_e_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_e_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_f_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_f_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_p_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_p_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_girth_side_a_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_girth_side_a_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_girth_side_b_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_girth_side_b_fraction']), 
+                addslashes($api_data['inventory_id']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_length_feet']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_length_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_length_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_a_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_a_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_b_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_b_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_c_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_c_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_d_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_d_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_e_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_e_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_f_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_f_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_p_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_p_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_girth_side_a_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_girth_side_a_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_girth_side_b_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_girth_side_b_fraction']), 
                 addslashes($api_data['project_id']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_record_index'])
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_record_index'])
             ), 
             $sql_template_update_data_contract_item_dimensions
         );
@@ -467,30 +542,6 @@ if ($enable_updating['data_contract_items_deminsions'] == true) {
         if (!(strval($api_data['cf_id']) != '' && 
               strval($api_data['cf_id']) != '0')) {
             $results_update_data['data_contract_items_deminsions']['total_input'] = 2;
-
-            $current_vr_item_adhoc = ($api_data['vr_form_items_data_entry']['vr_item_adhoc'] == 'yes') ? 1 : 0;
-
-            $customisation_options = array();
-            $customisation_options['vr_type_ref_name'] = $api_data['vr_form_items_data_entry']['vr_type_ref_name'];
-            $customisation_options['vr_section_display_name'] = $api_data['vr_form_items_data_entry']['vr_section_display_name'];
-            $customisation_options['vr_section_ref_name'] = $api_data['vr_form_items_data_entry']['vr_section_ref_name'];
-            $customisation_options['vr_subsection_display_name'] = $api_data['vr_form_items_data_entry']['vr_subsection_display_name'];
-            $customisation_options['vr_subsection_ref_name'] = $api_data['vr_form_items_data_entry']['vr_subsection_ref_name'];
-            $customisation_options['vr_item_display_name_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_display_name_input_type'];
-            $customisation_options['vr_item_webbing_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_webbing_input_type'];
-            $customisation_options['vr_item_colour_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_colour_input_type'];
-            $customisation_options['vr_item_finish_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_finish_input_type'];
-            $customisation_options['vr_item_uom_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_uom_input_type'];
-            $customisation_options['vr_item_unit_price_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_unit_price_input_type'];
-            $customisation_options['vr_item_qty_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_qty_input_type'];
-            $customisation_options['vr_item_length_feet_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_length_feet_input_type'];
-            $customisation_options['vr_item_length_inch_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_length_inch_input_type'];
-            $customisation_options['vr_item_length_fraction_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_length_fraction_input_type'];
-            $customisation_options['vr_item_rrp_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_rrp_input_type'];
-            $customisation_options['vr_item_image'] = $api_data['vr_form_items_data_entry']['vr_item_image'];
-            $customisation_options['vr_item_image_input_type'] = $api_data['vr_form_items_data_entry']['vr_item_image_input_type'];
-            $customisation_options['vr_item_config_internal_ref_name'] = $api_data['vr_form_items_data_entry']['vr_item_config_internal_ref_name'];
-            $customisation_options_in_string = json_encode($customisation_options);
 
             $sql = str_replace(
                 array(
@@ -528,7 +579,6 @@ if ($enable_updating['data_contract_items_deminsions'] == true) {
 
             $results = executeDbQuery($sql);
             if ($results['error'] == 'null') {
-
                 $sql = $sql_template_retrieve_last_insert_id;
                 $results2 = executeDbQuery($sql);
                 while ($r2 = mysql_fetch_array($results2['data'])) {
@@ -542,6 +592,7 @@ if ($enable_updating['data_contract_items_deminsions'] == true) {
             }
         }
 
+        $data_contract_items_deminsions_action = 'save';
         $sql = str_replace(
             array(
                 '[CF_ID]',                      '[QUOTE_ID]',               '[PROJECT_ID]', 
@@ -562,37 +613,41 @@ if ($enable_updating['data_contract_items_deminsions'] == true) {
                 addslashes($api_data['quote_id']), 
                 addslashes($api_data['project_id']), 
                 addslashes($api_data['inventory_id']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_length_feet']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_length_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_length_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_a_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_a_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_b_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_b_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_c_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_c_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_d_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_d_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_e_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_e_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_f_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_f_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_p_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_p_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_girth_side_a_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_girth_side_a_fraction']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_girth_side_b_inch']), 
-                addslashes($api_data['bom_form_item_dimensions_info']['item_dimension_girth_side_b_fraction'])
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_length_feet']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_length_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_length_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_a_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_a_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_b_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_b_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_c_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_c_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_d_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_d_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_e_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_e_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_f_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_f_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_p_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_p_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_girth_side_a_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_girth_side_a_fraction']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_girth_side_b_inch']), 
+                addslashes($api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_girth_side_b_fraction'])
             ), 
             $sql_template_insert_data_contract_item_dimensions
         );
     }
 
     if (mysql_query($sql)) {
-        $sql = $sql_template_retrieve_last_insert_id;
-        $results2 = executeDbQuery($sql);
-        while ($r2 = mysql_fetch_array($results2['data'])) {
-            $last_insert_id_data_contract_items_deminsions = $r2['last_insert_id'];
+        if ($data_contract_items_deminsions_action == 'save') {
+            $sql = $sql_template_retrieve_last_insert_id;
+            $results2 = executeDbQuery($sql);
+            while ($r2 = mysql_fetch_array($results2['data'])) {
+                $last_insert_id_data_contract_items_deminsions = $r2['last_insert_id'];
+            }
+        } else {
+            $last_insert_id_data_contract_items_deminsions = $api_data['vr_form_items_data_entry']['bom_form_item_dimensions_info']['item_dimension_record_index'];
         }
 
         $results_update_data['data_contract_items_deminsions']['total_success']++;

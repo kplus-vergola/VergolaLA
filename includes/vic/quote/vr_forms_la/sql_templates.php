@@ -753,6 +753,7 @@ $sql_template_update_data_contract_items = "
 */
 $sql_template_update_data_contract_item_dimensions = "
     UPDATE ver_chronoforms_data_contract_items_deminsions SET  
+        inventoryid = '[VR_ITEM_REF_NAME]', 
         length_feet = '[LENGTH_FEET]', length_inch = '[LENGTH_INCH]', 
         length_fraction = '[LENGTH_FRACTION]', dimension_a_inch = '[DIMENSION_A_INCH]', 
         dimension_a_fraction = '[DIMENSION_A_FRACTION]', dimension_b_inch = '[DIMENSION_B_INCH]', 

@@ -18,6 +18,8 @@
             var popup_display_timer;
             var info_field_name = '';
             var target_vr_section_ref_name = vr_form_items_data_entry[bom_form_item_data_entry_index]['vr_section_ref_name'].toLowerCase();
+            var target_vr_item_data_entry_ref_name = document.getElementById('vr_item_data_entry_ref_name_' + bom_form_item_data_entry_index).value;
+            var enable_fill_up_default_dimension = false;
 
             if (bom_form_item_dimension_current_popup_index > -1) {
                 hideBomFormItemDimensionPopup();
@@ -35,25 +37,33 @@
             document.getElementById('item_image_form_bom').src = document.getElementById('vr_item_data_entry_image_' + bom_form_item_data_entry_index).src;
 
             if (vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info']) {
-                for (info_field_name in bom_form_item_dimensions_info) {
-                    if (document.getElementById(info_field_name + '_form_bom')) {
-                        document.getElementById(info_field_name + '_form_bom').value = vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info'][info_field_name];
+                if (vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info']['item_dimension_record_index'] == '' || 
+                    vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info']['item_dimension_record_index'] == '0') {
+                    enable_fill_up_default_dimension = true;
+                } else {
+                    if (vr_form_items_data_entry[bom_form_item_data_entry_index]['vr_item_ref_name'] != target_vr_item_data_entry_ref_name) {
+                        enable_fill_up_default_dimension = true;
                     }
                 }
             } else {
                 vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info'] = {};
                 for (info_field_name in bom_form_item_dimensions_info) {
-                    vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info'][info_field_name] = vr_item_default_dimensions_list[document.getElementById('vr_item_data_entry_ref_name_' + bom_form_item_data_entry_index).value][info_field_name];
+                    vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info'][info_field_name] = '';
                 }
+                enable_fill_up_default_dimension = true;
+            }
 
-                if (document.getElementById('vr_item_data_entry_ref_name_' + bom_form_item_data_entry_index)) {
-                    if (vr_item_default_dimensions_list[document.getElementById('vr_item_data_entry_ref_name_' + bom_form_item_data_entry_index).value]) {
-                        for (info_field_name in bom_form_item_dimensions_info) {
-                            if (document.getElementById(info_field_name + '_form_bom')) {
-                                document.getElementById(info_field_name + '_form_bom').value = vr_item_default_dimensions_list[document.getElementById('vr_item_data_entry_ref_name_' + bom_form_item_data_entry_index).value][info_field_name];
-                            }
-                        }
+            if (enable_fill_up_default_dimension == true) {
+                for (info_field_name in bom_form_item_dimensions_info) {
+                    if (info_field_name != 'item_dimension_record_index') {
+                        vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info'][info_field_name] = vr_item_default_dimensions_list[target_vr_item_data_entry_ref_name][info_field_name];
                     }
+                }
+            }
+
+            for (info_field_name in bom_form_item_dimensions_info) {
+                if (document.getElementById(info_field_name + '_form_bom')) {
+                    document.getElementById(info_field_name + '_form_bom').value = vr_form_items_data_entry[bom_form_item_data_entry_index]['bom_form_item_dimensions_info'][info_field_name];
                 }
             }
 
@@ -94,44 +104,7 @@
 
             for (info_field_name in bom_form_item_dimensions_info) {
                 if (document.getElementById(info_field_name + '_form_bom')) {
-                    bom_form_item_dimensions_info[info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
-
                     vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
-
-/*
-                    if (vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info']) {
-console.log('copyBomFormDimensionInfoFormValue > vr_form_items_data_entry > bom_form_item_dimensions_info exists');
-                        if (vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name]) {
-console.log('copyBomFormDimensionInfoFormValue > vr_form_items_data_entry > bom_form_item_dimensions_info > info_field_name exists: ' + info_field_name);
-                            vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
-                        } else {
-console.log('copyBomFormDimensionInfoFormValue > vr_form_items_data_entry > bom_form_item_dimensions_info > info_field_name not exists: ' + info_field_name);
-                            // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'] = {
-                            //     info_field_name: document.getElementById(info_field_name + '_form_bom').value
-                            // };
-
-                            // temp_text = '{"' + info_field_name + '": "' + document.getElementById(info_field_name + '_form_bom').value + '"}';
-                            // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'] = eval('(' + temp_text + ')');
-
-                            // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'] = [];
-                            // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
-                        }
-                    } else {
-console.log('copyBomFormDimensionInfoFormValue > vr_form_items_data_entry > bom_form_item_dimensions_info not exists');
-                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index] = {
-                        //     "bom_form_item_dimensions_info": {
-                        //         info_field_name: document.getElementById(info_field_name + '_form_bom').value    
-                        //     }   
-                        // };
-
-                        // temp_text = '{"bom_form_item_dimensions_info": {"' + info_field_name + '": "' + document.getElementById(info_field_name + '_form_bom').value + '"}}';
-                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index] = eval('(' + temp_text + ')');
-
-                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index] = [];
-                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'] = [];
-                        // vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info'][info_field_name] = document.getElementById(info_field_name + '_form_bom').value;
-                    }
-*/
                 }
             }
         }
