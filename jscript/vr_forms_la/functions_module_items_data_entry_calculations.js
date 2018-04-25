@@ -274,7 +274,8 @@
                     total_payment_disbursement_sub_total += parseFloat(vr_form_items_data_entry[c1]['vr_item_rrp']);
                 }
             }
-            total_payment_vergola = (total_payment_vr_items_rrp - total_payment_disbursement_sub_total) / vr_form_system_info['payment_vergola_commission_percentage'];
+
+            total_payment_vergola = total_payment_vr_items_rrp / vr_form_system_info['payment_vergola_commission_percentage'];
 
             total_payment_sub_total = total_payment_vergola + total_payment_disbursement_sub_total;
             total_payment_tax = total_payment_sub_total * vr_form_system_info['payment_tax_percentage'];
