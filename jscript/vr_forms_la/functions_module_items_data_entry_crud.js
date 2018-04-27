@@ -108,7 +108,7 @@
                     'vr_commission_installer_payment'
                 ];
                 for (c1 = 0; c1 < billing_info_fields.length; c1++) {
-                    document.getElementById(billing_info_fields[c1] + '_form_billing').value = results['data']['vr_form_billing_info'][billing_info_fields[c1]];
+                    document.getElementById(billing_info_fields[c1] + '_form_billing').value = formatOutputValue('float', results['data']['vr_form_billing_info'][billing_info_fields[c1]]);
                 }
                 vr_form_billing_info = results['data']['vr_form_billing_info'];
 

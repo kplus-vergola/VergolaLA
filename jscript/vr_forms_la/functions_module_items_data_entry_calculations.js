@@ -90,11 +90,92 @@
                     results['item_qty'] = document.getElementById('vr_item_data_entry_qty_' + c1).value;
                     results['item_length_feet'] = document.getElementById('vr_item_data_entry_length_feet_' + c1).value;
                     results['item_length_inch'] = document.getElementById('vr_item_data_entry_length_inch_' + c1).value;
-                    results['item_rrp'] = document.getElementById('vr_item_data_entry_rrp_' + c1).value;
+                    results['item_rrp'] = formatInputValue('float', document.getElementById('vr_item_data_entry_rrp_' + c1).value);
                 }
             }
 
             return results;
+        }
+
+
+        function formatNumberWithoutComma(input_value) {
+            var result;
+            var temp_text = '';
+            var temp_array = [];
+            var c1 = 0;
+            var new_input_value = '';
+
+            temp_text = '' + input_value;
+            temp_array = temp_text.split(',');
+
+            for (c1 in temp_array) {
+                if (!isNaN(c1)) {
+                    new_input_value += temp_array[c1];
+                }
+            }
+            result = new_input_value;
+
+            return result;
+        }
+
+
+        function formatNumberWithComma(input_value) {
+            var result;
+            var temp_text = '';
+            var temp_array = [];
+            var c1 = 0;
+            var comma_per_total_chars = 3;
+            var current_total_chars = 0;
+            var new_input_value = '';
+
+
+            if (isNaN(input_value)) {
+                result = 0;
+            } else {
+                temp_text = '' + input_value;
+                temp_array = temp_text.split('.')
+                temp_text = temp_array[0];
+                for (c1 = (temp_text.length - 1); c1 >= 0; c1--) {
+                    current_total_chars++;
+                    new_input_value = temp_text.substring(c1, c1 + 1) + new_input_value;
+                    if (current_total_chars >= comma_per_total_chars) {
+                        current_total_chars = 0;
+                        if (c1 > 0) {
+                            new_input_value = ',' + new_input_value;
+                        }
+                    }
+                }
+
+                if (temp_array.length == 2) {
+                    new_input_value = '' + new_input_value + '.' + temp_array[1];
+                }
+
+                result = new_input_value;
+            }
+
+            return result;
+        }
+
+
+        function formatInputValue(input_type, input_value) {
+            var result;
+
+            switch (input_type) {
+                case 'integer':
+                    result = formatNumberWithoutComma(input_value);
+                    break;
+                case 'float':
+                    result = formatNumberWithoutComma(input_value);
+                    break;
+                case 'number':
+                    result = formatNumberWithoutComma(input_value);
+                    break;
+                case 'text':
+                    result = input_value;
+                    break;
+            }
+
+            return result;
         }
 
 
@@ -106,21 +187,21 @@
                     if (isNaN(output_value)) {
                         result = 0;
                     } else {
-                        result = parseInt(output_value);
+                        result = formatNumberWithComma(parseInt(output_value));
                     }
                     break;
                 case 'float':
                     if (isNaN(output_value)) {
                         result = 0.0;
                     } else {
-                        result = parseFloat(output_value).toFixed(2);
+                        result = formatNumberWithComma(parseFloat(output_value).toFixed(2));
                     }
                     break;
                 case 'number':
                     if (isNaN(output_value)) {
                         result = '0';
                     } else {
-                        result = output_value;
+                        result = formatNumberWithComma(output_value);
                     }
                     break;
                 case 'text':

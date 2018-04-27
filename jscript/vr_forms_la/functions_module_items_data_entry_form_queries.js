@@ -107,7 +107,7 @@
 
             for (c1 = 0; c1 < billing_info_fields.length; c1++) {
                 if (document.getElementById(billing_info_fields[c1] + '_form_billing')) {
-                    vr_form_billing_info[billing_info_fields[c1]] = document.getElementById(billing_info_fields[c1] + '_form_billing').value;
+                    vr_form_billing_info[billing_info_fields[c1]] = formatInputValue('float', document.getElementById(billing_info_fields[c1] + '_form_billing').value);
                 }
             }
         }

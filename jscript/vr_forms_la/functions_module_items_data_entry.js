@@ -435,7 +435,7 @@
                 vr_form_items_data_entry[c1]['vr_item_length_fraction'] = document.getElementById('vr_item_data_entry_length_fraction_' + c1).value;
                 vr_form_items_data_entry[c1]['vr_item_length_fraction_input_type'] = document.getElementById('vr_item_data_entry_length_fraction_input_type_' + c1).value;
 
-                vr_form_items_data_entry[c1]['vr_item_rrp'] = document.getElementById('vr_item_data_entry_rrp_' + c1).value;
+                vr_form_items_data_entry[c1]['vr_item_rrp'] = formatInputValue('float', document.getElementById('vr_item_data_entry_rrp_' + c1).value);
                 vr_form_items_data_entry[c1]['vr_item_rrp_input_type'] = document.getElementById('vr_item_data_entry_rrp_input_type_' + c1).value;
             }
         }
@@ -1213,7 +1213,7 @@
                             if (vr_form_items_data_entry[c12]['vr_item_rrp_input_type'] == 'Input Box Autofill') {
                                 temp_text = replaceSubstringInText(
                                     ['[FIELD_NAME]', '[FIELD_VALUE]'], 
-                                    ['vr_item_data_entry_rrp_' + c12, vr_form_items_data_entry[c12]['vr_item_rrp']], 
+                                    ['vr_item_data_entry_rrp_' + c12, formatOutputValue('float', vr_form_items_data_entry[c12]['vr_item_rrp'])], 
                                     template_vr_form_inputbox_autofill
                                 );
                                 temp_text = replaceSubstringInText(
