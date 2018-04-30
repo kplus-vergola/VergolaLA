@@ -268,62 +268,64 @@
             var current_calculation_log = '';
 
             for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
-                current_item_length_feet = vr_form_items_data_entry[c1]['vr_item_length_feet'];
-                current_item_length_inch = vr_form_items_data_entry[c1]['vr_item_length_inch'];
-                current_item_length = current_item_length_feet + '\'' + current_item_length_inch;
-                current_item_length_in_value_for_calculation = convertValueForCalculation(current_item_length);
-                current_item_unit_price = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']);
+                if (document.getElementById('vr_type_data_entry_ref_name_' + c1)) {
+                    current_item_length_feet = vr_form_items_data_entry[c1]['vr_item_length_feet'];
+                    current_item_length_inch = vr_form_items_data_entry[c1]['vr_item_length_inch'];
+                    current_item_length = current_item_length_feet + '\'' + current_item_length_inch;
+                    current_item_length_in_value_for_calculation = convertValueForCalculation(current_item_length);
+                    current_item_unit_price = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']);
 
-                current_subtotal = 0.0;
-                if (length_unit_types.indexOf(vr_form_items_data_entry[c1]['vr_item_uom'].toLowerCase()) == -1) {
-                    current_subtotal = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
-                } else {
-                    current_subtotal = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
-                }
+                    current_subtotal = 0.0;
+                    if (length_unit_types.indexOf(vr_form_items_data_entry[c1]['vr_item_uom'].toLowerCase()) == -1) {
+                        current_subtotal = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                    } else {
+                        current_subtotal = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                    }
 
-                webbing_pricing_info = {"item_uom":"", "item_unit_price":""};
-                current_webbing_subtotal = 0.0;
-                if (vr_form_items_data_entry[c1]['vr_item_webbing_input_type'] == 'Select Box' && 
-                    vr_form_items_data_entry[c1]['vr_item_webbing'] != 'null') {
-                    webbing_pricing_info = getVrItemWebbingPricingInfo(vr_form_items_data_entry[c1]['vr_section_ref_name'], vr_form_items_data_entry[c1]['vr_item_webbing']);
-                    if (webbing_pricing_info['item_uom'] != '' && webbing_pricing_info['item_unit_price'] != '') {
-                        if (length_unit_types.indexOf(webbing_pricing_info['item_uom'].toLowerCase()) == -1) {
-                            current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
-                        } else {
-                            current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                    webbing_pricing_info = {"item_uom":"", "item_unit_price":""};
+                    current_webbing_subtotal = 0.0;
+                    if (vr_form_items_data_entry[c1]['vr_item_webbing_input_type'] == 'Select Box' && 
+                        vr_form_items_data_entry[c1]['vr_item_webbing'] != 'null') {
+                        webbing_pricing_info = getVrItemWebbingPricingInfo(vr_form_items_data_entry[c1]['vr_section_ref_name'], vr_form_items_data_entry[c1]['vr_item_webbing']);
+                        if (webbing_pricing_info['item_uom'] != '' && webbing_pricing_info['item_unit_price'] != '') {
+                            if (length_unit_types.indexOf(webbing_pricing_info['item_uom'].toLowerCase()) == -1) {
+                                current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                            } else {
+                                current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                            }
                         }
                     }
-                }
 
-                finish_pricing_info = {"item_uom":"", "item_unit_price":""};
-                current_finish_subtotal = 0.0;
-                if (vr_form_items_data_entry[c1]['vr_item_finish_input_type'] == 'Select Box' && 
-                    vr_form_items_data_entry[c1]['vr_item_finish'] != 'null') {
-                    finish_pricing_info = getVrItemFinishPricingInfo(vr_form_items_data_entry[c1]['vr_section_ref_name'], vr_form_items_data_entry[c1]['vr_item_finish']);
-                    if (finish_pricing_info['item_uom'] != '' && finish_pricing_info['item_unit_price'] != '') {
-                        if (length_unit_types.indexOf(finish_pricing_info['item_uom'].toLowerCase()) == -1) {
-                            current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
-                        } else {
-                            current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                    finish_pricing_info = {"item_uom":"", "item_unit_price":""};
+                    current_finish_subtotal = 0.0;
+                    if (vr_form_items_data_entry[c1]['vr_item_finish_input_type'] == 'Select Box' && 
+                        vr_form_items_data_entry[c1]['vr_item_finish'] != 'null') {
+                        finish_pricing_info = getVrItemFinishPricingInfo(vr_form_items_data_entry[c1]['vr_section_ref_name'], vr_form_items_data_entry[c1]['vr_item_finish']);
+                        if (finish_pricing_info['item_uom'] != '' && finish_pricing_info['item_unit_price'] != '') {
+                            if (length_unit_types.indexOf(finish_pricing_info['item_uom'].toLowerCase()) == -1) {
+                                current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                            } else {
+                                current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                            }
                         }
                     }
+
+                    current_item_rrp = (current_subtotal + current_webbing_subtotal + current_finish_subtotal).toFixed(2);
+                    vr_form_items_data_entry[c1]['vr_item_rrp'] = current_item_rrp;
+                    document.getElementById('vr_item_data_entry_rrp_' + c1).value = formatOutputValue('float', current_item_rrp);
+
+                    current_calculation_log = '' + 
+                                                'item length(in): ' + formatOutputValue('float', current_item_length_in_value_for_calculation) + '<br />' + 
+                                                'item unit price: ' + formatOutputValue('float', current_item_unit_price) + '<br />' + 
+                                                'webbing uom: ' + webbing_pricing_info['item_uom'] + '<br />' + 
+                                                'webbing unit price: ' + webbing_pricing_info['item_unit_price'] + '<br />' + 
+                                                'finish uom: ' + finish_pricing_info['item_uom'] + '<br />' + 
+                                                'finish unit price: ' + finish_pricing_info['item_unit_price'] + '<br />' + 
+                                                'item subtotal: ' + formatOutputValue('float', current_subtotal) + '<br />' + 
+                                                'webbing subtotal: ' + formatOutputValue('float', current_webbing_subtotal) + '<br />' + 
+                                                'finish subtotal: ' + formatOutputValue('float', current_finish_subtotal);
+                    document.getElementById('vr_item_data_entry_rrp_log_' + c1).innerHTML = current_calculation_log;
                 }
-
-                current_item_rrp = (current_subtotal + current_webbing_subtotal + current_finish_subtotal).toFixed(2);
-                vr_form_items_data_entry[c1]['vr_item_rrp'] = current_item_rrp;
-                document.getElementById('vr_item_data_entry_rrp_' + c1).value = formatOutputValue('float', current_item_rrp);
-
-                current_calculation_log = '' + 
-                                            'item length(in): ' + formatOutputValue('float', current_item_length_in_value_for_calculation) + '<br />' + 
-                                            'item unit price: ' + formatOutputValue('float', current_item_unit_price) + '<br />' + 
-                                            'webbing uom: ' + webbing_pricing_info['item_uom'] + '<br />' + 
-                                            'webbing unit price: ' + webbing_pricing_info['item_unit_price'] + '<br />' + 
-                                            'finish uom: ' + finish_pricing_info['item_uom'] + '<br />' + 
-                                            'finish unit price: ' + finish_pricing_info['item_unit_price'] + '<br />' + 
-                                            'item subtotal: ' + formatOutputValue('float', current_subtotal) + '<br />' + 
-                                            'webbing subtotal: ' + formatOutputValue('float', current_webbing_subtotal) + '<br />' + 
-                                            'finish subtotal: ' + formatOutputValue('float', current_finish_subtotal);
-                document.getElementById('vr_item_data_entry_rrp_log_' + c1).innerHTML = current_calculation_log;
             }
         }
 
