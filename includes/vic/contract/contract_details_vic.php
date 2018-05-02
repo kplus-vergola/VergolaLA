@@ -488,7 +488,7 @@ foreach($groups as $group) {
 <span><label style="width: 200px;">Site Spec Engr'ng Application:</label><p><?php if ($SiteSpecEngrDate!="") {echo date(PHP_DFORMAT,strtotime($SiteSpecEngrDate)); } else {echo "";}?></p></span>
 <span><label style="width: 200px;">Final Inspection:</label><p><?php if ($FinalInspection!="") {echo date(PHP_DFORMAT,strtotime($FinalInspection)); } else {echo "";} ?></p></span>
 <span><label style="width: 200px;">Sales Commission:</label><p><?php echo " $".number_format($ListSalesValue,2,".",","); ?></p> </span>
-<span><label style="width: 200px;">Strata Application:</label><p><?php if ($StrataDate!="") {echo date(PHP_DFORMAT,strtotime($StrataDate)); } else {echo "";} ?></p></span>
+<span><label style="width: 200px;">HoA Application:</label><p><?php if ($StrataDate!="") {echo date(PHP_DFORMAT,strtotime($StrataDate)); } else {echo "";} ?></p></span>
 <span><label style="width: 200px;">Warranty Start:</label><p><?php if ($WarrantyStart!="") {echo date(PHP_DFORMAT,strtotime($WarrantyStart)); } else {echo "";} ?></p></span>
 <span><label style="width: 200px;">Installer Commission:</label><p><?php echo " $".number_format("$ListErectorsValue",2,".",","); ?></p></span>
 <span><label style="width: 200px;">Coastal Application:</label><p><?php if ($CoastalDate!="") {echo date(PHP_DFORMAT,strtotime($CoastalDate)); } else {echo "";} ?></p></span>
@@ -548,7 +548,7 @@ foreach($groups as $group) {
 
 
 <span><label>Site Spec Engr'ng Approval:</label> <p><?php if ($SiteSpecEngrApprovedDate!="") {echo date(PHP_DFORMAT,strtotime($SiteSpecEngrApprovedDate)); } else {echo "";} ?></p></span>
-<span><label>Strata Application:</label> <p><?php if ($StrataDate!="") {echo date(PHP_DFORMAT,strtotime($StrataDate)); } else {echo "";} ?></p></span>
+<span><label>HoA Application:</label> <p><?php if ($StrataDate!="") {echo date(PHP_DFORMAT,strtotime($StrataDate)); } else {echo "";} ?></p></span>
 
  -->
 

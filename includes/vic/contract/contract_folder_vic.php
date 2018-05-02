@@ -1126,10 +1126,10 @@ $groups = $user->get('groups');
                 ?>
             </select>  
             </label>
-            <label class="input stratadate" for="stratadateid"><span class="visible">Strata Application: </span>
+            <label class="input stratadate" for="stratadateid"><span class="visible">HoA Application: </span>
                 <input <?php if ($contract_stat['fstrata_active'] !='Yes') {echo disabled; } else {echo "";} ?> type="text" style="width:90px; text-align:right;" value="<?php echo $contract_stat['fstrata_date']; ?>" name="stratadate" id="stratadateid" class="" ></label>
             <label class="input " >
-                <span class="visible">Strata Application Approval: </span>
+                <span class="visible">HoA Application Approval: </span>
                 <input <?php if ($contract_stat['fstrata_active'] !='Yes') {echo disabled; } else {echo "";} ?> type="text" style="width:90px; text-align:right;" value="<?php echo $contract_stat['fstrata_approved_date']; ?>" name="strataapproveddate" id="strataapproveddateid" class="" /></label>                
         </div>
 

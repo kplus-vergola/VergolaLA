@@ -669,7 +669,7 @@ NOTE: all folds are 90&deg; unless otherwise stated
 
 </div> 
 </textarea>
-<input type="submit" class="btn" name="add" id="add1" value="Download PDF"> <input class="btn" type="button" value="Close" onClick="window.opener=null; window.close(); return false;">
+<input type="submit" class="btn" name="add" id="add1" value="Download PDF "> <input class="btn" type="button" value="Close" onClick="window.opener=null; window.close(); return false;">
 
 <!-- <input class="btn" type="submit" value="Save" onClick="window.location=window.location=location.window.location.href + "&titleID='.$titleID.'";  return true;">
 <a href='<?php echo 'index.php?&titleID='.$titleID.'&option=com_chronoforms&tmpl=component&chronoform=Download-PDF'; ?>'>
