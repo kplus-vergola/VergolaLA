@@ -553,6 +553,5 @@ foreach($groups as $group) {
  -->
 
 <?php } else { ?>
-
 <?php } ?>
 

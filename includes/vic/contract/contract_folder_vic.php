@@ -1842,8 +1842,4 @@ function list_Stat_Req_Planning($name="",$selected=null) {
   $r .= "</select>";
   return $r;
 }
-
-
-
-
 ?>
