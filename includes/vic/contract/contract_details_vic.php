@@ -483,19 +483,20 @@ foreach($groups as $group) {
 
 <span><label style="width: 200px;">Contract Value:</label><p><?php echo " $".number_format($ListContractValue,2,".",","); ?></p></span>
 <span><label style="width: 200px;">City Permit Application:</label><p><?php if ($CityPermitDate!="") {echo date(PHP_DFORMAT,strtotime($CityPermitDate)); } else {echo "";} ?></p></span>
-<span><label style="width: 200px;">Job Complete:</label><p><?php if ($JobEnd!="") {echo date(PHP_DFORMAT,strtotime($JobEnd)); } else {echo "";} ?></p></span>
+<span><label style="width: 200px;">Footing Inspection:</label><p><?php if ($JobEnd!="") {echo date(PHP_DFORMAT,strtotime($JobEnd)); } else {echo "";} ?></p></span>
 <span><label style="width: 200px;">Variation:</label><p><?php echo " $".number_format($PaymentVariationValue,2,".",","); ?></p></span>
-<span><label style="width: 200px;">Site Spec Engr'ng Application:</label><p><?php if ($SiteSpecEngrDate!="") {echo date(PHP_DFORMAT,strtotime($SiteSpecEngrDate)); } else {echo "";}?></p></span>
-<span><label style="width: 200px;">Final Inspection:</label><p><?php if ($FinalInspection!="") {echo date(PHP_DFORMAT,strtotime($FinalInspection)); } else {echo "";} ?></p></span>
+<span><label style="width: 200px;">Site Spec Engr'ng Approval Date:</label><p><?php if ($SiteSpecEngrDate!="") {echo date(PHP_DFORMAT,strtotime($SiteSpecEngrDate)); } else {echo "";}?></p></span>
+<span><label style="width: 200px;">Job Complete:</label><p><?php if ($JobEnd!="") {echo date(PHP_DFORMAT,strtotime($JobEnd)); } else {echo "";} ?></p></span>
 <span><label style="width: 200px;">Sales Commission:</label><p><?php echo " $".number_format($ListSalesValue,2,".",","); ?></p> </span>
-<span><label style="width: 200px;">HoA Application:</label><p><?php if ($StrataDate!="") {echo date(PHP_DFORMAT,strtotime($StrataDate)); } else {echo "";} ?></p></span>
-<span><label style="width: 200px;">Warranty Start:</label><p><?php if ($WarrantyStart!="") {echo date(PHP_DFORMAT,strtotime($WarrantyStart)); } else {echo "";} ?></p></span>
+<span><label style="width: 200px;">HoA Approval Date:</label><p><?php if ($StrataDate!="") {echo date(PHP_DFORMAT,strtotime($StrataDate)); } else {echo "";} ?></p></span>
+<span><label style="width: 200px;">Final Inspection:</label><p><?php if ($FinalInspection!="") {echo date(PHP_DFORMAT,strtotime($FinalInspection)); } else {echo "";} ?></p></span>
 <span><label style="width: 200px;">Installer Commission:</label><p><?php echo " $".number_format("$ListErectorsValue",2,".",","); ?></p></span>
-<span><label style="width: 200px;">Coastal Application:</label><p><?php if ($CoastalDate!="") {echo date(PHP_DFORMAT,strtotime($CoastalDate)); } else {echo "";} ?></p></span>
-<span><label style="width: 200px;">Warranty End:</label><p><?php if ($WarrantyEnd!="") {echo date(PHP_DFORMAT,strtotime($WarrantyEnd)); } else {echo "";} ?></p></span>
+<span><label style="width: 200px;">Coastal Approval Date:</label><p><?php if ($CoastalDate!="") {echo date(PHP_DFORMAT,strtotime($CoastalDate)); } else {echo "";} ?></p></span>
+<span><label style="width: 200px;">Warranty Start:</label><p><?php if ($WarrantyStart!="") {echo date(PHP_DFORMAT,strtotime($WarrantyStart)); } else {echo "";} ?></p></span>
 <span><label style="width: 200px;">Installer:</label><p><?php echo $Erectors; ?></p></span>
 <span><label style="width: 200px;">City Permit Approval:</label><p><?php if ($CityPermitApprovedDate!="") {echo date(PHP_DFORMAT,strtotime($CityPermitApprovedDate)); } else {echo "";} ?></p></span>
-<span><label style="width: 200px;"></label></span>
+<!--<span><label style="width: 200px;"></label></span>-->
+<span><label style="width: 200px;">Warranty End:</label><p><?php if ($WarrantyEnd!="") {echo date(PHP_DFORMAT,strtotime($WarrantyEnd)); } else {echo "";} ?></p></span>
 <span><label style="width: 200px;">Check Measurer:</label><p><?php echo $CheckMeasurer; ?></p></span>
 <span><label style="width: 200px;">Production Complete:</label><p><?php if ($ProductionComplete!="") {echo date(PHP_DFORMAT,strtotime($ProductionComplete)); } else {echo "";} ?></p></span>
 <span><label style="width: 200px;">Travel Cost:</label><p><?php echo " $".number_format($Travel,2,".",","); ?></p></span>

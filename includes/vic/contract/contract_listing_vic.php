@@ -648,10 +648,13 @@ if(isset($_POST['download_pdf'])==false){
 		Coastal Application</th><th>
 		City Permital Approval</th><th>
 		Framework Ordered</th><th>
-		Production Completed</th><th>
-		Con Note Number</th><th>
+		Production Completed</th>
+		<th>Con Note Number</th>
+		<th>
 		Install Date</th><th>
-		Installer</th><th>
+		Installer</th>
+		<!--<th>Footing Inspection</th>-->
+		<th>
 		Completion Date</th><th>
 		Final Inspection</th><th>
 		Note</th></tr>";
@@ -673,10 +676,13 @@ if(isset($_POST['download_pdf'])==false){
 		Engineering Approved</th><th width=\"5%\">
 		Permit Approved</th><th width=\"5%\">
 		Framework Ordered</th><th width=\"5%\">
-		Production Completed</th><th>
-		Con Note Number</th><th width=\"5%\">
+		Production Completed</th>
+		<th>Con Note Number</th>
+		<th width=\"5%\">
 		Install Date</th><th> 
-		Installer </th><th width=\"5%\"> 
+		Installer </th>
+		<!--<th width=\"5%\"> Footing Inspection </th>-->
+		<th width=\"5%\"> 
 		Completion Date </th><th width=\"5%\"> 
 		Final Inspection </th></tr>";
 }

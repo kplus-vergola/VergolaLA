@@ -899,7 +899,7 @@ $groups = $user->get('groups');
     </div> 
     <!-- For the Installer DropDown -->
     <?php
-            $cbo_installer1 = "<select    name=\"erectors_name\" style='width:107%;'><option value=''>Select Installer 1</option>"; 
+            $cbo_installer1 = "<select    name=\"erectors_name\" style='width:103%; padding:0px'><option value=''>Select Installer 1</option>"; 
             $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
 
                         $resultsub = mysql_query($querysub);
@@ -950,8 +950,9 @@ $groups = $user->get('groups');
           
           <div class="label-input-row"> 
             <label class="input jobstart"><span class="visible">Job Start: </span><input type="text" value="<?php echo $contract_vergola['fjob_start_date']; ?>" name="jobstart" class="date_entered"></label> 
-            <label class="input jobend"><span class="visible">Job Complete: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered"></label> 
-            <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
+            <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered"></label> 
+            <label class="input jobend"><span class="visible">Job Complete: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered"></label>
+			<!--<label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>-->
           </div>
 
           <div class="label-input-row">      
