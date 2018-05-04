@@ -3,22 +3,28 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 01, 2018 at 07:13 AM
+-- Generation Time: May 04, 2018 at 04:32 AM
 -- Server version: 5.6.21
 -- PHP Version: 5.5.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
 --
 -- Database: `vergola_quotedb_v5_us`
 --
+
+DELIMITER $$
+--
+-- Functions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `FracToDec`() RETURNS int(11)
+BEGIN
+
+RETURN 1;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -769,7 +775,7 @@ CREATE TABLE IF NOT EXISTS `tblsummarydailysalesgeneral` (
   `num_quotes` int(11) DEFAULT NULL,
   `num_contracts` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=935946 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=792386 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -791,7 +797,7 @@ CREATE TABLE IF NOT EXISTS `tblsummarydailysalesgeneral_temp` (
   `num_quotes` int(11) DEFAULT NULL,
   `num_contracts` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=935946 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=792386 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -805,7 +811,7 @@ CREATE TABLE IF NOT EXISTS `tblsummarydailysalesquote` (
   `consultant_id` varchar(45) DEFAULT NULL,
   `quote_id` varchar(45) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=368537 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=306954 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -819,7 +825,7 @@ CREATE TABLE IF NOT EXISTS `tblsummarydailysalesquote_temp` (
   `consultant_id` varchar(45) DEFAULT NULL,
   `quote_id` varchar(45) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=368549 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=306954 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -830,7 +836,7 @@ CREATE TABLE IF NOT EXISTS `tblsummarydailysalesquote_temp` (
 CREATE TABLE IF NOT EXISTS `tblsummarydatelist` (
 `id` int(11) NOT NULL,
   `date` date DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4743524 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3857914 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -841,7 +847,7 @@ CREATE TABLE IF NOT EXISTS `tblsummarydatelist` (
 CREATE TABLE IF NOT EXISTS `tblsummarydatelist_temp` (
 `id` int(11) NOT NULL,
   `date` date DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4743524 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3857914 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1150,7 +1156,7 @@ CREATE TABLE IF NOT EXISTS `ver_assets` (
   `name` varchar(50) NOT NULL COMMENT 'The unique name for the asset.\n',
   `title` varchar(100) NOT NULL COMMENT 'The descriptive title for the asset.',
   `rules` varchar(5120) NOT NULL COMMENT 'JSON encoded access control.'
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1525,7 +1531,7 @@ CREATE TABLE IF NOT EXISTS `ver_chronoforms_data_contract_bom_meterial_vic` (
   `length_feet` decimal(19,2) DEFAULT NULL,
   `length_inch` decimal(19,2) DEFAULT NULL,
   `length_fraction` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16558 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1559,7 +1565,7 @@ CREATE TABLE IF NOT EXISTS `ver_chronoforms_data_contract_bom_vic` (
   `length_feet` decimal(19,2) DEFAULT NULL,
   `length_inch` decimal(19,2) DEFAULT NULL,
   `length_fraction` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=380 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1727,7 +1733,7 @@ CREATE TABLE IF NOT EXISTS `ver_chronoforms_data_contract_items_vic` (
   `length_feet` decimal(19,2) DEFAULT NULL,
   `length_inch` decimal(19,2) DEFAULT NULL,
   `length_fraction` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2601 DEFAULT CHARSET=latin1 COMMENT='quote_no = QuoteID (Old System DB Table) quoteid name is already used in new system db table\nquote_qno = QCostID  (Old System DB Table)';
+) ENGINE=InnoDB AUTO_INCREMENT=2603 DEFAULT CHARSET=latin1 COMMENT='quote_no = QuoteID (Old System DB Table) quoteid name is already used in new system db table\nquote_qno = QCostID  (Old System DB Table)';
 
 -- --------------------------------------------------------
 
@@ -1942,7 +1948,8 @@ CREATE TABLE IF NOT EXISTS `ver_chronoforms_data_contract_vergola_vic` (
   `time_frame_letter` date DEFAULT NULL,
   `schedule_completion` date DEFAULT NULL,
   `framework_letter` datetime DEFAULT NULL,
-  `special_condition` varchar(255) DEFAULT NULL
+  `special_condition` varchar(255) DEFAULT NULL,
+  `footing_inspection` date DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -2020,7 +2027,7 @@ CREATE TABLE IF NOT EXISTS `ver_chronoforms_data_followup_vic` (
   `width_feet` decimal(19,2) DEFAULT NULL,
   `width_inch` decimal(19,2) DEFAULT NULL,
   `width_fraction` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=902 DEFAULT CHARSET=latin1 COMMENT=' is_builder is a column to determine if the quote was for a builder use in sales report.';
+) ENGINE=InnoDB AUTO_INCREMENT=908 DEFAULT CHARSET=latin1 COMMENT=' is_builder is a column to determine if the quote was for a builder use in sales report.';
 
 -- --------------------------------------------------------
 
@@ -2063,7 +2070,7 @@ CREATE TABLE IF NOT EXISTS `ver_chronoforms_data_inventory_material_vic` (
   `updated_at` datetime DEFAULT NULL,
   `inv_qty` int(11) DEFAULT '0',
   `inv_extcost` float DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=661 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10790 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2200,7 +2207,7 @@ CREATE TABLE IF NOT EXISTS `ver_chronoforms_data_letters_vic` (
   `is_temp` int(11) DEFAULT '0',
   `has_upload_file` int(11) DEFAULT '0',
   `dateupdated` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=528 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=732 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -2299,7 +2306,7 @@ CREATE TABLE IF NOT EXISTS `ver_chronoforms_data_measurement_vic` (
   `width_fraction` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=1659 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1665 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2375,7 +2382,7 @@ CREATE TABLE IF NOT EXISTS `ver_chronoforms_data_quote_vic` (
   `length_feet` decimal(19,2) DEFAULT NULL,
   `length_inch` decimal(19,2) DEFAULT NULL,
   `length_fraction` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=50754 DEFAULT CHARSET=latin1 COMMENT='supplier_id = supplier id for new system\nsupplierid = supplier id from old system';
+) ENGINE=InnoDB AUTO_INCREMENT=51080 DEFAULT CHARSET=latin1 COMMENT='supplier_id = supplier id for new system\nsupplierid = supplier id from old system';
 
 -- --------------------------------------------------------
 
@@ -2715,7 +2722,7 @@ CREATE TABLE IF NOT EXISTS `ver_extensions` (
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ordering` int(11) DEFAULT '0',
   `state` int(11) DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=865 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=870 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -3063,6 +3070,181 @@ CREATE TABLE IF NOT EXISTS `ver_finder_types` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ver_fsj_main_attachment`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_main_attachment` (
+`id` int(10) unsigned NOT NULL,
+  `params` text NOT NULL,
+  `source` varchar(50) NOT NULL DEFAULT '',
+  `source_id` int(11) NOT NULL DEFAULT '0',
+  `dest` varchar(50) NOT NULL DEFAULT '',
+  `dest_id` int(11) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ver_fsj_main_cron`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_main_cron` (
+`id` int(10) unsigned NOT NULL,
+  `source` varchar(50) NOT NULL DEFAULT '',
+  `source_id` int(10) NOT NULL DEFAULT '0',
+  `event` varchar(50) NOT NULL DEFAULT '',
+  `file` varchar(250) NOT NULL DEFAULT '',
+  `class` varchar(250) NOT NULL DEFAULT '',
+  `function` varchar(250) NOT NULL DEFAULT '',
+  `param` varchar(250) NOT NULL DEFAULT '',
+  `interval` int(10) NOT NULL DEFAULT '0',
+  `state` int(10) NOT NULL DEFAULT '0',
+  `lastrun` int(11) NOT NULL DEFAULT '0',
+  `runkey` varchar(50) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ver_fsj_main_cronlog`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_main_cronlog` (
+`id` int(10) unsigned NOT NULL,
+  `source` varchar(50) NOT NULL DEFAULT '',
+  `source_id` int(10) NOT NULL DEFAULT '0',
+  `event` varchar(50) NOT NULL DEFAULT '',
+  `whentime` int(11) NOT NULL DEFAULT '0',
+  `whendate` date NOT NULL DEFAULT '0000-00-00',
+  `success` int(11) NOT NULL DEFAULT '0',
+  `result` varchar(250) NOT NULL DEFAULT '',
+  `log` mediumtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ver_fsj_main_related`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_main_related` (
+`id` int(10) unsigned NOT NULL,
+  `params` text NOT NULL,
+  `source` varchar(50) NOT NULL DEFAULT '',
+  `source_id` int(11) NOT NULL DEFAULT '0',
+  `dest` varchar(50) NOT NULL DEFAULT '',
+  `dest_id` int(11) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ver_fsj_main_settings`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_main_settings` (
+`id` int(10) unsigned NOT NULL,
+  `parent_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `lft` int(10) NOT NULL DEFAULT '0',
+  `rgt` int(10) NOT NULL DEFAULT '0',
+  `level` int(10) unsigned NOT NULL DEFAULT '0',
+  `path` varchar(255) NOT NULL DEFAULT '',
+  `alias` varchar(255) NOT NULL DEFAULT '',
+  `j_asset` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `title` varchar(100) NOT NULL DEFAULT '',
+  `value` text NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ver_fsj_plg_plugin`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_plg_plugin` (
+`id` int(10) unsigned NOT NULL,
+  `state` tinyint(3) NOT NULL DEFAULT '0',
+  `params` text NOT NULL,
+  `type` varchar(50) NOT NULL DEFAULT '',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `path` varchar(250) NOT NULL DEFAULT '',
+  `title` varchar(50) NOT NULL DEFAULT '',
+  `description` varchar(250) NOT NULL DEFAULT '',
+  `author` varchar(50) NOT NULL DEFAULT '',
+  `settings` text NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ver_fsj_plg_type`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_plg_type` (
+`id` int(10) unsigned NOT NULL,
+  `params` text NOT NULL,
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `path` varchar(250) NOT NULL DEFAULT '',
+  `component` varchar(250) NOT NULL DEFAULT '',
+  `title` varchar(50) NOT NULL DEFAULT '',
+  `description` varchar(250) NOT NULL DEFAULT '',
+  `author` varchar(50) NOT NULL DEFAULT '',
+  `settings` text NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ver_fsj_sqlman_sql`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_sqlman_sql` (
+`id` int(10) unsigned NOT NULL,
+  `sqlcmd` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ver_fsj_tpl_template`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_tpl_template` (
+`id` int(10) unsigned NOT NULL,
+  `component` varchar(50) NOT NULL DEFAULT '',
+  `type` varchar(50) NOT NULL DEFAULT '',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `title` varchar(250) NOT NULL DEFAULT '',
+  `description` text NOT NULL,
+  `parsed` text NOT NULL,
+  `params` text NOT NULL,
+  `updated` int(11) NOT NULL DEFAULT '0',
+  `noedit` int(11) NOT NULL DEFAULT '0',
+  `base` varchar(50) NOT NULL DEFAULT ''
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ver_fsj_tpl_type`
+--
+
+CREATE TABLE IF NOT EXISTS `ver_fsj_tpl_type` (
+`id` int(10) unsigned NOT NULL,
+  `component` varchar(50) NOT NULL DEFAULT '',
+  `type` varchar(50) NOT NULL DEFAULT '',
+  `xmlfile` varchar(250) NOT NULL DEFAULT '',
+  `instpath` varchar(250) NOT NULL DEFAULT '',
+  `title` varchar(250) NOT NULL DEFAULT '',
+  `description` text NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ver_languages`
 --
 
@@ -3114,7 +3296,7 @@ CREATE TABLE IF NOT EXISTS `ver_menu` (
   `home` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Indicates if this menu item is the home or default page.',
   `language` char(7) NOT NULL DEFAULT '',
   `client_id` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -3517,7 +3699,7 @@ CREATE TABLE IF NOT EXISTS `ver_updates` (
   `data` text NOT NULL,
   `detailsurl` text NOT NULL,
   `infourl` text NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=381 DEFAULT CHARSET=utf8 COMMENT='Available Updates';
+) ENGINE=InnoDB AUTO_INCREMENT=394 DEFAULT CHARSET=utf8 COMMENT='Available Updates';
 
 -- --------------------------------------------------------
 
@@ -3546,7 +3728,7 @@ CREATE TABLE IF NOT EXISTS `ver_update_sites` (
   `location` text NOT NULL,
   `enabled` int(11) DEFAULT '0',
   `last_check_timestamp` bigint(20) DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='Update Sites';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='Update Sites';
 
 -- --------------------------------------------------------
 
@@ -3603,7 +3785,7 @@ CREATE TABLE IF NOT EXISTS `ver_users` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4578,6 +4760,66 @@ ALTER TABLE `ver_finder_types`
  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `title` (`title`);
 
 --
+-- Indexes for table `ver_fsj_main_attachment`
+--
+ALTER TABLE `ver_fsj_main_attachment`
+ ADD PRIMARY KEY (`id`), ADD KEY `Lookup` (`source`,`source_id`,`dest`,`dest_id`);
+
+--
+-- Indexes for table `ver_fsj_main_cron`
+--
+ALTER TABLE `ver_fsj_main_cron`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ver_fsj_main_cronlog`
+--
+ALTER TABLE `ver_fsj_main_cronlog`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ver_fsj_main_related`
+--
+ALTER TABLE `ver_fsj_main_related`
+ ADD PRIMARY KEY (`id`), ADD KEY `Lookup` (`source`,`source_id`,`dest`,`dest_id`);
+
+--
+-- Indexes for table `ver_fsj_main_settings`
+--
+ALTER TABLE `ver_fsj_main_settings`
+ ADD PRIMARY KEY (`id`), ADD KEY `idx_asset_id` (`j_asset`), ADD KEY `idx_name` (`name`), ADD KEY `idx_lft_rgt` (`lft`,`rgt`), ADD KEY `parent_id` (`parent_id`), ADD KEY `idx_id_lft_rgt` (`id`,`lft`,`rgt`);
+
+--
+-- Indexes for table `ver_fsj_plg_plugin`
+--
+ALTER TABLE `ver_fsj_plg_plugin`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `idx_name` (`type`,`name`), ADD KEY `idx_state` (`state`), ADD KEY `Main` (`type`,`name`);
+
+--
+-- Indexes for table `ver_fsj_plg_type`
+--
+ALTER TABLE `ver_fsj_plg_type`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `idx_name` (`name`);
+
+--
+-- Indexes for table `ver_fsj_sqlman_sql`
+--
+ALTER TABLE `ver_fsj_sqlman_sql`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ver_fsj_tpl_template`
+--
+ALTER TABLE `ver_fsj_tpl_template`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `Main` (`component`,`type`,`name`);
+
+--
+-- Indexes for table `ver_fsj_tpl_type`
+--
+ALTER TABLE `ver_fsj_tpl_type`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `Main` (`component`,`type`);
+
+--
 -- Indexes for table `ver_languages`
 --
 ALTER TABLE `ver_languages`
@@ -4956,32 +5198,32 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 -- AUTO_INCREMENT for table `tblsummarydailysalesgeneral`
 --
 ALTER TABLE `tblsummarydailysalesgeneral`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=935946;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=792386;
 --
 -- AUTO_INCREMENT for table `tblsummarydailysalesgeneral_temp`
 --
 ALTER TABLE `tblsummarydailysalesgeneral_temp`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=935946;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=792386;
 --
 -- AUTO_INCREMENT for table `tblsummarydailysalesquote`
 --
 ALTER TABLE `tblsummarydailysalesquote`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=368537;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=306954;
 --
 -- AUTO_INCREMENT for table `tblsummarydailysalesquote_temp`
 --
 ALTER TABLE `tblsummarydailysalesquote_temp`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=368549;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=306954;
 --
 -- AUTO_INCREMENT for table `tblsummarydatelist`
 --
 ALTER TABLE `tblsummarydatelist`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4743524;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3857914;
 --
 -- AUTO_INCREMENT for table `tblsummarydatelist_temp`
 --
 ALTER TABLE `tblsummarydatelist_temp`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4743524;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3857914;
 --
 -- AUTO_INCREMENT for table `tblsuporders`
 --
@@ -5046,7 +5288,7 @@ MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 -- AUTO_INCREMENT for table `ver_assets`
 --
 ALTER TABLE `ver_assets`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',AUTO_INCREMENT=42;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',AUTO_INCREMENT=44;
 --
 -- AUTO_INCREMENT for table `ver_banners`
 --
@@ -5096,12 +5338,12 @@ MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 -- AUTO_INCREMENT for table `ver_chronoforms_data_contract_bom_meterial_vic`
 --
 ALTER TABLE `ver_chronoforms_data_contract_bom_meterial_vic`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=98;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16558;
 --
 -- AUTO_INCREMENT for table `ver_chronoforms_data_contract_bom_vic`
 --
 ALTER TABLE `ver_chronoforms_data_contract_bom_vic`
-MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=45;
+MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=380;
 --
 -- AUTO_INCREMENT for table `ver_chronoforms_data_contract_details_vic`
 --
@@ -5121,7 +5363,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=762;
 -- AUTO_INCREMENT for table `ver_chronoforms_data_contract_items_vic`
 --
 ALTER TABLE `ver_chronoforms_data_contract_items_vic`
-MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2601;
+MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2603;
 --
 -- AUTO_INCREMENT for table `ver_chronoforms_data_contract_items_vic_1`
 --
@@ -5156,7 +5398,7 @@ MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
 -- AUTO_INCREMENT for table `ver_chronoforms_data_followup_vic`
 --
 ALTER TABLE `ver_chronoforms_data_followup_vic`
-MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=902;
+MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=908;
 --
 -- AUTO_INCREMENT for table `ver_chronoforms_data_image_vic`
 --
@@ -5171,7 +5413,7 @@ MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 -- AUTO_INCREMENT for table `ver_chronoforms_data_inventory_material_vic`
 --
 ALTER TABLE `ver_chronoforms_data_inventory_material_vic`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=661;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10790;
 --
 -- AUTO_INCREMENT for table `ver_chronoforms_data_inventory_vic`
 --
@@ -5201,7 +5443,7 @@ MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=37;
 -- AUTO_INCREMENT for table `ver_chronoforms_data_letters_vic`
 --
 ALTER TABLE `ver_chronoforms_data_letters_vic`
-MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=528;
+MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=732;
 --
 -- AUTO_INCREMENT for table `ver_chronoforms_data_materials_vic`
 --
@@ -5231,7 +5473,7 @@ MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
 -- AUTO_INCREMENT for table `ver_chronoforms_data_measurement_vic`
 --
 ALTER TABLE `ver_chronoforms_data_measurement_vic`
-MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1659;
+MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1665;
 --
 -- AUTO_INCREMENT for table `ver_chronoforms_data_notes_vic`
 --
@@ -5246,7 +5488,7 @@ MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=50;
 -- AUTO_INCREMENT for table `ver_chronoforms_data_quote_vic`
 --
 ALTER TABLE `ver_chronoforms_data_quote_vic`
-MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=50754;
+MODIFY `cf_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51080;
 --
 -- AUTO_INCREMENT for table `ver_chronoforms_data_quote_vic_old_system`
 --
@@ -5311,7 +5553,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `ver_extensions`
 --
 ALTER TABLE `ver_extensions`
-MODIFY `extension_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=865;
+MODIFY `extension_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=870;
 --
 -- AUTO_INCREMENT for table `ver_finder_filters`
 --
@@ -5338,6 +5580,56 @@ MODIFY `term_id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 ALTER TABLE `ver_finder_types`
 MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `ver_fsj_main_attachment`
+--
+ALTER TABLE `ver_fsj_main_attachment`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ver_fsj_main_cron`
+--
+ALTER TABLE `ver_fsj_main_cron`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ver_fsj_main_cronlog`
+--
+ALTER TABLE `ver_fsj_main_cronlog`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ver_fsj_main_related`
+--
+ALTER TABLE `ver_fsj_main_related`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ver_fsj_main_settings`
+--
+ALTER TABLE `ver_fsj_main_settings`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `ver_fsj_plg_plugin`
+--
+ALTER TABLE `ver_fsj_plg_plugin`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
+--
+-- AUTO_INCREMENT for table `ver_fsj_plg_type`
+--
+ALTER TABLE `ver_fsj_plg_type`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `ver_fsj_sqlman_sql`
+--
+ALTER TABLE `ver_fsj_sqlman_sql`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ver_fsj_tpl_template`
+--
+ALTER TABLE `ver_fsj_tpl_template`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `ver_fsj_tpl_type`
+--
+ALTER TABLE `ver_fsj_tpl_type`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT for table `ver_languages`
 --
 ALTER TABLE `ver_languages`
@@ -5346,7 +5638,7 @@ MODIFY `lang_id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `ver_menu`
 --
 ALTER TABLE `ver_menu`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=198;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=200;
 --
 -- AUTO_INCREMENT for table `ver_menu_types`
 --
@@ -5426,7 +5718,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 -- AUTO_INCREMENT for table `ver_updates`
 --
 ALTER TABLE `ver_updates`
-MODIFY `update_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=381;
+MODIFY `update_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=394;
 --
 -- AUTO_INCREMENT for table `ver_update_categories`
 --
@@ -5436,7 +5728,7 @@ MODIFY `categoryid` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `ver_update_sites`
 --
 ALTER TABLE `ver_update_sites`
-MODIFY `update_site_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `update_site_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `ver_usergroups`
 --
@@ -5446,7 +5738,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',AUTO_
 -- AUTO_INCREMENT for table `ver_users`
 --
 ALTER TABLE `ver_users`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=80;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=81;
 --
 -- AUTO_INCREMENT for table `ver_user_notes`
 --
@@ -5472,6 +5764,3 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',AUTO_
 --
 ALTER TABLE `ver_weblinks`
 MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
