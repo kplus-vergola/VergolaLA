@@ -286,7 +286,7 @@ if ($enable_retrieve['data_followup'] == true) {
         $vr_form_billing_info['vr_commission_pay1'] = $r1['com_pay1'];
         $vr_form_billing_info['vr_commission_pay2'] = $r1['com_pay2'];
         $vr_form_billing_info['vr_commission_final'] = $r1['com_final'];
-        $vr_form_billing_info['vr_commission_installer_payment'] = $r1['install_comm'];
+        $vr_form_billing_info['vr_commission_installer_payment'] = ($r1['install_comm_cost'] > 0) ? $r1['install_comm_cost'] : $r1['install_comm'];
         $vr_form_billing_info['vr_payment_deposit'] = $r1['payment_deposit'];
         $vr_form_billing_info['vr_payment_progress_payment'] = $r1['payment_progress'];
         $vr_form_billing_info['vr_payment_final_payment'] = $r1['payment_final'];
