@@ -8,16 +8,14 @@ $config = array(
     'vergola_server' => array(
         'la' => array(
             'local' => array(
-                array('name' => 'vergola.contract-system-v4-la.dev', 'port' => '80'), 
                 array('name' => 'la.vergola.com', 'port' => '80'), 
-                array('name' => 'la.vergola.com', 'port' => '82') 
+                array('name' => 'training.la.vergola.com', 'port' => '80'), 
+                array('name' => 'as-live.la.vergola.com', 'port' => '80') 
             ), 
             'preproduction' => array(
-                array('ip' => '192.168.0.9'), 
-                array('name' => 'vglla.knowledgeplus.net.au', 'port' => '9000'), 
-                array('name' => 'la.vergola.com', 'port' => '80'), 
-                array('name' => 'la.vergola.com', 'port' => '82'), 
+                array('ip' => '192.168.0.5'), 
                 array('name' => 'vglla.knowledgeplus.net.au', 'port' => '5000'), 
+                array('name' => 'training.vglla.knowledgeplus.net.au', 'port' => '5000'), 
                 array('name' => 'as-live.vglla.knowledgeplus.net.au', 'port' => '5000')
             ), 
             'live' => array(
@@ -28,15 +26,11 @@ $config = array(
         ), 
         'sa' => array(
             'local' => array(
-                array('name' => 'vergola.contract-system-v3-sa.dev', 'port' => '80'), 
-                array('name' => 'sa.vergola.com', 'port' => '80'), 
-                array('name' => 'sa.vergola.com', 'port' => '82') 
+                array('name' => 'sa.vergola.com', 'port' => '80')
             ), 
             'preproduction' => array(
                 array('ip' => '192.168.0.5'), 
-                array('name' => 'vglsa.knowledgeplus.net.au', 'port' => '5000'), 
-                array('name' => 'sa.vergola.com', 'port' => '80'), 
-                array('name' => 'sa.vergola.com', 'port' => '82') 
+                array('name' => 'vglsa.knowledgeplus.net.au', 'port' => '5000')
             ), 
             'live' => array(
                 array('ip' => '192.168.0.7'), 
@@ -46,15 +40,10 @@ $config = array(
         ), 
         'vic' => array(
             'local' => array(
-                array('name' => 'vergola.contract-system-v3-vic.dev', 'port' => '80'), 
-                array('name' => 'victoria.vergola.com', 'port' => '80'), 
-                array('name' => 'victoria.vergola.com', 'port' => '82') 
+                array('name' => 'victoria.vergola.com', 'port' => '80')
             ), 
             'preproduction' => array(
-                array('ip' => '192.168.0.3'), 
-                array('name' => 'vglvic.knowledgeplus.net.au', 'port' => '3000'), 
-                array('name' => 'victoria.vergola.com', 'port' => '80'), 
-                array('name' => 'victoria.vergola.com', 'port' => '82'), 
+                array('ip' => '192.168.0.5'), 
                 array('name' => 'vglvic.knowledgeplus.net.au', 'port' => '5000')
             ), 
             'live' => array(
