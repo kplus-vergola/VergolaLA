@@ -23,6 +23,7 @@ $vr_type_reverse_map = array(
     'Single Bay VR1' => 'VR1', 
     'Single Bay VR1 - Drop-In' => 'VR1', 
     'Double Bay VR2' => 'VR2', 
+    'Double Bay VR2 - Drop-In' => 'VR2', 
     'Double Bay VR3' => 'VR3', 
     'Double Bay VR3 - Drop-In' => 'VR3', 
     'Double Bay VR3 - Gutter' => 'VR3G'

@@ -500,6 +500,7 @@ $sql_template_retrieve_data_quote = "
 $sql_template_retrieve_data_quote = "
     SELECT 
         dq.cf_id, 
+        dq.framework_type, 
         dq.framework, 
         dq.inventoryid, 
         dq.description, 
@@ -583,6 +584,7 @@ $sql_template_retrieve_status_data_followup = "
 $sql_template_retrieve_data_contract_items = "
     SELECT 
         dci.cf_id, 
+        dci.framework_type, 
         dci.framework, 
         dci.inventoryid, 
         dci.description, 
