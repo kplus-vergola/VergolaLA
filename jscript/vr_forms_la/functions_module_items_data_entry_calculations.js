@@ -397,6 +397,44 @@
         }
 
 
+        function adjustPaymentTaxManually() {
+            var total_payment_sub_total = 0.0;
+            var total_payment_tax = 0.0;
+            var total_payment_total = 0.0;
+            var temp_text1 = '';
+            var temp_text2 = '';
+
+            if (document.getElementById('vr_payment_sub_total_form_billing').value.length > 0) {
+                temp_text1 = document.getElementById('vr_payment_sub_total_form_billing').value;
+                temp_text2 = temp_text1.replace(',', '');
+                total_payment_sub_total = parseFloat(temp_text2);
+            }
+
+            if (document.getElementById('vr_payment_tax_form_billing').value.length > 0) {
+                temp_text1 = document.getElementById('vr_payment_tax_form_billing').value;
+                temp_text2 = temp_text1.replace(',', '');
+                total_payment_tax = parseFloat(temp_text2);
+            }
+
+            if (document.getElementById('vr_payment_total_form_billing').value.length > 0) {
+                temp_text1 = document.getElementById('vr_payment_total_form_billing').value;
+                temp_text2 = temp_text1.replace(',', '');
+                total_payment_total = parseFloat(temp_text2);
+            }
+
+            if (total_payment_tax == 0) {
+                total_payment_tax = total_payment_sub_total * vr_form_system_info['payment_tax_percentage'];
+                total_payment_total = total_payment_sub_total + total_payment_tax;
+            } else {
+                total_payment_total = total_payment_sub_total + total_payment_tax;
+            }
+
+            document.getElementById('vr_payment_sub_total_form_billing').value = formatOutputValue('float', total_payment_sub_total);
+            document.getElementById('vr_payment_tax_form_billing').value = formatOutputValue('float', total_payment_tax);
+            document.getElementById('vr_payment_total_form_billing').value = formatOutputValue('float', total_payment_total);
+        }
+
+
         function calculateVrFormItemsDataEntryValues(process_option) {
             if (vr_form_system_info['access_mode'] != 'quote_view' && vr_form_system_info['access_mode'] != 'contract_bom_edit') {
                 switch (process_option) {

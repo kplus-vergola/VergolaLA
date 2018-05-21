@@ -194,7 +194,7 @@
                             <tr>
                                 <td class="vr_table_body_1 vr_form_field_name_1"></td>
                                 <td class="vr_table_body_1 vr_form_field_name_2">$</td>
-                                <td class="vr_table_body_1"><input type="text" class="vr_form_field_textbox_1" id="vr_payment_tax_form_billing" name="vr_payment_tax_form_billing" value="" /></td>
+                                <td class="vr_table_body_1"><input type="text" class="vr_form_field_textbox_1" id="vr_payment_tax_form_billing" name="vr_payment_tax_form_billing" value="" onchange="adjustPaymentTaxManually()"/></td>
                             </tr>
                             <tr>
                                 <td class="vr_table_body_1 vr_form_field_name_1">Total</td>
