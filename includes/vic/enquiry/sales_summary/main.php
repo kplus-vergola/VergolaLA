@@ -57,6 +57,7 @@ $sql = str_replace(
 );
 $query_results = executeDbQuery($db_connection, $sql);
 $adhoc_consultant_filter = 'AND ' . rtrim(trim($consultant_filter), 'AND');
+$adhoc_consultant_filter = str_replace('rep_id', 'consultant_id', $adhoc_consultant_filter);
 $sql = str_replace(
 	array('[ADDITIONAL_CONDITION]'), 
 	array($adhoc_consultant_filter), 
@@ -73,6 +74,7 @@ $sql = str_replace(
 );
 $query_results = executeDbQuery($db_connection, $sql);
 $adhoc_consultant_filter = 'AND ' . rtrim(trim($consultant_filter), 'AND');
+$adhoc_consultant_filter = str_replace('rep_id', 'consultant_id', $adhoc_consultant_filter);
 $sql = str_replace(
 	array('[ADDITIONAL_CONDITION]'), 
 	array($adhoc_consultant_filter), 
