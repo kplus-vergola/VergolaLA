@@ -7,7 +7,7 @@
   //$dbname = 'vergola_quotedb_sa_v1';
 
  
-  $dbname = 'vergola_quotedb_v5_us(training)';
+  $dbname = 'vergola_quotedb_v5_us';
   mysql_select_db($dbname);
   
   $state_table = "ver_chronoforms_data_suburbs_vic";
