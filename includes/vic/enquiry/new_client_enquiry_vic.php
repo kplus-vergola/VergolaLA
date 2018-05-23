@@ -81,44 +81,44 @@ if(isset($_POST['update']) || isset($_POST['send_and_update']) )
   $EmployeeID = $_POST['username'];
   $lastRepId = $_POST['lastRepId']; 
 $sql = "UPDATE ver_chronoforms_data_clientpersonal_vic SET
-                client_suburbid = '$ClientSuburbID', 
-                client_title = '$ClientTitle', 
-                client_firstname = '$ClientFirstName', 
-                client_lastname = '$ClientLastName',
-                builder_name = '$builder_name', 
-                builder_contact = '$builder_contact', 
-                client_address1 = '$ClientAddress1', 
-                client_address2 = '$ClientAddress2', 
-                client_suburb = '$ClientSuburb', 
-                client_state = '$ClientState', 
-                client_postcode = '$ClientPostCode', 
-                client_wkphone = '$ClientWPhone', 
-                client_hmphone = '$ClientHPhone', 
-                client_mobile = '$ClientMobile', 
-                client_other = '$ClientOther', 
-                client_email = '$ClientEmail', 
-                site_suburbid = '$SiteSuburbID',
-                site_title = '$SiteTitle',
-                site_firstname = '$SiteFirstName',
-                site_lastname = '$SiteLastName',
-                site_address1 = '$SiteAddress1',
-                site_address2 = '$SiteAddress2',
-                site_suburb = '$SiteSuburb',
-                site_state = '$SiteState',
-                site_postcode = '$SitePostcode',
-                site_wkphone = '$SiteWKPhone',
-                site_hmphone = '$SiteHMPhone',
-                site_mobile = '$SiteMobile',
-                site_other = '$SiteOther',
-                site_email = '$SiteEmail',  
-                repid = '$RepID',
-                repident = '$RepIdent',
-                repname = '$RepName',
-                leadid = '$LeadID',
-                leadname = '$LeadName',
-                appointmentdate = $AppointmentLodged,
-                employeeid = '$EmployeeID',
-                lastRepId = '$lastRepId' 
+                client_suburbid = '" . mysql_real_escape_string($ClientSuburbID) . "', 
+                client_title = '" . mysql_real_escape_string($ClientTitle) . "', 
+                client_firstname = '" . mysql_real_escape_string($ClientFirstName) . "', 
+                client_lastname = '" . mysql_real_escape_string($ClientLastName) . "',
+                builder_name = '" . mysql_real_escape_string($builder_name) . "', 
+                builder_contact = '" . mysql_real_escape_string($builder_contact) . "', 
+                client_address1 = '" . mysql_real_escape_string($ClientAddress1) . "', 
+                client_address2 = '" . mysql_real_escape_string($ClientAddress2) . "', 
+                client_suburb = '" . mysql_real_escape_string($ClientSuburb) . "', 
+                client_state = '" . mysql_real_escape_string($ClientState) . "', 
+                client_postcode = '" . mysql_real_escape_string($ClientPostCode) . "', 
+                client_wkphone = '" . mysql_real_escape_string($ClientWPhone) . "', 
+                client_hmphone = '" . mysql_real_escape_string($ClientHPhone) . "', 
+                client_mobile = '" . mysql_real_escape_string($ClientMobile) . "', 
+                client_other = '" . mysql_real_escape_string($ClientOther) . "', 
+                client_email = '" . mysql_real_escape_string($ClientEmail) . "', 
+                site_suburbid = '" . mysql_real_escape_string($SiteSuburbID) . "',
+                site_title = '" . mysql_real_escape_string($SiteTitle) . "',
+                site_firstname = '" . mysql_real_escape_string($SiteFirstName) . "',
+                site_lastname = '" . mysql_real_escape_string($SiteLastName) . "',
+                site_address1 = '" . mysql_real_escape_string($SiteAddress1) . "',
+                site_address2 = '" . mysql_real_escape_string($SiteAddress2) . "',
+                site_suburb = '" . mysql_real_escape_string($SiteSuburb) . "',
+                site_state = '" . mysql_real_escape_string($SiteState) . "',
+                site_postcode = '" . mysql_real_escape_string($SitePostcode) . "',
+                site_wkphone = '" . mysql_real_escape_string($SiteWKPhone) . "',
+                site_hmphone = '" . mysql_real_escape_string($SiteHMPhone) . "',
+                site_mobile = '" . mysql_real_escape_string($SiteMobile) . "',
+                site_other = '" . mysql_real_escape_string($SiteOther) . "',
+                site_email = '" . mysql_real_escape_string($SiteEmail) . "',  
+                repid = '" . mysql_real_escape_string($RepID) . "',
+                repident = '" . mysql_real_escape_string($RepIdent) . "',
+                repname = '" . mysql_real_escape_string($RepName) . "',
+                leadid = '" . mysql_real_escape_string($LeadID) . "',
+                leadname = '" . mysql_real_escape_string($LeadName) . "',
+                appointmentdate = '" . mysql_real_escape_string($AppointmentLodged) . "',
+                employeeid = '" . mysql_real_escape_string($EmployeeID) . "',
+                lastRepId = '" . mysql_real_escape_string($lastRepId) . "' 
         WHERE pid={$pid};         
       ";
   //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); exit();
@@ -253,47 +253,47 @@ $sql = "INSERT INTO ver_chronoforms_data_clientpersonal_vic
                 builder_name,
                 builder_contact,
                 is_builder) 
-         VALUES ('$ClientID',
-                 '$ClientSuburbID', 
-                 '$ClientTitle', 
-                 '$ClientFirstName', 
-                 '$ClientLastName', 
-                 '$ClientAddress1', 
-                 '$ClientAddress2', 
-                 '$ClientSuburb', 
-                 '$ClientState', 
-                 '$ClientPostCode', 
-                 '$ClientWPhone', 
-                 '$ClientHPhone', 
-                 '$ClientMobile', 
-                 '$ClientOther', 
-                 '$ClientEmail',
-                 '$SiteSuburbID',
-                 '$SiteTitle',
-                 '$SiteFirstName',
-                 '$SiteLastName',
-                 '$SiteAddress1',
-                 '$SiteAddress2',
-                 '$SiteSuburb',
-                 '$SiteState',
-                 '$SitePostcode',
-                 '$SiteWKPhone',
-                 '$SiteHMPhone',
-                 '$SiteMobile',
-                 '$SiteOther',
-                 '$SiteEmail',
-                 '$DateLodged',
-                 '$RepID',
-                 '$RepIdent',
-                 '$RepName',
-                 '$LeadID',
-                 '$LeadName',
-                 $AppointmentLodged,
-                 '$EmployeeID',
-         '$lastRepId',
-         '$builder_name',
-         '$builder_contact',
-         '$is_builder')";
+         VALUES ('" . mysql_real_escape_string($ClientID) . "',
+                 '" . mysql_real_escape_string($ClientSuburbID) . "', 
+                 '" . mysql_real_escape_string($ClientTitle) . "', 
+                 '" . mysql_real_escape_string($ClientFirstName) . "', 
+                 '" . mysql_real_escape_string($ClientLastName) . "', 
+                 '" . mysql_real_escape_string($ClientAddress1) . "', 
+                 '" . mysql_real_escape_string($ClientAddress2) . "', 
+                 '" . mysql_real_escape_string($ClientSuburb) . "', 
+                 '" . mysql_real_escape_string($ClientState) . "', 
+                 '" . mysql_real_escape_string($ClientPostCode) . "', 
+                 '" . mysql_real_escape_string($ClientWPhone) . "', 
+                 '" . mysql_real_escape_string($ClientHPhone) . "', 
+                 '" . mysql_real_escape_string($ClientMobile) . "', 
+                 '" . mysql_real_escape_string($ClientOther) . "', 
+                 '" . mysql_real_escape_string($ClientEmail) . "',
+                 '" . mysql_real_escape_string($SiteSuburbID) . "',
+                 '" . mysql_real_escape_string($SiteTitle) . "',
+                 '" . mysql_real_escape_string($SiteFirstName) . "',
+                 '" . mysql_real_escape_string($SiteLastName) . "',
+                 '" . mysql_real_escape_string($SiteAddress1) . "',
+                 '" . mysql_real_escape_string($SiteAddress2) . "',
+                 '" . mysql_real_escape_string($SiteSuburb) . "',
+                 '" . mysql_real_escape_string($SiteState) . "',
+                 '" . mysql_real_escape_string($SitePostcode) . "',
+                 '" . mysql_real_escape_string($SiteWKPhone) . "',
+                 '" . mysql_real_escape_string($SiteHMPhone) . "',
+                 '" . mysql_real_escape_string($SiteMobile) . "',
+                 '" . mysql_real_escape_string($SiteOther) . "',
+                 '" . mysql_real_escape_string($SiteEmail) . "',
+                 '" . mysql_real_escape_string($DateLodged) . "',
+                 '" . mysql_real_escape_string($RepID) . "',
+                 '" . mysql_real_escape_string($RepIdent) . "',
+                 '" . mysql_real_escape_string($RepName) . "',
+                 '" . mysql_real_escape_string($LeadID) . "',
+                 '" . mysql_real_escape_string($LeadName) . "',
+                 '" . mysql_real_escape_string($AppointmentLodged) . "',
+                 '" . mysql_real_escape_string($EmployeeID) . "',
+                 '" . mysql_real_escape_string($lastRepId) . "',
+                 '" . mysql_real_escape_string($builder_name) . "',
+                 '" . mysql_real_escape_string($builder_contact) . "',
+                 '" . mysql_real_escape_string($is_builder) . "')";
 //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); exit();
 mysql_query($sql);
 $result_id  = mysql_insert_id();
@@ -301,8 +301,15 @@ $NotesTxt =  $_POST['notestxt'];
 //$DateNotes = $_POST['date_notes'];
 $UsernameNotes = $_POST['username_notes'];  
 if(strlen($NotesTxt)>0){
-  mysql_query("INSERT INTO ver_chronoforms_data_notes_vic (clientid, username, content)  
-              VALUES ('$getclientid', '$UsernameNotes','$NotesTxt')");
+  mysql_query(
+    "
+    INSERT INTO ver_chronoforms_data_notes_vic (clientid, username, content)  
+    VALUES (
+    '" . mysql_real_escape_string($getclientid) . "', 
+    '" . mysql_real_escape_string($UsernameNotes) . "',
+    '" . mysql_real_escape_string($NotesTxt) . "'
+    )"
+  );
 }
 //This is the Time Save 
 $now = time();  
@@ -312,7 +319,7 @@ if(isset($_FILES['photo'])){
         $target="images/drawings/$now-";
         $target=$target.$_FILES['photo']['name'][$key]; 
         if (move_uploaded_file($tmp_name, $target)) {
-$query = "INSERT INTO ver_chronoforms_data_drawings_vic (clientid, photo) VALUES  ('$getclientid', '$target')";
+$query = "INSERT INTO ver_chronoforms_data_drawings_vic (clientid, photo) VALUES  ('" . mysql_real_escape_string($getclientid) . "', '" . mysql_real_escape_string($target) . "')";
  mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
             }
     }

@@ -285,225 +285,388 @@ if(isset($_POST['save']) || isset($_POST['sendmail']))
    if ($BuilderName1!=$BuildName1) {
        	
 		mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
-		             builderid ='$BuildID1',
-					 builder_suburbid ='$BuilderSuburbID1', 
-					 builder_name ='$BuilderName1', 
-					 builder_contact ='$BuilderContact1', 
-					 builder_address1 ='$BuilderAddress11', 
-					 builder_address2 ='$BuilderAddress21',
-					 builder_suburb ='$BuilderSuburb1',
-					 builder_state ='$BuilderState1',
-					 builder_postcode ='$BuilderPostcode1',
-					 builder_wkphone ='$BuilderWPhone1',
-					 builder_mobile ='$BuilderMobile1',
-					 builder_fax ='$BuilderFax1',
-					 builder_email ='$BuilderEmail1'
+		             builderid ='" . mysql_real_escape_string($BuildID1) . "',
+					 builder_suburbid ='" . mysql_real_escape_string($BuilderSuburbID1) . "', 
+					 builder_name ='" . mysql_real_escape_string($BuilderName1) . "', 
+					 builder_contact ='" . mysql_real_escape_string($BuilderContact1) . "', 
+					 builder_address1 ='" . mysql_real_escape_string($BuilderAddress11) . "', 
+					 builder_address2 ='" . mysql_real_escape_string($BuilderAddress21) . "',
+					 builder_suburb ='" . mysql_real_escape_string($BuilderSuburb1) . "',
+					 builder_state ='" . mysql_real_escape_string($BuilderState1) . "',
+					 builder_postcode ='" . mysql_real_escape_string($BuilderPostcode1) . "',
+					 builder_wkphone ='" . mysql_real_escape_string($BuilderWPhone1) . "',
+					 builder_mobile ='" . mysql_real_escape_string($BuilderMobile1) . "',
+					 builder_fax ='" . mysql_real_escape_string($BuilderFax1) . "',
+					 builder_email ='" . mysql_real_escape_string($BuilderEmail1) . "'
 					 WHERE pid = '$pid1'");
 		  
    } 
    elseif ($BuilderName2!="" && $BuildName2=="") 
-   { mysql_query("INSERT INTO ver_chronoforms_data_builderpersonal_vic 
+   {
+
+   			mysql_query("
+	   			INSERT INTO ver_chronoforms_data_builderpersonal_vic 
                  (builderid, builder_suburbid, builder_name, builder_contact, builder_address1, builder_address2,
 				  builder_suburb, builder_state, builder_postcode, builder_wkphone, builder_mobile, builder_fax,
 				  builder_email, site_suburbid, site_project, site_address1, site_address2, site_suburb,
 				  site_state, site_postcode, site_wkphone, site_hmphone, site_mobile, site_other, site_email,
 				  tenderstatus, tenderid, datelodged, repid, repident, repname, leadid, leadname, appointmentdate,
 				  employeeid) 
-							  
-	      VALUES('$getclientid', '$BuilderSuburbID2', '$BuilderName2', '$BuilderContact2', '$BuilderAddress12',
-                 '$BuilderAddress22', '$BuilderSuburb2', '$BuilderState2', '$BuilderPostcode2', '$BuilderWPhone2',
-                 '$BuilderMobile2', '$BuilderFax2', '$BuilderEmail2',
-				 
-				 '$SiteSuburbID', '$SiteProject', '$SiteAddress1', '$SiteAddress2', '$SiteSuburb', '$SiteState',
-				 '$SitePostcode', '$SiteWKPhone', '$SiteHMPhone', '$SiteMobile', '$SiteOther', '$SiteEmail',
-				 '$TenderStatus', '$TenderID',
+			    VALUES(
+		    	 '" . mysql_real_escape_string($getclientid) . "', 
+      			 '" . mysql_real_escape_string($BuilderSuburbID2) . "', 
+      			 '" . mysql_real_escape_string($BuilderName2) . "', 
+      			 '" . mysql_real_escape_string($BuilderContact2) . "', 
+      			 '" . mysql_real_escape_string($BuilderAddress12) . "',
+                 '" . mysql_real_escape_string($BuilderAddress22) . "', 
+                 '" . mysql_real_escape_string($BuilderSuburb2) . "', 
+                 '" . mysql_real_escape_string($BuilderState2) . "', 
+                 '" . mysql_real_escape_string($BuilderPostcode2) . "', 
+                 '" . mysql_real_escape_string($BuilderWPhone2) . "',
+                 '" . mysql_real_escape_string($BuilderMobile2) . "', 
+                 '" . mysql_real_escape_string($BuilderFax2) . "', 
+                 '" . mysql_real_escape_string($BuilderEmail2) . "',
+					 
+				 '" . mysql_real_escape_string($SiteSuburbID) . "', 
+				 '" . mysql_real_escape_string($SiteProject) . "', 
+				 '" . mysql_real_escape_string($SiteAddress1) . "', 
+				 '" . mysql_real_escape_string($SiteAddress2) . "', 
+				 '" . mysql_real_escape_string($SiteSuburb) . "', 
+				 '" . mysql_real_escape_string($SiteState) . "',
+				 '" . mysql_real_escape_string($SitePostcode) . "', 
+				 '" . mysql_real_escape_string($SiteWKPhone) . "', 
+				 '" . mysql_real_escape_string($SiteHMPhone) . "', 
+				 '" . mysql_real_escape_string($SiteMobile) . "', 
+				 '" . mysql_real_escape_string($SiteOther) . "', 
+				 '" . mysql_real_escape_string($SiteEmail) . "',
+				 '" . mysql_real_escape_string($TenderStatus) . "', 
+				 '" . mysql_real_escape_string($TenderID) . "',
                  
-                 '$DateNow', '$RepID', '$RepIdent', '$RepName', '$LeadID', '$LeadName', '$AppointmentLodged',
-				 '$EmployeeID')");
+                 '" . mysql_real_escape_string($DateNow) . "', 
+                 '" . mysql_real_escape_string($RepID) . "', 
+                 '" . mysql_real_escape_string($RepIdent) . "', 
+                 '" . mysql_real_escape_string($RepName) . "', 
+                 '" . mysql_real_escape_string($LeadID) . "', 
+                 '" . mysql_real_escape_string($LeadName) . "', 
+                 '" . mysql_real_escape_string($AppointmentLodged) . "',
+				 '" . mysql_real_escape_string($EmployeeID) . "'
+				 )"
+			);
 	   
 	   } 
 	   elseif ($BuilderName2!=$BuildName2) {
         
 	
-		mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
-		             builderid ='$BuildID2',
-					 builder_suburbid ='$BuilderSuburbID2', 
-					 builder_name ='$BuilderName2', 
-					 builder_contact ='$BuilderContact2', 
-					 builder_address2 ='$BuilderAddress12', 
-					 builder_address2 ='$BuilderAddress22',
-					 builder_suburb ='$BuilderSuburb2',
-					 builder_state ='$BuilderState2',
-					 builder_postcode ='$BuilderPostcode2',
-					 builder_wkphone ='$BuilderWPhone2',
-					 builder_mobile ='$BuilderMobile2',
-					 builder_fax ='$BuilderFax2',
-					 builder_email ='$BuilderEmail2'
-					 WHERE pid = '$pid2'");
+        mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
+                     builderid ='" . mysql_real_escape_string($BuildID2) . "',
+                     builder_suburbid ='" . mysql_real_escape_string($BuilderSuburbID2) . "', 
+                     builder_name ='" . mysql_real_escape_string($BuilderName2) . "', 
+                     builder_contact ='" . mysql_real_escape_string($BuilderContact2) . "', 
+                     builder_address1 ='" . mysql_real_escape_string($BuilderAddress12) . "', 
+                     builder_address2 ='" . mysql_real_escape_string($BuilderAddress22) . "',
+                     builder_suburb ='" . mysql_real_escape_string($BuilderSuburb2) . "',
+                     builder_state ='" . mysql_real_escape_string($BuilderState2) . "',
+                     builder_postcode ='" . mysql_real_escape_string($BuilderPostcode2) . "',
+                     builder_wkphone ='" . mysql_real_escape_string($BuilderWPhone2) . "',
+                     builder_mobile ='" . mysql_real_escape_string($BuilderMobile2) . "',
+                     builder_fax ='" . mysql_real_escape_string($BuilderFax2) . "',
+                     builder_email ='" . mysql_real_escape_string($BuilderEmail2) . "'
+                     WHERE pid = '$pid2'");
+
 		  
    } 
    elseif ($BuilderName3!="" && $BuildName3=="") 
-   { mysql_query("INSERT INTO ver_chronoforms_data_builderpersonal_vic 
-                 (builderid, builder_suburbid, builder_name, builder_contact, builder_address1, builder_address2,
-				  builder_suburb, builder_state, builder_postcode, builder_wkphone, builder_mobile, builder_fax,
-				  builder_email, site_suburbid, site_project, site_address1, site_address2, site_suburb,
-				  site_state, site_postcode, site_wkphone, site_hmphone, site_mobile, site_other, site_email,
-				  tenderstatus, tenderid, datelodged, repid, repident, repname, leadid, leadname, appointmentdate,
-				  employeeid) 
-							  
-	      VALUES('$getclientid', '$BuilderSuburbID3', '$BuilderName3', '$BuilderContact3', '$BuilderAddress13',
-                 '$BuilderAddress23', '$BuilderSuburb3', '$BuilderState3', '$BuilderPostcode3', '$BuilderWPhone3',
-                 '$BuilderMobile3', '$BuilderFax3', '$BuilderEmail3',
-				 
-				 '$SiteSuburbID', '$SiteProject', '$SiteAddress1', '$SiteAddress2', '$SiteSuburb', '$SiteState',
-				 '$SitePostcode', '$SiteWKPhone', '$SiteHMPhone', '$SiteMobile', '$SiteOther', '$SiteEmail',
-				 '$TenderStatus', '$TenderID',
-                 
-                 '$DateNow', '$RepID', '$RepIdent', '$RepName', '$LeadID', '$LeadName', '$AppointmentLodged',
-				 '$EmployeeID')");
+   {
+
+            mysql_query("
+	               INSERT INTO ver_chronoforms_data_builderpersonal_vic 
+	                 (builderid, builder_suburbid, builder_name, builder_contact, builder_address1, builder_address2,
+	              builder_suburb, builder_state, builder_postcode, builder_wkphone, builder_mobile, builder_fax,
+	              builder_email, site_suburbid, site_project, site_address1, site_address2, site_suburb,
+	              site_state, site_postcode, site_wkphone, site_hmphone, site_mobile, site_other, site_email,
+	              tenderstatus, tenderid, datelodged, repid, repident, repname, leadid, leadname, appointmentdate,
+	              employeeid) 
+	             VALUES(
+	             '" . mysql_real_escape_string($getclientid) . "', 
+	                '" . mysql_real_escape_string($BuilderSuburbID3) . "', 
+	                '" . mysql_real_escape_string($BuilderName3) . "', 
+	                '" . mysql_real_escape_string($BuilderContact3) . "', 
+	                '" . mysql_real_escape_string($BuilderAddress13) . "',
+	                 '" . mysql_real_escape_string($BuilderAddress23) . "', 
+	                 '" . mysql_real_escape_string($BuilderSuburb3) . "', 
+	                 '" . mysql_real_escape_string($BuilderState3) . "', 
+	                 '" . mysql_real_escape_string($BuilderPostcode3) . "', 
+	                 '" . mysql_real_escape_string($BuilderWPhone3) . "',
+	                 '" . mysql_real_escape_string($BuilderMobile3) . "', 
+	                 '" . mysql_real_escape_string($BuilderFax3) . "', 
+	                 '" . mysql_real_escape_string($BuilderEmail3) . "',
+	                
+	             '" . mysql_real_escape_string($SiteSuburbID) . "', 
+	             '" . mysql_real_escape_string($SiteProject) . "', 
+	             '" . mysql_real_escape_string($SiteAddress1) . "', 
+	             '" . mysql_real_escape_string($SiteAddress2) . "', 
+	             '" . mysql_real_escape_string($SiteSuburb) . "', 
+	             '" . mysql_real_escape_string($SiteState) . "',
+	             '" . mysql_real_escape_string($SitePostcode) . "', 
+	             '" . mysql_real_escape_string($SiteWKPhone) . "', 
+	             '" . mysql_real_escape_string($SiteHMPhone) . "', 
+	             '" . mysql_real_escape_string($SiteMobile) . "', 
+	             '" . mysql_real_escape_string($SiteOther) . "', 
+	             '" . mysql_real_escape_string($SiteEmail) . "',
+	             '" . mysql_real_escape_string($TenderStatus) . "', 
+	             '" . mysql_real_escape_string($TenderID) . "',
+	                 
+	                 '" . mysql_real_escape_string($DateNow) . "', 
+	                 '" . mysql_real_escape_string($RepID) . "', 
+	                 '" . mysql_real_escape_string($RepIdent) . "', 
+	                 '" . mysql_real_escape_string($RepName) . "', 
+	                 '" . mysql_real_escape_string($LeadID) . "', 
+	                 '" . mysql_real_escape_string($LeadName) . "', 
+	                 '" . mysql_real_escape_string($AppointmentLodged) . "',
+	             '" . mysql_real_escape_string($EmployeeID) . "'
+	             )"
+         	);
+
 	   
 	   } 
 	   elseif ($BuilderName3!=$BuildName3) {
         
 	
-		mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
-		             builderid ='$BuildID3',
-					 builder_suburbid ='$BuilderSuburbID3', 
-					 builder_name ='$BuilderName3', 
-					 builder_contact ='$BuilderContact3', 
-					 builder_address1 ='$BuilderAddress13', 
-					 builder_address2 ='$BuilderAddress23',
-					 builder_suburb ='$BuilderSuburb3',
-					 builder_state ='$BuilderState3',
-					 builder_postcode ='$BuilderPostcode3',
-					 builder_wkphone ='$BuilderWPhone3',
-					 builder_mobile ='$BuilderMobile3',
-					 builder_fax ='$BuilderFax3',
-					 builder_email ='$BuilderEmail3'
-					 WHERE pid = '$pid3'");
+        mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
+                     builderid ='" . mysql_real_escape_string($BuildID3) . "',
+                     builder_suburbid ='" . mysql_real_escape_string($BuilderSuburbID3) . "', 
+                     builder_name ='" . mysql_real_escape_string($BuilderName3) . "', 
+                     builder_contact ='" . mysql_real_escape_string($BuilderContact3) . "', 
+                     builder_address1 ='" . mysql_real_escape_string($BuilderAddress13) . "', 
+                     builder_address2 ='" . mysql_real_escape_string($BuilderAddress23) . "',
+                     builder_suburb ='" . mysql_real_escape_string($BuilderSuburb3) . "',
+                     builder_state ='" . mysql_real_escape_string($BuilderState3) . "',
+                     builder_postcode ='" . mysql_real_escape_string($BuilderPostcode3) . "',
+                     builder_wkphone ='" . mysql_real_escape_string($BuilderWPhone3) . "',
+                     builder_mobile ='" . mysql_real_escape_string($BuilderMobile3) . "',
+                     builder_fax ='" . mysql_real_escape_string($BuilderFax3) . "',
+                     builder_email ='" . mysql_real_escape_string($BuilderEmail3) . "'
+                     WHERE pid = '$pid3'");
 		  
    } 
    elseif ($BuilderName4!="" && $BuildName4=="") 
-   { mysql_query("INSERT INTO ver_chronoforms_data_builderpersonal_vic 
-                 (builderid, builder_suburbid, builder_name, builder_contact, builder_address1, builder_address2,
-				  builder_suburb, builder_state, builder_postcode, builder_wkphone, builder_mobile, builder_fax,
-				  builder_email, site_suburbid, site_project, site_address1, site_address2, site_suburb,
-				  site_state, site_postcode, site_wkphone, site_hmphone, site_mobile, site_other, site_email,
-				  tenderstatus, tenderid, datelodged, repid, repident, repname, leadid, leadname, appointmentdate,
-				  employeeid) 
-							  
-	      VALUES('$getclientid', '$BuilderSuburbID4', '$BuilderName4', '$BuilderContact4', '$BuilderAddress14',
-                 '$BuilderAddress24', '$BuilderSuburb4', '$BuilderState4', '$BuilderPostcode4', '$BuilderWPhone4',
-                 '$BuilderMobile4', '$BuilderFax4', '$BuilderEmail4',
-				 
-				 '$SiteSuburbID', '$SiteProject', '$SiteAddress1', '$SiteAddress2', '$SiteSuburb', '$SiteState',
-				 '$SitePostcode', '$SiteWKPhone', '$SiteHMPhone', '$SiteMobile', '$SiteOther', '$SiteEmail',
-				 '$TenderStatus', '$TenderID',
-                 
-                 '$DateNow', '$RepID', '$RepIdent', '$RepName', '$LeadID', '$LeadName', '$AppointmentLodged',
-				 '$EmployeeID')");
-	   
+   { 
+
+	            mysql_query("
+	               INSERT INTO ver_chronoforms_data_builderpersonal_vic 
+	                 (builderid, builder_suburbid, builder_name, builder_contact, builder_address1, builder_address2,
+	              builder_suburb, builder_state, builder_postcode, builder_wkphone, builder_mobile, builder_fax,
+	              builder_email, site_suburbid, site_project, site_address1, site_address2, site_suburb,
+	              site_state, site_postcode, site_wkphone, site_hmphone, site_mobile, site_other, site_email,
+	              tenderstatus, tenderid, datelodged, repid, repident, repname, leadid, leadname, appointmentdate,
+	              employeeid) 
+	             VALUES(
+	             '" . mysql_real_escape_string($getclientid) . "', 
+	                '" . mysql_real_escape_string($BuilderSuburbID4) . "', 
+	                '" . mysql_real_escape_string($BuilderName4) . "', 
+	                '" . mysql_real_escape_string($BuilderContact4) . "', 
+	                '" . mysql_real_escape_string($BuilderAddress14) . "',
+	                 '" . mysql_real_escape_string($BuilderAddress24) . "', 
+	                 '" . mysql_real_escape_string($BuilderSuburb4) . "', 
+	                 '" . mysql_real_escape_string($BuilderState4) . "', 
+	                 '" . mysql_real_escape_string($BuilderPostcode4) . "', 
+	                 '" . mysql_real_escape_string($BuilderWPhone4) . "',
+	                 '" . mysql_real_escape_string($BuilderMobile4) . "', 
+	                 '" . mysql_real_escape_string($BuilderFax4) . "', 
+	                 '" . mysql_real_escape_string($BuilderEmail4) . "',
+	                
+	             '" . mysql_real_escape_string($SiteSuburbID) . "', 
+	             '" . mysql_real_escape_string($SiteProject) . "', 
+	             '" . mysql_real_escape_string($SiteAddress1) . "', 
+	             '" . mysql_real_escape_string($SiteAddress2) . "', 
+	             '" . mysql_real_escape_string($SiteSuburb) . "', 
+	             '" . mysql_real_escape_string($SiteState) . "',
+	             '" . mysql_real_escape_string($SitePostcode) . "', 
+	             '" . mysql_real_escape_string($SiteWKPhone) . "', 
+	             '" . mysql_real_escape_string($SiteHMPhone) . "', 
+	             '" . mysql_real_escape_string($SiteMobile) . "', 
+	             '" . mysql_real_escape_string($SiteOther) . "', 
+	             '" . mysql_real_escape_string($SiteEmail) . "',
+	             '" . mysql_real_escape_string($TenderStatus) . "', 
+	             '" . mysql_real_escape_string($TenderID) . "',
+	                 
+	                 '" . mysql_real_escape_string($DateNow) . "', 
+	                 '" . mysql_real_escape_string($RepID) . "', 
+	                 '" . mysql_real_escape_string($RepIdent) . "', 
+	                 '" . mysql_real_escape_string($RepName) . "', 
+	                 '" . mysql_real_escape_string($LeadID) . "', 
+	                 '" . mysql_real_escape_string($LeadName) . "', 
+	                 '" . mysql_real_escape_string($AppointmentLodged) . "',
+	             '" . mysql_real_escape_string($EmployeeID) . "'
+	             )"
+	         );
+   
 	   } 
 	   elseif ($BuilderName4!=$BuildName4) {
         
 	
-		mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
-		             builderid ='$BuildID4',
-					 builder_suburbid ='$BuilderSuburbID4', 
-					 builder_name ='$BuilderName4', 
-					 builder_contact ='$BuilderContact4', 
-					 builder_address1 ='$BuilderAddress14', 
-					 builder_address2 ='$BuilderAddress24',
-					 builder_suburb ='$BuilderSuburb4',
-					 builder_state ='$BuilderState4',
-					 builder_postcode ='$BuilderPostcode4',
-					 builder_wkphone ='$BuilderWPhone4',
-					 builder_mobile ='$BuilderMobile4',
-					 builder_fax ='$BuilderFax4',
-					 builder_email ='$BuilderEmail4'
-					 WHERE pid = '$pid4'");
+        mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
+                     builderid ='" . mysql_real_escape_string($BuildID4) . "',
+                     builder_suburbid ='" . mysql_real_escape_string($BuilderSuburbID4) . "', 
+                     builder_name ='" . mysql_real_escape_string($BuilderName4) . "', 
+                     builder_contact ='" . mysql_real_escape_string($BuilderContact4) . "', 
+                     builder_address1 ='" . mysql_real_escape_string($BuilderAddress14) . "', 
+                     builder_address2 ='" . mysql_real_escape_string($BuilderAddress24) . "',
+                     builder_suburb ='" . mysql_real_escape_string($BuilderSuburb4) . "',
+                     builder_state ='" . mysql_real_escape_string($BuilderState4) . "',
+                     builder_postcode ='" . mysql_real_escape_string($BuilderPostcode4) . "',
+                     builder_wkphone ='" . mysql_real_escape_string($BuilderWPhone4) . "',
+                     builder_mobile ='" . mysql_real_escape_string($BuilderMobile4) . "',
+                     builder_fax ='" . mysql_real_escape_string($BuilderFax4) . "',
+                     builder_email ='" . mysql_real_escape_string($BuilderEmail4) . "'
+                     WHERE pid = '$pid4'");
+
 		  
    } 
    elseif ($BuilderName5!="" && $BuildName5=="") 
-   { mysql_query("INSERT INTO ver_chronoforms_data_builderpersonal_vic 
-                 (builderid, builder_suburbid, builder_name, builder_contact, builder_address1, builder_address2,
-				  builder_suburb, builder_state, builder_postcode, builder_wkphone, builder_mobile, builder_fax,
-				  builder_email, site_suburbid, site_project, site_address1, site_address2, site_suburb,
-				  site_state, site_postcode, site_wkphone, site_hmphone, site_mobile, site_other, site_email,
-				  tenderstatus, tenderid, datelodged, repid, repident, repname, leadid, leadname, appointmentdate,
-				  employeeid) 
-							  
-	      VALUES('$getclientid', '$BuilderSuburbID5', '$BuilderName5', '$BuilderContact5', '$BuilderAddress15',
-                 '$BuilderAddress25', '$BuilderSuburb5', '$BuilderState5', '$BuilderPostcode5', '$BuilderWPhone5',
-                 '$BuilderMobile5', '$BuilderFax5', '$BuilderEmail5',
-				 
-				 '$SiteSuburbID', '$SiteProject', '$SiteAddress1', '$SiteAddress2', '$SiteSuburb', '$SiteState',
-				 '$SitePostcode', '$SiteWKPhone', '$SiteHMPhone', '$SiteMobile', '$SiteOther', '$SiteEmail',
-				 '$TenderStatus', '$TenderID',
-                 
-                 '$DateNow', '$RepID', '$RepIdent', '$RepName', '$LeadID', '$LeadName', '$AppointmentLodged',
-				 '$EmployeeID')");
+   { 
+
+            mysql_query("
+                  INSERT INTO ver_chronoforms_data_builderpersonal_vic 
+                    (builderid, builder_suburbid, builder_name, builder_contact, builder_address1, builder_address2,
+                 builder_suburb, builder_state, builder_postcode, builder_wkphone, builder_mobile, builder_fax,
+                 builder_email, site_suburbid, site_project, site_address1, site_address2, site_suburb,
+                 site_state, site_postcode, site_wkphone, site_hmphone, site_mobile, site_other, site_email,
+                 tenderstatus, tenderid, datelodged, repid, repident, repname, leadid, leadname, appointmentdate,
+                 employeeid) 
+                VALUES(
+                '" . mysql_real_escape_string($getclientid) . "', 
+                   '" . mysql_real_escape_string($BuilderSuburbID5) . "', 
+                   '" . mysql_real_escape_string($BuilderName5) . "', 
+                   '" . mysql_real_escape_string($BuilderContact5) . "', 
+                   '" . mysql_real_escape_string($BuilderAddress15) . "',
+                    '" . mysql_real_escape_string($BuilderAddress25) . "', 
+                    '" . mysql_real_escape_string($BuilderSuburb5) . "', 
+                    '" . mysql_real_escape_string($BuilderState5) . "', 
+                    '" . mysql_real_escape_string($BuilderPostcode5) . "', 
+                    '" . mysql_real_escape_string($BuilderWPhone5) . "',
+                    '" . mysql_real_escape_string($BuilderMobile5) . "', 
+                    '" . mysql_real_escape_string($BuilderFax5) . "', 
+                    '" . mysql_real_escape_string($BuilderEmail5) . "',
+                   
+                '" . mysql_real_escape_string($SiteSuburbID) . "', 
+                '" . mysql_real_escape_string($SiteProject) . "', 
+                '" . mysql_real_escape_string($SiteAddress1) . "', 
+                '" . mysql_real_escape_string($SiteAddress2) . "', 
+                '" . mysql_real_escape_string($SiteSuburb) . "', 
+                '" . mysql_real_escape_string($SiteState) . "',
+                '" . mysql_real_escape_string($SitePostcode) . "', 
+                '" . mysql_real_escape_string($SiteWKPhone) . "', 
+                '" . mysql_real_escape_string($SiteHMPhone) . "', 
+                '" . mysql_real_escape_string($SiteMobile) . "', 
+                '" . mysql_real_escape_string($SiteOther) . "', 
+                '" . mysql_real_escape_string($SiteEmail) . "',
+                '" . mysql_real_escape_string($TenderStatus) . "', 
+                '" . mysql_real_escape_string($TenderID) . "',
+                    
+                    '" . mysql_real_escape_string($DateNow) . "', 
+                    '" . mysql_real_escape_string($RepID) . "', 
+                    '" . mysql_real_escape_string($RepIdent) . "', 
+                    '" . mysql_real_escape_string($RepName) . "', 
+                    '" . mysql_real_escape_string($LeadID) . "', 
+                    '" . mysql_real_escape_string($LeadName) . "', 
+                    '" . mysql_real_escape_string($AppointmentLodged) . "',
+                '" . mysql_real_escape_string($EmployeeID) . "'
+                )"
+            );
 	   
 	   } 
 	   elseif ($BuilderName5!=$BuildName5) {
         
 	
-		mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
-		             builderid ='$BuildID5',
-					 builder_suburbid ='$BuilderSuburbID5', 
-					 builder_name ='$BuilderName5', 
-					 builder_contact ='$BuilderContact5', 
-					 builder_address1 ='$BuilderAddress15', 
-					 builder_address2 ='$BuilderAddress25',
-					 builder_suburb ='$BuilderSuburb5',
-					 builder_state ='$BuilderState5',
-					 builder_postcode ='$BuilderPostcode5',
-					 builder_wkphone ='$BuilderWPhone5',
-					 builder_mobile ='$BuilderMobile5',
-					 builder_fax ='$BuilderFax5',
-					 builder_email ='$BuilderEmail5'
-					 WHERE pid = '$pid5'");
+        mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
+                     builderid ='" . mysql_real_escape_string($BuildID5) . "',
+                     builder_suburbid ='" . mysql_real_escape_string($BuilderSuburbID5) . "', 
+                     builder_name ='" . mysql_real_escape_string($BuilderName5) . "', 
+                     builder_contact ='" . mysql_real_escape_string($BuilderContact5) . "', 
+                     builder_address1 ='" . mysql_real_escape_string($BuilderAddress15) . "', 
+                     builder_address2 ='" . mysql_real_escape_string($BuilderAddress25) . "',
+                     builder_suburb ='" . mysql_real_escape_string($BuilderSuburb5) . "',
+                     builder_state ='" . mysql_real_escape_string($BuilderState5) . "',
+                     builder_postcode ='" . mysql_real_escape_string($BuilderPostcode5) . "',
+                     builder_wkphone ='" . mysql_real_escape_string($BuilderWPhone5) . "',
+                     builder_mobile ='" . mysql_real_escape_string($BuilderMobile5) . "',
+                     builder_fax ='" . mysql_real_escape_string($BuilderFax5) . "',
+                     builder_email ='" . mysql_real_escape_string($BuilderEmail5) . "'
+                     WHERE pid = '$pid5'");
 		  
    } 
     elseif ($BuilderName6!="" && $BuildName6=="") 
-   { mysql_query("INSERT INTO ver_chronoforms_data_builderpersonal_vic 
-                 (builderid, builder_suburbid, builder_name, builder_contact, builder_address1, builder_address2,
-				  builder_suburb, builder_state, builder_postcode, builder_wkphone, builder_mobile, builder_fax,
-				  builder_email, site_suburbid, site_project, site_address1, site_address2, site_suburb,
-				  site_state, site_postcode, site_wkphone, site_hmphone, site_mobile, site_other, site_email,
-				  tenderstatus, tenderid, datelodged, repid, repident, repname, leadid, leadname, appointmentdate,
-				  employeeid) 
-							  
-	      VALUES('$getclientid', '$BuilderSuburbID6', '$BuilderName6', '$BuilderContact6', '$BuilderAddress16',
-                 '$BuilderAddress26', '$BuilderSuburb6', '$BuilderState6', '$BuilderPostcode6', '$BuilderWPhone6',
-                 '$BuilderMobile6', '$BuilderFax6', '$BuilderEmail6',
-				 
-				 '$SiteSuburbID', '$SiteProject', '$SiteAddress1', '$SiteAddress2', '$SiteSuburb', '$SiteState',
-				 '$SitePostcode', '$SiteWKPhone', '$SiteHMPhone', '$SiteMobile', '$SiteOther', '$SiteEmail',
-				 '$TenderStatus', '$TenderID',
-                 
-                 '$DateNow', '$RepID', '$RepIdent', '$RepName', '$LeadID', '$LeadName', '$AppointmentLodged',
-				 '$EmployeeID')");
+   { 
+
+               mysql_query("
+                  INSERT INTO ver_chronoforms_data_builderpersonal_vic 
+                    (builderid, builder_suburbid, builder_name, builder_contact, builder_address1, builder_address2,
+                 builder_suburb, builder_state, builder_postcode, builder_wkphone, builder_mobile, builder_fax,
+                 builder_email, site_suburbid, site_project, site_address1, site_address2, site_suburb,
+                 site_state, site_postcode, site_wkphone, site_hmphone, site_mobile, site_other, site_email,
+                 tenderstatus, tenderid, datelodged, repid, repident, repname, leadid, leadname, appointmentdate,
+                 employeeid) 
+                VALUES(
+                '" . mysql_real_escape_string($getclientid) . "', 
+                   '" . mysql_real_escape_string($BuilderSuburbID6) . "', 
+                   '" . mysql_real_escape_string($BuilderName6) . "', 
+                   '" . mysql_real_escape_string($BuilderContact6) . "', 
+                   '" . mysql_real_escape_string($BuilderAddress16) . "',
+                    '" . mysql_real_escape_string($BuilderAddress26) . "', 
+                    '" . mysql_real_escape_string($BuilderSuburb6) . "', 
+                    '" . mysql_real_escape_string($BuilderState6) . "', 
+                    '" . mysql_real_escape_string($BuilderPostcode6) . "', 
+                    '" . mysql_real_escape_string($BuilderWPhone6) . "',
+                    '" . mysql_real_escape_string($BuilderMobile6) . "', 
+                    '" . mysql_real_escape_string($BuilderFax6) . "', 
+                    '" . mysql_real_escape_string($BuilderEmail6) . "',
+                   
+                '" . mysql_real_escape_string($SiteSuburbID) . "', 
+                '" . mysql_real_escape_string($SiteProject) . "', 
+                '" . mysql_real_escape_string($SiteAddress1) . "', 
+                '" . mysql_real_escape_string($SiteAddress2) . "', 
+                '" . mysql_real_escape_string($SiteSuburb) . "', 
+                '" . mysql_real_escape_string($SiteState) . "',
+                '" . mysql_real_escape_string($SitePostcode) . "', 
+                '" . mysql_real_escape_string($SiteWKPhone) . "', 
+                '" . mysql_real_escape_string($SiteHMPhone) . "', 
+                '" . mysql_real_escape_string($SiteMobile) . "', 
+                '" . mysql_real_escape_string($SiteOther) . "', 
+                '" . mysql_real_escape_string($SiteEmail) . "',
+                '" . mysql_real_escape_string($TenderStatus) . "', 
+                '" . mysql_real_escape_string($TenderID) . "',
+                    
+                    '" . mysql_real_escape_string($DateNow) . "', 
+                    '" . mysql_real_escape_string($RepID) . "', 
+                    '" . mysql_real_escape_string($RepIdent) . "', 
+                    '" . mysql_real_escape_string($RepName) . "', 
+                    '" . mysql_real_escape_string($LeadID) . "', 
+                    '" . mysql_real_escape_string($LeadName) . "', 
+                    '" . mysql_real_escape_string($AppointmentLodged) . "',
+                '" . mysql_real_escape_string($EmployeeID) . "'
+                )"
+            );
 	   
 	   } 
 	   elseif ($BuilderName6!=$BuildName6) {
         
 	
-		mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
-		             builderid ='$BuildID6',
-					 builder_suburbid ='$BuilderSuburbID6', 
-					 builder_name ='$BuilderName6', 
-					 builder_contact ='$BuilderContact6', 
-					 builder_address1 ='$BuilderAddress16', 
-					 builder_address2 ='$BuilderAddress26',
-					 builder_suburb ='$BuilderSuburb6',
-					 builder_state ='$BuilderState6',
-					 builder_postcode ='$BuilderPostcode6',
-					 builder_wkphone ='$BuilderWPhone6',
-					 builder_mobile ='$BuilderMobile6',
-					 builder_fax ='$BuilderFax6',
-					 builder_email ='$BuilderEmail6'
-					 WHERE pid = '$pid6'");
+        mysql_query("UPDATE ver_chronoforms_data_builderpersonal_vic SET 
+                     builderid ='" . mysql_real_escape_string($BuildID6) . "',
+                     builder_suburbid ='" . mysql_real_escape_string($BuilderSuburbID6) . "', 
+                     builder_name ='" . mysql_real_escape_string($BuilderName6) . "', 
+                     builder_contact ='" . mysql_real_escape_string($BuilderContact6) . "', 
+                     builder_address1 ='" . mysql_real_escape_string($BuilderAddress16) . "', 
+                     builder_address2 ='" . mysql_real_escape_string($BuilderAddress26) . "',
+                     builder_suburb ='" . mysql_real_escape_string($BuilderSuburb6) . "',
+                     builder_state ='" . mysql_real_escape_string($BuilderState6) . "',
+                     builder_postcode ='" . mysql_real_escape_string($BuilderPostcode6) . "',
+                     builder_wkphone ='" . mysql_real_escape_string($BuilderWPhone6) . "',
+                     builder_mobile ='" . mysql_real_escape_string($BuilderMobile6) . "',
+                     builder_fax ='" . mysql_real_escape_string($BuilderFax6) . "',
+                     builder_email ='" . mysql_real_escape_string($BuilderEmail6) . "'
+                     WHERE pid = '$pid6'");
 		  
    } 
    

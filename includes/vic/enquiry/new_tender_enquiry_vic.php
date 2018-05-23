@@ -112,50 +112,56 @@ if(isset($_POST['save']) || isset($_POST['sendmail']))
 
                               appointmentdate,
                               employeeid) 
-         VALUES ('$getclientid',
-                 '$BuildSuburbID1',
-                 '$BuildName1',
-                 '$BuildContact1',
-                 '$BuildAddress11',
-                 '$BuildAddress21',
-                 '$BuildSuburb1',
-                 '$BuildState1',    
-                 '$BuildPostcode1',
-                 '$BuildWPhone1',
-                 '$BuildMobile1',
-                 '$BuildFax1',
-                 '$BuildEmail1',
+         VALUES ('" . mysql_real_escape_string($getclientid) . "',
+                 '" . mysql_real_escape_string($BuildSuburbID1) . "',
+                 '" . mysql_real_escape_string($BuildName1) . "',
+                 '" . mysql_real_escape_string($BuildContact1) . "',
+                 '" . mysql_real_escape_string($BuildAddress11) . "',
+                 '" . mysql_real_escape_string($BuildAddress21) . "',
+                 '" . mysql_real_escape_string($BuildSuburb1) . "',
+                 '" . mysql_real_escape_string($BuildState1) . "',    
+                 '" . mysql_real_escape_string($BuildPostcode1) . "',
+                 '" . mysql_real_escape_string($BuildWPhone1) . "',
+                 '" . mysql_real_escape_string($BuildMobile1) . "',
+                 '" . mysql_real_escape_string($BuildFax1) . "',
+                 '" . mysql_real_escape_string($BuildEmail1) . "',
                  
-                 '$SiteSuburbID',
-                 '$SiteProject',
-                 '$SiteAddress1',
-                 '$SiteAddress2',
-                 '$SiteSuburb',
-                 '$SiteState',
-                 '$SitePostcode',
-                 '$SiteWKPhone',
-                 '$SiteHMPhone',
-                 '$SiteMobile',
-                 '$SiteOther',
-                 '$SiteEmail',
-                 '$TenderStatus',
-                 '$gettenderid',
+                 '" . mysql_real_escape_string($SiteSuburbID) . "',
+                 '" . mysql_real_escape_string($SiteProject) . "',
+                 '" . mysql_real_escape_string($SiteAddress1) . "',
+                 '" . mysql_real_escape_string($SiteAddress2) . "',
+                 '" . mysql_real_escape_string($SiteSuburb) . "',
+                 '" . mysql_real_escape_string($SiteState) . "',
+                 '" . mysql_real_escape_string($SitePostcode) . "',
+                 '" . mysql_real_escape_string($SiteWKPhone) . "',
+                 '" . mysql_real_escape_string($SiteHMPhone) . "',
+                 '" . mysql_real_escape_string($SiteMobile) . "',
+                 '" . mysql_real_escape_string($SiteOther) . "',
+                 '" . mysql_real_escape_string($SiteEmail) . "',
+                 '" . mysql_real_escape_string($TenderStatus) . "',
+                 '" . mysql_real_escape_string($gettenderid) . "',
                  
-                 '$DateLodged',
-                 '$RepID',
-                 '$RepIdent',
-                 '$RepName',
-                 '$LeadID',
-                 '$LeadName',
-                 '$AppointmentLodged',
-                 '$EmployeeID')");
+                 '" . mysql_real_escape_string($DateLodged) . "',
+                 '" . mysql_real_escape_string($RepID) . "',
+                 '" . mysql_real_escape_string($RepIdent) . "',
+                 '" . mysql_real_escape_string($RepName) . "',
+                 '" . mysql_real_escape_string($LeadID) . "',
+                 '" . mysql_real_escape_string($LeadName) . "',
+                 '" . mysql_real_escape_string($AppointmentLodged) . "',
+                 '" . mysql_real_escape_string($EmployeeID) . "')");
                  
 $NotesTxt =  $_POST['notestxt'];
 $DateNotes = $_POST['date_notes'];
 $UsernameNotes = $_POST['username_notes'];  
 
 mysql_query("INSERT INTO ver_chronoforms_data_notes_vic (clientid, datenotes, username, content)  
-              VALUES ('$getclientid','$DateNotes', '$UsernameNotes','$NotesTxt')");
+              VALUES (
+              '" . mysql_real_escape_string($getclientid) . "',
+              '" . mysql_real_escape_string($DateNotes) . "', 
+              '" . mysql_real_escape_string($UsernameNotes) . "',
+              '" . mysql_real_escape_string($NotesTxt) . "'
+              )"
+              );
                  
 //This is the Time Save 
 $now = time();  
@@ -168,7 +174,8 @@ if(isset($_FILES['photo'])){
         $target=$target.$_FILES['photo']['name'][$key]; 
         if (move_uploaded_file($tmp_name, $target)) {
 
-$query = "INSERT INTO ver_chronoforms_data_drawings_vic (clientid, photo) VALUES  ('$getclientid', '$target')";
+$query = "INSERT INTO ver_chronoforms_data_drawings_vic (clientid, photo) 
+          VALUES  ('" . mysql_real_escape_string($getclientid) . "', '" . mysql_real_escape_string($target) . "')";
  mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
 
                 
