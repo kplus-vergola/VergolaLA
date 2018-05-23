@@ -32,7 +32,7 @@ class CfactionTcpdf{
 				'pdf_save_path' => '',
 				'pdf_post_name' => 'cf_pdf_file',
 				'pdf_page_orientation' => 'P',
-				'pdf_page_format' => 'A4',
+				'pdf_page_format' => 'LETTER',
 				'pdf_header' => 'Powered by Chronoforms + TCPDF',
 				'pdf_header_font' => 'helvetica',
 				'pdf_header_font_size' => 10,

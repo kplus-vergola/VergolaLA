@@ -30,7 +30,8 @@ class CfactionTcpdfHelper{
 		require_once('tcpdf/tcpdf.php');
 						
 		// create new PDF document
-		$pdf = new TCPDF($params->get('pdf_page_orientation', 'P'), PDF_UNIT, $params->get('pdf_page_format', 'A4'), true, 'UTF-8', false);
+		//$pdf = new TCPDF($params->get('pdf_page_orientation', 'P'), PDF_UNIT, $params->get('pdf_page_format', 'LETTER'), true, 'UTF-8', false);
+		$pdf = new TCPDF($params->get('pdf_page_orientation', 'P'), PDF_UNIT, $params->get('pdf_page_format', 'LETTER'), true, 'UTF-8', false);
 		
 		//set protection if enabled
 		if((bool)$params->get('enable_protection', 0) === true){
@@ -50,6 +51,9 @@ class CfactionTcpdfHelper{
 			$pdf->SetHeaderData(false, 0, $params->get('pdf_title', 'PDF Title Goes Here.'), $params->get('pdf_header', 'Powered by Chronoforms + TCPDF'));
 		}
 
+		//$pdf->SetPrintHeader(true);
+		//$pdf->SetPrintFooter(false);
+		
 		// set header and footer fonts
 		$pdf->setHeaderFont(Array($params->get('pdf_header_font', 'helvetica'), '', (int)$params->get('pdf_header_font_size', 10)));
 		$pdf->setFooterFont(Array($params->get('pdf_footer_font', 'helvetica'), '', (int)$params->get('pdf_footer_font_size', 8)));
@@ -58,15 +62,20 @@ class CfactionTcpdfHelper{
 		$pdf->SetDefaultMonospacedFont($params->get('pdf_monospaced_font', 'courier'));
 
 		//set margins
-		$pdf->SetMargins($params->get('pdf_margin_left', 15), $params->get('pdf_margin_top', 27), $params->get('pdf_margin_right', 15));
-		$pdf->SetHeaderMargin($params->get('pdf_margin_header', 5));
-		$pdf->SetFooterMargin($params->get('pdf_margin_footer', 10));
-
+		//$pdf->SetMargins($params->get('pdf_margin_left', 15), $params->get('pdf_margin_top', 17), $params->get('pdf_margin_right', 15));
+		//SetMargins ( $left, $top, $right = -1, $keepmargins = false )
+		$pdf->SetMargins(15,10,15,false);
+		//$pdf->SetHeaderMargin($params->get('pdf_margin_header', 5));
+		//$pdf->SetFooterMargin($params->get('pdf_margin_footer', 10));
+		$pdf->SetFooterMargin(15);
+		$pdf->SetHeaderMargin(15);
 		//set auto page breaks
-		$pdf->SetAutoPageBreak(TRUE, $params->get('pdf_margin_bottom', 25));
+		//$pdf->SetAutoPageBreak(TRUE, $params->get('pdf_margin_bottom', 25));
+		$pdf->SetAutoPageBreak(TRUE, 15);
 
 		//set image scale factor
-		$pdf->setImageScale($params->get('pdf_image_scale_ratio', 1.25));
+		$pdf->setImageScale(1.20);
+		//$pdf->setImageScale(100);
 
 		//set some language-dependent strings
 		$pdf->setLanguageArray($l);

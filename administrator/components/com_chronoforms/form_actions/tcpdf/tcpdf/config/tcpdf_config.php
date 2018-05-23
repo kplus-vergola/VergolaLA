@@ -101,7 +101,7 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	 * page format
 	 */
-	define ('PDF_PAGE_FORMAT', 'A4');
+	define ('PDF_PAGE_FORMAT', 'LETTER');
 
 	/**
 	 * page orientation (P=portrait, L=landscape)
@@ -201,7 +201,7 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	 * ratio used to adjust the conversion of pixels to user units
 	 */
-	define ('PDF_IMAGE_SCALE_RATIO', 1.25);
+	define ('PDF_IMAGE_SCALE_RATIO', 5.25);
 
 	/**
 	 * magnification factor for titles

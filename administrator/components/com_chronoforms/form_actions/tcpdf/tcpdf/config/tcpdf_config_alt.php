@@ -96,7 +96,7 @@ define ('K_BLANK_IMAGE', K_PATH_IMAGES.'_blank.png');
 /**
  * page format
  */
-define ('PDF_PAGE_FORMAT', 'A4');
+define ('PDF_PAGE_FORMAT', 'LETTER');
 
 /**
  * page orientation (P=portrait, L=landscape)

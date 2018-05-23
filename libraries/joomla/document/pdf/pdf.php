@@ -103,7 +103,7 @@ class JDocumentpdf extends JDocumentHTML
 	 * @param   string   $orientation  Paper orientation landscape|portrait
 	 */
 
-	public function setPaper($size = 'A4', $orientation = 'landscape')
+	public function setPaper($size = 'letter', $orientation = 'landscape')
 	{
 		$size = strtoupper($size);
 		$this->engine->set_paper($size, $orientation);

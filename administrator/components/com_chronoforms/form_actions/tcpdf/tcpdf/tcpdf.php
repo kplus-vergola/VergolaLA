@@ -1846,7 +1846,7 @@ class TCPDF {
 	 * @public
 	 * @see getPageSizeFromFormat(), setPageFormat()
 	 */
-	public function __construct($orientation='P', $unit='mm', $format='A4', $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false) {
+	public function __construct($orientation='P', $unit='mm', $format='LETTER', $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false) {
 		/* Set internal character encoding to ASCII */
 		if (function_exists('mb_internal_encoding') AND mb_internal_encoding()) {
 			$this->internal_encoding = mb_internal_encoding();
@@ -1932,7 +1932,7 @@ class TCPDF {
 		// set page format and orientation
 		$this->setPageFormat($format, $orientation);
 		// page margins (1 cm)
-		$margin = 28.35 / $this->k;
+		$margin = 18.35 / $this->k;
 		$this->SetMargins($margin, $margin);
 		// internal cell padding
 		$cpadding = $margin / 10;
@@ -2730,7 +2730,8 @@ class TCPDF {
 			case 'FR_TELLIERE'         : {$pf = array(  963.780, 1247.244); break;}
 			case 'FR_POT'              : {$pf = array(  878.740, 1133.858); break;}
 			// DEFAULT ISO A4
-			default: {$pf = array(  595.276,  841.890); break;}
+			default: {$pf = array(  612.000,  792.000); break;}//{$pf = array(  595.276,  841.890); break;}
+
 		}
 		return $pf;
 	}
@@ -4064,7 +4065,7 @@ class TCPDF {
 	 * @param $hm (int) distance in user units
 	 * @public
 	 */
-	public function setHeaderMargin($hm=10) {
+	public function setHeaderMargin($hm=15) {
 		$this->header_margin = $hm;
 	}
 
@@ -4084,7 +4085,7 @@ class TCPDF {
 	 * @param $fm (int) distance in user units
 	 * @public
 	 */
-	public function setFooterMargin($fm=10) {
+	public function setFooterMargin($fm=15) {
 		$this->footer_margin = $fm;
 	}
 
@@ -4198,7 +4199,7 @@ class TCPDF {
 			$this->SetX($header_x);
 			$this->MultiCell($cw, $cell_height, $headerdata['string'], 0, '', 0, 1, '', '', true, 0, false, true, 0, 'T', false);
 			// print an ending header line
-			$this->SetLineStyle(array('width' => 0.85 / $this->k, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)));
+			$this->SetLineStyle(array('width' => 0.85 / $this->k, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 255, 255)));
 			$this->SetY((2.835 / $this->k) + max($imgy, $this->y));
 			if ($this->rtl) {
 				$this->SetX($this->original_rMargin);
@@ -4273,6 +4274,13 @@ class TCPDF {
 			$this->Cell(0, 0, $this->getAliasRightShift().$pagenumtxt, 'T', 0, 'R');
 		}
 	}
+		// // Position at 15 mm from bottom
+		//       $this->SetY(-15);
+		//       // Set font
+		//       $this->SetFont('helvetica', 'I', 8);
+		//       // Page number
+		//       $this->Cell(0, 0, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
+		//   }
 
 	/**
 	 * This method is used to render the page header.
@@ -4355,9 +4363,13 @@ class TCPDF {
 			}
 			//DeeEmm footer text hack
                 $this->SetY($footer_y);
-                $this->Cell(1, 0, '   Vergola Quotation /www.vergola.com', 0, 0, 'L');
-				$this->Cell(2, 10, '  101 Port Road Thebarton 5031 South Australia P 61+8+8150 6888 F 61+8+8150 6888 info@vergola.com www.vergola.com', 0, 0, 'L');
-				$this->Cell(2, 16, 'A Division of Mima Industries ABN 96 008 043 016 Builders License BLD 120044', 0, 0, 'L');
+                //$this->Cell(1, 0, '   Vergola Quotation /www.vergola.com', 0, 0, 'L');
+				//$this->Cell(2, 10, '  101 Port Road Thebarton 5031 South Australia P 61+8+8150 6888 F 61+8+8150 6888 info@vergola.com www.vergola.com', 0, 0, 'L');
+				//$this->Cell(2, 16, 'A Division of Mima Industries ABN 96 008 043 016 Builders License BLD 120044', 0, 0, 'L');
+
+				//$this->Cell(30, 100, 'Description', 1, false, 'C', 0, '', 0, false, 'T', 'M');
+				//$this->Cell(130, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 1, false, 'C', 0, '', 0, false, 'T', 'C');
+				//$this->Cell(30, 10, 'Reference number', 1, false, 'C', 0, '', 0, false, 'T', 'M');
 				
 			$this->_out('Q');
 			$this->lasth = $lasth;
@@ -6314,7 +6326,7 @@ class TCPDF {
 	 * @since 1.3
 	 * @see SetFont(), SetDrawColor(), SetFillColor(), SetTextColor(), SetLineWidth(), Cell(), Write(), SetAutoPageBreak()
 	 */
-	public function MultiCell($w, $h, $txt, $border=0, $align='J', $fill=false, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false) {
+	public function MultiCell($w, $h, $txt, $border=0, $align='J', $fill=false, $ln=0, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false) {
 		$prev_cell_margin = $this->cell_margin;
 		$prev_cell_padding = $this->cell_padding;
 		// adjust internal padding
