@@ -11,15 +11,14 @@ if(isset($_REQUEST['pid']))
 $QuoteIDAlpha = substr($QuoteID, 0, 3);
 $current_date = date('Y-m-d H:i:s');
 
-//administrator\components\com_chronoforms\form_actions\tcpdf
-//error_log($QuoteIDAlpha, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+//error_log($QuoteIDAlpha, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 if(isset($_POST['add']))
 {	
     $template_clientid=$_POST['clientid'];
 	$template_title=$_POST['title'] ; 
+	// $template_content=addslashes($_POST['htmlcontent']);
 	$template_content=$_POST['htmlcontent'] ;
-    
-	 
+     
 	mysql_query("INSERT INTO ver_chronoforms_data_letters_vic (clientid, template_name, datecreated, template_content) 
 		 VALUES ('$template_clientid','$template_title', '$current_date', '$template_content')"); 
 
@@ -30,13 +29,6 @@ if(isset($_POST['add']))
     //echo('<script language="Javascript">alert(opener.window.location.href);</script>');
     //var url = opener.window.location.href+'&section=frame';
     $titleID=$_POST['title'] ;
-	
-	// $file=$template_title;
-	// header('Content-type: application/pdf');
-	// header('Content-Disposition: attachment; filename='.$file.'');
-	// readfile($file);
-	
-
 	echo('<script language="Javascript">window.opener.parent.location.href = opener.window.location.href + "&titleID='.$titleID.'"; window.close();</script>');
 	 
 }
@@ -77,10 +69,8 @@ if(isset($_POST['add']))
 					// Advanced theme
 					theme_advanced_toolbar_location : "top",
 					theme_advanced_toolbar_align : "left",
-					// theme_advanced_source_editor_height : "950",
-					// theme_advanced_source_editor_width : "750",
-					theme_advanced_source_editor_height : "792",
-					theme_advanced_source_editor_width : "612",
+					theme_advanced_source_editor_height : "950",
+					theme_advanced_source_editor_width : "750",
 					theme_advanced_resizing : true,
 					theme_advanced_resize_horizontal : false,
 					theme_advanced_statusbar_location : "bottom", theme_advanced_path : true,
@@ -101,10 +91,7 @@ if(isset($_POST['add']))
 				function submitForm() { 
 				    document.getElementById("add").click();
 				}
-				//window.location = "test.php";
-				//window.open = opener.window.location.href + "&titleID='.$titleID.'";
 				window.onload = submitForm;
-
 
 				</script>
 <style>
@@ -122,8 +109,7 @@ p {margin: 0;}
 </style>
 </head>
 <body>
-<?php
- 
+<?php 
  
 $projectid = mysql_real_escape_string($_REQUEST['projectid']);
 $section = mysql_real_escape_string($_REQUEST['section']);
@@ -138,16 +124,16 @@ if($section=="reorder"){
 }
 
 //$sql = "SELECT * FROM ver_chronoforms_data_contract_list_vic  AS contract LEFT JOIN ver_chronoforms_data_clientpersonal_vic AS c ON c.clientid = contract.quoteid WHERE  contract.projectid = '{$projectid}' ";
-//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');exit();
+//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');exit();
 $sql = "SELECT * FROM ver_chronoforms_data_contract_list_vic  AS contract JOIN ver_chronoforms_data_clientpersonal_vic AS c ON c.clientid = contract.quoteid WHERE  contract.projectid = '".$projectid."' ";
-//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 $qContract = mysql_query($sql);
 $contract = mysql_fetch_array($qContract); 
-//error_log(print_r($contract,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');exit();
+//error_log(print_r($contract,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');exit();
 
  
 $sql = "SELECT * FROM ver_chronoforms_data_supplier_vic  WHERE  supplierid = '".$supplierid."' ";
-//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 $qSupplier = mysql_query($sql);
 $supplier = mysql_fetch_array($qSupplier);
 
@@ -165,55 +151,58 @@ $supplier = mysql_fetch_array($qSupplier);
 		 	<img src="<?php echo JURI::base().'images/company_logo.png'; ?> " class="" style="float:left;padding:0px 0px 10px 0; width: 120px;"/>
 			 
 		</td>
-		<td valign="top" style="padding-left: 5px; font-family:Arial, Helvetica, sans-serif;font-size:10pt;width:50%;">			
-			<b>Vergola LA Inc</b><br/>
-			13800 Crenshaw Boulevard<br/>
-			Gardena CA 90249<br/>
-			Phone: 855 949 8347<br/>
-			Email: purchasingla@vergola.com  
+		<td valign="middle" style="padding-left: 5px; font-family:Arial, Helvetica, sans-serif;font-size:10pt;width:50%;">
+			<br/>
+			<b>Vergola (<?php echo (HOST_SERVER=="Victoria"?"Vic":""); echo (HOST_SERVER=="SA"?"SA":""); echo (HOST_SERVER=="LA"?"LA":""); ?>) Pty Ltd</b><br/>
+			101 Port Road<br/>
+			THEBARTON SA 5031<br/>
+			Phone: 0881506888  &nbsp;&nbsp;&nbsp; FAX: 08 8150 6868 <br/>
+			ABN: 14115578112 <br/>
+			Email: admin@vergola.com
+  
 		</td>
 	</tr>
 	<tr>
-		<td style="padding-left: 5px; border: 1px solid black; border-collapse: collapse; width: 327px">
+		<td style="padding-left: 5px; border: 1px solid black; border-collapse: collapse;">
 			 
-			<div><b>&nbsp;To:</b></div>
+			<div><b>To:</b></div>
 			<div>
-				&nbsp;<?php echo $supplier["company_name"]; ?> <br/>
-				&nbsp;<?php echo $supplier["address1"]; ?> <br/>
-				&nbsp;<?php echo $supplier["suburb"]." ".$supplier["state"]." ".$supplier["postcode"]; ?> <br/> 
-				&nbsp;<?php echo $supplier["phone"] ?> <br/>
-				&nbsp;<?php echo $supplier["fax"]  ?> <br/>  
+				<?php echo $supplier["company_name"]; ?> <br/>
+				<?php echo $supplier["address1"]; ?> <br/>
+				<?php echo $supplier["suburb"]." ".$supplier["state"]." ".$supplier["postcode"]; ?> <br/> 
+				<?php echo $supplier["phone"] ?> <br/>
+				<?php echo $supplier["fax"]  ?> <br/>  
 			</div>
 		</td>
 		<td style="padding-left: 5px; border: 1px solid black; border-collapse: collapse;">
 			 
-			<div><b>&nbsp;Deliver To:</b></div>
+			<div><b>Deliver To:</b></div>
 			<div>
-				&nbsp;<?php if($contract['is_builder']==1){  
+				<?php if($contract['is_builder']==1){  
 					  echo $contract["builder_name"];    
 				}else{
 					 echo $contract["client_firstname"]." ".$contract["client_lastname"]; 
 				} ?> <br/>
 
-				&nbsp;<?php if(empty($contract['site_address1'])==false){  
+				<?php if(empty($contract['site_address1'])==false){  
 					echo $contract["site_address1"]." ".$contract["site_address2"];  
 				}else{
 					echo $contract["client_address1"]." ".$contract["client_address2"]; 
 				} ?><br/>
 				
-				&nbsp;<?php if(empty($contract['site_suburb'])==false){ 
+				<?php if(empty($contract['site_suburb'])==false){ 
 					echo $contract["site_suburb"]." ".$contract["site_state"]." ".$contract["site_postcode"]; 
 				}else{
 					echo $contract["client_suburb"]." ".$contract["client_state"]." ".$contract["client_postcode"]; 
 				} ?><br/>
 
-				&nbsp;<?php if(empty($contract["site_hmphone"])==false){ 
+				<?php if(empty($contract["site_hmphone"])==false){ 
 					 echo $contract["site_hmphone"];
 				}else{
 					echo $contract["client_hmphone"];
 				} ?><br/>	
  
-				&nbsp;<?php if(empty($contract["site_mobile"])==false){ 
+				<?php if(empty($contract["site_mobile"])==false){ 
 					echo $contract["site_mobile"];
 				}else{   
 					echo $contract["client_mobile"];
@@ -227,10 +216,10 @@ $supplier = mysql_fetch_array($qSupplier);
 			<b>Client:</b> <?php if($contract["is_builder"]==1){ echo $contract["builder_name"]; }else{ echo $contract["client_firstname"]." ".$contract["client_lastname"];} ?> &nbsp;&nbsp;&nbsp;&nbsp; 
 			<b>Project ID:</b> <?php echo $contract["projectid"]; ?>&nbsp;&nbsp;
 			<b>Account No:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<b>Required Date:</b>  
-		</td>
-	</tr>	
-</table>  
+			<b>Required Date:</b> 
+		</td> 
+	</tr> 
+</table> 
 <br/> 
  
 <b>PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?>
@@ -266,635 +255,351 @@ $supplier = mysql_fetch_array($qSupplier);
 
 
 	<?php
- 
-//Main item of a raw material that should display first like beam and post.
-// $sql = "SELECT bm.id, b.qty, m.qty, (m.qty*b.qty) AS m_qty, SUM(m.qty*b.qty) AS s_qty, 
-// 	CASE WHEN m.is_per_length=1 THEN CASE WHEN m.uom='Ea' THEN SUM(floor(b.length/m.length_per_ea)) ELSE SUM(b.qty*m.qty) END ELSE SUM(m.qty*b.qty) END  AS ls_qty, 
-//     CASE WHEN m.is_per_length=1 
-// 		THEN CASE WHEN m.uom='Ea' THEN SUM(m.raw_cost * floor(b.length/m.length_per_ea)) 
-//         ELSE SUM(m.raw_cost * b.qty) END
-// 	ELSE SUM(m.raw_cost * b.qty)  END  AS ls_amount,
-//     b.length, CASE WHEN m.is_per_length=1 THEN SUM(b.length) END AS s_length, bm.projectid, bm.inventoryid, bm.materialid, (bm.raw_cost * bm.qty) AS raw_cost, bm.qty, bm.supplierid, m.raw_description, m.is_per_length, m.length_per_ea, m.uom, s.company_name, inv.photo, b.colour, b.finish
-// FROM ver_chronoforms_data_contract_bom_meterial_vic AS bm  
-// JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid=bm.inventoryid
-// JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=bm.inventoryid 				
-// JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=bm.materialid 
-// JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid
-// JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid AND bm.materialid = im.materialid
-// WHERE bm.projectid = '{$projectid}' AND b.projectid = '{$projectid}' AND b.is_reorder={$is_reorder}  ".($is_reorder==1?" AND b.inventoryid='{$inventoryid}' ":" AND inv.section='{$section}'")." AND m.supplierid='{$supplierid}' AND m.is_main_item=1 GROUP BY b.cf_id ORDER BY is_per_length DESC, bm.id, b.length DESC, b.qty DESC ";
+$order_by = ""; 
+if($section=="Vergola"){ 
+	$order_by = " ORDER BY FIELD(inv.category,'Louvers') DESC, FIELD(inv.inventoryid, 'IRV66', 'IRV64', 'IRV63', 'IRV62', 'IRV60', 'IRV59','IRV58') DESC, id   "; 
+}
 
-//Modiefied SQL QUERY for Main item of a raw material that should display first like beam and post.
+//Main item of a raw material that should display first like beam and post.
+
+
+// $sql = "SELECT bm.id,m.qty,(im.inv_qty*bm.qty) AS m_qty,(bm.qty*im.inv_qty) AS ls_qty,bm.length,CASE WHEN m.uom='Mtrs' THEN bm.raw_cost*(im.inv_qty*bm.qty)*bm.length ELSE bm.raw_cost*(im.inv_qty*bm.qty) END AS ls_amount,bm.projectid,bm.inventoryid,bm.materialid,bm.raw_cost,bm.qty AS bm_qty,bm.supplierid,m.raw_description,m.is_per_length,m.length_per_ea,m.uom,s.company_name,inv.photo,b.colour,b.finish FROM ver_chronoforms_data_contract_bom_meterial_vic AS bm JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id=bm.contract_item_cf_id JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=bm.inventoryid JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid=bm.inventoryid AND im.materialid=bm.materialid JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=im.materialid JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=bm.supplierid WHERE bm.projectid='{$projectid}' AND b.projectid='{$projectid}' ".($is_reorder==1?" AND inv.inventoryid='{$inventoryid}' ":" AND bm.section='{$section}' ")." AND bm.supplierid='{$supplierid}' AND m.is_main_item=1 { $ order_by}  "; // ORDER BY is_per_length DESC, bm.id, b.length DESC, b.qty DESC
 $sql = "
 SELECT
 	bm.id,
-	b.qty,
 	m.qty,
-	(im.inv_qty * b.qty ) AS m_qty,
-	SUM(im.inv_qty * b.qty ) AS s_qty,
+	( im.inv_qty * bm.qty ) AS m_qty,
+	bm.length,
+	( bm.qty * im.inv_qty ) AS ls_qty,
+	SUM( bm.qty * im.inv_qty ) AS ts_qty,	
 CASE
 	
-	WHEN m.is_per_length = 1 THEN
-CASE
-	
-	WHEN m.uom = 'Ea' THEN
-	SUM( im.inv_qty * b.qty )  ELSE SUM( floor( ( ( b.length_feet * 12 ) + b.length_inch) / m.length_per_ea_us ) )
-	END ELSE SUM( im.inv_qty *  b.qty ) 
-	END AS ls_qty,
-CASE
-		
-		WHEN m.is_per_length = 1 THEN
-	CASE
-			
-			WHEN m.uom = 'Ea' THEN
-			SUM( m.raw_cost * im.inv_qty * b.qty ) ELSE SUM(
-				( m.raw_cost * im.inv_qty * (floor((( b.length_feet * 12 ) + b.length_inch ) / m.length_per_ea_us) + COALESCE(((( RIGHT ( SUBSTRING_INDEX( b.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( b.length_fraction, '/',- 1 ), 1 ) + 0 ))), 0)) * b.qty 
-			)) 
-		END ELSE SUM( m.raw_cost * im.inv_qty * b.qty) 		
-	END AS ls_amount,
+	WHEN m.uom = 'Inches' THEN
+	(bm.raw_cost * ( im.inv_qty * bm.qty ) * ((bm.length_feet * 12) + bm.length_inch)) ELSE bm.raw_cost * ( im.inv_qty * bm.qty ) 
+	END AS ls_amount,	
 
-	CASE
-		
+CASE	
+	WHEN m.is_per_length = 1 THEN
+CASE	
+	WHEN m.uom = 'Ea' THEN
+	SUM( im.inv_qty * b.qty ) ELSE SUM( floor( ((b.length_feet * 12) + b.length_inch) / m.length_per_ea_us ) ) 
+	END ELSE SUM( im.inv_qty * b.qty ) 
+	END AS ls_qty,
+CASE		
 		WHEN m.is_per_length = 1 THEN
-	CASE
-			
+	CASE			
 			WHEN m.uom = 'Ea' THEN
 			( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
-				( m.raw_cost * im.inv_qty * floor(((( b.length_feet * 12 ) + b.length_inch ) / m.length_per_ea_us) + COALESCE(((( RIGHT ( SUBSTRING_INDEX( b.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( b.length_fraction, '/',- 1 ), 1 ) + 0 ))), 0)) * b.qty 
-			)) 
-		END ELSE ( m.raw_cost * im.inv_qty * bm.qty) 		
+				(
+					(m.raw_cost * im.inv_qty * (((b.length_feet * 12) + b.length_inch)  / m.length_per_ea_us ) )* b.qty 
+				) 
+			) 
+		END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
+	END AS ls_amount,
+CASE		
+		WHEN m.is_per_length = 1 THEN
+	CASE			
+			WHEN m.uom = 'Ea' THEN
+			( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
+				(
+					(m.raw_cost * im.inv_qty * (((b.length_feet * 12) + b.length_inch)  / m.length_per_ea_us ) )* b.qty 
+				) 
+			) 
+		END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
 	END AS ls_amount_guttering,
+CASE		
+		WHEN m.is_per_length = 1 THEN
+		SUM( ((b.length_feet * 12) + b.length_inch) ) 
+	END AS s_length,
+	( ((bm.length_feet * 12) + bm.length_inch) ) AS length,
 
 CASE
 	
-	WHEN m.is_per_length = 1 THEN
-	SUM( ( bm.length_feet * 12 ) + bm.length_inch ) 
-	END AS s_length,
-	(( b.length_feet * 12 ) + b.length_inch) AS length,	
+	WHEN m.uom = 'Inches' THEN
+	SUM(bm.raw_cost * ( im.inv_qty * bm.qty ) * ((bm.length_feet * 12) + bm.length_inch)) ELSE SUM(bm.raw_cost * ( im.inv_qty * bm.qty ) )
+	END AS lss_amount,
+
 	bm.projectid,
 	bm.inventoryid,
 	bm.materialid,
-	( bm.raw_cost * bm.qty ) AS bm_rawcost,
-	bm.qty,
+	bm.raw_cost,
+	bm.qty AS bm_qty,
 	bm.supplierid,
 	m.raw_description,
-	m.raw_cost,
 	m.is_per_length,
 	m.length_per_ea,
 	m.uom,
-	m.is_main_item,
 	s.company_name,
 	inv.photo,
 	b.colour,
 	b.finish 
 FROM
-	(SELECT DISTINCT *, ( ( length_feet * 12 ) + length_inch ) AS bmlength  FROM ver_chronoforms_data_contract_bom_meterial_vic GROUP BY inventoryid, materialid, bmlength) bm
-	INNER JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.materialid = bm.materialid 
-		AND im.inventoryid = bm.inventoryid
-	INNER JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = bm.materialid 
-	INNER JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = m.supplierid
-	Inner JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
-	INNER JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid AND b.projectid = bm.projectid
-WHERE
-	b.projectid = '{$projectid}' 
-	-- AND b.projectid = '{$projectid}' 
-	AND inv.section='{$section}'
-   	AND m.supplierid = '{$supplierid}'  	
-   	-- AND inv.section= 'Frame'
-   	AND b.is_reorder = {$is_reorder} ".($is_reorder=="1 "?" 
-	AND b.inventoryid = '{$inventoryid}' ":" 
-	AND inv.section = '{$section}'")."
-   	AND is_main_item = 1
-
-GROUP BY
-	CASE 
- 		WHEN inv.section='Guttering' OR inv.section='Flashings' THEN
- 			b.cf_id	
-			ELSE bm.id
-			END,
-	 length, b.colour
-ORDER BY
-b.cf_id ASC,
-	m.is_per_length DESC,
-	b.length DESC,
-	b.qty DESC,
-	FIELD(inv.category, 'Post Fixings','Beam Fixings','Intermediates','Beams') DESC";
-
-
-// CASE 
-// 	WHEN inv.section='Guttering' OR inv.section='Flashings' THEN
-// 		b.cf_id
-// 	-- ELSE bm.inventoryid, length, b.colour END
-// 	END;
-// ".(inv.section="Guttering "?" b.cf_id ":" ")."
-
-
-
-
-// $sql = "SELECT
-// 	bm.id,
-// 	b.qty,
-// 	m.qty,
-// 	( m.qty * b.qty ) AS m_qty,
-// 	SUM( m.qty * b.qty ) AS s_qty,
-// CASE
-	
-// 	WHEN m.is_per_length = 1 THEN
-// CASE
-	
-// 	WHEN m.uom = 'Ea' THEN
-// 	SUM( floor( ( ( bm.length_feet * 12 ) + bm.length_inch) / m.length_per_ea ) ) ELSE SUM( b.qty ) 
-// 	END ELSE SUM( b.qty ) 
-// 	END AS ls_qty,
-// CASE
-	
-// 	WHEN m.is_per_length = 1 THEN
-// CASE
-	
-// 	WHEN m.uom = 'Ea' THEN
-// 	SUM( m.raw_cost * floor( ( b.length_feet * 12 ) + b.length_inch / m.length_per_ea ) ) ELSE SUM(m.raw_cost *  b.qty) 
-// 	END ELSE SUM( m.raw_cost * ( b.qty * im.inv_qty ) ) 
-// 	END AS ls_amount,
-// -- 	b.length,
-// CASE
-	
-// 	WHEN m.is_per_length = 1 THEN
-// 	SUM( ( bm.length_feet * 12 ) + bm.length_inch ) 
-// 	END AS s_length,	
-// 	v.length,
-// 	Floor(bm.length_fraction) AS rfrac,	
-// 	(RIGHT(SUBSTRING_INDEX(bm.length_fraction,'/',1),1)+0)
-//          /  (LEFT(SUBSTRING_INDEX(bm.length_fraction,'/',-1),1)+0) AS fresult,         
-// 	bm.length_fraction,
-// 	bm.length_feet,
-// 	bm.length_inch,
-// 	v.length,
-// 	bm.projectid,
-// 	bm.inventoryid,
-// 	bm.materialid,
-// 	( bm.raw_cost * bm.qty ) AS bm_rawcost,
-// 	bm.qty,
-// 	bm.supplierid,
-// 	m.raw_description,
-// 	m.is_per_length,
-// 	m.length_per_ea,
-// 	m.uom,
-// 	m.is_main_item,
-// 	s.company_name,
-// 	inv.photo,
-// 	b.colour,
-// 	b.finish 
-// FROM
-// 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
-//  	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid 
-//  	JOIN ver_chronoforms_data_contract_items_vic AS v ON v.cf_id = b.contract_item_cf_id
-// 	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
-// 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = bm.materialid
-// 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = m.supplierid
-// 	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid 
-// 	AND bm.materialid = im.materialid 
-// WHERE
-// 	bm.projectid = '{$projectid}' 
-// 	AND b.projectid = '{$projectid}' 	
-	
-// 	AND inv.section='{$section}'
-//    	AND m.supplierid = '{$supplierid}' 
-//  	AND m.is_main_item = 1 
-//  GROUP BY	
-//    	b.cf_id
-// ORDER BY
-// 	is_per_length DESC,
-// 	bm.id,
-// 	b.length DESC,
-// 	b.qty DESC ";
-	
-/*
-$sql = "SELECT
-		bm.id,
-		b.qty,
-		( im.inv_qty * b.qty ) AS m_qty,
-		SUM( im.inv_qty * b.qty ) AS s_qty,
-	CASE
-		
-		WHEN m.is_per_length = 1 THEN
-	CASE
-		
-		WHEN m.uom = 'Ea' THEN
-		SUM(( floor(b.length_feet * 12 ) + b.length_inch / m.length_per_ea ) ) ELSE SUM( b.qty * im.inv_qty ) 
-		END ELSE SUM( im.inv_qty * b.qty ) 
-		END AS ls_qty,
-	CASE
-			
-			WHEN m.is_per_length = 1 THEN
-		CASE
-				
-				WHEN m.uom = 'Ea' THEN
-				SUM( im.inv_extcost * floor((b.length_feet * 12 ) + b.length_inch / m.length_per_ea ) ) ELSE SUM( im.inv_extcost * b.qty ) 
-			END ELSE SUM( im.inv_extcost * b.qty ) 
-		END AS ls_amount,
-		
-	CASE 
-			
-			WHEN m.is_per_length = 1 THEN
-			SUM( (b.length_feet * 12 ) + b.length_inch ) 
-		END AS s_length,
-		ROUND(bm.length_fraction) AS rfrac,
-		CEILING(bm.length_fraction) AS cfrac,
-		bm.projectid,
-		bm.inventoryid,
-		bm.materialid,
-		(bm.raw_cost * im.inv_qty) AS rawcost,
-		(bm.qty * im.inv_qty) AS invqty,
-		bm.qty AS bm_qty,
-		bm.supplierid,
-		bm.length_fraction,
-		m.raw_description AS rawdesc,
-		m.raw_description,
-		m.is_per_length,
-		m.length_per_ea,
-		m.uom,		
-		m.raw_cost,
-		im.inv_extcost,
-		im.inv_qty,
-		s.company_name,
-		inv.photo,
-		b.colour,
-		b.finish 
-		FROM
 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
- 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid 
- 	JOIN ver_chronoforms_data_contract_items_vic AS v ON v.cf_id = b.contract_item_cf_id
 	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
-	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = bm.materialid
-	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = m.supplierid
-	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid 
-	AND bm.materialid = im.materialid 
+	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
+	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
+	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid
+	AND im.materialid = bm.materialid
+	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
+	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
+	
 WHERE
 	bm.projectid = '{$projectid}' 
 	AND b.projectid = '{$projectid}' 
-	AND b.is_reorder={$is_reorder}  '.(['$is_reorder']==1?' 
-	AND b.inventoryid='{$inventoryid}' ':' 
-	AND inv.section='{$section}'').'
-   	AND m.supplierid = '{$supplierid}' 
- 	AND m.is_main_item = 1 
- GROUP BY	
-   	b.cf_id
-ORDER BY
-	is_per_length DESC,
-	bm.id,
-	b.length DESC,
-	b.qty DESC "; */
+	AND m.supplierid = '{$supplierid}' 	
+	
+	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
+	AND is_main_item = 1 
+GROUP BY
+CASE
+		
+		WHEN inv.section = 'Guttering' 
+		OR inv.section = 'Flashings' THEN
+			bm.id ELSE bm.materialid 
+		END,
+		b.length,
+		b.colour 
+	ORDER BY
+		m.cf_id ASC,
+		m.is_per_length DESC,
+		bm.length DESC,
+	bm.qty DESC
+	,FIELD( inv.category, 'Post Fixings', 'Beam Fixings', 'Intermediates', 'Beams' ) DESC ";
 
-//Non main item that are additional item like bolts & nuts for a post or a beam.
-// $sql2 = "SELECT bm.id, b.qty, m.qty, (m.qty*b.qty) AS m_qty, SUM(m.qty*b.qty) AS s_qty, 
-// 	CASE WHEN m.is_per_length=1 THEN CASE WHEN m.uom='Ea' THEN IF(1=".(METRIC_SYSTEM=="inch"?"1":"0").",'i '+SUM(floor(b.length/m.length_per_ea_us)),'m '+SUM(floor(b.length/m.length_per_ea))) ELSE SUM(b.qty*m.qty) END ELSE SUM(m.qty*b.qty) END  AS ls_qty, 
-//     CASE WHEN m.is_per_length=1 
-// 		THEN CASE WHEN m.uom='Ea' THEN SUM(m.raw_cost * floor(b.length/m.length_per_ea)) 
-//         ELSE SUM(m.raw_cost * b.qty) END
-// 	ELSE SUM(m.raw_cost * b.qty)  END  AS ls_amount,
-//     b.length, 
-//     CASE WHEN m.is_per_length=1 THEN SUM(b.length) END AS s_length,
-//     bm.projectid, bm.inventoryid, bm.materialid, bm.raw_cost, bm.qty, bm.supplierid, m.raw_description, m.is_per_length, m.length_per_ea, m.uom, s.company_name, b.colour, b.finish
-// FROM ver_chronoforms_data_contract_bom_meterial_vic AS bm  
-// JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid=bm.inventoryid
-// JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=bm.inventoryid 				
-// JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=bm.materialid 
-// JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid  
-// WHERE bm.projectid = '{$projectid}' AND b.projectid = '{$projectid}' AND b.is_reorder={$is_reorder}  ".($is_reorder==1?" AND b.inventoryid='{$inventoryid}' ":" AND inv.section='{$section}'")." AND m.supplierid='{$supplierid}' AND m.is_main_item=0 GROUP BY bm.materialid ORDER BY is_per_length DESC ";
-
-//----------Begin Old Query------------------------
-// $sql2 = "SELECT bm.id,   m.qty, (m.qty*bm.qty) AS m_qty, SUM(m.qty*bm.qty) AS s_qty, 
-// 	CASE WHEN m.is_per_length=1 THEN CASE WHEN m.uom='Ea' THEN IF(1=".(METRIC_SYSTEM=="inch"?"1":"0").", SUM(bm.qty*floor(ROUND(bm.length/m.length_per_ea_us,3))), SUM(bm.qty*floor(ROUND(bm.length/m.length_per_ea,3)))) ELSE SUM(bm.qty*m.qty) END ELSE SUM(m.qty*bm.qty) END  AS ls_qty, 
-//     CASE WHEN m.is_per_length=1 
-// 		THEN CASE WHEN m.uom='Ea' THEN SUM(m.raw_cost * floor(bm.length/m.length_per_ea)) 
-//         ELSE SUM(m.raw_cost * bm.qty) END
-// 	ELSE SUM(m.raw_cost * bm.qty)  END  AS ls_amount,
-//     bm.length, 
-//     CASE WHEN m.is_per_length=1 THEN SUM(bm.length) END AS s_length,
-//     bm.projectid, bm.inventoryid, bm.materialid, bm.raw_cost, bm.qty, bm.supplierid, m.raw_description, m.is_per_length, m.length_per_ea, m.uom, s.company_name 
-// FROM ver_chronoforms_data_contract_bom_meterial_vic AS bm   
-// JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=bm.inventoryid 				
-// JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=bm.materialid 
-// JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=m.supplierid
-// WHERE bm.projectid = '{$projectid}'  AND m.supplierid='{$supplierid}' AND m.is_main_item=0 GROUP BY bm.materialid ORDER BY is_per_length DESC ";
-//----------End Old Query------------------------
-
-//SQL for raw materials secondary items
-
-$sql2 = 
-"SELECT
-	count(bm.id),
+$sql2 = "
+SELECT
 	bm.id,
 	m.qty,
 	( im.inv_qty * bm.qty ) AS m_qty,
-	SUM( im.inv_qty * bm.qty ) AS s_qty,
+	bm.length,
+	( bm.qty * im.inv_qty ) AS ls_qty,
+	SUM( bm.qty ) AS ts_qty,	
+	SUM(bm.qty) AS bms_qty,
 CASE
 	
+	WHEN m.uom = 'Inches' THEN
+	bm.raw_cost * ( im.inv_qty * bm.qty ) * ((bm.length_feet * 12) + bm.length_inch) ELSE bm.raw_cost * ( im.inv_qty * bm.qty ) 
+	END AS ls_amount,	
+
+CASE	
 	WHEN m.is_per_length = 1 THEN
-CASE
-	
+CASE	
 	WHEN m.uom = 'Ea' THEN
-IF
-	(
-	1 = ".(METRIC_SYSTEM==" inch "?" 1 ":" 0 ").",
-SUM( bm.qty * floor( ROUND( ( ( bm.length_feet * 12 ) + bm.length_inch )  / m.length_per_ea_us, 3 ) ) ),
-	SUM( bm.qty * floor( ROUND( ( ( bm.length_feet * 12 ) + bm.length_inch )  / m.length_per_ea, 3 ) ) ) 
-	) ELSE SUM( bm.qty * m.qty ) 
-	END ELSE SUM( m.qty * bm.qty ) 
+	SUM( im.inv_qty * b.qty ) ELSE SUM( floor( ((bm.length_feet * 12) + bm.length_inch) / m.length_per_ea_us ) ) 
+	END ELSE SUM( im.inv_qty * b.qty ) 
 	END AS ls_qty,
-CASE
-		
+CASE		
 		WHEN m.is_per_length = 1 THEN
-	CASE
-			
+	CASE			
 			WHEN m.uom = 'Ea' THEN
 			SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
-				( m.raw_cost * im.inv_qty * (floor((( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us) + COALESCE(((( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ))), 0)) * bm.qty 
-			)) 
-		END ELSE SUM( m.raw_cost * im.inv_qty * bm.qty ) 
+				(
+					(m.raw_cost * im.inv_qty * (((bm.length_feet * 12) + bm.length_inch)  / m.length_per_ea_us ) )* b.qty 
+				) 
+			) 
+		-- END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
+		END ELSE SUM(m.raw_cost * bm.qty )
 	END AS ls_amount,
-	( ( bm.length_feet * 12 ) + bm.length_inch ) AS length,
-CASE
-		
+CASE		
 		WHEN m.is_per_length = 1 THEN
-		SUM( ( bm.length_feet * 12 ) + bm.length_inch ) 
+	CASE			
+			WHEN m.uom = 'Ea' THEN
+			( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
+				(
+					(m.raw_cost * im.inv_qty * (((bm.length_feet * 12) + bm.length_inch)  / m.length_per_ea_us ) )* b.qty 
+				) 
+			) 
+		END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
+	END AS ls_amount_guttering,
+CASE		
+		WHEN m.is_per_length = 1 THEN
+		SUM( ((bm.length_feet * 12) + bm.length_inch) ) 
 	END AS s_length,
+	( b.length ) AS length,
+
+CASE
+	
+	WHEN m.uom = 'Mtrs' THEN
+	SUM(bm.raw_cost * ( im.inv_qty * bm.qty ) * bm.length) ELSE SUM(bm.raw_cost * ( im.inv_qty * bm.qty ) ) 
+	END AS lss_amount,
+
 	bm.projectid,
 	bm.inventoryid,
 	bm.materialid,
 	bm.raw_cost,
-	bm.qty,
+	bm.qty AS bm_qty,
 	bm.supplierid,
 	m.raw_description,
 	m.is_per_length,
 	m.length_per_ea,
 	m.uom,
-	s.company_name 
+	s.company_name,
+	inv.photo,
+	b.colour,
+	b.finish 
 FROM
 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
 	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
-	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = bm.materialid
-	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = m.supplierid 
-	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.materialid = bm.materialid AND im.inventoryid = bm.inventoryid
+	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid 
+	AND im.materialid = bm.materialid
+	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
+	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
+	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
+	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
 WHERE
-	bm.projectid = '{$projectid}'
-	AND m.supplierid = '{$supplierid}'
-	AND m.is_main_item = 0 	
-	AND inv.section = '{$section}'
+	bm.projectid = '{$projectid}' 
+	".($is_reorder==1?" 
+	AND bm.inventoryid = '{$inventoryid}' ":" 
+	AND inv.section = '{$section}' ")." 
+	AND bm.supplierid = '{$supplierid}' AND m.is_main_item = 0
 GROUP BY
-		bm.materialid 
-ORDER BY
-is_per_length DESC";
-// "
-// SELECT
-// 	bm.projectid,
-// 	bm.inventoryid,
-// 	bm.materialid,
-// 	bm.raw_cost,
-// 	((bm.length_feet * 12) + bm.length_inch) + bm.length_fraction AS bmlength,
-// CASE
-	
-// 	WHEN m.is_per_length = 1 THEN
-// CASE
-	
-// 	WHEN m.uom = 'Ea' THEN
-// 	( m.raw_cost * b.qty ) ELSE (
-// 	( im.inv_extcost * b.qty ) * (
-// 			(
-// 				( RIGHT ( SUBSTRING_INDEX( b.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( b.length_fraction, '/',- 1 ), 1 ) + 0 ) 
-// 			) + ( ( b.length_feet * 12 ) + b.length_inch ) 
-// 		) 
-// 		) 
-// 	END ELSE ( m.raw_cost * b.qty ) 
-// 	END AS ls_amount,
-// 	( im.inv_qty * b.qty ) AS b_qty,
-// 	( b.length_feet * 12 ) + b.length_inch AS b_length,
-// 	m.qty,
-// 	bm.supplierid,
-// 	m.raw_description,
-// 	m.uom,
-// 	m.is_per_length,
-// 	m.length_per_ea,
-// 	s.company_name,
-// 	m.length_per_ea_us,
-// 	im.inv_extcost AS raw_invcost,
-// 	im.inv_qty AS invqty,
-// 	( im.inv_extcost * im.inv_qty ) AS extended_cost
-// FROM
-// 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
-// 	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid
-// 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
-// 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = im.inventoryid
-// 	JOIN ver_chronoforms_data_contract_items_vic AS i ON i.inventoryid = b.inventoryid
-// 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = m.supplierid 
-// 	AND bm.materialid = im.materialid 
-	
-// WHERE
-// 	bm.projectid = '{$projectid}' 
-// 	AND b.projectid = '{$projectid}' -- 	AND i.projectid = 'PRV341'
-	
-// 	AND b.inventory_section = '{$section}' 
-// 	AND m.is_main_item = 0
-// -- GROUP BY
-// -- 	b.cf_id 	
-// -- ORDER BY
-// -- 	b.cf_id ASC,
-// -- 	is_per_length DESC,
-// 	-- bm.id 
-
-// 	GROUP BY bm.materialid ORDER BY is_per_length DESC ";
-
-// "// SELECT
-// 	bm.id,
-// 	m.qty,
-// 	( m.qty * bm.qty ) AS m_qty,
-// 	SUM( m.qty * bm.qty ) AS s_qty,
-// CASE
-	
-// 	WHEN m.is_per_length = 1 THEN
-// CASE
-	
-// 	WHEN m.uom = 'Ea' THEN
-// IF
-// 	(
-// 	1 = ".(METRIC_SYSTEM=="inch "?" 1 ":" 0").",
-// SUM( bm.qty * floor( ROUND( (v.length + (((RIGHT(SUBSTRING_INDEX(bm.length_fraction,'/',1),1)+0)
-//          /  (LEFT(SUBSTRING_INDEX(bm.length_fraction,'/',-1),1)+0) ) + v.length)) / m.length_per_ea_us, 3 ) ) ),
-// 	SUM( bm.qty * floor( ROUND( (v.length + (((RIGHT(SUBSTRING_INDEX(bm.length_fraction,'/',1),1)+0)
-//          /  (LEFT(SUBSTRING_INDEX(bm.length_fraction,'/',-1),1)+0) ) + v.length)) / m.length_per_ea, 3 ) ) ) 
-// 	) ELSE SUM( bm.qty * m.qty ) 
-// 	END ELSE SUM( m.qty * bm.qty ) 
-// 	END AS ls_qty,
-// CASE
+CASE
 		
-// 		WHEN m.is_per_length = 1 THEN
-// 	CASE
-			
-// 			WHEN m.uom = 'Ea' THEN
-// 			 SUM( m.raw_cost * bm.qty )  ELSE SUM( m.raw_cost * floor( v.length / m.length_per_ea ) )
-// 		END ELSE SUM( m.raw_cost * bm.qty ) 
-// 	END AS ls_amount,
-// 	v.length,
-// 	(((RIGHT(SUBSTRING_INDEX(bm.length_fraction,'/',1),1)+0)
-//          /  (LEFT(SUBSTRING_INDEX(bm.length_fraction,'/',-1),1)+0) ) + v.length) AS rfrac,	
-// CASE
-		
-// 		WHEN m.is_per_length = 1 THEN
-// 		SUM( v.length ) 
-// 	END AS s_length,
-// 	bm.projectid,
-// 	bm.inventoryid,
-// 	bm.materialid,
-// 	bm.raw_cost,
-// 	bm.qty,
-// 	bm.supplierid,
-// 	m.raw_description,
-// 	m.is_per_length,
-// 	m.length_per_ea,
-// 	m.is_main_item,
-// 	m.uom,
-// 	s.company_name 
-// FROM
-// 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
-// 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid 
-// 	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
-// 	JOIN ver_chronoforms_data_contract_items_vic AS v ON v.cf_id = b.contract_item_cf_id
-// 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = bm.materialid
-// 	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.materialid = m.cf_id
-// 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = m.supplierid 
-// WHERE
-// 	bm.projectid = '{$projectid}' 
-// 	AND b.projectid = '{$projectid}' 
-//  	AND m.supplierid = '{$supplierid}' 
-// 	AND inv.section = '{$section}'
-//  	AND m.is_main_item = 0
-// GROUP BY
-// 	bm.materialid 
-// ORDER BY
-// 	is_per_length DESC,
-// 	bm.id,
-// 	b.length DESC,
-// 	b.qty DESC ";
-//WHERE bm.projectid = '{$projectid}'  AND m.supplierid='{$supplierid}' AND m.is_main_item=0 GROUP BY bm.materialid ORDER BY is_per_length DESC ";
+		WHEN inv.section = 'Guttering' 
+		OR inv.section = 'Flashings' THEN
+			bm.id ELSE bm.materialid 
+		END
+	ORDER BY
+		m.cf_id ASC,
+		m.is_per_length DESC,
+		bm.length DESC,
+	bm.qty DESC
+	,FIELD( inv.category, 'Post Fixings', 'Beam Fixings', 'Intermediates', 'Beams' ) DESC ";
 
-//Display Main item of a raw material that should display first like beam and post.
- 				$totalRrp = 0;
-				 
-				//error_log("sql 2: ". $sql2, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+//ORDER BY is_per_length DESC
+
+ 				$totalRrp = 0; 
+				//error_log("sql : ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
+				//error_log("sql 2: ". $sql2, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+				
+				// echo $sql;
 				$item_result = mysql_query ($sql);
-				
-				while ($m = mysql_fetch_assoc($item_result)){ 
-					$totalRrp += $m['ls_amount'];
+				//$num_result = mysql_num_rows($item_result);
+				$i = 1; $num_same_inv_id = 0;
+				$prev_inv_id = "";
+				$m_qty = 0; $m_amount = 0; $is_1st=1; $is_2nd = 0;  
+				$m_qty_IRV59 = 0; $m_amount_IRV59 = 0; $m_qty_IRV60 = 0; $m_amount_IRV60 = 0; // Just only for link bar and pivot strip
 
-
-				//Convert fraction to decimal
-				$input = $m['length_fraction'];				
-				if (strpos($input, '/') === FALSE) { $result = $input;
-				} else { $fraction = array('whole' => 0);
-					preg_match('/^((?P<whole>\d+)(?=\s))?(\s*)?(?P<numerator>\d+)\/(?P<denominator>\d+)$/', $input, $fraction);
-				    $result = $fraction['whole']; if ($fraction['denominator'] > 0) $result += $fraction['numerator'] / $fraction['denominator']; }
-				
-				//while ($row = mysql_fetch_assoc($result)){
-				//$amount = 0;
-				$m_qty = 1; $m_length = 1;
-				if($m['is_per_length']==1){
-					// $amount = $m['raw_cost'] * $m['qty'] * $bm['qty'] * floor($bm['length'] / $m['length_per_ea']);
-					if($m['uom']=="Ea"){
-						$m_qty = 0; 
-						$mlength = (($m['length_feet'] * 12) + $m['length_inch']);
-						$m_qty = $m['invqty'] * floor($m['s_length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea']));						
-						//$amount = $m_qty * $m['raw_invcost'];  
-						//$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length'];
-						//error_log("inventoryid:".$bm['inventoryid']."m_qty:".$m_qty."---- lpe:".((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])." bm-length:".$bm['length']." floor-".($bm['length'] / ((METRIC_SYSTEM=="inch")?$m['length_per_ea_us']:$m['length_per_ea'])), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
-						$amount = ($m['raw_cost'] * (($m['inv_qty'] == 0 || $m['inv_qty'] == null) ?  1 : $m['inv_qty']))  * $m['bm_qty']; 
-						$m['raw_description'] = $m['raw_description'] . "(Equals EA)";
+				while ($m = mysql_fetch_assoc($item_result)){ //this is just to get get the sum of the link bar and pivot strip.
+					if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
+						  
+						$m_qty_IRV59 += $m['m_qty'];
+						$m_amount_IRV59 += $m['ls_amount'];
+ 
+					}else if(fnmatch("*Double Bay VR*",$contract['framework'])  && $section=="Vergola" && $m["inventoryid"]=="IRV60" ){ //IRV60 is a Link Bar
+ 
+						$m_qty_IRV60 += $m['m_qty'];
+						$m_amount_IRV60 += $m['lss_amount']; 
+ 
 					}
-					else{
-						//$bm['qty'] = $raw_qty;
-						$m_qty = $m['invqty'] * $bm['qty'];
-						$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
-						$m_fracs = number_format($bm['length_fraction']);
-						$m_length = $bm['length'] / $m['length_per_ea'];// * floor($bm['length'] / $m['length_per_ea']); 						
-						//$amount = $m['raw_cost'] * ((($bm['length_feet'] * 12) + $bm['length_inch']) + number_format($bm['length_fraction']));
-						//$amount = $m['inv_extcost'] * ($m['invqty'] * ($m['s_length'] + $result));						
-						//$amount = 150;
-						$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['lenght_feet']; 
-						$amount = ($m['raw_cost'] * (($m['inv_qty'] == 0 || $m['inv_qty'] == null) ?  1 : $m['inv_qty']))  * ($m['length'] + $result) * $m['bm_qty']; 
-						
-						//$amount = $m['qty'];
-					}
+				}	
 
+				mysql_data_seek($item_result, 0); 
+				$IRV59_1st=1; $IRV60_1st=1; 
+				while ($m = mysql_fetch_assoc($item_result)){
+					$m_qty = 0; $m_amount = 0;
+					if($m['id']==""){continue;} 
+					$totalRrp += $m['lss_amount']; 
+
+					if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
+						  
+						$m_qty = $m_qty_IRV59;
+						$m_amount = $m_amount_IRV59;
+ 
+						if($IRV59_1st==1){
+							$IRV59_1st = 0;
+						}else{
+							continue;
+						}
+					}else if(fnmatch("*Double Bay VR*",$contract['framework'])  && $section=="Vergola" && $m["inventoryid"]=="IRV60" ){ //IRV60 is a Link Bar
+ 
+						$m_qty = $m_qty_IRV60;
+						$m_amount = $m_amount_IRV60;
+ 
+						if($IRV60_1st==1){ 
+							$IRV60_1st = 0;
+						}else{
+							continue;
+						} 
+
+						//error_log("INV: ".$m["inventoryid"]." m_qty:".$m_qty." m_amount:".$m_amount, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+ 
+					}
+					//error_log("HERE 2: ", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+					 // only 2nd of IRV59 and IRV60 will be displayed. 
+					//error_log("Double Bay VR:".$contract['framework']." section:".$section." inventoryid:".$m["inventoryid"], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 					
-				}else{
-					$bm['length'] = (($bm['length_feet'] * 12) + $bm['length_inch']);
-					//$bm['qty'] = $raw_qty;
-					$amount = $m['raw_invcost'] * $m['invqty'] * $bm['qty']; 
-					$m_qty = $m['invqty'] * $bm['qty'];
-					$m_length = $bm['length_feet']."'".$bm['length_inch']; //$m_length = $bm['length']; 
-
-					$amount = $m['inv_extcost'] * $m['invqty'] * ($m['length'] + $result);						
-					//$amount = 50;
-					if($bm['inventoryid']=="IRV120"){
-					//error_log(print_r($m,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
-					//error_log("m_qty:".$m_qty." m-qty:".$m['qty']." bm-qty:".$bm['qty'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');  
-					}
-					
-				}
-				// $m['raw_description'] = {$bmnventoryid']} " " . $m['raw_description'];
-					// if ($m['section'] == "Guttering" OR $m['section'] == "Flashing") 
-				// {$section}
-					// if ($section == "Guttering" OR $section == "Flashings"){
-					// 	$m['s_qty'] = $m['m_qty'];
-					// }
+ 
 				?>  
-					<tr> 						
+					<tr> 
 						<td colspan="2"><?php echo $m['raw_description']; ?></td>  
-						 <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['s_qty']))); ?></td>
-						<!-- <td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td> -->
-						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"? get_feet_value($m['length']):($m['uom']=="Inches"?$m['length']:"")); ?></td>
+						<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td> 
+						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?></td>  -->
+						<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td> -->
+						<td style="text-align:right;"><?php echo ($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Mtrs"?$m['length']:"")); ?></td>
 						<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 						<td><?php echo $m['colour']; ?></td>
 						<td><?php echo $m['finish']; ?></td>
 						<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>
-						<!-- <td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td> -->
-						 <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['ls_amount_guttering'],2):($section = "Flashings"?number_format($m['ls_amount_guttering'],2):number_format($m['ls_amount'],2))); ?></td>
+						<td style="text-align:right;">$<?php echo number_format(($m_amount>0?$m_amount:$m['ls_amount']),2); ?></td>
 					</tr>  
 
 				<?php
+				$m_qty = 0; $m_amount = 0; $is_2nd = 0; 
 
 				if($m["photo"] !=""  ){ //$section=="Guttering"
 
 				?>
 					<tr>
-			  			<td colspan="9" style="border:none;padding: 2px;">
+			  			<td colspan="9" style="border:none">
 			  				<?php
 				  			if($m["photo"] !="") { 
-				  				echo " <img src='".JURI::base()."images/inventory/".$m['photo']."' class='' style='float:left;padding:1px 1px 1px 0; width: 345px;'/>";
+				  				echo " <img src='".JURI::base()."images/inventory/".$m['photo']."' class='' style='float:left;padding:0px 0px 0px 0; width: 345px;'/>";
 							} 
 							?>
-			  			</td> 
+
+			  			</td>
+			  			<!-- <td colspan="2" style="column-width: 15%;">
+			  				<tr>
+			  					<th colspan="1" align="right"  style="border:none;">Girth A&nbsp;&nbsp;</th>
+				  				<th colspan="1" align="right"  style="border:none;">Girth B&nbsp;&nbsp;</th>
+				  			</tr>
+				  			<tr>
+				  				<td colspan="1" valign="top" align="right" style="border:none;"><?php echo $item_dimension["girth_a"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+							<td colspan="1" valign="top" align="right" style="border:none;"><?php echo $item_dimension["girth_b"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+				  			</tr>
+			  			</td> -->
 			  		</tr>
 
 				<?php 
 					//mysql_data_seek($item_result, 0); 
+						
+						if($prev_inv_id==""){
+							$prev_inv_id = $m['inventoryid'];
 
-						$sql = "SELECT ((id.length_feet * 12 ) + id.length_inch) AS l, CONCAT( id.dimension_a_inch, '<br />', id.dimension_a_fraction ) AS dimension_a,
-								CONCAT( id.dimension_b_inch, '<br />', id.dimension_b_fraction ) AS dimension_b,
-								CONCAT( id.dimension_c_inch, '<br />', id.dimension_c_fraction ) AS dimension_c,
-								CONCAT( id.dimension_d_inch, '<br />', id.dimension_d_fraction ) AS dimension_d,
-								CONCAT( id.dimension_e_inch, '<br />', id.dimension_e_fraction ) AS dimension_e,
-								CONCAT( id.dimension_f_inch, '<br />', id.dimension_f_fraction ) AS dimension_f,
-								CONCAT( id.dimension_p_inch, '<br />', id.dimension_p_fraction ) AS dimension_p  
-								FROM ver_chronoforms_data_contract_items_deminsions  AS id   WHERE projectid = '{$projectid}' AND inventoryid='{$m['inventoryid']}' LIMIT 1 ";
-						//error_log("sql G: ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+						}else if($prev_inv_id == $m['inventoryid']){
+							 
+							$num_same_inv_id++;
+
+						}else{
+							$num_same_inv_id = 0;
+						}
+
+						$sql = "SELECT id.length AS l, id.dimension_a, id.dimension_b, id.dimension_c, id.dimension_d, id.dimension_e, id.dimension_f, id.dimension_p,girth_side_a AS girth_a, girth_side_b AS girth_b FROM ver_chronoforms_data_contract_items_deminsions  AS id   WHERE projectid = '{$projectid}' AND inventoryid='{$m['inventoryid']}' LIMIT 1  OFFSET {$num_same_inv_id} ";
+
+						//error_log("sql G: ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 						
 						$r_item_dimension = mysql_query ($sql);
 						$item_dimension = mysql_fetch_assoc($r_item_dimension);	
+
 
 						if(!empty($item_dimension)){
 					?>   
 					  	   
 				  		<tr>
-				  			<th colspan="2" align="right"  style="border:none;">Length&nbsp;&nbsp;</th>
+				  			<!-- <th colspan="1" align="right"  style="border:none;">Length&nbsp;&nbsp;</th> -->
+				  			<th colspan="1" align="left"  style="border:none;">Girth A</th>
+				  			<th colspan="1" align="left"  style="border:none;">Girth B&nbsp;&nbsp;</th>
 				  			<th align="center"  style="border:none;">A</th>
 				  			<th align="left"  style="border:none;">B</th>
 				  			<th align="left"   style="border:none;">C</th>
@@ -905,7 +610,9 @@ is_per_length DESC";
 				  			 
 				  		</tr> 
 				  		<tr> 
-							<td colspan="2" valign="top" align="right" style="border:none;"><?php echo get_feet_value($item_dimension["l"]); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+							<!-- <td colspan="1" valign="top" align="right" style="border:none;"><?php echo $item_dimension["l"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td> -->
+							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $item_dimension["girth_a"]; ?></td>
+							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $item_dimension["girth_b"]; ?>&nbsp;&nbsp;</td>
 							<td valign="top" align="center" style="border:none;"><?php echo $item_dimension["dimension_a"]; ?></td>
 							<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_b"]; ?></td>
 							<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_c"]; ?></td>
@@ -918,8 +625,11 @@ is_per_length DESC";
 					  		 
 					   
 			  	<?php 
+			  		
 			  	 	} //end if if it has a dimension
 			   		
+			   		$i++; 
+
 			   		if($m["photo"] !="" ){
 
 			   			echo "<tr>
@@ -938,11 +648,16 @@ is_per_length DESC";
 					
 					while ($m = mysql_fetch_assoc($item_result2)){ 
 						$totalRrp += $m['ls_amount']; 
+						if($m['id']==""){continue;} 
 					?>  
 						<tr> 
 							<td colspan="2"><?php echo $m['raw_description']; ?></td>  
-							<td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td>
-							<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Inches"?$m['length']:"")); ?></td>
+							<!-- <td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td>
+							<td style="text-align:right;"><?php echo ($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Mtrs"?$m['length']:"")); ?></td> -->
+							<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['ts_qty']):number_format($m['ls_qty']))); ?></td> -->
+							<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td> -->
+							<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td> 
+							<td style="text-align:right;"><?php echo ($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch"?get_feet_value($m['s_length']):($m['uom']=="Mtrs"?$m['s_length']:"")); ?></td>
 							<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 							<td> &nbsp; </td>
 							<td> &nbsp; </td>
@@ -959,7 +674,7 @@ is_per_length DESC";
   
 		<?php //} //------------ bm END contract_bom_vic loop. 
 
-			$gst = $totalRrp * 0.95;
+			$gst = $totalRrp * 0.1;
 			$totalSum = $totalRrp + $gst;
 
 		 ?>  	
@@ -991,7 +706,7 @@ is_per_length DESC";
 	</tr>
 	<tr>
 		<td colspan="7" style="text-align:right"> 
-			<span ><b>Sales Tax</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+			<span ><b>GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
 		</td>
 		 	
 		<td style="text-align:right">
@@ -1000,7 +715,7 @@ is_per_length DESC";
 	</tr>
 	<tr>
 		<td colspan="7" style="text-align:right"> 
-			<span  ><b>Total Inclusive of Sales Tax</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+			<span  ><b>Total Inclusive of GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
 		</td>
 	 			
 		<td style="text-align:right">
@@ -1011,22 +726,20 @@ is_per_length DESC";
 </table>
 
 <br/><br/>
-Conditions below used on PO Templates for Gutters and Flashing only<br/>
-Measurement Tolerance - 0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Length Tolerance - 0<br/>
+Measurement Tolerance - 0m / + 1mm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Length Tolerance - 0m / + 10mm <br/>
 NOTE: all folds are 90&deg; unless otherwise stated
 
 
 
 </div> 
 </textarea>
-<input type="submit" class="btn" name="add" id="add1" value="Download PDF "> <input class="btn" type="button" value="Close" onClick="window.opener=null; window.close(); return false;">
+<input type="submit" class="btn " name="add" id="add1" value="Download PDF" onClick="window.opener.location.replace(redirectUrl);
+window.close;"> 
+<input class="btn" type="button" value="Close" onClick="window.opener=null; window.close(); return false;">
 
-<!-- <input class="btn" type="submit" value="Save" onClick="window.location=window.location=location.window.location.href + "&titleID='.$titleID.'";  return true;">
-<a href='<?php echo 'index.php?&titleID='.$titleID.'&option=com_chronoforms&tmpl=component&chronoform=Download-PDF'; ?>'>
-    Download it!
-</a> -->
+<!-- echo('<script language="Javascript">window.opener.parent.location.href = opener.window.location.href + "&titleID='.$titleID.'"; window.close();</script>'); -->
 
-
+<!-- <?php echo "<a href=\"".JURI::base()."contract-listing-vic/contract-folder-vic/contract-po-vic?quoteid=".$quoteid."&projectid=".$projectid."&page_name=po&view=summary\" class='btn ".($page_name=="po" && $is_summary_view==1?"btn-disabled":"")."'>&nbsp;&nbsp; PO Summary &nbsp;&nbsp;</a>&nbsp;"; ?> -->
 
 </form>
 </body>
@@ -1049,6 +762,5 @@ function get_feet_inch($inches){
 	return floor($inches % 12);
      
 }
-
  
 ?> 

@@ -2,15 +2,17 @@
   // connect to database
   //$con = mysql_connect("localhost","root","password");
   //include 'database.php';
-  $con = mysql_connect("localhost","root","pass123");
+  $con = mysql_connect("localhost","root","");
   if (!$con) { echo "Error"; }
   //$dbname = 'vergola_quotedb_sa_v1';
 
  
-  $dbname = 'vergola_quotedb_v5_us';
+  // $dbname = 'vergola_quotedb_v5_us';
+  // $dbname = 'vergola_quotedb_v4_as_live';
+  $dbname = 'vergola_quotedb_v5_us_as_live';
   mysql_select_db($dbname);
   
-  $state_table = "ver_chronoforms_data_suburbs_vic";
+  $state_table = "ver_chronoforms_data_suburbs_vic_orig";
   
   $initialSuburbsArray = array( );
   $result = mysql_query("SELECT cf_id, suburb, suburb_state, suburb_postcode FROM {$state_table} ",$con) or die (mysql_error());
