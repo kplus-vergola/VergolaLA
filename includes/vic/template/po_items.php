@@ -150,16 +150,14 @@ $supplier = mysql_fetch_array($qSupplier);
 		<td  style="width:50%; text-align:left; " >
 		 	<img src="<?php echo JURI::base().'images/company_logo.png'; ?> " class="" style="float:left;padding:0px 0px 10px 0; width: 120px;"/>
 			 
+		
 		</td>
-		<td valign="middle" style="padding-left: 5px; font-family:Arial, Helvetica, sans-serif;font-size:10pt;width:50%;">
-			<br/>
-			<b>Vergola (<?php echo (HOST_SERVER=="Victoria"?"Vic":""); echo (HOST_SERVER=="SA"?"SA":""); echo (HOST_SERVER=="LA"?"LA":""); ?>) Pty Ltd</b><br/>
-			101 Port Road<br/>
-			THEBARTON SA 5031<br/>
-			Phone: 0881506888  &nbsp;&nbsp;&nbsp; FAX: 08 8150 6868 <br/>
-			ABN: 14115578112 <br/>
-			Email: admin@vergola.com
-  
+		<td valign="top" style="padding-left: 5px; font-family:Arial, Helvetica, sans-serif;font-size:10pt;width:50%;">			
+			<b>Vergola LA Inc</b><br/>
+			13800 Crenshaw Boulevard<br/>
+			Gardena CA 90249<br/>
+			Phone: 855 949 8347<br/>
+			Email: purchasingla@vergola.com  
 		</td>
 	</tr>
 	<tr>
@@ -499,7 +497,7 @@ CASE
 				while ($m = mysql_fetch_assoc($item_result)){
 					$m_qty = 0; $m_amount = 0;
 					if($m['id']==""){continue;} 
-					$totalRrp += $m['lss_amount']; 
+					$totalRrp += $m['ls_amount']; 
 
 					if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
 						  
@@ -536,7 +534,7 @@ CASE
 						<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td> 
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?></td>  -->
 						<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td> -->
-						<td style="text-align:right;"><?php echo ($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Mtrs"?$m['length']:"")); ?></td>
+						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>
 						<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 						<td><?php echo $m['colour']; ?></td>
 						<td><?php echo $m['finish']; ?></td>
@@ -585,7 +583,16 @@ CASE
 							$num_same_inv_id = 0;
 						}
 
-						$sql = "SELECT id.length AS l, id.dimension_a, id.dimension_b, id.dimension_c, id.dimension_d, id.dimension_e, id.dimension_f, id.dimension_p,girth_side_a AS girth_a, girth_side_b AS girth_b FROM ver_chronoforms_data_contract_items_deminsions  AS id   WHERE projectid = '{$projectid}' AND inventoryid='{$m['inventoryid']}' LIMIT 1  OFFSET {$num_same_inv_id} ";
+						$sql_1 = "SELECT id.length AS l, id.dimension_a, id.dimension_b, id.dimension_c, id.dimension_d, id.dimension_e, id.dimension_f, id.dimension_p,girth_side_a AS girth_a, girth_side_b AS girth_b FROM ver_chronoforms_data_contract_items_deminsions  AS id   WHERE projectid = '{$projectid}' AND inventoryid='{$m['inventoryid']}' LIMIT 1  OFFSET {$num_same_inv_id} ";
+
+						$sql = "SELECT ((id.length_feet * 12 ) + id.length_inch) AS l, CONCAT( id.dimension_a_inch, '<br />', id.dimension_a_fraction ) AS dimension_a,
+								CONCAT( id.dimension_b_inch, '<br />', id.dimension_b_fraction ) AS dimension_b,
+								CONCAT( id.dimension_c_inch, '<br />', id.dimension_c_fraction ) AS dimension_c,
+								CONCAT( id.dimension_d_inch, '<br />', id.dimension_d_fraction ) AS dimension_d,
+								CONCAT( id.dimension_e_inch, '<br />', id.dimension_e_fraction ) AS dimension_e,
+								CONCAT( id.dimension_f_inch, '<br />', id.dimension_f_fraction ) AS dimension_f,
+								CONCAT( id.dimension_p_inch, '<br />', id.dimension_p_fraction ) AS dimension_p  
+								FROM ver_chronoforms_data_contract_items_deminsions  AS id   WHERE projectid = '{$projectid}' AND inventoryid='{$m['inventoryid']}' LIMIT 1 ";
 
 						//error_log("sql G: ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 						
@@ -650,12 +657,12 @@ CASE
 						$totalRrp += $m['ls_amount']; 
 						if($m['id']==""){continue;} 
 					?>  
-						<tr> 
+						<!-- <tr> 
 							<td colspan="2"><?php echo $m['raw_description']; ?></td>  
-							<!-- <td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td>
-							<td style="text-align:right;"><?php echo ($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Mtrs"?$m['length']:"")); ?></td> -->
-							<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['ts_qty']):number_format($m['ls_qty']))); ?></td> -->
-							<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td> -->
+							<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td>
+							<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['length']):($m['uom']=="Mtrs"?$m['length']:"")); ?></td>
+							<td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['ts_qty']):number_format($m['ls_qty']))); ?></td>
+							<td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td>
 							<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td> 
 							<td style="text-align:right;"><?php echo ($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch"?get_feet_value($m['s_length']):($m['uom']=="Mtrs"?$m['s_length']:"")); ?></td>
 							<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
@@ -663,8 +670,18 @@ CASE
 							<td> &nbsp; </td>
 							<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>
 							<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td> 
-						</tr> 
+						</tr> -->
 
+<tr> 
+	<td colspan="2"><?php echo $m['raw_description']; ?></td>  
+	<td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td>
+	<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>
+	<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
+	<td> &nbsp; </td>
+	<td> &nbsp; </td>
+	<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>
+	<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td> 
+</tr>
 			  	<?php
 
 				
