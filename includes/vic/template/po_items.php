@@ -487,7 +487,7 @@ CASE
 					}else if(fnmatch("*Double Bay VR*",$contract['framework'])  && $section=="Vergola" && $m["inventoryid"]=="IRV60" ){ //IRV60 is a Link Bar
  
 						$m_qty_IRV60 += $m['m_qty'];
-						$m_amount_IRV60 += $m['lss_amount']; 
+						$m_amount_IRV60 += $m['ls_amount']; 
  
 					}
 				}	
@@ -585,6 +585,7 @@ CASE
 
 						$sql_1 = "SELECT id.length AS l, id.dimension_a, id.dimension_b, id.dimension_c, id.dimension_d, id.dimension_e, id.dimension_f, id.dimension_p,girth_side_a AS girth_a, girth_side_b AS girth_b FROM ver_chronoforms_data_contract_items_deminsions  AS id   WHERE projectid = '{$projectid}' AND inventoryid='{$m['inventoryid']}' LIMIT 1  OFFSET {$num_same_inv_id} ";
 
+						//Modified query string to dicrectly get the dimension values from the defaults table
 						$sql = "SELECT ((id.length_feet * 12 ) + id.length_inch) AS l, CONCAT( id.dimension_a_inch, '<br />', id.dimension_a_fraction ) AS dimension_a,
 								CONCAT( id.dimension_b_inch, '<br />', id.dimension_b_fraction ) AS dimension_b,
 								CONCAT( id.dimension_c_inch, '<br />', id.dimension_c_fraction ) AS dimension_c,
@@ -592,7 +593,12 @@ CASE
 								CONCAT( id.dimension_e_inch, '<br />', id.dimension_e_fraction ) AS dimension_e,
 								CONCAT( id.dimension_f_inch, '<br />', id.dimension_f_fraction ) AS dimension_f,
 								CONCAT( id.dimension_p_inch, '<br />', id.dimension_p_fraction ) AS dimension_p  
-								FROM ver_chronoforms_data_contract_items_deminsions  AS id   WHERE projectid = '{$projectid}' AND inventoryid='{$m['inventoryid']}' LIMIT 1 ";
+								FROM 
+								-- ver_chronoforms_data_contract_items_default_deminsions  AS id  
+								-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = id.inventoryid
+								ver_chronoforms_data_contract_bom_meterial_vic AS bm
+								JOIN ver_chronoforms_data_contract_items_default_deminsions AS id ON id.inventoryid = bm.inventoryid
+								WHERE bm.projectid = '{$projectid}' AND id.inventoryid='{$m['inventoryid']}' LIMIT 1 ";
 
 						//error_log("sql G: ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 						
