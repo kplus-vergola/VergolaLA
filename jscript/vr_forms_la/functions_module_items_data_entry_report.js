@@ -120,7 +120,7 @@
             if (vr_type_info['bay_roof_shape'] == 'gable') {
                 temp_text = replaceSubstringInText(
                     ['[RUN_VALUE]'], 
-                    [document.getElementById('vr_run_feet_form_query').value + '\' ' + document.getElementById('vr_run_feet_form_query').value + '"'], 
+                    [document.getElementById('vr_run_feet_form_query').value + '\' ' + document.getElementById('vr_run_inch_form_query').value + '"'], 
                     template_vr_run_form_query_body
                 );
                 vr_run_form_query_body_area = temp_text;

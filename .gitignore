@@ -1,7 +1,12 @@
 # ignore folder(s)
 /cache/
+/images/drawings/
+/images/file_upload/
+/images/pic/
+/images/pics/
 /logs/
 /tmp/
+
 
 # ignore file(s)
 configuration.php

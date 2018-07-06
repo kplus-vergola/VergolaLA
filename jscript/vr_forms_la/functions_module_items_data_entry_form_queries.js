@@ -2,7 +2,7 @@
             var run_value = 0;
             var run_feet_value = 0;
             var run_inch_value = 0;
-            var rise_inch = 0;
+            var rise_value = 0;
             var rise_feet_value = 0;
             var rise_inch_value = 0;
             var rafter_length_value = 0.0;
