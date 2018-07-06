@@ -88,20 +88,23 @@ if(isset($_POST['save']) || isset($_POST['save_new']))
      
     //Updates the information to the database  
     if (isset($_POST['save'])) { 
-      $sql = "UPDATE `ver_chronoforms_data_inventory_vic` SET   
-        inventoryid = '$id',
-        section ='$section_save', 
-        category ='$category_save',  
-        description ='$name_save', 
-        photo ='$pic_save', 
-        uom ='$uom_save',
-        rrp ='$rrp_save', 
-        cost ='$cost_save'
-         
-        WHERE inventoryid = '$id'";
-      //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
-      mysql_query($sql) or die(mysql_error()); //echo "Saved! #a"; 
-
+      if ($pic_save != '' || $pic_save != 0){
+        $sql = "UPDATE `ver_chronoforms_data_inventory_vic` SET   
+          inventoryid = '$id',
+          section ='$section_save', 
+          category ='$category_save',  
+          description ='$name_save', 
+          photo ='$pic_save', 
+          uom ='$uom_save',
+          rrp ='$rrp_save', 
+          cost ='$cost_save'
+           
+          WHERE inventoryid = '$id'";
+        //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+        mysql_query($sql) or die(mysql_error()); //echo "Saved! #a"; 
+        }else{
+          
+        }
     }
 
     if (isset($_POST['save_new'])) { 
