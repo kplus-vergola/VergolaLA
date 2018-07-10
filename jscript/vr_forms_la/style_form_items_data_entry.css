@@ -4,8 +4,9 @@
         }
 
         .vr_table_2 {
+            min-width: 1050px;
+            width: 100%;
             /*
-            min-width: 1340px;
             max-width: 1900px;
             */
             border-spacing: 0px;
@@ -65,43 +66,53 @@
         }
 
         .vr_form_field_description_1 {
-            width: 280px;
+            min-width: 210px;
+            width: 20%;
             vertical-align: top;
         }
         .vr_form_field_webbing_1 {
-            width: 110px;
+            min-width: 90px;
+            width: 9%;
             vertical-align: top;
         }
         .vr_form_field_colour_1 {
-            width: 110px;
+            min-width: 90px;
+            width: 9%;
             vertical-align: top;
         }
         .vr_form_field_finish_1 {
-            width: 110px;
+            min-width: 90px;
+            width: 9%;
             vertical-align: top;
         }
         .vr_form_field_uom_1 {
-            width: 70px;
+            min-width: 50px;
+            width: 5%;
             vertical-align: top;
         }
         .vr_form_field_qty_1 {
-            width: 80px;
+            min-width: 60px;
+            width: 6%;
             vertical-align: top;
         }
         .vr_form_field_length_1 {
-            width: 150px;
+            min-width: 140px;
+            width: 13%;
             vertical-align: top;
         }
         .vr_form_field_rrp_1 {
-            width: 80px;
+            min-width: 60px;
+            width: 6%;
             vertical-align: top;
         }
         .vr_form_field_image_1 {
-            width: 150px;
+            min-width: 140px;
+            width: 13%;
             vertical-align: top;
         }
         .vr_form_field_action_1 {
-            width: 90px;
+            min-width: 120px;
+            width: 11%;
             vertical-align: top;
         }
 
@@ -281,6 +292,12 @@
         .bom_form_field_textbox_1 {
             min-width: 150px;
             min-height: 23px;
+        }
+
+        .bom_form_field_text_1 {
+            font-weight: normal;
+            font-size: 7pt;
+            font-style: italic;
         }
 
         .bom_form_field_image_1 {

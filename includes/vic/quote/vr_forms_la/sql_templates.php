@@ -142,15 +142,17 @@ $sql_template_insert_data_contract_items = "
 $sql_template_insert_data_contract_bom_meterial = "
     INSERT INTO ver_chronoforms_data_contract_bom_meterial_vic 
     ( 
-            projectid,          inventoryid,            materialid, 
-            raw_cost,           qty,                    length_feet, 
-            length_inch,        length_fraction,        supplierid 
+            contract_item_cf_id,        section, 
+            projectid,                  inventoryid,                materialid, 
+            raw_cost,                   qty,                        length_feet, 
+            length_inch,                length_fraction,            supplierid 
     ) 
     (
         SELECT  
-            '[PROJECT_ID]',     im.inventoryid,         im.materialid, 
-            dm.raw_cost,        '[VR_ITEM_QTY]',        '[LENGTH_FEET]', 
-            '[LENGTH_INCH]',    '[LENGTH_FRACTION]',    dm.supplierid 
+            '[CONTRACT_ITEM_CF_ID]',    '[VR_SECTION_REF_NAME]', 
+            '[PROJECT_ID]',             im.inventoryid,             im.materialid, 
+            dm.raw_cost,                '[VR_ITEM_QTY]',            '[LENGTH_FEET]', 
+            '[LENGTH_INCH]',            '[LENGTH_FRACTION]',        dm.supplierid 
         FROM ver_chronoforms_data_inventory_material_vic AS im 
             JOIN ver_chronoforms_data_materials_vic AS dm ON dm.cf_id = im.materialid 
         WHERE im.inventoryid = '[INVENTORY_ID]' 
@@ -432,8 +434,7 @@ $sql_template_retrieve_vr_form_items_config_list_by_section_info = "
         vr_item_image_input_type, 
         vr_item_config_internal_ref_name 
     FROM tblvrformitemsconfig 
-    WHERE vr_type_ref_name = '[VR_TYPE_REF_NAME]' 
-    AND vr_section_ref_name = '[VR_SECTION_REF_NAME]' 
+    WHERE vr_section_ref_name = '[VR_SECTION_REF_NAME]' 
     AND vr_subsection_ref_name = '[VR_SUBSECTION_REF_NAME]' 
     ORDER BY id 
     LIMIT 1; 
@@ -469,34 +470,6 @@ $sql_template_retrieve_total_process_order_items_by_section_info = "
 ----- retrieve data quote  -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
-/*
-$sql_template_retrieve_data_quote = "
-    SELECT 
-        dq.cf_id, 
-        dq.framework, 
-        dq.inventoryid, 
-        dq.description, 
-        dq.webbing, 
-        dq.colour, 
-        dq.finish, 
-        dq.uom, 
-        dq.cost, 
-        dq.qty, 
-        dq.length_feet, 
-        dq.length_inch, 
-        dq.length_fraction, 
-        dq.rrp, 
-        dq.is_additional, 
-        iv.section, 
-        iv.category, 
-        iv.photo 
-    FROM ver_chronoforms_data_quote_vic dq 
-        LEFT JOIN ver_chronoforms_data_inventory_vic iv 
-            ON dq.inventoryid = iv.inventoryid 
-    WHERE dq.projectid = '[PROJECT_ID]' 
-    ORDER BY dq.cf_id; 
-";
-*/
 $sql_template_retrieve_data_quote = "
     SELECT 
         dq.cf_id, 
@@ -521,8 +494,11 @@ $sql_template_retrieve_data_quote = "
     FROM ver_chronoforms_data_quote_vic dq 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
             ON dq.inventoryid = iv.inventoryid 
+        LEFT JOIN ver_chronoforms_data_section_vic ds 
+            ON iv.section = ds.section 
+            AND iv.category = ds.category 
     WHERE dq.projectid = '[PROJECT_ID]' 
-    ORDER BY dq.cf_id; 
+    ORDER BY ds.section_display_order, dq.cf_id; 
 ";
 
 
@@ -858,7 +834,7 @@ $sql_template_delete_data_contract_items_by_record_index = "
 $sql_template_delete_data_contract_bom_meterial = "
     DELETE FROM ver_chronoforms_data_contract_bom_meterial_vic 
     WHERE projectid = '[PROJECT_ID]' 
-    AND inventoryid = '[INVENTORY_ID]';
+    AND section = '[VR_SECTION_REF_NAME]';
 ";
 
 
@@ -869,6 +845,7 @@ $sql_template_delete_data_contract_bom_meterial = "
 */
 $sql_template_delete_data_contract_bom = "
     DELETE FROM ver_chronoforms_data_contract_bom_vic 
-    WHERE contract_item_cf_id = '[VR_RECORD_INDEX]';
+    WHERE projectid = '[PROJECT_ID]' 
+    AND inventory_section = '[VR_SECTION_REF_NAME]';
 ";
 ?>

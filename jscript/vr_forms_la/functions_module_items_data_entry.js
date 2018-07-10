@@ -14,8 +14,8 @@
             var template_vr_form_inputbox_caution = '<input type="text" class="vr_form_field_textbox_3" id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_VALUE]" onchange="" />';
 
             var template_vr_form_inputbox_length_feet = '<input type="text" class="vr_form_field_textbox_feet_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Feet" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
-            var template_vr_form_inputbox_length_inch = '<input type="text" class="vr_form_field_textbox_inch_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Inch" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
             var template_vr_form_inputbox_autofill_length_feet = '<input type="text" class="vr_form_field_textbox_feet_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Feet" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
+            var template_vr_form_inputbox_length_inch = '<input type="text" class="vr_form_field_textbox_inch_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Inch" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
             var template_vr_form_inputbox_autofill_length_inch = '<input type="text" class="vr_form_field_textbox_inch_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Inch" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
 
             var vr_item_data_entry_input_type_area = {};
@@ -389,6 +389,54 @@
         }
 
 
+        function setMandatoryNumericFields() {
+            var c1 = 0;
+            var c2 = 0;
+            var target_field_names = [];
+
+            var vr_type_info = getVrTypeInfo();
+            for (c1 = 0; c1 < parseInt(vr_type_info['number_of_bay']); c1++) {
+                if (document.getElementById('vr_length_feet_form_query_' + c1)) {
+                    if (document.getElementById('vr_length_feet_form_query_' + c1).value.length == 0 || 
+                        isNaN(document.getElementById('vr_length_feet_form_query_' + c1).value)) {
+                        document.getElementById('vr_length_feet_form_query_' + c1).value = '0';
+                    }
+                }
+                if (document.getElementById('vr_length_inch_form_query_' + c1)) {
+                    if (document.getElementById('vr_length_inch_form_query_' + c1).value.length == 0 || 
+                        isNaN(document.getElementById('vr_length_inch_form_query_' + c1).value)) {
+                        document.getElementById('vr_length_inch_form_query_' + c1).value = '0';
+                    }
+                }
+            }
+
+            if (document.getElementById('vr_width_feet_form_query')) {
+                if (document.getElementById('vr_width_feet_form_query').value.length == 0 || 
+                    isNaN(document.getElementById('vr_width_feet_form_query').value)) {
+                    document.getElementById('vr_width_feet_form_query').value = '0';
+                }
+            }
+            if (document.getElementById('vr_width_inch_form_query')) {
+                if (document.getElementById('vr_width_inch_form_query').value.length == 0 || 
+                    isNaN(document.getElementById('vr_width_inch_form_query').value)) {
+                    document.getElementById('vr_width_inch_form_query').value = '0';
+                }
+            }
+
+            target_field_names = ['vr_item_data_entry_qty', 'vr_item_data_entry_length_feet', 'vr_item_data_entry_length_inch'];
+            for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                if (document.getElementById('vr_type_data_entry_ref_name_' + c1)) {
+                    for (c2 = 0; c2 < target_field_names.length; c2++) {
+                        if (document.getElementById(target_field_names[c2] + '_' + c1).value.length == 0 || 
+                            isNaN(document.getElementById(target_field_names[c2] + '_' + c1).value)) {
+                            document.getElementById(target_field_names[c2] + '_' + c1).value = '0';
+                        }
+                    }
+                }
+            }
+        }
+
+
         function copyVrFormItemsDataEntryFormValue() {
             var c1 = 0;
 
@@ -496,6 +544,46 @@
         }
 
 
+        function getVrFormItemConfigByAdhocCriteria(adhoc_criteria) {
+            var c1 = 0;
+            var c2 = 0;
+            var i1;
+            var vr_form_item_config = {};
+            var total_adhoc_criteria_found = 0;
+            var current_adhoc_criteria_field_name = '';
+            var current_adhoc_criteria_field_value = '';
+            var current_vr_item_config_field_value = '';
+
+            for (c1 = 0; c1 < vr_item_config_list[vr_form_queries_info['vr_type']].length; c1++) {
+                total_adhoc_criteria_found = 0;
+                for (c2 = 0; c2 < adhoc_criteria['search_info'].length; c2++) {
+                    current_adhoc_criteria_field_name = adhoc_criteria['search_info'][c2]['field_name'];
+                    current_adhoc_criteria_field_value = adhoc_criteria['search_info'][c2]['field_value'];
+                    current_vr_item_config_field_value = vr_item_config_list[vr_form_queries_info['vr_type']][c1][current_adhoc_criteria_field_name];
+                    if (current_vr_item_config_field_value.toLowerCase() == current_adhoc_criteria_field_value.toLowerCase()) {
+                        total_adhoc_criteria_found++;
+                    }
+                }
+                if (total_adhoc_criteria_found == adhoc_criteria['search_info'].length) {
+                    for (i1 in vr_item_config_list[vr_form_queries_info['vr_type']][c1]) {
+                        vr_form_item_config[i1] = vr_item_config_list[vr_form_queries_info['vr_type']][c1][i1];
+                    }
+                    vr_form_item_config['vr_item_config_internal_ref_name'] = 'null';
+                    if (adhoc_criteria['input_type_info'].length > 0) {
+                        vr_form_item_config['vr_item_display_name_input_type'] = adhoc_criteria['input_type_info'];
+                    }
+                    if (adhoc_criteria['qty_info'].length > 0) {
+                        vr_form_item_config['vr_item_qty'] = adhoc_criteria['qty_info'];
+                    }
+                    vr_form_item_config['vr_item_adhoc'] = 'yes';
+                    break;
+                }
+            }
+
+            return vr_form_item_config;
+        }
+
+
         function getVrSectionLastVrFormItemIndex(vr_section_display_name) {
             var c1 = 0;
             var vr_section_last_vr_form_item_index = null;
@@ -545,13 +633,91 @@
         }
 
 
-        function addVrFormItemAdhocDataEntry(vr_section_display_name, vr_form_item_data_entry_index) {
+        function addVrFormItemAdhocDataEntry(vr_section_display_name) {
             var vr_section_first_vr_form_item_config = {};
+            var vr_section_last_vr_form_item_index = null;
+            var adhoc_criteria1 = [];
+            var adhoc_criteria2 = {};
+            var c1 = 0;
+            var c2 = 0;
+            var i1 = '';
+            var current_vr_section_ref_name = '';
+            var current_vr_subsection_ref_name = '';
+            var current_related_vr_items = [];
 
             copyVrFormItemsDataEntryFormValue();
-            vr_section_first_vr_form_item_config = getVrSectionFirstVrFormItemConfig(vr_section_display_name);
-            insertVrSectionFirstVrFormItemConfig(vr_form_item_data_entry_index, vr_section_first_vr_form_item_config);
-            generateVrFormItemsDataEntry('form');
+            adhoc_criteria1 = {
+                "search_info": [
+                   {"field_name": "vr_section_display_name", "field_value": vr_section_display_name}
+                ], 
+                "input_type_info": "Select Box", 
+                "qty_info": "0"
+            };
+            vr_form_item_config = getVrFormItemConfigByAdhocCriteria(adhoc_criteria1);
+            vr_section_last_vr_form_item_index = getVrSectionLastVrFormItemIndex(vr_section_display_name);
+            if (vr_section_last_vr_form_item_index != null) {
+                insertVrSectionFirstVrFormItemConfig((vr_section_last_vr_form_item_index + 1), vr_form_item_config);
+                generateVrFormItemsDataEntry('form');
+            }
+
+            if (vr_form_system_info['access_mode'] == 'quote_add' || vr_form_system_info['access_mode'] == 'quote_edit') {
+                adhoc_criteria2 = {
+                    "target_vr_item_sections_info":[
+                        {
+                            "vr_section_ref_name":"Vergola", 
+                            "vr_subsection_ref_name":"Louvers", 
+                            "related_vr_items": [
+                                {
+                                    "search_info":{
+                                        "vr_section_ref_name":"Vergola", "vr_subsection_ref_name":"Accessories", "vr_item_display_name":"Pivot strip"
+                                    },
+                                    "input_type_info":"Data Value", 
+                                    "qty_info": "0"
+                                }, 
+                                {
+                                    "search_info":{
+                                        "vr_section_ref_name":"Vergola", "vr_subsection_ref_name":"Accessories", "vr_item_display_name":"Link Bar"
+                                    },
+                                    "input_type_info":"Data Value", 
+                                    "qty_info": "0"
+                                }
+                            ]
+                        }
+                    ]
+                };
+                for (c1 = 0; c1 < adhoc_criteria2['target_vr_item_sections_info'].length; c1++) {
+                    current_vr_section_ref_name = adhoc_criteria2['target_vr_item_sections_info'][c1]['vr_section_ref_name'];
+                    current_vr_subsection_ref_name = adhoc_criteria2['target_vr_item_sections_info'][c1]['vr_subsection_ref_name'];
+                    current_related_vr_items = adhoc_criteria2['target_vr_item_sections_info'][c1]['related_vr_items'];
+                    if (current_vr_section_ref_name.toLowerCase() == vr_form_item_config['vr_section_ref_name'].toLowerCase() && 
+                        current_vr_subsection_ref_name.toLowerCase() == vr_form_item_config['vr_subsection_ref_name'].toLowerCase()) {
+                        for (c2 = 0; c2 < current_related_vr_items.length; c2++) {
+                            adhoc_criteria1 = {
+                                "search_info": [], 
+                                "input_type_info": "", 
+                                "qty_info": ""
+                            };
+                            for (i1 in current_related_vr_items[c2]['search_info']) {
+                                adhoc_criteria1['search_info'][adhoc_criteria1['search_info'].length] = {
+                                    "field_name": i1, 
+                                    "field_value": current_related_vr_items[c2]['search_info'][i1]
+                                };
+                            }
+                            adhoc_criteria1['input_type_info'] = current_related_vr_items[c2]['input_type_info'];
+                            adhoc_criteria1['qty_info'] = current_related_vr_items[c2]['qty_info'];
+
+                            vr_form_item_config = getVrFormItemConfigByAdhocCriteria(adhoc_criteria1);
+                            vr_section_last_vr_form_item_index = getVrSectionLastVrFormItemIndex(vr_form_item_config['vr_section_display_name']);
+                            if (vr_section_last_vr_form_item_index != null) {
+                                insertVrSectionFirstVrFormItemConfig((vr_section_last_vr_form_item_index + 1), vr_form_item_config);
+                                generateVrFormItemsDataEntry('form');
+                            }
+                        }
+                    }
+                }
+            }
+
+            calculateVrFormItemsDataEntryValues(2);
         }
 
 
@@ -569,6 +735,72 @@
             vr_form_items_data_entry = temp_array;
 
             generateVrFormItemsDataEntry('form');
+            calculateVrFormItemsDataEntryValues(2);
+        }
+
+
+        function extractVrFormItemsIndexByAdhocCriteria(source_info_vr_form_items_data_entry, adhoc_criteria) {
+            var c1 = 0;
+            var c2 = 0;
+            var total_adhoc_criteria_matched = 0;
+            var current_search_field_name = '';
+            var current_search_field_value = '';
+            var extracted_indexes = [];
+
+            for (c1 = 0; c1 < source_info_vr_form_items_data_entry.length; c1++) {
+                total_adhoc_criteria_matched = 0;
+                for (c2 = 0; c2 < adhoc_criteria['target_fields'].length; c2++) {
+                    current_search_field_name = adhoc_criteria['target_fields'][c2]['field_name'];
+                    current_search_field_value = adhoc_criteria['target_fields'][c2]['field_value'];
+                    if (source_info_vr_form_items_data_entry[c1][current_search_field_name] &&
+                        source_info_vr_form_items_data_entry[c1][current_search_field_name] == current_search_field_value) {
+                        total_adhoc_criteria_matched++;
+                    }
+                }
+                if (total_adhoc_criteria_matched > 0) {
+                    extracted_indexes[extracted_indexes.length] = c1;
+                }
+            }
+
+            return extracted_indexes; 
+        }
+
+
+        function extractVrFormItemsRowByAdhocCriteria(source_info_vr_form_items_data_entry, targeted_vr_section_ref_names, targeted_vr_form_item_data_entry_indexes, target_matching_type) {
+            var c11 = 0;
+            var c12 = 0;
+            var extracted_rows = [];
+
+            switch (target_matching_type) {
+                case 'exist':
+                    for (c11 = 0; c11 < vr_sections_list.length; c11++) {
+                        if (targeted_vr_section_ref_names.indexOf(vr_sections_list[c11]['ref_name']) != -1) {
+                            for (c12 = 0; c12 < source_info_vr_form_items_data_entry.length; c12++) {
+                                if (source_info_vr_form_items_data_entry[c12]['vr_section_display_name'] == vr_sections_list[c11]['display_name']) {
+                                    if (targeted_vr_form_item_data_entry_indexes.indexOf(c12) != -1) {
+                                        extracted_rows[extracted_rows.length] = source_info_vr_form_items_data_entry[c12];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 'not_exist':
+                    for (c11 = 0; c11 < vr_sections_list.length; c11++) {
+                        if (targeted_vr_section_ref_names.indexOf(vr_sections_list[c11]['ref_name']) == -1) {
+                            for (c12 = 0; c12 < source_info_vr_form_items_data_entry.length; c12++) {
+                                if (source_info_vr_form_items_data_entry[c12]['vr_section_display_name'] == vr_sections_list[c11]['display_name']) {
+                                    if (targeted_vr_form_item_data_entry_indexes.indexOf(c12) == -1) {
+                                        extracted_rows[extracted_rows.length] = source_info_vr_form_items_data_entry[c12];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+
+            return extracted_rows; 
         }
 
 
@@ -596,6 +828,17 @@
                 '<td class="vr_table_head_1">' + 
                     '[FIELD_NAME]' + 
                 '</td>';
+            var template_vr_form_item_data_entry_table_column_header = {};
+            template_vr_form_item_data_entry_table_column_header['item_display_name'] = '<td class="vr_table_head_1 vr_form_field_description_1">[FIELD_NAME]</td>';
+            template_vr_form_item_data_entry_table_column_header['webbing'] = '<td class="vr_table_head_1 vr_form_field_webbing_1">[FIELD_NAME]</td>';
+            template_vr_form_item_data_entry_table_column_header['colour'] = '<td class="vr_table_head_1 vr_form_field_colour_1">[FIELD_NAME]</td>';
+            template_vr_form_item_data_entry_table_column_header['finish'] = '<td class="vr_table_head_1 vr_form_field_finish_1">[FIELD_NAME]</td>';
+            template_vr_form_item_data_entry_table_column_header['uom'] = '<td class="vr_table_head_1 vr_form_field_uom_1">[FIELD_NAME]</td>';
+            template_vr_form_item_data_entry_table_column_header['qty'] = '<td class="vr_table_head_1 vr_form_field_qty_1">[FIELD_NAME]</td>';
+            template_vr_form_item_data_entry_table_column_header['length'] = '<td class="vr_table_head_1 vr_form_field_length_1">[FIELD_NAME]</td>';
+            template_vr_form_item_data_entry_table_column_header['rrp'] = '<td class="vr_table_head_1 vr_form_field_rrp_1">[FIELD_NAME]</td>';
+            template_vr_form_item_data_entry_table_column_header['image'] = '<td class="vr_table_head_1 vr_form_field_image_1">[FIELD_NAME]</td>';
+            template_vr_form_item_data_entry_table_column_header['action'] = '<td class="vr_table_head_1 vr_form_field_action_1">[FIELD_NAME]</td>';
 
             var template_vr_form_item_data_entry_table_column_body = {};
             template_vr_form_item_data_entry_table_column_body['item_display_name'] = '<td class="vr_table_body_1 vr_form_field_description_1" id="vr_form_item_data_entry_table_column_item_display_name_[INDEX_NUMBER]">[VR_ITEM_DATA_ENTRY_ITEM_DISPLAY_NAME_INPUT_TYPE_AREA]</td>';
@@ -646,20 +889,18 @@
             var template_vr_form_inputbox_caution = '<input type="text" class="vr_form_field_textbox_3" id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_VALUE]" onchange="" />';
 
             var template_vr_form_inputbox_length_feet = '<input type="text" class="vr_form_field_textbox_feet_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Feet" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
-            var template_vr_form_inputbox_length_inch = '<input type="text" class="vr_form_field_textbox_inch_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Inch" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
             var template_vr_form_inputbox_autofill_length_feet = '<input type="text" class="vr_form_field_textbox_feet_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Feet" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
+            var template_vr_form_inputbox_length_inch = '<input type="text" class="vr_form_field_textbox_inch_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Inch" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
             var template_vr_form_inputbox_autofill_length_inch = '<input type="text" class="vr_form_field_textbox_inch_2" id="[FIELD_NAME]" name="[FIELD_NAME]" placeholder="Inch" value="[FIELD_VALUE]" onchange="" onmouseover="" onmouseout="" />';
 
-            // var template_vr_form_add_item_button = '' +
-            //     '<td colspan="[COLUMN_SPAN]" class="vr_table_body_1">' + 
-            //         '<input type="button" class="vr_form_field_button_1" id="button_add_vr_form_item_data_entry_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" name="button_add_vr_form_item_data_entry_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" value="Add [VR_SECTION_DISPLAY_NAME] Item" onclick="addBomFormItemAdhocDataEntry(\'[VR_SECTION_DISPLAY_NAME]\')" />' + 
-            //     '</td>';
             var template_vr_form_add_item_bar = '' + 
                 '<td colspan="[COLUMN_SPAN]" class="vr_table_body_1">' + 
                     '[BUTTON_AREA]' + 
                 '</td>';
             var template_vr_form_add_item_button = '' +
-                '<input type="button" class="vr_form_field_button_1" id="button_add_vr_form_item_data_entry_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" name="button_add_vr_form_item_data_entry_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" value="Add [VR_SECTION_DISPLAY_NAME] Item" onclick="addBomFormItemAdhocDataEntry(\'[VR_SECTION_DISPLAY_NAME]\')" />';
+                '<input type="button" class="vr_form_field_button_1" id="button_add_vr_form_item_data_entry_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" name="button_add_vr_form_item_data_entry_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" value="Add [VR_SECTION_DISPLAY_NAME] Item" onclick="addVrFormItemAdhocDataEntry(\'[VR_SECTION_DISPLAY_NAME]\')" />';
+            var template_vr_form_save_bom_button = '' +
+                '<input type="button" class="vr_form_field_button_1" id="button_save_bom_vr_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" name="button_save_bom_vr_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" value="Save" onclick="saveBomFormContractItemData(1)" />';
             var template_vr_form_process_order_button = '' +
                 '<input type="button" class="bom_form_field_button_1" id="button_process_order_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" name="button_process_order_form_bom_[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]" value="Process Order" onclick="saveBomFormPoData(\'[VR_SECTION_DISPLAY_NAME]\')" />'
             var template_vr_form_cancel_order_button = '' +
@@ -701,41 +942,35 @@
             var current_default_colour = '';
             var current_ref_name = '';
 
-            var vr_form_item_table_mode = 'quote';
-            if (vr_form_system_info['access_mode'] == 'contract_bom_edit') {
-                vr_form_item_table_mode = 'bom';
+            var vr_form_item_table_mode = '';
+            switch (output_format) {
+                case 'form':
+                    vr_form_item_table_mode = 'quote';
+                    if (vr_form_system_info['access_mode'] == 'contract_bom_edit') {
+                        vr_form_item_table_mode = 'bom';
+                    }
+                    break;
+                case 'report':
+                    vr_form_item_table_mode = 'report';
+                    break;
             }
+
             var total_column_vr_form_item_table = vr_form_item_table_column_config[vr_form_item_table_mode].length;
 
             var current_vr_item_image_url = '';
             var current_template_vr_form_image = '';
+            var total_column_apply = 0;
 
             /* --- begin store ignored indexes of vr form item data entry --- */
             if (document.getElementById('vr_framework_type_form_query').value == 'Drop-In') {
                 var adhoc_criteria = {
-                    "ignore_fields":[
+                    "target_fields":[
                         {"field_name":"vr_section_ref_name", "field_value":"Frame"}, 
                         {"field_name":"vr_section_ref_name", "field_value":"Fixings"} 
                     ]
                 };
-
-                for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
-                    total_adhoc_criteria_matched = 0;
-                    for (c2 = 0; c2 < adhoc_criteria['ignore_fields'].length; c2++) {
-                        current_search_field_name = adhoc_criteria['ignore_fields'][c2]['field_name'];
-                        current_search_field_value = adhoc_criteria['ignore_fields'][c2]['field_value'];
-                        if (vr_form_items_data_entry[c1][current_search_field_name] &&
-                            vr_form_items_data_entry[c1][current_search_field_name] == current_search_field_value) {
-                            total_adhoc_criteria_matched++;
-                        }
-                    }
-                    if (total_adhoc_criteria_matched > 0) {
-                        if (ignored_vr_section_ref_names.indexOf(vr_form_items_data_entry[c1]['vr_section_ref_name']) == -1) {
-                            ignored_vr_section_ref_names[ignored_vr_section_ref_names.length] = vr_form_items_data_entry[c1]['vr_section_ref_name'];
-                        }
-                        ignored_vr_form_item_data_entry_indexes[ignored_vr_form_item_data_entry_indexes.length] = c1;
-                    }
-                }
+                var ignored_vr_section_ref_names = ['Frame', 'Fixings'];
+                var ignored_vr_form_item_data_entry_indexes = extractVrFormItemsIndexByAdhocCriteria(vr_form_items_data_entry, adhoc_criteria);
             }
             /* --- end store ignored indexes of vr form item data entry --- */
 
@@ -747,7 +982,7 @@
                     temp_text = replaceSubstringInText(
                         ['[FIELD_NAME]'], 
                         [vr_form_item_table_column_config[vr_form_item_table_mode][c1]['display_name']], 
-                        template_vr_form_item_data_entry_table_column_header
+                        template_vr_form_item_data_entry_table_column_header[vr_form_item_table_column_config[vr_form_item_table_mode][c1]['ref_name']]
                     );
                     items_list_text_data_entry += temp_text;
                     items_list_text_report_output += temp_text;
@@ -1235,7 +1470,7 @@
                                         ], 
                                         temp_text
                                     );
-                                    vr_item_report_output_value_area['rrp'] = vr_form_items_data_entry[c12]['vr_item_rrp'];
+                                    vr_item_report_output_value_area['rrp'] = formatOutputValue('float', vr_form_items_data_entry[c12]['vr_item_rrp']);
                                 }
                                 vr_item_data_entry_input_type_area['rrp'] = temp_text;
                                 if (isVrFormItemTableColumnHidden('rrp') == true) {
@@ -1305,7 +1540,12 @@
                                 /* --- begin apply column data to table row --- */
                                 items_list_text_data_entry += '<tr>';
                                 items_list_text_report_output += '<tr>';
-                                for (c13 = 0; c13 < (total_column_vr_form_item_table - 1); c13++) {
+                                total_column_apply = (total_column_vr_form_item_table - 1); 
+                                if (vr_form_item_table_mode == 'report') {
+                                    total_column_apply = total_column_vr_form_item_table; 
+                                    template_vr_form_item_data_entry_table_column_body['rrp'] = '<td class="vr_table_body_1 vr_form_field_rrp_1" id="vr_form_item_data_entry_table_column_rrp_[INDEX_NUMBER]">[VR_ITEM_DATA_ENTRY_RRP_INPUT_TYPE_AREA]</td>';
+                                }
+                                for (c13 = 0; c13 < total_column_apply; c13++) {
                                     if (vr_form_item_table_column_config[vr_form_item_table_mode][c13]['visible'] == 'y') {
                                         current_ref_name = vr_form_item_table_column_config[vr_form_item_table_mode][c13]['ref_name'];
                                         temp_text = replaceSubstringInText(
@@ -1315,12 +1555,14 @@
                                         );
                                         items_list_text_data_entry += temp_text;
 
-                                        temp_text = replaceSubstringInText(
-                                            ['[INDEX_NUMBER]', '[VR_ITEM_DATA_ENTRY_' + current_ref_name.toUpperCase() + '_INPUT_TYPE_AREA]'], 
-                                            [c12, vr_item_report_output_value_area[current_ref_name]], 
-                                            template_vr_form_item_data_entry_table_column_body[current_ref_name]
-                                        );
-                                        items_list_text_report_output += temp_text;
+                                        if (parseInt(vr_item_report_output_value_area['rrp']) > 0) {
+                                            temp_text = replaceSubstringInText(
+                                                ['[INDEX_NUMBER]', '[VR_ITEM_DATA_ENTRY_' + current_ref_name.toUpperCase() + '_INPUT_TYPE_AREA]'], 
+                                                [c12, vr_item_report_output_value_area[current_ref_name]], 
+                                                template_vr_form_item_data_entry_table_column_body[current_ref_name]
+                                            );
+                                            items_list_text_report_output += temp_text;
+                                        }
                                     }
                                 }
 
@@ -1384,30 +1626,6 @@
                     }
                     /* --- end generate vr form item data entry table row body --- */
 
-                    // if (vr_form_system_info['access_mode'] != 'quote_view') {
-                    //     vr_section_display_name_as_variable_name = replaceSubstringInText(
-                    //         [' '], 
-                    //         ['_'], 
-                    //         vr_sections_list[c11]['display_name'].toLowerCase()
-                    //     );
-                    //     items_list_text_data_entry += '<tr>';
-                    //     temp_text = replaceSubstringInText(
-                    //         [
-                    //             '[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]', 
-                    //             '[VR_SECTION_DISPLAY_NAME]', 
-                    //             '[COLUMN_SPAN]'
-                    //         ], 
-                    //         [
-                    //             vr_section_display_name_as_variable_name, 
-                    //             vr_sections_list[c11]['display_name'], 
-                    //             total_column_vr_form_item_table
-                    //         ], 
-                    //         template_vr_form_add_item_button
-                    //     );
-                    //     items_list_text_data_entry += temp_text;
-                    //     items_list_text_data_entry += '</tr>';
-                    // }
-
                     /* --- begin generate add item button row > available buttons: add item button, process order button or cancel order button --- */
                     if (vr_form_system_info['access_mode'] != 'quote_view') {
                         vr_section_display_name_as_variable_name = replaceSubstringInText(
@@ -1427,6 +1645,20 @@
                             ], 
                             template_vr_form_add_item_button
                         );
+                        temp_text4 = '';
+                        if (vr_form_system_info['access_mode'] == 'contract_bom_edit') {
+                            temp_text4 = replaceSubstringInText(
+                                [
+                                    '[VR_SECTION_DISPLAY_NAME_AS_VARIABLE_NAME]', 
+                                    '[VR_SECTION_DISPLAY_NAME]' 
+                                ], 
+                                [
+                                    vr_section_display_name_as_variable_name, 
+                                    vr_sections_list[c11]['display_name'] 
+                                ], 
+                                template_vr_form_save_bom_button
+                            );
+                        }
                         temp_text2 = '';
                         if (vr_form_system_info['access_mode'] == 'contract_bom_edit') {
                             temp_text2 = replaceSubstringInText(
@@ -1468,11 +1700,10 @@
                         if (temp_array[0]) {
                             total_process_order_items = temp_array[0]['total_process_order_items'];
                         }
-                        button_list = temp_text1 + '&nbsp;' + temp_text2;
+                        button_list = temp_text1 + '&nbsp;' + temp_text4 + '&nbsp;' + temp_text2;
                         if (total_process_order_items > 0) {
-                            button_list = temp_text1 + '&nbsp;' + temp_text3;
+                            button_list = temp_text3;
                         }
-
                         temp_text = replaceSubstringInText(
                             ['[BUTTON_AREA]'], [button_list], temp_text
                         );
@@ -1531,39 +1762,57 @@
 
             for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_display_name_input_type']) != -1) {
-                    document.getElementById('vr_item_data_entry_ref_name_' + c1).disabled = true;
+                    if (document.getElementById('vr_item_data_entry_ref_name_' + c1)) {
+                        document.getElementById('vr_item_data_entry_ref_name_' + c1).disabled = true;
+                    }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_webbing_input_type']) != -1) {
-                    document.getElementById('vr_item_data_entry_webbing_' + c1).disabled = true;
+                    if (document.getElementById('vr_item_data_entry_webbing_' + c1)) {
+                        document.getElementById('vr_item_data_entry_webbing_' + c1).disabled = true;
+                    }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_colour_input_type']) != -1) {
-                    document.getElementById('vr_item_data_entry_colour_' + c1).disabled = true;
+                    if (document.getElementById('vr_item_data_entry_colour_' + c1)) {
+                        document.getElementById('vr_item_data_entry_colour_' + c1).disabled = true;
+                    }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_finish_input_type']) != -1) {
-                    document.getElementById('vr_item_data_entry_finish_' + c1).disabled = true;
+                    if (document.getElementById('vr_item_data_entry_finish_' + c1)) {
+                        document.getElementById('vr_item_data_entry_finish_' + c1).disabled = true;
+                    }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_qty_input_type']) != -1) {
-                    document.getElementById('vr_item_data_entry_qty_' + c1).disabled = true;
+                    if (document.getElementById('vr_item_data_entry_qty_' + c1)) {
+                        document.getElementById('vr_item_data_entry_qty_' + c1).disabled = true;
+                    }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_length_feet_input_type']) != -1) {
-                    document.getElementById('vr_item_data_entry_length_feet_' + c1).disabled = true;
+                    if (document.getElementById('vr_item_data_entry_length_feet_' + c1)) {
+                        document.getElementById('vr_item_data_entry_length_feet_' + c1).disabled = true;
+                    }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_length_inch_input_type']) != -1) {
-                    document.getElementById('vr_item_data_entry_length_inch_' + c1).disabled = true;
+                    if (document.getElementById('vr_item_data_entry_length_inch_' + c1)) {
+                        document.getElementById('vr_item_data_entry_length_inch_' + c1).disabled = true;
+                    }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_length_fraction_input_type']) != -1) {
-                    document.getElementById('vr_item_data_entry_length_fraction_' + c1).disabled = true;
+                    if (document.getElementById('vr_item_data_entry_length_fraction_' + c1)) {
+                        document.getElementById('vr_item_data_entry_length_fraction_' + c1).disabled = true;
+                    }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_rrp_input_type']) != -1) {
-                    document.getElementById('vr_item_data_entry_rrp_' + c1).disabled = true;
+                    if (document.getElementById('vr_item_data_entry_rrp_' + c1)) {
+                        document.getElementById('vr_item_data_entry_rrp_' + c1).disabled = true;
+                    }
                 }
             }
 
@@ -1669,9 +1918,11 @@
                     showFormArea('vr_form_queries_button_area_1');
                     hideFormArea('vr_form_queries_button_area_21');
                     hideFormArea('vr_form_queries_button_area_31');
+                    hideFormArea('vr_form_queries_button_area_41');
                     hideFormArea('vr_form_billing_table_area');
                     hideFormArea('vr_form_queries_button_area_22');
                     hideFormArea('vr_form_queries_button_area_32');
+                    hideFormArea('vr_form_queries_button_area_42');
                     hideFormArea('bom_form_buttons_area_2');
                     break;
                 case 'quote_edit':
@@ -1681,9 +1932,11 @@
                     showFormArea('vr_form_queries_button_area_1');
                     hideFormArea('vr_form_queries_button_area_21');
                     hideFormArea('vr_form_queries_button_area_31');
+                    hideFormArea('vr_form_queries_button_area_41');
                     showFormArea('vr_form_billing_table_area');
                     hideFormArea('vr_form_queries_button_area_22');
                     hideFormArea('vr_form_queries_button_area_32');
+                    hideFormArea('vr_form_queries_button_area_42');
                     hideFormArea('bom_form_buttons_area_2');
                     retrieveVrFormData();
                     break;
@@ -1694,9 +1947,11 @@
                     hideFormArea('vr_form_queries_button_area_1');
                     hideFormArea('vr_form_queries_button_area_21');
                     hideFormArea('vr_form_queries_button_area_31');
+                    showFormArea('vr_form_queries_button_area_41');
                     showFormArea('vr_form_billing_table_area');
                     hideFormArea('vr_form_queries_button_area_22');
                     hideFormArea('vr_form_queries_button_area_32');
+                    showFormArea('vr_form_queries_button_area_42');
                     showFormArea('bom_form_buttons_area_2');
                     retrieveVrFormData();
                     break;
@@ -1707,9 +1962,11 @@
                     hideFormArea('vr_form_queries_button_area_1');
                     hideFormArea('vr_form_queries_button_area_21');
                     hideFormArea('vr_form_queries_button_area_31');
+                    hideFormArea('vr_form_queries_button_area_41');
                     hideFormArea('vr_form_billing_table_area');
                     hideFormArea('vr_form_queries_button_area_22');
                     hideFormArea('vr_form_queries_button_area_32');
+                    hideFormArea('vr_form_queries_button_area_42');
                     showFormArea('bom_form_buttons_area_2');
                     retrieveVrFormData();
                     break;

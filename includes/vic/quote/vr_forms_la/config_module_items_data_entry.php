@@ -100,6 +100,16 @@
                 {"ref_name":"webbing", "display_name":"Webbing", "visible":"n"}, 
                 {"ref_name":"rrp", "display_name":"RRP", "visible":"n"}, 
                 {"ref_name":"action", "display_name":"", "visible":"y"} /* limit to last position with visibility always on */
+            ], 
+            "report":[
+                {"ref_name":"item_display_name", "display_name":"Description", "visible":"y"}, 
+                {"ref_name":"webbing", "display_name":"Webbing", "visible":"y"}, 
+                {"ref_name":"colour", "display_name":"Colour", "visible":"y"}, 
+                {"ref_name":"finish", "display_name":"Finish", "visible":"y"}, 
+                {"ref_name":"uom", "display_name":"UOM", "visible":"y"}, 
+                {"ref_name":"qty", "display_name":"QTY", "visible":"y"}, 
+                {"ref_name":"length", "display_name":"Length", "visible":"y"}, 
+                {"ref_name":"rrp", "display_name":"RRP", "visible":"y"}
             ]
         };
 
@@ -128,4 +138,8 @@
             "item_dimension_girth_side_b_inch":"", 
             "item_dimension_girth_side_b_fraction":""
         };
+
+        var vr_form_report_info = '';
+
+        var total_calculation_process_done = 0;
 </script>

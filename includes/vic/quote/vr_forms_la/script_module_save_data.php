@@ -344,10 +344,14 @@ if ($enable_saving['data_contract_bom_meterial'] == true) {
 
             $sql = str_replace(
                 array(
-                    '[PROJECT_ID]',     '[VR_ITEM_QTY]',        '[LENGTH_FEET]', 
-                    '[LENGTH_INCH]',    '[LENGTH_FRACTION]',    '[INVENTORY_ID]'
+                    '[CONTRACT_ITEM_CF_ID]',    '[VR_SECTION_REF_NAME]', 
+                    '[PROJECT_ID]',             '[VR_ITEM_QTY]', 
+                    '[LENGTH_FEET]',           '[LENGTH_INCH]',           '[LENGTH_FRACTION]', 
+                    '[INVENTORY_ID]'
                 ), 
                 array(
+                    addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_record_index']), 
+                    addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_section_ref_name']), 
                     addslashes($api_data['vr_form_system_info']['project_id']), 
                     addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_item_qty']), 
                     addslashes($api_data['vr_form_items_data_entry'][$c1]['vr_item_length_feet']), 
@@ -487,6 +491,7 @@ $api_response['message'] = array(
     'total_overall_failure' => $total_overall_failure, 
     'last_sql' => $sql, 
     'last_results' => $results, 
+    'next_project_id' => $next_project_id, 
     'failure_indexes' => array(
         'data_quote' => $results_save_data['data_quote']['failure_indexes'], 
         'data_followup' => $results_save_data['data_followup']['failure_indexes'], 

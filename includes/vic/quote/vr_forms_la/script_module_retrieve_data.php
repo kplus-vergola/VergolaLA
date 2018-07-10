@@ -18,15 +18,28 @@ $vr_form_items_data_entry = array();
 $vr_type_ref_name = '';
 
 $vr_type_reverse_map = array(
-    'Single Bay VR0' => 'VR0', 
     'Single Bay VR0 - Drop-In' => 'VR0', 
-    'Single Bay VR1' => 'VR1', 
+    'Single Bay VR0' => 'VR0', 
     'Single Bay VR1 - Drop-In' => 'VR1', 
-    'Double Bay VR2' => 'VR2', 
+    'Single Bay VR1' => 'VR1', 
     'Double Bay VR2 - Drop-In' => 'VR2', 
-    'Double Bay VR3' => 'VR3', 
+    'Double Bay VR2' => 'VR2', 
     'Double Bay VR3 - Drop-In' => 'VR3', 
-    'Double Bay VR3 - Gutter' => 'VR3G'
+    'Double Bay VR3' => 'VR3', 
+    'Double Bay VR3 - Gutter - Drop-In' => 'VR3G', 
+    'Double Bay VR3 - Gutter' => 'VR3G', 
+    'Triple Bay VR4 - Drop-In' => 'VR4', 
+    'Triple Bay VR4' => 'VR4', 
+    'Triple Bay VR5 - Drop-In' => 'VR5', 
+    'Triple Bay VR5' => 'VR5', 
+    'Quadruple Bay VR6 - Drop-In' => 'VR6', 
+    'Quadruple Bay VR6' => 'VR6', 
+    'Quadruple Bay VR7 - Drop-In' => 'VR7', 
+    'Quadruple Bay VR7' => 'VR7', 
+    'Double Bay VR8 - Gable - Drop-In' => 'VR8', 
+    'Double Bay VR8 - Gable' => 'VR8', 
+    'Double Bay VR9 - Gable - Drop-In' => 'VR9', 
+    'Double Bay VR9 - Gable' => 'VR9'
 );
 
 $vr_section_map = array();
@@ -98,9 +111,9 @@ if ($enable_retrieve[$target_data_source] == true) {
             $vr_form_items_data_entry[$current_item_index]['vr_item_finish'] = $r1['finish'];
             $vr_form_items_data_entry[$current_item_index]['vr_item_uom'] = $r1['uom'];
             $vr_form_items_data_entry[$current_item_index]['vr_item_unit_price'] = $r1['cost'];
-            $vr_form_items_data_entry[$current_item_index]['vr_item_qty'] = intval($r1['qty']);
-            $vr_form_items_data_entry[$current_item_index]['vr_item_length_feet'] = intval($r1['length_feet']);
-            $vr_form_items_data_entry[$current_item_index]['vr_item_length_inch'] = intval($r1['length_inch']);
+            $vr_form_items_data_entry[$current_item_index]['vr_item_qty'] = $r1['qty'];
+            $vr_form_items_data_entry[$current_item_index]['vr_item_length_feet'] = $r1['length_feet'];
+            $vr_form_items_data_entry[$current_item_index]['vr_item_length_inch'] = $r1['length_inch'];
             $vr_form_items_data_entry[$current_item_index]['vr_item_length_fraction'] = $r1['length_fraction'];
             $vr_form_items_data_entry[$current_item_index]['vr_item_rrp'] = $r1['rrp'];
             $vr_form_items_data_entry[$current_item_index]['vr_item_adhoc'] = ($r1['is_additional'] == 1) ? 'yes' : '';
@@ -173,9 +186,16 @@ if ($enable_retrieve[$target_data_source] == true) {
 
             // if ($enable_data_patching == true) {
                 if ($item_config_found == false) {
+                    /*
                     $sql = str_replace(
                         array('[VR_TYPE_REF_NAME]', '[VR_SECTION_REF_NAME]', '[VR_SUBSECTION_REF_NAME]'), 
                         array($current_vr_type_ref_name, $current_vr_section_ref_name, $current_vr_subsection_ref_name), 
+                        $sql_template_retrieve_vr_form_items_config_list_by_section_info
+                    );
+                    */
+                    $sql = str_replace(
+                        array('[VR_SECTION_REF_NAME]', '[VR_SUBSECTION_REF_NAME]'), 
+                        array($current_vr_section_ref_name, $current_vr_subsection_ref_name), 
                         $sql_template_retrieve_vr_form_items_config_list_by_section_info
                     );
 
@@ -219,8 +239,8 @@ if ($enable_retrieve[$target_data_source] == true) {
                     while ($r2 = mysql_fetch_array($results2['data'])) {
                         $vr_form_items_data_entry[$current_item_index]['bom_form_item_dimensions_info'] = array(
                             'item_dimension_record_index' => $r2['id'], 
-                            'item_dimension_length_feet' => intval($r2['length_feet']), 
-                            'item_dimension_length_inch' => intval($r2['length_inch']), 
+                            'item_dimension_length_feet' => $r2['length_feet'], 
+                            'item_dimension_length_inch' => $r2['length_inch'], 
                             'item_dimension_length_fraction' => $r2['length_fraction'], 
                             'item_dimension_a_inch' => $r2['dimension_a_inch'], 
                             'item_dimension_a_fraction' => $r2['dimension_a_fraction'], 
@@ -301,10 +321,10 @@ if ($enable_retrieve['data_followup'] == true) {
         if ($vr_type_ref_name == 'VR8' || 
             $vr_type_ref_name == 'VR9') {
             $customisation_options = json_decode($r1['customisation_options'], true);
-            $vr_form_queries_info['vr_run_feet'] = intval($customisation_options['vr_run_feet']);
-            $vr_form_queries_info['vr_run_inch'] = intval($customisation_options['vr_run_inch']);
-            $vr_form_queries_info['vr_rise_feet'] = intval($customisation_options['vr_rise_feet']);
-            $vr_form_queries_info['vr_rise_inch'] = intval($customisation_options['vr_rise_inch']);
+            $vr_form_queries_info['vr_run_feet'] = $customisation_options['vr_run_feet'];
+            $vr_form_queries_info['vr_run_inch'] = $customisation_options['vr_run_inch'];
+            $vr_form_queries_info['vr_rise_feet'] = $customisation_options['vr_rise_feet'];
+            $vr_form_queries_info['vr_rise_inch'] = $customisation_options['vr_rise_inch'];
         }
     }
 }
@@ -338,10 +358,10 @@ if ($enable_retrieve['data_measurement'] == true) {
         $current_item_index = 0;
         while ($r1 = mysql_fetch_array($results['data'])) {
             $vr_form_queries_info['vr_length_info']['vr_record_indexes'][$current_item_index] = $r1['cf_id'];
-            $vr_form_queries_info['vr_length_info']['vr_lengths_feet'][$current_item_index] = intval($r1['length_feet']);
-            $vr_form_queries_info['vr_length_info']['vr_lengths_inch'][$current_item_index] = intval($r1['length_inch']);
-            $vr_form_queries_info['vr_width_feet'] = intval($r1['width_feet']);
-            $vr_form_queries_info['vr_width_inch'] = intval($r1['width_inch']);
+            $vr_form_queries_info['vr_length_info']['vr_lengths_feet'][$current_item_index] = $r1['length_feet'];
+            $vr_form_queries_info['vr_length_info']['vr_lengths_inch'][$current_item_index] = $r1['length_inch'];
+            $vr_form_queries_info['vr_width_feet'] = $r1['width_feet'];
+            $vr_form_queries_info['vr_width_inch'] = $r1['width_inch'];
             $current_item_index++;
         }
         $vr_form_queries_info['vr_number_of_bay'] = count($vr_form_queries_info['vr_length_info']['vr_record_indexes']);

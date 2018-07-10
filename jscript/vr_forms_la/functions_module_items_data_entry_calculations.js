@@ -1,3 +1,20 @@
+        function getVrItemPricingInfo(vr_item_ref_name) {
+            var c1 = 0;
+            var results = {"item_uom":"", "item_unit_price":""};
+
+            if (vr_item_ref_name.toLowerCase() != 'null') {
+                for (c1 = 0; c1 < vr_items_list.length; c1++) {
+                    if (vr_items_list[c1]['item_ref_name'] == vr_item_ref_name) {
+                        results['item_uom'] = vr_items_list[c1]['item_uom'];
+                        results['item_unit_price'] = vr_items_list[c1]['item_unit_price'];
+                    }
+                }
+            }
+
+            return results;
+        }
+
+
         function getVrItemWebbingPricingInfo(vr_section_ref_name, selected_webbing_value) {
             var c1 = 0;
             var results = {"item_uom":"", "item_unit_price":""};
@@ -35,7 +52,7 @@
         }
 
 
-        function setVrFormItemDataEntryRowValues(vr_item_config_internal_ref_name, row_values) {
+        function setVrFormItemDataEntryRowValuesByInternalRefName(vr_item_config_internal_ref_name, row_values) {
             var c1 = 0;
             var c2 = 0;
 
@@ -50,7 +67,22 @@
         }
 
 
-        function getVrFormItemDataEntryRowValues(vr_item_config_internal_ref_name) {
+        function setVrFormItemDataEntryRowValuesByRowIndex(row_index, row_values) {
+            var c1 = 0;
+            var c2 = 0;
+
+            for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                if (c1 == row_index) {
+                    for (c2 = 0; c2 < row_values.length; c2++) {
+                        document.getElementById(row_values[c2]['form_item_name'] + '_' + c1).value = row_values[c2]['col_value'];
+                        vr_form_items_data_entry[c1][row_values[c2]['variable_name']] = row_values[c2]['col_value'];
+                    }
+                }
+            }
+        }
+
+
+        function getVrFormItemDataEntryRowValuesByInternalRefName(vr_item_config_internal_ref_name) {
             var c1 = 0;
             var results = {
                 "type_ref_name":"", 
@@ -214,36 +246,21 @@
 
 
         function assignVrDimensionsToVrFormItemsDataEntry() {
+            assignVrDimensionsToVrFormBeamRows();
             switch (document.getElementById('vr_type_form_query').value) {
                 case 'VR1':
-                    assignVrDimensionsToVrFormItemsDataEntryVr1();
-                    break;
                 case 'VR2':
-                    assignVrDimensionsToVrFormItemsDataEntryVr2();
+                case 'VR4':
+                case 'VR6':
+                case 'VR8':
+                    assignVrDimensionsToVrYFormRelatedRows();
                     break;
                 case 'VR3':
-                    assignVrDimensionsToVrFormItemsDataEntryVr3();
-                    break;
                 case 'VR3G':
-                    assignVrDimensionsToVrFormItemsDataEntryVr3G();
-                    break;
-                case 'VR4':
-                    assignVrDimensionsToVrFormItemsDataEntryVr4();
-                    break;
                 case 'VR5':
-                    assignVrDimensionsToVrFormItemsDataEntryVr5();
-                    break;
-                case 'VR6':
-                    assignVrDimensionsToVrFormItemsDataEntryVr6();
-                    break;
                 case 'VR7':
-                    assignVrDimensionsToVrFormItemsDataEntryVr7();
-                    break;
-                case 'VR8':
-                    assignVrDimensionsToVrFormItemsDataEntryVr8();
-                    break;
                 case 'VR9':
-                    assignVrDimensionsToVrFormItemsDataEntryVr9();
+                    assignVrDimensionsToVrXFormRelatedRows();
                     break;
             }
         }
@@ -259,10 +276,12 @@
             var current_item_length_inch = 0.0;
             var current_item_length_inch_in_value_for_calculation = 0.0;
             var current_item_unit_price = 0.0;
+            var current_item_qty = 0.0;
             var current_item_rrp = 0.0;
             var current_subtotal = 0.0;
             var current_webbing_subtotal = 0.0;
             var current_finish_subtotal = 0.0;
+            var item_pricing_info = {"item_uom":"", "item_unit_price":""};
             var webbing_pricing_info = {"item_uom":"", "item_unit_price":""};
             var finish_pricing_info = {"item_uom":"", "item_unit_price":""};
             var current_calculation_log = '';
@@ -273,13 +292,27 @@
                     current_item_length_inch = vr_form_items_data_entry[c1]['vr_item_length_inch'];
                     current_item_length = current_item_length_feet + '\'' + current_item_length_inch;
                     current_item_length_in_value_for_calculation = convertValueForCalculation(current_item_length);
+
+                    current_item_qty = vr_form_items_data_entry[c1]['vr_item_qty'];/*parseInt(vr_form_items_data_entry[c1]['vr_item_qty'])*/
+                    current_item_qty = (current_item_qty.length == 0 || isNaN(current_item_qty)) ? 0 : current_item_qty;
+
+                    item_pricing_info = {"item_uom":"", "item_unit_price":""};
+                    item_pricing_info = getVrItemPricingInfo(vr_form_items_data_entry[c1]['vr_item_ref_name']);
+                    if (item_pricing_info['item_uom'] != '' && item_pricing_info['item_unit_price'] != '') {
+                        if (item_pricing_info['item_uom'].toLowerCase() != vr_form_items_data_entry[c1]['vr_item_uom'].toLowerCase()) {
+                            vr_form_items_data_entry[c1]['vr_item_uom'] = item_pricing_info['item_uom'];
+                        }
+                        if (item_pricing_info['item_unit_price'] != vr_form_items_data_entry[c1]['vr_item_unit_price']) {
+                            vr_form_items_data_entry[c1]['vr_item_unit_price'] = item_pricing_info['item_unit_price'];
+                        }
+                    }
                     current_item_unit_price = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']);
 
                     current_subtotal = 0.0;
                     if (length_unit_types.indexOf(vr_form_items_data_entry[c1]['vr_item_uom'].toLowerCase()) == -1) {
-                        current_subtotal = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                        current_subtotal = current_item_unit_price * current_item_qty;
                     } else {
-                        current_subtotal = parseFloat(vr_form_items_data_entry[c1]['vr_item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                        current_subtotal = current_item_unit_price * current_item_length_in_value_for_calculation * current_item_qty;
                     }
 
                     webbing_pricing_info = {"item_uom":"", "item_unit_price":""};
@@ -289,9 +322,9 @@
                         webbing_pricing_info = getVrItemWebbingPricingInfo(vr_form_items_data_entry[c1]['vr_section_ref_name'], vr_form_items_data_entry[c1]['vr_item_webbing']);
                         if (webbing_pricing_info['item_uom'] != '' && webbing_pricing_info['item_unit_price'] != '') {
                             if (length_unit_types.indexOf(webbing_pricing_info['item_uom'].toLowerCase()) == -1) {
-                                current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                                current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * current_item_qty;
                             } else {
-                                current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                                current_webbing_subtotal = parseFloat(webbing_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * current_item_qty;
                             }
                         }
                     }
@@ -303,9 +336,9 @@
                         finish_pricing_info = getVrItemFinishPricingInfo(vr_form_items_data_entry[c1]['vr_section_ref_name'], vr_form_items_data_entry[c1]['vr_item_finish']);
                         if (finish_pricing_info['item_uom'] != '' && finish_pricing_info['item_unit_price'] != '') {
                             if (length_unit_types.indexOf(finish_pricing_info['item_uom'].toLowerCase()) == -1) {
-                                current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                                current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * current_item_qty;
                             } else {
-                                current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * parseInt(vr_form_items_data_entry[c1]['vr_item_qty']);
+                                current_finish_subtotal = parseFloat(finish_pricing_info['item_unit_price']) * current_item_length_in_value_for_calculation * current_item_qty;
                             }
                         }
                     }
@@ -315,7 +348,7 @@
                     document.getElementById('vr_item_data_entry_rrp_' + c1).value = formatOutputValue('float', current_item_rrp);
 
                     current_calculation_log = '' + 
-                                                'item length(in): ' + formatOutputValue('float', current_item_length_in_value_for_calculation) + '<br />' + 
+                                                'item length: ' + formatOutputValue('float', current_item_length_in_value_for_calculation) + '<br />' + 
                                                 'item unit price: ' + formatOutputValue('float', current_item_unit_price) + '<br />' + 
                                                 'webbing uom: ' + webbing_pricing_info['item_uom'] + '<br />' + 
                                                 'webbing unit price: ' + webbing_pricing_info['item_unit_price'] + '<br />' + 
@@ -368,6 +401,10 @@
             if (total_payment_deposit < vr_form_system_info['payment_deposit_minimum']) {
                 total_payment_deposit = vr_form_system_info['payment_deposit_minimum'];
             }
+            if (vr_form_system_info['payment_deposit_calculation_method'] == 'minimum') {
+                total_payment_deposit = vr_form_system_info['payment_deposit_minimum'];
+            }
+
             total_payment_progress_payment = total_payment_total * vr_form_system_info['payment_progress_payment_percentage'];
             total_payment_final_payment = total_payment_total - total_payment_deposit - total_payment_progress_payment;
 
@@ -437,21 +474,30 @@
 
         function calculateVrFormItemsDataEntryValues(process_option) {
             if (vr_form_system_info['access_mode'] != 'quote_view' && vr_form_system_info['access_mode'] != 'contract_bom_edit') {
-                switch (process_option) {
-                    case 1:
-                        copyVrFormItemsDataEntryFormValue();
-                        extractVrFormItemDataEntryPropertiesName();
-                        assignVrDimensionsToVrFormItemsDataEntry();
-                        assignSubtotalPriceToVrFormItemsDataEntry();
-                        assignVrFormBillingInfo();
-                        break;
-                    case 2:
-                        copyVrFormItemsDataEntryFormValue();
-                        extractVrFormItemDataEntryPropertiesName();
-                        assignSubtotalPriceToVrFormItemsDataEntry();
-                        assignVrFormBillingInfo();
-                        break;
+                if (total_calculation_process_done > 0) {
+                    switch (process_option) {
+                        case 1:
+                            setMandatoryNumericFields();
+                            copyVrFormItemsDataEntryFormValue();
+                            extractVrFormItemDataEntryPropertiesName();
+                            assignVrDimensionsToVrFormItemsDataEntry();
+                            calculateTotalGutterLining();
+                            calculateLouvreRelatedInfo();
+                            assignSubtotalPriceToVrFormItemsDataEntry();
+                            assignVrFormBillingInfo();
+                            break;
+                        case 2:
+                            setMandatoryNumericFields();
+                            copyVrFormItemsDataEntryFormValue();
+                            extractVrFormItemDataEntryPropertiesName();
+                            calculateTotalGutterLining();
+                            calculateLouvreRelatedInfo();
+                            assignSubtotalPriceToVrFormItemsDataEntry();
+                            assignVrFormBillingInfo();
+                            break;
+                    }
                 }
+                total_calculation_process_done++;
             }
         }
 

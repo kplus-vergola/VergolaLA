@@ -13,16 +13,9 @@
         <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_form_bom.js'; ?>" type="text/javascript"></script>
         <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_formulas.js'; ?>" type="text/javascript"></script>
         <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr1.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr2.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr3.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr3g.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr4.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr5.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr6.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr7.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr8.js'; ?>" type="text/javascript"></script>
-        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr9.js'; ?>" type="text/javascript"></script>
+        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vr.js'; ?>" type="text/javascript"></script>
+        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vrY.js'; ?>" type="text/javascript"></script>
+        <script src="<?php echo JURI::base().'jscript/vr_forms_la/functions_module_items_data_entry_calculations_vrX.js'; ?>" type="text/javascript"></script>
         <link rel="stylesheet" type="text/css" href="<?php echo JURI::base().'jscript/vr_forms_la/style_form_items_data_entry.css'; ?>" />
 
         <?php
@@ -72,8 +65,8 @@
                     <td class="vr_table_head_3">Default Colour</td>
                 </tr>
                 <tr>
-                    <td class="vr_table_body_3"><select class="vr_form_field_selectbox_2" id="vr_framework_type_form_query" name="vr_framework_type_form_query" onchange="processVrFrameworkTypeFormQueries()"></select></td>
-                    <td class="vr_table_body_3"><select class="vr_form_field_selectbox_2" id="vr_type_form_query" name="vr_type_form_query" onchange="processVrDimensionFormQueries()"></select></td>
+                    <td class="vr_table_body_3"><select class="vr_form_field_selectbox_2" id="vr_framework_type_form_query" name="vr_framework_type_form_query" onchange="processVrFrameworkTypeFormQueries(1)"></select></td>
+                    <td class="vr_table_body_3"><select class="vr_form_field_selectbox_2" id="vr_type_form_query" name="vr_type_form_query" onchange="processVrDimensionFormQueries(1)"></select></td>
                     <td class="vr_table_body_3"><input type="text" class="vr_form_field_textbox_1" id="vr_project_name_form_query" name="vr_project_name_form_query" value="" /></td>
                     <td class="vr_table_body_3"><select class="vr_form_field_selectbox_2" id="vr_default_colour_form_query" name="vr_default_colour_form_query" onchange="setVrFormItemsDataEntryColourByDefaultValue()"></select></td>
                 </tr>
@@ -88,16 +81,23 @@
         </div>
         <div id="vr_form_queries_button_area_21" style="display: none;">
             <input type="button" class="vr_form_field_button_1" id="button_save_vr_form_items_data_entry" name="button_save_vr_form_items_data_entry" value="Save" onclick="saveVrFormData('')" />
+            <input type="button" class="vr_form_field_button_1" id="button_save_and_exit_vr_form_items_data_entry" name="button_save_and_exit_vr_form_items_data_entry" value="Save & Close" onclick="saveVrFormData('save_and_exit')" />
             <input type="button" class="vr_form_field_button_1" id="button_cancel_vr_form_items_data_entry" name="button_cancel_vr_form_items_data_entry" value="Cancel" onclick="cancelVrFormData()" />
             <br />
             <br />
         </div>
         <div id="vr_form_queries_button_area_31" style="display: none;">
             <input type="button" class="vr_form_field_button_1" id="button_save_vr_form_items_data_entry" name="button_save_vr_form_items_data_entry" value="Save" onclick="saveVrFormData('')" />
+            <input type="button" class="vr_form_field_button_1" id="button_save_and_exit_vr_form_items_data_entry" name="button_save_and_exit_vr_form_items_data_entry" value="Save & Close" onclick="saveVrFormData('save_and_exit')" />
             <input type="button" class="vr_form_field_button_1" id="button_cancel_vr_form_items_data_entry" name="button_cancel_vr_form_items_data_entry" value="Cancel" onclick="cancelVrFormData()" />
             <input type="button" class="vr_form_field_button_1" id="button_delete_vr_form_items_data_entry" name="button_delete_vr_form_items_data_entry" value="Delete" onclick="deleteVrFormData()" />
             <input type="button" class="vr_form_field_button_1" id="button_download_vr_form_items_data_entry" name="button_download_vr_form_items_data_entry" value="Download PDF" onclick="downloadVrFormData()" />
             <input type="button" class="vr_form_field_button_1" id="button_duplicate_vr_form_items_data_entry" name="button_duplicate_vr_form_items_data_entry" value="Duplicate" onclick="saveVrFormData('duplicate')" />
+            <br />
+            <br />
+        </div>
+        <div id="vr_form_queries_button_area_41" style="display: none;">
+            <input type="button" class="vr_form_field_button_1" id="button_download_vr_form_items_data_entry" name="button_download_vr_form_items_data_entry" value="Download PDF" onclick="downloadVrFormData()" />
             <br />
             <br />
         </div>
@@ -211,16 +211,23 @@
 
         <div id="vr_form_queries_button_area_22" style="display: none;">
             <input type="button" class="vr_form_field_button_1" id="button_save_vr_form_items_data_entry" name="button_save_vr_form_items_data_entry" value="Save" onclick="saveVrFormData('')" />
+            <input type="button" class="vr_form_field_button_1" id="button_save_and_exit_vr_form_items_data_entry" name="button_save_and_exit_vr_form_items_data_entry" value="Save & Close" onclick="saveVrFormData('save_and_exit')" />
             <input type="button" class="vr_form_field_button_1" id="button_cancel_vr_form_items_data_entry" name="button_cancel_vr_form_items_data_entry" value="Cancel" onclick="cancelVrFormData()" />
             <br />
             <br />
         </div>
         <div id="vr_form_queries_button_area_32" style="display: none;">
             <input type="button" class="vr_form_field_button_1" id="button_save_vr_form_items_data_entry" name="button_save_vr_form_items_data_entry" value="Save" onclick="saveVrFormData('')" />
+            <input type="button" class="vr_form_field_button_1" id="button_save_and_exit_vr_form_items_data_entry" name="button_save_and_exit_vr_form_items_data_entry" value="Save & Close" onclick="saveVrFormData('save_and_exit')" />
             <input type="button" class="vr_form_field_button_1" id="button_cancel_vr_form_items_data_entry" name="button_cancel_vr_form_items_data_entry" value="Cancel" onclick="cancelVrFormData()" />
             <input type="button" class="vr_form_field_button_1" id="button_delete_vr_form_items_data_entry" name="button_delete_vr_form_items_data_entry" value="Delete" onclick="deleteVrFormData()" />
             <input type="button" class="vr_form_field_button_1" id="button_download_vr_form_items_data_entry" name="button_download_vr_form_items_data_entry" value="Download PDF" onclick="downloadVrFormData()" />
             <input type="button" class="vr_form_field_button_1" id="button_duplicate_vr_form_items_data_entry" name="button_duplicate_vr_form_items_data_entry" value="Duplicate" onclick="saveVrFormData('duplicate')" />
+            <br />
+            <br />
+        </div>
+        <div id="vr_form_queries_button_area_42" style="display: none;">
+            <input type="button" class="vr_form_field_button_1" id="button_download_vr_form_items_data_entry" name="button_download_vr_form_items_data_entry" value="Download PDF" onclick="downloadVrFormData()" />
             <br />
             <br />
         </div>
@@ -331,6 +338,7 @@
                                         <div id="item_dimension_girth_side_a_fraction_form_bom_area" style="display: inline-block;">
                                             <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_girth_side_a_fraction_form_bom" name="item_dimension_girth_side_a_fraction_form_bom" onchange=""></select>
                                         </div>
+                                        <span class="bom_form_field_text_1" id="item_dimension_girth_side_a_sum_method_form_bom_area"></span>
                                     </div>
                                     <div id="item_dimension_girth_side_b_info_form_bom_area" style="display: inline-block;">
                                         Side B:&nbsp;
@@ -338,6 +346,7 @@
                                         <div id="item_dimension_girth_side_b_fraction_form_bom_area" style="display: inline-block;">
                                             <select class="vr_form_field_selectbox_fraction_1" id="item_dimension_girth_side_b_fraction_form_bom" name="item_dimension_girth_side_b_fraction_form_bom" onchange=""></select>
                                         </div>
+                                        <span class="bom_form_field_text_1" id="item_dimension_girth_side_b_sum_method_form_bom_area"></span>
                                     </div>
                                 </td>
                             <tr>

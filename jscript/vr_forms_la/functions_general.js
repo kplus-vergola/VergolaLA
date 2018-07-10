@@ -160,3 +160,34 @@
 
             return data_rows;
         }
+
+
+        function encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list) {
+            var result = json_text;
+            var input_text = json_text + '';
+            var new_text = '';
+            var c1 = 0;
+            var c2 = 0;
+            var temp_array = [];
+            var total_split = 0;
+
+            for (c1 = 0; c1 < special_chars_encoding_list.length; c1++) {
+                temp_array = input_text.split(special_chars_encoding_list[c1]['search_text']);
+                total_split = temp_array.length;
+
+                new_text = '';
+                if (temp_array.length >= 2) {
+                    for (c2 = 0; c2 < temp_array.length; c2++) {
+                        new_text += temp_array[c2];
+                        if (c2 < (temp_array.length - 1)) {
+                            new_text += special_chars_encoding_list[c1]['replace_text'];
+                        }
+                    }
+                    input_text = new_text + '';
+                }
+            }
+
+            result = input_text;
+
+            return result;
+        }

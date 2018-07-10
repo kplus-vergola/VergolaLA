@@ -45,8 +45,17 @@ function getResultsetInJson($sql) {
 
 
 function getApiData($api_data_string) {
+    $results = array(
+        'api_data_string' => '', 
+        'api_data' => array()
+    );
+
     $api_data_string = str_replace('[AMPERSAND]', '&', $api_data_string);
     $api_data = json_decode($api_data_string, true);
-    return $api_data;
+
+    $results['api_data_string'] = $api_data_string;
+    $results['api_data'] = $api_data;
+
+    return $results;
 }
 ?>

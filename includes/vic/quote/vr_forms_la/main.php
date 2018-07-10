@@ -52,7 +52,9 @@ if (isset($_REQUEST['api_mode'])) {
 
     if (isset($_REQUEST['api_data'])) {
         $api_data_string = $_REQUEST['api_data'];
-        $api_data = getApiData($api_data_string);
+        $results = getApiData($api_data_string);
+        $api_data_string = $results['api_data_string'];
+        $api_data = $results['api_data'];
 
         if (json_decode($api_data_string, true) == true) {
             if (isset($api_data['vr_form_operation'])) {
@@ -237,6 +239,7 @@ if (isset($_REQUEST['api_mode'])) {
 
     $vr_form_system_info['payment_deposit_percentage'] = 0.1;
     $vr_form_system_info['payment_deposit_minimum'] = 1000;
+    $vr_form_system_info['payment_deposit_calculation_method'] = 'minimum'; //percentage
     $vr_form_system_info['payment_progress_payment_percentage'] = 0.65;
     $vr_form_system_info['commission_pay1_percentage'] = 0.4;
     $vr_form_system_info['commission_pay2_percentage'] = 0.3;
@@ -256,6 +259,7 @@ if (isset($_REQUEST['api_mode'])) {
             break;
     }
 
+    $vr_form_url_info['save_quote'] = JURI::base() . 'add-quote-vic?page_name=quote_edit';
     $vr_form_url_info['contract_details'] = JURI::base() . 'contract-listing-vic/contract-folder-vic/contract-folder-vic?quoteid=' . $vr_form_system_info['quote_id'] . '&projectid=' . $vr_form_system_info['project_id'];
     $vr_form_url_info['quote_details'] = JURI::base() . 'view-quote-vic?ref=back&ref_page=contracts&page_name=quote_details&quoteid=' . $vr_form_system_info['quote_id'] . '&projectid=' . $vr_form_system_info['project_id'];
     $vr_form_url_info['bom'] = JURI::base() . 'contract-listing-vic/contract-folder-vic/contract-bom-vic?quoteid=' . $vr_form_system_info['quote_id'] . '&projectid=' . $vr_form_system_info['project_id'];

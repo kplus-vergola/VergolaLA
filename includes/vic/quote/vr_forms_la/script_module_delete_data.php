@@ -174,26 +174,28 @@ $results_delete_data['data_contract_bom_meterial']['total_success'] = 0;
 $results_delete_data['data_contract_bom_meterial']['total_failure'] = 0;
 $results_delete_data['data_contract_bom_meterial']['is_success'] = false;
 
-$number_of_targeted_items = 0;
+$number_of_targeted_items = 1;
 if ($enable_deleting['data_contract_bom_meterial'] == true) {
+    $target_section_ref_name = '';
     for ($c1 = 0; $c1 < $number_of_items_data_entry; $c1++) {
         if (isset($api_data['cancel_order_by_vr_section_display_name']) && 
             $api_data['cancel_order_by_vr_section_display_name'] == $api_data['vr_form_items_data_entry'][$c1]['vr_section_display_name']) {
-            $number_of_targeted_items++;
+            $target_section_ref_name = $api_data['vr_form_items_data_entry'][$c1]['vr_section_ref_name'];
+            $results_delete_data['data_contract_bom_meterial']['failure_indexes'][] = $c1;
+        }
+    }
+    if ($target_section_ref_name != '') {
+        $sql = str_replace(
+            array('[PROJECT_ID]', '[VR_SECTION_REF_NAME]'), 
+            array($api_data['project_id'], $target_section_ref_name), 
+            $sql_template_delete_data_contract_bom_meterial 
+        );
 
-            $sql = str_replace(
-                array('[PROJECT_ID]', '[INVENTORY_ID]'), 
-                array($api_data['project_id'], $api_data['vr_form_items_data_entry'][$c1]['vr_item_ref_name']), 
-                $sql_template_delete_data_contract_bom_meterial 
-            );
-
-            $results = executeDbQuery($sql);
-            if ($results['error'] == 'null') {
-                $results_delete_data['data_contract_bom_meterial']['total_success']++;
-            } else {
-                $results_delete_data['data_contract_bom_meterial']['total_failure']++;
-                $results_delete_data['data_contract_bom_meterial']['failure_indexes'][] = $c1;
-            }
+        $results = executeDbQuery($sql);
+        if ($results['error'] == 'null') {
+            $results_delete_data['data_contract_bom_meterial']['total_success']++;
+        } else {
+            $results_delete_data['data_contract_bom_meterial']['total_failure']++;
         }
     }
 
@@ -213,26 +215,28 @@ $results_delete_data['data_contract_bom']['total_success'] = 0;
 $results_delete_data['data_contract_bom']['total_failure'] = 0;
 $results_delete_data['data_contract_bom']['is_success'] = false;
 
-$number_of_targeted_items = 0;
+$number_of_targeted_items = 1;
 if ($enable_deleting['data_contract_bom'] == true) {
+    $target_section_ref_name = '';
     for ($c1 = 0; $c1 < $number_of_items_data_entry; $c1++) {
         if (isset($api_data['cancel_order_by_vr_section_display_name']) && 
             $api_data['cancel_order_by_vr_section_display_name'] == $api_data['vr_form_items_data_entry'][$c1]['vr_section_display_name']) {
-            $number_of_targeted_items++;
+            $target_section_ref_name = $api_data['vr_form_items_data_entry'][$c1]['vr_section_ref_name'];
+            $results_delete_data['data_contract_bom']['failure_indexes'][] = $c1;
+        }
+    }
+    if ($target_section_ref_name != '') {
+        $sql = str_replace(
+            array('[PROJECT_ID]', '[VR_SECTION_REF_NAME]'), 
+            array($api_data['project_id'], $target_section_ref_name), 
+            $sql_template_delete_data_contract_bom 
+        );
 
-            $sql = str_replace(
-                array('[VR_RECORD_INDEX]'), 
-                array($api_data['vr_form_items_data_entry'][$c1]['vr_record_index']), 
-                $sql_template_delete_data_contract_bom 
-            );
-
-            $results = executeDbQuery($sql);
-            if ($results['error'] == 'null') {
-                $results_delete_data['data_contract_bom']['total_success']++;
-            } else {
-                $results_delete_data['data_contract_bom']['total_failure']++;
-                $results_delete_data['data_contract_bom']['failure_indexes'][] = $c1;
-            }
+        $results = executeDbQuery($sql);
+        if ($results['error'] == 'null') {
+            $results_delete_data['data_contract_bom']['total_success']++;
+        } else {
+            $results_delete_data['data_contract_bom']['total_failure']++;
         }
     }
 

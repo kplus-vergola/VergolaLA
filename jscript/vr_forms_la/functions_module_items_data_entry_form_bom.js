@@ -1,18 +1,3 @@
-        function addBomFormItemAdhocDataEntry(vr_section_display_name) {
-            var vr_section_first_vr_form_item_config = {};
-            var vr_section_last_vr_form_item_index = null;
-
-            copyVrFormItemsDataEntryFormValue();
-            vr_form_item_config = getVrFormItemConfig(vr_section_display_name);
-            vr_section_last_vr_form_item_index = getVrSectionLastVrFormItemIndex(vr_section_display_name);
-
-            if (vr_section_last_vr_form_item_index != null) {
-                insertVrSectionFirstVrFormItemConfig((vr_section_last_vr_form_item_index + 1), vr_form_item_config);
-                generateVrFormItemsDataEntry('form');
-            }
-        }
-
-
         function showBomFormItemDimensionPopup(bom_form_item_data_entry_index, form_action) {
             var popup_display_time_in_seconds = 1000;
             var popup_display_timer;
@@ -81,10 +66,16 @@
             if (target_vr_section_ref_name.search('gutter') >= 0) {
                 document.getElementById('item_dimension_girth_side_a_info_form_bom_area').style.display = 'block';
                 document.getElementById('item_dimension_girth_side_b_info_form_bom_area').style.display = 'block';
+
+                document.getElementById('item_dimension_girth_side_a_sum_method_form_bom_area').innerHTML = '(F+A+P+C+E)';
+                document.getElementById('item_dimension_girth_side_b_sum_method_form_bom_area').innerHTML = '(F+B+P+D+E)';
             } else {
                 if (target_vr_section_ref_name.search('flashing') >= 0) {
                     document.getElementById('item_dimension_girth_side_a_info_form_bom_area').style.display = 'block';
                     document.getElementById('item_dimension_girth_side_b_info_form_bom_area').style.display = 'none';
+
+                    document.getElementById('item_dimension_girth_side_a_sum_method_form_bom_area').innerHTML = '(A+B+C+D+E+F+P)';
+                    document.getElementById('item_dimension_girth_side_b_sum_method_form_bom_area').innerHTML = '';
                 }
             }
 

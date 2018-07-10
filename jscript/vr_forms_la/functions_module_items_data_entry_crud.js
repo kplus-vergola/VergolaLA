@@ -51,6 +51,59 @@
         }
 
 
+        function filterVrFormJsonArray(json_array_ref_name) {
+            var c1;
+            var c2;
+            var special_chars_encoding_list = [
+                {"search_text":"&", "replace_text":"[AMPERSAND]"}
+            ];
+            var json_text = '';
+
+            switch (json_array_ref_name) {
+                case 'vr_form_system_info':
+                    for (c1 in vr_form_system_info) {
+                        json_text = vr_form_system_info[c1];
+                        if (isNaN(json_text)) {
+                            vr_form_system_info[c1] = encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list);
+                        }
+                    }
+                    break;
+                case 'vr_form_queries_info':
+                    for (c1 in vr_form_queries_info) {
+                        if ((typeof vr_form_queries_info[c1] === 'object') && (vr_form_queries_info[c1] !== null)) {
+                            /* no processing for object or array */
+                        } else {
+                            json_text = vr_form_queries_info[c1];
+                            if (isNaN(json_text)) {
+                                vr_form_queries_info[c1] = encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list);
+                            }
+                        }
+                    }
+                    break;
+                case 'vr_form_items_data_entry':
+                    for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                        for (c2 in vr_form_items_data_entry[c1]) {
+                            if ((typeof vr_form_items_data_entry[c1][c2] === 'object') && (vr_form_items_data_entry[c1][c2] !== null)) {
+                                /* no processing for object or array */
+                            } else {
+                                json_text = vr_form_items_data_entry[c1][c2];
+                                if (isNaN(json_text)) {
+                                    vr_form_items_data_entry[c1][c2] = encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 'vr_form_report_info':
+                    json_text = vr_form_report_info;
+                    if (isNaN(json_text)) {
+                        vr_form_report_info = encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list);
+                    }
+                    break;
+            }
+        }
+
+
         function processRetrieveResult(results) {
             if (results['error'] == 'null') {
                 console.log('processRetrieveResult > results:');
@@ -63,8 +116,8 @@
 
                 vr_item_config_saved_data_list[document.getElementById('vr_type_form_query').value] = results['data']['vr_form_items_data_entry'];
 
-                processVrDimensionFormQueries();
-                processVrFrameworkTypeFormQueries();
+                processVrFrameworkTypeFormQueries(2);
+                processVrDimensionFormQueries(2);
 
                 if (document.getElementById('vr_type_form_query').value == 'VR8' || 
                     document.getElementById('vr_type_form_query').value == 'VR9') {
@@ -114,7 +167,6 @@
 
                 document.getElementById('project_name_form_bom').innerHTML = vr_form_queries_info['vr_project_name'];
                 document.getElementById('contract_id_form_bom').innerHTML = vr_form_system_info['project_id'];
-
 
                 if (vr_form_system_info['access_mode'] == 'quote_view') {
                     disableVrFormItemsDataEntryMode();
@@ -168,22 +220,47 @@
         }
 
 
-        function processSaveResult(results) {
+        function processSaveResult1(results) {
             if (results['error'] == 'null') {
                 window.location = vr_form_url_info['previous'] + '&uc=' + vr_form_url_info['unique_code'];
             } else {
-                console.log('processSaveResult > results:');
+                console.log('processSaveResult1 > results:');
+                console.log(results);
+            }
+        }
+
+
+        function processSaveResult2(results) {
+            if (results['error'] == 'null') {
+                var project_id = '';
+                if (vr_form_system_info['access_mode'] == 'quote_add') {
+                    project_id = results['message']['next_project_id'];
+                }
+                if (vr_form_system_info['access_mode'] == 'quote_edit') {
+                    project_id = vr_form_system_info['project_id'];
+                }
+                window.location = vr_form_url_info['save_quote'] + '&project_id=' + project_id + '&uc=' + vr_form_url_info['unique_code'];
+            } else {
+                console.log('processSaveResult2 > results:');
                 console.log(results);
             }
         }
 
 
         function saveVrFormData(save_option) {
+            setMandatoryNumericFields();
             copyVrFormItemsDataEntryFormValue();
             extractVrFormItemDataEntryPropertiesName();
             jsonEncodeVrFormItemsDataEntry();
             copyVrFormQueriesInfoFormValue();
             copyVrFormBillingInfoFormValue();
+
+            vr_form_report_info = getReportFromVrFormAllInfo();
+
+            filterVrFormJsonArray('vr_form_system_info');
+            filterVrFormJsonArray('vr_form_queries_info');
+            filterVrFormJsonArray('vr_form_items_data_entry');
+            filterVrFormJsonArray('vr_form_report_info');
 
             var url = window.location.href + '&api_mode=1';
             var request_data = {
@@ -191,18 +268,25 @@
                 "vr_form_queries_info":vr_form_queries_info, 
                 "vr_form_items_data_entry":vr_form_items_data_entry, 
                 "vr_form_billing_info":vr_form_billing_info, 
-                "vr_form_report_info":getReportFromVrFormAllInfo()
+                "vr_form_report_info":vr_form_report_info
             };
             request_data['vr_form_operation'] = 'save';
             if (vr_form_system_info['access_mode'] == 'quote_edit' || 
                 vr_form_system_info['access_mode'] == 'contract_bom_edit') {
                 request_data['vr_form_operation'] = 'update';
             }
+
             if (save_option == 'duplicate') {
                 request_data['vr_form_operation'] = 'save';
+                vr_form_queries_info['vr_project_name'] = 'Duplicate: ' + vr_form_queries_info['vr_project_name'];
             }
 
-            requestAjaxCall(url, request_data, 'processSaveResult');
+            if (save_option == 'save_and_exit' || save_option == 'duplicate') {
+                requestAjaxCall(url, request_data, 'processSaveResult1');
+            } else {
+                requestAjaxCall(url, request_data, 'processSaveResult2');
+            }
+
             console.log('url:');
             console.log(url);
             console.log('request_data:');
@@ -237,6 +321,10 @@
             copyVrFormItemsDataEntryFormValue();
             copyBomFormDimensionInfoFormValue();
 
+            filterVrFormJsonArray('vr_form_system_info');
+            filterVrFormJsonArray('vr_form_queries_info');
+            filterVrFormJsonArray('vr_form_items_data_entry');
+
             var url = window.location.href + '&api_mode=1';
             var request_data = {
                 "vr_form_operation":"update", 
@@ -258,7 +346,7 @@
 
         function processDeleteResultBomFormData(results) {
             if (results['error'] == 'null') {
-                window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
+                window.location = vr_form_url_info['bom'] + '&uc=' + vr_form_url_info['unique_code'];
             } else {
                 console.log('processDeleteResultBomFormData > results:');
                 console.log(results);
@@ -271,6 +359,10 @@
             extractVrFormItemDataEntryPropertiesName();
             jsonEncodeVrFormItemsDataEntry();
             copyVrFormQueriesInfoFormValue();
+
+            filterVrFormJsonArray('vr_form_system_info');
+            filterVrFormJsonArray('vr_form_queries_info');
+            filterVrFormJsonArray('vr_form_items_data_entry');
 
             var url = window.location.href + '&api_mode=1';
             var request_data = {
@@ -293,7 +385,7 @@
 
         function processSaveResultBomFormPoData(results) {
             if (results['error'] == 'null') {
-                saveBomFormContractItemData();
+                saveBomFormContractItemData(2);
             } else {
                 console.log('processSaveResultBomFormPoData > results:');
                 console.log(results);
@@ -306,6 +398,10 @@
             extractVrFormItemDataEntryPropertiesName();
             jsonEncodeVrFormItemsDataEntry();
             copyVrFormQueriesInfoFormValue();
+
+            filterVrFormJsonArray('vr_form_system_info');
+            filterVrFormJsonArray('vr_form_queries_info');
+            filterVrFormJsonArray('vr_form_items_data_entry');
 
             var url = window.location.href + '&api_mode=1';
             var request_data = {
@@ -325,7 +421,17 @@
         }
 
 
-        function processSaveResultBomFormContractItemData(results) {
+        function processSaveResultBomFormContractItemData1(results) {
+            if (results['error'] == 'null') {
+                // window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
+            } else {
+                console.log('processSaveResultBomFormContractItemData > results:');
+                console.log(results);
+            }
+        }
+
+
+        function processSaveResultBomFormContractItemData2(results) {
             if (results['error'] == 'null') {
                 window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
             } else {
@@ -335,11 +441,15 @@
         }
 
 
-        function saveBomFormContractItemData() {
+        function saveBomFormContractItemData(process_option) {
             copyVrFormItemsDataEntryFormValue();
             extractVrFormItemDataEntryPropertiesName();
             jsonEncodeVrFormItemsDataEntry();
             copyVrFormQueriesInfoFormValue();
+
+            filterVrFormJsonArray('vr_form_system_info');
+            filterVrFormJsonArray('vr_form_queries_info');
+            filterVrFormJsonArray('vr_form_items_data_entry');
 
             var url = window.location.href + '&api_mode=1';
             var request_data = {
@@ -350,7 +460,15 @@
                 "vr_form_items_data_entry":vr_form_items_data_entry
             };
 
-            requestAjaxCall(url, request_data, 'processSaveResultBomFormContractItemData');
+            switch (process_option) {
+                case 1:
+                    requestAjaxCall(url, request_data, 'processSaveResultBomFormContractItemData1');
+                    break;
+                case 2:
+                    requestAjaxCall(url, request_data, 'processSaveResultBomFormContractItemData2');
+                    break;
+            }
+
             console.log('url:');
             console.log(url);
             console.log('request_data:');

@@ -86,6 +86,33 @@
         }
 
 
+        function clearVrFormBillingInfoFormValue() {
+            var c1 = 0;
+            var billing_info_fields = [
+                'vr_payment_vergola', 
+                'vr_payment_vr_items_rrp', 
+                'vr_payment_disbursement_sub_total', 
+                'vr_payment_sub_total', 
+                'vr_payment_tax', 
+                'vr_payment_total', 
+                'vr_payment_deposit', 
+                'vr_payment_progress_payment', 
+                'vr_payment_final_payment', 
+                'vr_commission_sales_commission', 
+                'vr_commission_pay1', 
+                'vr_commission_pay2', 
+                'vr_commission_final', 
+                'vr_commission_installer_payment'
+            ];
+
+            for (c1 = 0; c1 < billing_info_fields.length; c1++) {
+                if (document.getElementById(billing_info_fields[c1] + '_form_billing')) {
+                    document.getElementById(billing_info_fields[c1] + '_form_billing').value = '';
+                }
+            }
+        }
+
+
         function copyVrFormBillingInfoFormValue() {
             var c1 = 0;
             var billing_info_fields = [
@@ -113,8 +140,8 @@
         }
 
 
-        function processVrDimensionFormQueries() {
-            processVrFrameworkTypeFormQueries();
+        function processVrDimensionFormQueries(process_option) {
+            processVrFrameworkTypeFormQueries(process_option);
             copyVrFormQueriesInfoFormValue();
 
             var template_vr_form_queries_table_row_header = '' + 
@@ -264,7 +291,7 @@
             );
             vr_framework_type_form_query_area = replaceSubstringInText(
                 ['onchange=""'], 
-                ['onchange="processVrFrameworkTypeFormQueries()"'], 
+                ['onchange="processVrFrameworkTypeFormQueries(1)"'], 
                 vr_framework_type_form_query_area
             );
 
@@ -280,7 +307,7 @@
             );
             vr_type_form_query_area = replaceSubstringInText(
                 ['onchange=""'], 
-                ['onchange="processVrDimensionFormQueries()"'], 
+                ['onchange="processVrDimensionFormQueries(1)"'], 
                 vr_type_form_query_area
             );
 
@@ -359,12 +386,83 @@
         }
 
 
-        function processVrFrameworkTypeFormQueries() {
+        function processVrFrameworkTypeFormQueries(process_option) {
+            var adhoc_criteria = {};
+            var targeted_vr_section_ref_names = [];
+            var targeted_vr_form_item_data_entry_indexes = [];
+            var temp_vr_form_items_data_entry = [];
+            var temp_vr_form_items_data_entry1 = [];
+            var temp_vr_form_items_data_entry2 = [];
+            var source_info_vr_form_items_data_entry = [];
+
             if (document.getElementById('vr_framework_type_form_query').value != 'null' && 
                 document.getElementById('vr_type_form_query').value != 'null') {
-                jsonDecodeVrFormItemsConfig();
+                if (vr_form_items_data_entry.length == 0) {
+                    jsonDecodeVrFormItemsConfig();
+                }
+
+                /* --- begin framework type == drop-in processing --- */
+                if (document.getElementById('vr_framework_type_form_query').value == 'Drop-In') {
+                    source_info_vr_form_items_data_entry = vr_form_items_data_entry;
+                    adhoc_criteria = {
+                        "target_fields":[
+                            {"field_name":"vr_section_ref_name", "field_value":"Frame"}, 
+                            {"field_name":"vr_section_ref_name", "field_value":"Fixings"} 
+                        ]
+                    };
+                    targeted_vr_section_ref_names = ['Frame', 'Fixings'];
+                    targeted_vr_form_item_data_entry_indexes = extractVrFormItemsIndexByAdhocCriteria(source_info_vr_form_items_data_entry, adhoc_criteria);
+                    temp_vr_form_items_data_entry = extractVrFormItemsRowByAdhocCriteria(source_info_vr_form_items_data_entry, targeted_vr_section_ref_names, targeted_vr_form_item_data_entry_indexes, 'not_exist');
+                    vr_form_items_data_entry = temp_vr_form_items_data_entry;
+                }
+                /* --- end framework type == drop-in processing --- */
+
+                /* --- begin framework type == framework processing --- */
+                if (document.getElementById('vr_framework_type_form_query').value == 'Framework') {
+                    if (vr_form_items_data_entry[0]['vr_section_display_name'] != vr_item_config_list[document.getElementById('vr_type_form_query').value][0]['vr_section_display_name']) {
+                        source_info_vr_form_items_data_entry = vr_item_config_list[document.getElementById('vr_type_form_query').value];
+                        adhoc_criteria = {
+                            "target_fields":[
+                                {"field_name":"vr_section_ref_name", "field_value":"Frame"}, 
+                                {"field_name":"vr_section_ref_name", "field_value":"Fixings"} 
+                            ]
+                        };
+                        targeted_vr_section_ref_names = ['Frame', 'Fixings'];
+                        targeted_vr_form_item_data_entry_indexes = extractVrFormItemsIndexByAdhocCriteria(source_info_vr_form_items_data_entry, adhoc_criteria);
+                        temp_vr_form_items_data_entry1 = extractVrFormItemsRowByAdhocCriteria(source_info_vr_form_items_data_entry, targeted_vr_section_ref_names, targeted_vr_form_item_data_entry_indexes, 'exist');
+
+                        source_info_vr_form_items_data_entry = vr_form_items_data_entry;
+                        adhoc_criteria = {
+                            "target_fields":[
+                                {"field_name":"vr_section_ref_name", "field_value":"Frame"}, 
+                                {"field_name":"vr_section_ref_name", "field_value":"Fixings"} 
+                            ]
+                        };
+                        targeted_vr_section_ref_names = ['Frame', 'Fixings'];
+                        targeted_vr_form_item_data_entry_indexes = extractVrFormItemsIndexByAdhocCriteria(source_info_vr_form_items_data_entry, adhoc_criteria);
+                        temp_vr_form_items_data_entry2 = extractVrFormItemsRowByAdhocCriteria(source_info_vr_form_items_data_entry, targeted_vr_section_ref_names, targeted_vr_form_item_data_entry_indexes, 'not_exist');
+
+                        var c1 = 0;
+                        for (c1 = 0; c1 < temp_vr_form_items_data_entry1.length; c1++) {
+                            temp_vr_form_items_data_entry[temp_vr_form_items_data_entry.length] = temp_vr_form_items_data_entry1[c1];
+                        }
+                        for (c1 = 0; c1 < temp_vr_form_items_data_entry2.length; c1++) {
+                            temp_vr_form_items_data_entry[temp_vr_form_items_data_entry.length] = temp_vr_form_items_data_entry2[c1];
+                        }
+
+                        vr_form_items_data_entry = temp_vr_form_items_data_entry;
+                    }
+                }
+                /* --- end framework type == framework processing --- */
+
                 generateVrFormItemsDataEntry('form');
                 hideFormArea('vr_form_queries_button_area_1');
+                setTimeout(
+                    function () {
+                        calculateVrFormItemsDataEntryValues(process_option);
+                    }, 
+                    1000
+                );
 
                 switch (vr_form_system_info['access_mode']) {
                     case 'quote_add':

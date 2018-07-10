@@ -2,10 +2,12 @@
             var run_in_value_for_calculation = convertValueForCalculation(run);
             var rise_in_value_for_calculation = convertValueForCalculation(rise);
             var rafter_length_in_value_for_calculation = 0.0;
+            var temp_float = 0.0;
             var rafter_length_in_value_for_display = '';
 
             rafter_length_in_value_for_calculation = Math.sqrt(Math.pow(run_in_value_for_calculation, 2) + Math.pow(rise_in_value_for_calculation, 2));
-            rafter_length_in_value_for_display = revertValueForCalculation(rafter_length_in_value_for_calculation);
+            temp_float = parseFloat(revertValueForCalculation(rafter_length_in_value_for_calculation));
+            rafter_length_in_value_for_display = temp_float.toFixed(2);
 
             return rafter_length_in_value_for_display;
         }
