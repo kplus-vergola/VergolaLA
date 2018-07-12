@@ -214,7 +214,8 @@ $cbo_suppliers .="</select>";
       <td class="rrp">
           <select name="uom"> 
             <option value="Ea" <?php echo ($m['uom']=="Ea"?"selected":""); ?> >Ea</option>
-            <option value="Mtrs" <?php echo ($m['uom']=="Mtrs"?"selected":""); ?> >Mtrs</option> 
+            <!-- <option value="Mtrs" <?php echo ($m['uom']=="Mtrs"?"selected":""); ?> >Mtrs</option>  -->
+            <option value="Inches" <?php echo ($m['uom']=="Inches"?"selected":""); ?> >Inches</option> 
             <option value="$" <?php echo ($m['uom']=="$"?"selected":""); ?> >$</option>
           </select>
       </td>
