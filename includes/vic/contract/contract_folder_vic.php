@@ -227,6 +227,21 @@ mysql_query($sql) or die(mysql_error());
         $final_inspection_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['final_inspection_date'])))."'";
     } 
 
+    $fw_orderdate = "NULL";
+    if (strlen($_POST['fw_orderdate']) && $_POST['fw_orderdate'] != "0000-00-00 00:00:00"){
+      $fw_orderdate = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['fw_orderdate'])))."'";
+    } 
+
+    $gutter_flashing_ordered = "NULL";
+    if (strlen($_POST['gutter_flashing_ordered']) && $_POST['gutter_flashing_ordered'] != "0000-00-00 00:00:00"){
+      $gutter_flashing_ordered = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['gutter_flashing_ordered'])))."'";
+    } 
+
+    $louvers_ordered = "NULL";
+    if (strlen($_POST['louvers_ordered']) && $_POST['louvers_ordered'] != "0000-00-00 00:00:00"){
+      $louvers_ordered = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['louvers_ordered'])))."'";
+    } 
+
     $schedule_completion = "NULL";
     if (strlen($_POST['schedule_completion']) && $_POST['schedule_completion'] != "0000-00-00 00:00:00") {
         $schedule_completion = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['schedule_completion'])))."'";
@@ -260,6 +275,9 @@ mysql_query($sql) or die(mysql_error());
         job_start_date_followup = {$job_start_date_followup},
         job_end_date = {$job_end_date},
         final_inspection_date = {$final_inspection_date},
+        fw_orderdate = {$fw_orderdate},
+        gutter_flashing_ordered = {$gutter_flashing_ordered},
+        louvers_ordered = {$louvers_ordered},
         schedule_completion = {$schedule_completion},
         time_frame_letter = {$time_frame_letter}
         WHERE projectid = '$projectid'
@@ -755,6 +773,9 @@ $groups = $user->get('groups');
             DATE_FORMAT(job_start_date_followup,'" . SQL_DATE_FORMAT_01 . "') fjob_start_date_followup, 
             DATE_FORMAT(job_end_date,'" . SQL_DATE_FORMAT_01 . "') fjob_end_date, 
             DATE_FORMAT(final_inspection_date,'" . SQL_DATE_FORMAT_01 . "') ffinal_inspection_date, 
+            DATE_FORMAT(fw_orderdate,'" . SQL_DATE_FORMAT_01 . "') ffw_orderdate, 
+            DATE_FORMAT(gutter_flashing_ordered,'" . SQL_DATE_FORMAT_01 . "') fgutter_flashing_ordered, 
+            DATE_FORMAT(louvers_ordered,'" . SQL_DATE_FORMAT_01 . "') flouvers_ordered, 
             DATE_FORMAT(install_date,'" . SQL_DATE_FORMAT_01 . "') finstall_date,
             DATE_FORMAT(schedule_completion,'" . SQL_DATE_FORMAT_01 . "') fschedule_completion,
             DATE_FORMAT(time_frame_letter,'" . SQL_DATE_FORMAT_01 . "') ftime_frame_letter
@@ -870,9 +891,9 @@ $groups = $user->get('groups');
      </div>  -->
 
     <div class="label-input-row"> 
-        <label class="input productionstart"><span class="visible">Framework Ordered: </span><input type="text" value="<?php echo $contract_vergola['fproduction_start_date']; ?>" name="productionstart" class="date_entered"></label>
-        <label class="input productionstart"><span class="visible">Gutter / Flashing: </span><input type="text" value="NO DATA" name="building_permit_issued" class="date_entered"></label>
-        <label class="input productionstart"><span class="visible">Louvers Ordered: </span><input type="text" value="NO DATA" name="building_permit_issued" class="date_entered"></label>
+        <label class="input productionstart"><span class="visible">Framework Ordered: </span><input type="text" value="<?php echo $contract_vergola['ffw_orderdate']; ?>" name="fw_orderdate" class="date_entered"></label>
+        <label class="input productionstart"><span class="visible">Gutter/Flashing: </span><input type="text" value="<?php echo $contract_vergola['fgutter_flashing_ordered']; ?>" name="gutter_flashing_ordered" class="date_entered"></label>
+        <label class="input productionstart"><span class="visible">Louvers Ordered: </span><input type="text" value="<?php echo $contract_vergola['flouvers_ordered']; ?>" name="louvers_ordered" class="date_entered"></label>
     </div>  
 
     <div class="label-input-row">     
