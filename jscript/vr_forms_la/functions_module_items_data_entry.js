@@ -365,6 +365,7 @@
                             current_vr_item_image_url = vr_form_url_info['base'] + 'images/inventory/' + vr_items_list[c1]['item_image'];
                         }
                         document.getElementById('vr_item_data_entry_image_' + vr_form_item_data_entry_index).src = current_vr_item_image_url;
+                        document.getElementById('vr_item_data_entry_image_input_type_' + vr_form_item_data_entry_index).value = 'Image With Popup Edit';
 
                         is_required_default_dimension = false;
                         for (key1 in vr_item_default_dimensions_list) {
@@ -439,6 +440,8 @@
 
         function copyVrFormItemsDataEntryFormValue() {
             var c1 = 0;
+            var vr_item_image_url_path = vr_form_url_info['base'] + 'images/inventory/';
+            var current_vr_item_image_url = '';
 
             for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
                 if (document.getElementById('vr_type_data_entry_ref_name_' + c1)) {
@@ -486,6 +489,14 @@
 
                     vr_form_items_data_entry[c1]['vr_item_rrp'] = formatInputValue('float', document.getElementById('vr_item_data_entry_rrp_' + c1).value);
                     vr_form_items_data_entry[c1]['vr_item_rrp_input_type'] = document.getElementById('vr_item_data_entry_rrp_input_type_' + c1).value;
+
+                    if (document.getElementById('vr_item_data_entry_image_' + c1)) {
+                        current_vr_item_image_url = document.getElementById('vr_item_data_entry_image_' + c1).src.substring(vr_item_image_url_path.length);
+                        vr_form_items_data_entry[c1]['vr_item_image'] = current_vr_item_image_url;
+                    }
+                    if (document.getElementById('vr_item_data_entry_image_input_type_' + c1)) {
+                        vr_form_items_data_entry[c1]['vr_item_image_input_type'] = document.getElementById('vr_item_data_entry_image_input_type_' + c1).value;
+                    }
                 }
             }
         }
@@ -878,6 +889,7 @@
                     '<input type="hidden" id="vr_item_data_entry_length_inch_input_type_[INDEX_NUMBER]" name="vr_item_data_entry_length_inch_input_type_[INDEX_NUMBER]" value="[VR_ITEM_DATA_ENTRY_LENGTH_INCH_INPUT_TYPE]" />' + 
                     '<input type="hidden" id="vr_item_data_entry_length_fraction_input_type_[INDEX_NUMBER]" name="vr_item_data_entry_length_fraction_input_type_[INDEX_NUMBER]" value="[VR_ITEM_DATA_ENTRY_LENGTH_FRACTION_INPUT_TYPE]" />' + 
                     '<input type="hidden" id="vr_item_data_entry_rrp_input_type_[INDEX_NUMBER]" name="vr_item_data_entry_rrp_input_type_[INDEX_NUMBER]" value="[VR_ITEM_DATA_ENTRY_RRP_INPUT_TYPE]" />' + 
+                    '<input type="hidden" id="vr_item_data_entry_image_input_type_[INDEX_NUMBER]" name="vr_item_data_entry_image_input_type_[INDEX_NUMBER]" value="[VR_ITEM_DATA_ENTRY_IMAGE_INPUT_TYPE]" />' + 
                     '<div id="vr_form_item_table_column_hidden_input_type_area_extra_[INDEX_NUMBER]" style="display: none;">[VR_FORM_ITEM_TABLE_COLUMN_HIDDEN_INPUT_TYPE_AREA_EXTRA]</div>' + 
                     '[VR_ITEM_DATA_ENTRY_ACTION_INPUT_TYPE_AREA]' + 
                 '</td>';
@@ -1588,6 +1600,7 @@
                                         '[VR_ITEM_DATA_ENTRY_LENGTH_INCH_INPUT_TYPE]', 
                                         '[VR_ITEM_DATA_ENTRY_LENGTH_FRACTION_INPUT_TYPE]', 
                                         '[VR_ITEM_DATA_ENTRY_RRP_INPUT_TYPE]', 
+                                        '[VR_ITEM_DATA_ENTRY_IMAGE_INPUT_TYPE]', 
                                         '[VR_FORM_ITEM_TABLE_COLUMN_HIDDEN_INPUT_TYPE_AREA_EXTRA]', 
                                         '[VR_ITEM_DATA_ENTRY_ACTION_INPUT_TYPE_AREA]'
                                     ], 
@@ -1612,6 +1625,7 @@
                                         vr_form_items_data_entry[c12]['vr_item_length_inch_input_type'], 
                                         vr_form_items_data_entry[c12]['vr_item_length_fraction_input_type'], 
                                         vr_form_items_data_entry[c12]['vr_item_rrp_input_type'], 
+                                        vr_form_items_data_entry[c12]['vr_item_image_input_type'], 
                                         vr_form_item_table_column_hidden_input_type_area_extra, 
                                         vr_item_data_entry_input_type_area['action']
                                     ], 
