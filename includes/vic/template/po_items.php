@@ -271,6 +271,20 @@ SELECT
 	bm.length,
 	( bm.qty * im.inv_qty ) AS ls_qty,
 	SUM( bm.qty * im.inv_qty ) AS ts_qty,	
+
+CASE		
+		WHEN m.is_per_length = 1 THEN
+	CASE			
+			WHEN m.uom = 'Ea' THEN
+			SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
+				(
+					(m.raw_cost * im.inv_qty * (((bm.length_feet * 12) + bm.length_inch)  / m.length_per_ea_us ) )* b.qty 
+				) 
+			) 
+		-- END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
+		END ELSE SUM(m.raw_cost * bm.qty )
+	END AS 1_amount,
+
 CASE
 	
 	WHEN m.uom = 'Inches' THEN
@@ -340,8 +354,8 @@ CASE
 FROM
 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
 	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
-	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
-	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
+	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
+	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
 	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid
 	AND im.materialid = bm.materialid
 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
@@ -349,8 +363,8 @@ FROM
 	
 WHERE
 	bm.projectid = '{$projectid}' 
-	AND b.projectid = '{$projectid}' 
-	AND m.supplierid = '{$supplierid}' 	
+	-- AND b.projectid = '{$projectid}' 
+	AND bm.supplierid = '{$supplierid}' 	
 	
 	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
 	AND is_main_item = 1 
@@ -543,6 +557,7 @@ CASE
 					//error_log("Double Bay VR:".$contract['framework']." section:".$section." inventoryid:".$m["inventoryid"], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 					if ($section == "Guttering" || $section == "Flashings"){ 
 						$m['ts_qty'] = $m['1_qty']; $m['s_length'] = $m['1_length']; 
+						$m['ls_amount'] = $m['1_amount'];
 					}	
 
  
