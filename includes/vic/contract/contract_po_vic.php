@@ -448,7 +448,7 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 			JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid 
 			AND im.materialid = bm.materialid
 			JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
-			JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = m.supplierid 
+			JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
 		WHERE
 			bm.projectid = '$ListProjectID' 
 			AND bm.inventoryid = '{$bm['inventoryid']}' 			
