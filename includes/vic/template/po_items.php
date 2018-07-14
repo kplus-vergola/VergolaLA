@@ -266,6 +266,7 @@ $sql = "
 SELECT
 	bm.id,
 	m.qty,
+	(bm.qty) AS 1_qty,
 	( im.inv_qty * bm.qty ) AS m_qty,
 	bm.length,
 	( bm.qty * im.inv_qty ) AS ls_qty,
@@ -309,6 +310,10 @@ CASE
 		WHEN m.is_per_length = 1 THEN
 		SUM( ((b.length_feet * 12) + b.length_inch) ) 
 	END AS s_length,
+CASE		
+		WHEN m.is_per_length = 1 THEN
+		((bm.length_feet * 12) + bm.length_inch)
+	END AS 1_length,	
 	( ((bm.length_feet * 12) + bm.length_inch) ) AS length,
 
 CASE
@@ -323,6 +328,7 @@ CASE
 	bm.raw_cost,
 	bm.qty AS bm_qty,
 	bm.supplierid,
+	-- CONCAT('SQL1','   ',m.raw_description) AS raw_description,
 	m.raw_description,
 	m.is_per_length,
 	m.length_per_ea,
@@ -368,6 +374,7 @@ $sql2 = "
 SELECT
 	bm.id,
 	m.qty,
+	(bm.qty) AS grp_qty,
 	( im.inv_qty * bm.qty ) AS m_qty,
 	bm.length,
 	( bm.qty * im.inv_qty ) AS ls_qty,
@@ -413,6 +420,10 @@ CASE
 		WHEN m.is_per_length = 1 THEN
 		SUM( ((bm.length_feet * 12) + bm.length_inch) ) 
 	END AS s_length,
+CASE		
+		WHEN m.is_per_length = 1 THEN
+		((bm.length_feet * 12) + bm.length_inch)
+	END AS ms_length,	
 	( b.length ) AS length,
 
 CASE
@@ -427,6 +438,7 @@ CASE
 	bm.raw_cost,
 	bm.qty AS bm_qty,
 	bm.supplierid,
+	-- CONCAT('SQL2','   ',m.raw_description) AS raw_description,
 	m.raw_description,
 	m.is_per_length,
 	m.length_per_ea,
@@ -445,7 +457,7 @@ FROM
 	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
 WHERE
-	bm.projectid = '{$projectid}' 
+	bm.projectid = '{$projectid}' AND b.projectid = '{$projectid}' 
 	".($is_reorder==1?" 
 	AND bm.inventoryid = '{$inventoryid}' ":" 
 	AND inv.section = '{$section}' ")." 
@@ -467,6 +479,7 @@ CASE
 //ORDER BY is_per_length DESC
 
  				$totalRrp = 0; 
+ 				
 				//error_log("sql : ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
 				//error_log("sql 2: ". $sql2, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 				
@@ -495,10 +508,11 @@ CASE
 				mysql_data_seek($item_result, 0); 
 				$IRV59_1st=1; $IRV60_1st=1; 
 				while ($m = mysql_fetch_assoc($item_result)){
-					$m_qty = 0; $m_amount = 0;
+					$m_qty = 0; $m_amount = 0; $is_group = 1;
 					if($m['id']==""){continue;} 
 					$totalRrp += $m['ls_amount']; 
-
+					
+					
 					if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
 						  
 						$m_qty = $m_qty_IRV59;
@@ -523,17 +537,26 @@ CASE
 						//error_log("INV: ".$m["inventoryid"]." m_qty:".$m_qty." m_amount:".$m_amount, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
  
 					}
+					
 					//error_log("HERE 2: ", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 					 // only 2nd of IRV59 and IRV60 will be displayed. 
 					//error_log("Double Bay VR:".$contract['framework']." section:".$section." inventoryid:".$m["inventoryid"], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
-					
+					if ($section == "Guttering" || $section == "Flashings"){ 
+						$m['ts_qty'] = $m['1_qty']; $m['s_length'] = $m['1_length']; 
+					}	
+
  
 				?>  
 					<tr> 
 						<td colspan="2"><?php echo $m['raw_description']; ?></td>  
+						
 						<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td> 
+						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?></td>  -->
 						<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td> -->
+						<!-- <td style="text-align:right;"><?php echo ($is_group== 1?number_format($m['m_qty']):number_format($m['ts_qty'])); ?></td> -->
+						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:($is_group==1?$m['ts_qty']:$m['ls_qty']))); ?></td>  -->
+
 						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['s_length']):($m['uom']=="Inches"?$m['s_length']:"")); ?></td>
 						<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 						<td><?php echo $m['colour']; ?></td>

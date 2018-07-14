@@ -451,8 +451,8 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 			JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = m.supplierid 
 		WHERE
 			bm.projectid = '$ListProjectID' 
-			AND bm.inventoryid = '{$bm['inventoryid']}' 
-			-- AND bm.contract_item_cf_id = {$bm['contract_item_cf_id']} 
+			AND bm.inventoryid = '{$bm['inventoryid']}' 			
+			AND bm.contract_item_cf_id = {$bm['contract_item_cf_id']} 
 		GROUP BY
 			bm.inventoryid,
 			bm.materialid ";
