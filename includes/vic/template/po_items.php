@@ -272,69 +272,65 @@ SELECT
 	( bm.qty * im.inv_qty ) AS ls_qty,
 	SUM( bm.qty * im.inv_qty ) AS ts_qty,	
 
-CASE		
+	CASE
+		
 		WHEN m.is_per_length = 1 THEN
-	CASE			
-			WHEN m.uom = 'Ea' THEN
-			SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
-				(
-					(m.raw_cost * im.inv_qty * (((bm.length_feet * 12) + bm.length_inch)  / m.length_per_ea_us ) )* b.qty 
+	CASE
+		
+		WHEN m.uom = 'Ea' THEN
+		SUM( im.inv_qty * bm.qty ) ELSE SUM( floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) ) 
+		END ELSE SUM( im.inv_qty * bm.qty ) 
+		END AS ls_qty,
+	CASE
+			
+			WHEN m.is_per_length = 1 THEN
+		CASE
+				
+				WHEN m.uom = 'Ea' THEN
+				SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
+					(
+						m.raw_cost * im.inv_qty * (
+							floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
+								(
+									(
+										( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+									) 
+								),
+								0 
+							) 
+						) * bm.qty 
+					) 
 				) 
-			) 
-		-- END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
-		END ELSE SUM(m.raw_cost * bm.qty )
-	END AS 1_amount,
-
-CASE
-	
-	WHEN m.uom = 'Inches' THEN
-	(bm.raw_cost * ( im.inv_qty * bm.qty ) * ((bm.length_feet * 12) + bm.length_inch)) ELSE bm.raw_cost * ( im.inv_qty * bm.qty ) 
-	END AS ls_amount,	
-
-CASE	
-	WHEN m.is_per_length = 1 THEN
-CASE	
-	WHEN m.uom = 'Ea' THEN
-	SUM( im.inv_qty * b.qty ) ELSE SUM( floor( ((b.length_feet * 12) + b.length_inch) / m.length_per_ea_us ) ) 
-	END ELSE SUM( im.inv_qty * b.qty ) 
-	END AS ls_qty,
-CASE		
-		WHEN m.is_per_length = 1 THEN
-	CASE			
-			WHEN m.uom = 'Ea' THEN
-			( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
-				(
-					(m.raw_cost * im.inv_qty * (((b.length_feet * 12) + b.length_inch)  / m.length_per_ea_us ) )* b.qty 
+			END ELSE SUM( m.raw_cost * im.inv_qty * bm.qty ) 
+		END AS ls_amount,
+	CASE
+			
+			WHEN m.is_per_length = 1 THEN
+		CASE
+				
+				WHEN m.uom = 'Ea' THEN
+				( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
+					(
+						m.raw_cost * im.inv_qty * floor(
+							( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
+								(
+									(
+										( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+									) 
+								),
+								0 
+							) 
+						) * bm.qty 
+					) 
 				) 
-			) 
-		END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
-	END AS ls_amount,
-CASE		
-		WHEN m.is_per_length = 1 THEN
-	CASE			
-			WHEN m.uom = 'Ea' THEN
-			( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
-				(
-					(m.raw_cost * im.inv_qty * (((b.length_feet * 12) + b.length_inch)  / m.length_per_ea_us ) )* b.qty 
-				) 
-			) 
-		END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
-	END AS ls_amount_guttering,
-CASE		
-		WHEN m.is_per_length = 1 THEN
-		SUM( ((b.length_feet * 12) + b.length_inch) ) 
-	END AS s_length,
-CASE		
-		WHEN m.is_per_length = 1 THEN
-		((bm.length_feet * 12) + bm.length_inch)
-	END AS 1_length,	
-	( ((bm.length_feet * 12) + bm.length_inch) ) AS length,
-
-CASE
-	
-	WHEN m.uom = 'Inches' THEN
-	SUM(bm.raw_cost * ( im.inv_qty * bm.qty ) * ((bm.length_feet * 12) + bm.length_inch)) ELSE SUM(bm.raw_cost * ( im.inv_qty * bm.qty ) )
-	END AS lss_amount,
+			END ELSE ( m.raw_cost * im.inv_qty * bm.qty ) 
+		END AS 1_amount,
+	CASE
+			
+			WHEN m.is_per_length = 1 THEN
+			SUM( ( bm.length_feet * 12 ) + bm.length_inch ) 
+		END AS s_length,
+		( ( bm.length_feet * 12 ) + bm.length_inch ) AS 1_length,
 
 	bm.projectid,
 	bm.inventoryid,
@@ -356,15 +352,15 @@ FROM
 	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
 	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
-	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid
-	AND im.materialid = bm.materialid
+	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = b.inventoryid
+	-- im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid AND im.materialid = bm.materialid
 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
 	
 WHERE
 	bm.projectid = '{$projectid}' 
-	-- AND b.projectid = '{$projectid}' 
-	AND bm.supplierid = '{$supplierid}' 	
+	AND b.projectid = '{$projectid}' 
+	AND s.supplierid = '{$supplierid}' 	
 	
 	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
 	AND is_main_item = 1 
@@ -388,63 +384,71 @@ $sql2 = "
 SELECT
 	bm.id,
 	m.qty,
-	(bm.qty) AS grp_qty,
+	(bm.qty) AS 1_qty,
 	( im.inv_qty * bm.qty ) AS m_qty,
 	bm.length,
 	( bm.qty * im.inv_qty ) AS ls_qty,
-	SUM( bm.qty ) AS ts_qty,	
-	SUM(bm.qty) AS bms_qty,
-CASE
-	
-	WHEN m.uom = 'Inches' THEN
-	bm.raw_cost * ( im.inv_qty * bm.qty ) * ((bm.length_feet * 12) + bm.length_inch) ELSE bm.raw_cost * ( im.inv_qty * bm.qty ) 
-	END AS ls_amount,	
+	SUM( bm.qty * im.inv_qty ) AS ts_qty,	
 
-CASE	
-	WHEN m.is_per_length = 1 THEN
-CASE	
-	WHEN m.uom = 'Ea' THEN
-	SUM( im.inv_qty * b.qty ) ELSE SUM( floor( ((bm.length_feet * 12) + bm.length_inch) / m.length_per_ea_us ) ) 
-	END ELSE SUM( im.inv_qty * b.qty ) 
-	END AS ls_qty,
-CASE		
+	CASE
+		
 		WHEN m.is_per_length = 1 THEN
-	CASE			
-			WHEN m.uom = 'Ea' THEN
-			SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
-				(
-					(m.raw_cost * im.inv_qty * (((bm.length_feet * 12) + bm.length_inch)  / m.length_per_ea_us ) )* b.qty 
+	CASE
+		
+		WHEN m.uom = 'Ea' THEN
+		SUM( im.inv_qty * bm.qty ) ELSE SUM( floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) ) 
+		END ELSE SUM( im.inv_qty * bm.qty ) 
+		END AS ls_qty,
+	CASE
+			
+			WHEN m.is_per_length = 1 THEN
+		CASE
+				
+				WHEN m.uom = 'Ea' THEN
+				SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
+					(
+						m.raw_cost * im.inv_qty * (
+							floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
+								(
+									(
+										( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+									) 
+								),
+								0 
+							) 
+						) * bm.qty 
+					) 
 				) 
-			) 
-		-- END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
-		END ELSE SUM(m.raw_cost * bm.qty )
-	END AS ls_amount,
-CASE		
-		WHEN m.is_per_length = 1 THEN
-	CASE			
-			WHEN m.uom = 'Ea' THEN
-			( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
-				(
-					(m.raw_cost * im.inv_qty * (((bm.length_feet * 12) + bm.length_inch)  / m.length_per_ea_us ) )* b.qty 
+			END ELSE SUM( m.raw_cost * im.inv_qty * bm.qty ) 
+		END AS ls_amount,
+	CASE
+			
+			WHEN m.is_per_length = 1 THEN
+		CASE
+				
+				WHEN m.uom = 'Ea' THEN
+				( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
+					(
+						m.raw_cost * im.inv_qty * floor(
+							( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
+								(
+									(
+										( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+									) 
+								),
+								0 
+							) 
+						) * bm.qty 
+					) 
 				) 
-			) 
-		END ELSE ( m.raw_cost * im.inv_qty * b.qty ) 
-	END AS ls_amount_guttering,
-CASE		
-		WHEN m.is_per_length = 1 THEN
-		SUM( ((bm.length_feet * 12) + bm.length_inch) ) 
-	END AS s_length,
-CASE		
-		WHEN m.is_per_length = 1 THEN
-		((bm.length_feet * 12) + bm.length_inch)
-	END AS ms_length,	
-	( b.length ) AS length,
-
-CASE
-	
-	WHEN m.uom = 'Mtrs' THEN
-	SUM(bm.raw_cost * ( im.inv_qty * bm.qty ) * bm.length) ELSE SUM(bm.raw_cost * ( im.inv_qty * bm.qty ) ) 
-	END AS lss_amount,
+			END ELSE ( m.raw_cost * im.inv_qty * bm.qty ) 
+		END AS 1_amount,
+	CASE
+			
+			WHEN m.is_per_length = 1 THEN
+			SUM( ( bm.length_feet * 12 ) + bm.length_inch ) 
+		END AS s_length,
+		( ( bm.length_feet * 12 ) + bm.length_inch ) AS 1_length,
 
 	bm.projectid,
 	bm.inventoryid,
@@ -452,7 +456,7 @@ CASE
 	bm.raw_cost,
 	bm.qty AS bm_qty,
 	bm.supplierid,
-	-- CONCAT('SQL2','   ',m.raw_description) AS raw_description,
+	-- CONCAT('SQL1','   ',m.raw_description) AS raw_description,
 	m.raw_description,
 	m.is_per_length,
 	m.length_per_ea,
@@ -464,25 +468,29 @@ CASE
 FROM
 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
 	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
-	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid 
-	AND im.materialid = bm.materialid
+	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
+	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
+	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = b.inventoryid
+	-- im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid AND im.materialid = bm.materialid
 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
-	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
-	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
+	
 WHERE
-	bm.projectid = '{$projectid}' AND b.projectid = '{$projectid}' 
-	".($is_reorder==1?" 
-	AND bm.inventoryid = '{$inventoryid}' ":" 
-	AND inv.section = '{$section}' ")." 
-	AND bm.supplierid = '{$supplierid}' AND m.is_main_item = 0
+	bm.projectid = '{$projectid}' 
+	AND b.projectid = '{$projectid}' 
+	AND s.supplierid = '{$supplierid}' 	
+	
+	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
+	AND is_main_item = 0 
 GROUP BY
 CASE
 		
 		WHEN inv.section = 'Guttering' 
 		OR inv.section = 'Flashings' THEN
 			bm.id ELSE bm.materialid 
-		END
+		END,
+		b.length,
+		b.colour 
 	ORDER BY
 		m.cf_id ASC,
 		m.is_per_length DESC,
@@ -504,6 +512,13 @@ CASE
 				$prev_inv_id = "";
 				$m_qty = 0; $m_amount = 0; $is_1st=1; $is_2nd = 0;  
 				$m_qty_IRV59 = 0; $m_amount_IRV59 = 0; $m_qty_IRV60 = 0; $m_amount_IRV60 = 0; // Just only for link bar and pivot strip
+				//Get the ungrouped amount,qty and length if section is Guttering or Flashings
+				if ($section == "Guttering" || $section == "Flashings"){ 
+						// $m['ts_qty'] = $m['1_qty']; 
+						$m['ts_qty'] = $m['m_qty']; 
+						$m['s_length'] = $m['1_length']; 
+						$m['ls_amount'] = $m['1_amount'];
+					}	
 
 				while ($m = mysql_fetch_assoc($item_result)){ //this is just to get get the sum of the link bar and pivot strip.
 					if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
@@ -527,6 +542,7 @@ CASE
 					$totalRrp += $m['ls_amount']; 
 					
 					
+
 					if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
 						  
 						$m_qty = $m_qty_IRV59;
@@ -555,10 +571,7 @@ CASE
 					//error_log("HERE 2: ", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 					 // only 2nd of IRV59 and IRV60 will be displayed. 
 					//error_log("Double Bay VR:".$contract['framework']." section:".$section." inventoryid:".$m["inventoryid"], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
-					if ($section == "Guttering" || $section == "Flashings"){ 
-						$m['ts_qty'] = $m['1_qty']; $m['s_length'] = $m['1_length']; 
-						$m['ls_amount'] = $m['1_amount'];
-					}	
+					
 
  
 				?>  
