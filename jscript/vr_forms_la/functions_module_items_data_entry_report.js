@@ -39,7 +39,7 @@
                 ], 
                 [
                     vr_form_system_info['client_name'], vr_form_system_info['quote_id'], 
-                    vr_form_system_info['sales_rep_name'], vr_form_system_info['lodged_date']
+                    vr_form_system_info['sales_rep_name'], vr_form_system_info['quote_date']
                 ], 
                 template_vr_form_intro_info
             );

@@ -1770,88 +1770,88 @@
         }
 
 
-        function disableVrFormItemsDataEntryMode() {
+        function disableVrFormItemsDataEntryMode(decision_option) {
             var c1 = 0;
             var data_entry_input_types = ['Select Box', 'Input Box', 'Input Box Caution', 'Input Box Autofill'];
 
             for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_display_name_input_type']) != -1) {
                     if (document.getElementById('vr_item_data_entry_ref_name_' + c1)) {
-                        document.getElementById('vr_item_data_entry_ref_name_' + c1).disabled = true;
+                        document.getElementById('vr_item_data_entry_ref_name_' + c1).disabled = decision_option;
                     }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_webbing_input_type']) != -1) {
                     if (document.getElementById('vr_item_data_entry_webbing_' + c1)) {
-                        document.getElementById('vr_item_data_entry_webbing_' + c1).disabled = true;
+                        document.getElementById('vr_item_data_entry_webbing_' + c1).disabled = decision_option;
                     }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_colour_input_type']) != -1) {
                     if (document.getElementById('vr_item_data_entry_colour_' + c1)) {
-                        document.getElementById('vr_item_data_entry_colour_' + c1).disabled = true;
+                        document.getElementById('vr_item_data_entry_colour_' + c1).disabled = decision_option;
                     }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_finish_input_type']) != -1) {
                     if (document.getElementById('vr_item_data_entry_finish_' + c1)) {
-                        document.getElementById('vr_item_data_entry_finish_' + c1).disabled = true;
+                        document.getElementById('vr_item_data_entry_finish_' + c1).disabled = decision_option;
                     }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_qty_input_type']) != -1) {
                     if (document.getElementById('vr_item_data_entry_qty_' + c1)) {
-                        document.getElementById('vr_item_data_entry_qty_' + c1).disabled = true;
+                        document.getElementById('vr_item_data_entry_qty_' + c1).disabled = decision_option;
                     }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_length_feet_input_type']) != -1) {
                     if (document.getElementById('vr_item_data_entry_length_feet_' + c1)) {
-                        document.getElementById('vr_item_data_entry_length_feet_' + c1).disabled = true;
+                        document.getElementById('vr_item_data_entry_length_feet_' + c1).disabled = decision_option;
                     }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_length_inch_input_type']) != -1) {
                     if (document.getElementById('vr_item_data_entry_length_inch_' + c1)) {
-                        document.getElementById('vr_item_data_entry_length_inch_' + c1).disabled = true;
+                        document.getElementById('vr_item_data_entry_length_inch_' + c1).disabled = decision_option;
                     }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_length_fraction_input_type']) != -1) {
                     if (document.getElementById('vr_item_data_entry_length_fraction_' + c1)) {
-                        document.getElementById('vr_item_data_entry_length_fraction_' + c1).disabled = true;
+                        document.getElementById('vr_item_data_entry_length_fraction_' + c1).disabled = decision_option;
                     }
                 }
 
                 if (data_entry_input_types.indexOf(vr_form_items_data_entry[c1]['vr_item_rrp_input_type']) != -1) {
                     if (document.getElementById('vr_item_data_entry_rrp_' + c1)) {
-                        document.getElementById('vr_item_data_entry_rrp_' + c1).disabled = true;
+                        document.getElementById('vr_item_data_entry_rrp_' + c1).disabled = decision_option;
                     }
                 }
             }
 
 
-            document.getElementById('vr_framework_type_form_query').disabled = true;
-            document.getElementById('vr_type_form_query').disabled = true;
-            document.getElementById('vr_project_name_form_query').disabled = true;
-            document.getElementById('vr_default_colour_form_query').disabled = true;
+            document.getElementById('vr_framework_type_form_query').disabled = decision_option;
+            document.getElementById('vr_type_form_query').disabled = decision_option;
+            document.getElementById('vr_project_name_form_query').disabled = decision_option;
+            document.getElementById('vr_default_colour_form_query').disabled = decision_option;
 
             if (document.getElementById('vr_type_form_query').value == 'VR8' || 
                 document.getElementById('vr_type_form_query').value == 'VR9') {
-                document.getElementById('vr_run_feet_form_query').disabled = true;
-                document.getElementById('vr_run_inch_form_query').disabled = true;
-                document.getElementById('vr_rise_feet_form_query').disabled = true;
-                document.getElementById('vr_rise_inch_form_query').disabled = true;
+                document.getElementById('vr_run_feet_form_query').disabled = decision_option;
+                document.getElementById('vr_run_inch_form_query').disabled = decision_option;
+                document.getElementById('vr_rise_feet_form_query').disabled = decision_option;
+                document.getElementById('vr_rise_inch_form_query').disabled = decision_option;
             }
 
             var c1 = 0;
             var vr_type_info = getVrTypeInfo();
             for (c1 = 0; c1 < parseInt(vr_type_info['number_of_bay']); c1++) {
-                document.getElementById('vr_length_feet_form_query_' + c1).disabled = true;
-                document.getElementById('vr_length_inch_form_query_' + c1).disabled = true;
+                document.getElementById('vr_length_feet_form_query_' + c1).disabled = decision_option;
+                document.getElementById('vr_length_inch_form_query_' + c1).disabled = decision_option;
             }
-            document.getElementById('vr_width_feet_form_query').disabled = true;
-            document.getElementById('vr_width_inch_form_query').disabled = true;
+            document.getElementById('vr_width_feet_form_query').disabled = decision_option;
+            document.getElementById('vr_width_inch_form_query').disabled = decision_option;
 
 
             var billing_info_fields = [
@@ -1871,7 +1871,7 @@
                 'vr_commission_installer_payment'
             ];
             for (c1 = 0; c1 < billing_info_fields.length; c1++) {
-                document.getElementById(billing_info_fields[c1] + '_form_billing').disabled = true;
+                document.getElementById(billing_info_fields[c1] + '_form_billing').disabled = decision_option;
             }
         }
 

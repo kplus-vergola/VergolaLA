@@ -169,7 +169,7 @@
                 document.getElementById('contract_id_form_bom').innerHTML = vr_form_system_info['project_id'];
 
                 if (vr_form_system_info['access_mode'] == 'quote_view') {
-                    disableVrFormItemsDataEntryMode();
+                    disableVrFormItemsDataEntryMode(true);
                 }
             } else {
                 console.log('processRetrieveResult > results:');
@@ -247,6 +247,20 @@
         }
 
 
+        function processSaveResult3(results) {
+            if (results['error'] == 'null') {
+                window.location = vr_form_url_info['download_pdf'] + '&uc=' + vr_form_url_info['unique_code'];
+            } else {
+                console.log('processSaveResult3 > results:');
+                console.log(results);
+            }
+
+            if (vr_form_system_info['access_mode'] == 'quote_view') {
+                disableVrFormItemsDataEntryMode(true);
+            }
+        }
+
+
         function saveVrFormData(save_option) {
             setMandatoryNumericFields();
             copyVrFormItemsDataEntryFormValue();
@@ -281,8 +295,14 @@
                 vr_form_queries_info['vr_project_name'] = 'Duplicate: ' + vr_form_queries_info['vr_project_name'];
             }
 
+            if (save_option == 'download_pdf') {
+                request_data['vr_form_operation'] = 'update';
+            }
+
             if (save_option == 'save_and_exit' || save_option == 'duplicate') {
                 requestAjaxCall(url, request_data, 'processSaveResult1');
+            } else if (save_option == 'download_pdf') {
+                requestAjaxCall(url, request_data, 'processSaveResult3');
             } else {
                 requestAjaxCall(url, request_data, 'processSaveResult2');
             }
@@ -300,7 +320,7 @@
 
 
         function downloadVrFormData() {
-            window.location = vr_form_url_info['download_pdf'] + '&uc=' + vr_form_url_info['unique_code'];
+            saveVrFormData('download_pdf');
         }
 
 
