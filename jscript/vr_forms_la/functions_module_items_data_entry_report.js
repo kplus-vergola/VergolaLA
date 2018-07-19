@@ -500,7 +500,7 @@
                         font-size: 9pt;
                         font-family: Arial, Helvetica, sans-serif;
                     }
-                    .vr_form_field_qty_1 {
+                    .vr_form_field_qty_2 {
                         width: 40px;
                         vertical-align: top;
                         padding: 4px;
@@ -508,7 +508,7 @@
                         font-size: 9pt;
                         font-family: Arial, Helvetica, sans-serif;
                     }
-                    .vr_form_field_length_1 {
+                    .vr_form_field_length_2 {
                         width: 50px;
                         vertical-align: top;
                         padding: 4px;
@@ -516,7 +516,7 @@
                         font-size: 9pt;
                         font-family: Arial, Helvetica, sans-serif;
                     }
-                    .vr_form_field_rrp_1 {
+                    .vr_form_field_rrp_2 {
                         width: 50px;
                         vertical-align: top;
                         padding: 4px;
@@ -526,12 +526,26 @@
                     }
                 </style>
             `;
+            var report_text = generateVrFormItemsDataEntry('report');
+            var temp_text = '';
+            var replace_text_list = [
+                {"search_text":"vr_form_field_qty_1", "replace_text":"vr_form_field_qty_2"}, 
+                {"search_text":"vr_form_field_length_1", "replace_text":"vr_form_field_length_2"}, 
+                {"search_text":"vr_form_field_rrp_1", "replace_text":"vr_form_field_rrp_2"}, 
+            ];
+            var c1 = 0;
+            for (c1 = 0; c1 < replace_text_list.length; c1++) {
+                while (report_text.indexOf(replace_text_list[c1]['search_text']) != -1) {
+                    temp_text = report_text.replace(replace_text_list[c1]['search_text'], replace_text_list[c1]['replace_text']);
+                    report_text = temp_text;
+                }
+            }
 
             template_vr_form_all_info += report_css_1;
             template_vr_form_all_info += '<div style="font-family:Arial, Helvetica, sans-serif; width:700px;  font-size: 10pt;">';
             template_vr_form_all_info += getReportFromVrFormIntroInfo();
             template_vr_form_all_info += getReportFromVrFormQueriesInfo();
-            template_vr_form_all_info += generateVrFormItemsDataEntry('report');
+            template_vr_form_all_info += report_text;
             template_vr_form_all_info += getReportFromVrFormBillingInfo();
             template_vr_form_all_info += '</div>';
 
