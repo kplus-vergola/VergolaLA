@@ -210,7 +210,9 @@
 
         function calculateTotalGutterLining() {
             var adhoc_criteria1 = {};
-            var vr_form_item_info = [];
+            var vr_form_item_info1 = [];
+            var adhoc_criteria2 = {};
+            var vr_form_item_info2 = [];
             var c1 = 0;
             var current_vr_length_in_string = '';
             var current_vr_length_in_value_for_calculation = 0.0;
@@ -234,25 +236,49 @@
                    {"field_name": "vr_item_rrp"}
                 ]
             };
-            vr_form_item_info = getVrFormItemInfoByAdhocCriteria(vr_form_items_data_entry, adhoc_criteria1);
+            vr_form_item_info1 = getVrFormItemInfoByAdhocCriteria(vr_form_items_data_entry, adhoc_criteria1);
 
-            for (c1 = 0; c1 < vr_form_item_info.length; c1++) {
-                current_vr_length_in_string = vr_form_item_info[c1]['vr_item_length_feet'] + '\'' + vr_form_item_info[c1]['vr_item_length_inch'];
+            for (c1 = 0; c1 < vr_form_item_info1.length; c1++) {
+                current_vr_length_in_string = vr_form_item_info1[c1]['vr_item_length_feet'] + '\'' + vr_form_item_info1[c1]['vr_item_length_inch'];
                 current_vr_length_in_value_for_calculation = convertValueForCalculation(current_vr_length_in_string);
-                total_vr_length_in_value_for_calculation += parseFloat(vr_form_item_info[c1]['vr_item_qty']) * current_vr_length_in_value_for_calculation;
+                total_vr_length_in_value_for_calculation += parseFloat(vr_form_item_info1[c1]['vr_item_qty']) * current_vr_length_in_value_for_calculation;
             }
             total_vr_length_in_value_for_display = revertValueForCalculation(total_vr_length_in_value_for_calculation);
             temp_array = total_vr_length_in_value_for_display.split('\'');
             total_gutter_lining_length_feet = temp_array[0];
             total_gutter_lining_length_inch = temp_array[1];
 
-            setVrFormItemDataEntryRowValuesByInternalRefName(
-                'gutter_lining', 
-                [
-                    {"form_item_name":"vr_item_data_entry_length_feet", "variable_name":"vr_item_length_feet", "col_value":total_gutter_lining_length_feet}, 
-                    {"form_item_name":"vr_item_data_entry_length_inch", "variable_name":"vr_item_length_inch", "col_value":total_gutter_lining_length_inch}
+            // setVrFormItemDataEntryRowValuesByInternalRefName(
+            //     'gutter_lining', 
+            //     [
+            //         {"form_item_name":"vr_item_data_entry_length_feet", "variable_name":"vr_item_length_feet", "col_value":total_gutter_lining_length_feet}, 
+            //         {"form_item_name":"vr_item_data_entry_length_inch", "variable_name":"vr_item_length_inch", "col_value":total_gutter_lining_length_inch}
+            //     ]
+            // );
+
+            adhoc_criteria2 = {
+                "search_info": [
+                   {"field_name": "vr_item_ref_name", "field_value": "IRV31"}
+                ], 
+                "search_ignore_info": [
+                ], 
+                "retrieve_info": [
+                   {"field_name": "vr_item_qty"}, 
+                   {"field_name": "vr_item_length_feet"}, 
+                   {"field_name": "vr_item_length_inch"}, 
+                   {"field_name": "vr_item_rrp"}
                 ]
-            );
+            };
+            vr_form_item_info2 = getVrFormItemInfoByAdhocCriteria(vr_form_items_data_entry, adhoc_criteria2);
+            if (vr_form_item_info2.length > 0) {
+                setVrFormItemDataEntryRowValuesByRowIndex(
+                    vr_form_item_info2[0]['row_index'], 
+                    [
+                        {"form_item_name":"vr_item_data_entry_length_feet", "variable_name":"vr_item_length_feet", "col_value":total_gutter_lining_length_feet}, 
+                        {"form_item_name":"vr_item_data_entry_length_inch", "variable_name":"vr_item_length_inch", "col_value":total_gutter_lining_length_inch}
+                    ]
+                );
+            }
         }
 
 
