@@ -238,8 +238,8 @@ if (isset($_REQUEST['api_mode'])) {
 
 
     $vr_form_system_info['payment_deposit_percentage'] = 0.1;
-    $vr_form_system_info['payment_deposit_minimum'] = 1000;
-    $vr_form_system_info['payment_deposit_calculation_method'] = 'minimum'; //percentage
+    $vr_form_system_info['payment_deposit_minimum'] = 0;
+    $vr_form_system_info['payment_deposit_maximum'] = 1000;
     $vr_form_system_info['payment_progress_payment_percentage'] = 0.65;
     $vr_form_system_info['commission_pay1_percentage'] = 0.4;
     $vr_form_system_info['commission_pay2_percentage'] = 0.3;

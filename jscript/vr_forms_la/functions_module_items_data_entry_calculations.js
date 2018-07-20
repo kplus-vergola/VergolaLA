@@ -401,8 +401,8 @@
             if (total_payment_deposit < vr_form_system_info['payment_deposit_minimum']) {
                 total_payment_deposit = vr_form_system_info['payment_deposit_minimum'];
             }
-            if (vr_form_system_info['payment_deposit_calculation_method'] == 'minimum') {
-                total_payment_deposit = vr_form_system_info['payment_deposit_minimum'];
+            if (total_payment_deposit > vr_form_system_info['payment_deposit_maximum']) {
+                total_payment_deposit = vr_form_system_info['payment_deposit_maximum'];
             }
 
             total_payment_progress_payment = total_payment_total * vr_form_system_info['payment_progress_payment_percentage'];

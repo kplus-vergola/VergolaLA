@@ -57,11 +57,11 @@
             var template_vr_form_queries_info = '' + 
                 '<table width="100%" border="0">' + 
                 '    <tr>' + 
+                '        <td class="text_field_title_name_21"><b>Project Name</b></td>' + 
+                '        <td class="text_field_separator_21">[BLANK_SPACE]</td>' + 
                 '        <td class="text_field_title_name_21"><b>Framework Type</b></td>' + 
                 '        <td class="text_field_separator_21">[BLANK_SPACE]</td>' + 
                 '        <td class="text_field_title_name_21"><b>VR Type</b></td>' + 
-                '        <td class="text_field_separator_21">[BLANK_SPACE]</td>' + 
-                '        <td class="text_field_title_name_21"><b>Project Name</b></td>' + 
                 '        <td class="text_field_separator_21">[BLANK_SPACE]</td>' + 
                 '        [VR_RUN_FORM_QUERY_HEADER_AREA]' + 
                 '        [VR_RISE_FORM_QUERY_HEADER_AREA]' + 
@@ -69,11 +69,11 @@
                 '        [VR_WIDTH_FORM_QUERY_HEADER_AREA]' + 
                 '    </tr>' + 
                 '    <tr>' + 
+                '        <td class="text_field_value_21">[VR_PROJECT_NAME_FORM_QUERY_AREA]</td>' + 
+                '        <td class="text_field_separator_21">[BLANK_SPACE]</td>' + 
                 '        <td class="text_field_value_21">[VR_FRAMEWORK_TYPE_FORM_QUERY_AREA]</td>' + 
                 '        <td class="text_field_separator_21">[BLANK_SPACE]</td>' + 
                 '        <td class="text_field_value_21">[VR_TYPE_FORM_QUERY_AREA]</td>' + 
-                '        <td class="text_field_separator_21">[BLANK_SPACE]</td>' + 
-                '        <td class="text_field_value_21">[VR_PROJECT_NAME_FORM_QUERY_AREA]</td>' + 
                 '        <td class="text_field_separator_21">[BLANK_SPACE]</td>' + 
                 '        [VR_RUN_FORM_QUERY_BODY_AREA]' + 
                 '        [VR_RISE_FORM_QUERY_BODY_AREA]' + 
@@ -117,7 +117,8 @@
                 vr_length_form_query_header_area += temp_text;
             }
             vr_width_form_query_header_area = template_vr_width_form_query_header;
-            if (document.getElementById('vr_type_form_query').value == 'null') {
+            if (document.getElementById('vr_type_form_query').value == 'null' || 
+                document.getElementById('vr_type_form_query').value == 'VR0') {
                 vr_width_form_query_header_area = '';
             }
 
@@ -167,7 +168,8 @@
                 );
                 vr_width_form_query_body_area = temp_text;
             }
-            if (document.getElementById('vr_type_form_query').value == 'null') {
+            if (document.getElementById('vr_type_form_query').value == 'null' || 
+                document.getElementById('vr_type_form_query').value == 'VR0') {
                 vr_width_form_query_body_area = '';
             }
 
@@ -460,16 +462,16 @@
                         font-family: Arial, Helvetica, sans-serif;
                         font-weight: bold;
                     }
-                    .vr_form_field_description_1 {
-                        width: 210px;
+                    .vr_form_field_description_2 {
+                        width: 200px;
                         vertical-align: top;
                         padding: 4px;
                         text-align: left;
                         font-size: 9pt;
                         font-family: Arial, Helvetica, sans-serif;
                     }
-                    .vr_form_field_webbing_1 {
-                        width: 70px;
+                    .vr_form_field_webbing_2 {
+                        width: 60px;
                         vertical-align: top;
                         padding: 4px;
                         text-align: left;
@@ -492,8 +494,8 @@
                         font-size: 9pt;
                         font-family: Arial, Helvetica, sans-serif;
                     }
-                    .vr_form_field_uom_1 {
-                        width: 50px;
+                    .vr_form_field_uom_2 {
+                        width: 40px;
                         vertical-align: top;
                         padding: 4px;
                         text-align: left;
@@ -501,7 +503,7 @@
                         font-family: Arial, Helvetica, sans-serif;
                     }
                     .vr_form_field_qty_2 {
-                        width: 40px;
+                        width: 50px;
                         vertical-align: top;
                         padding: 4px;
                         text-align: right;
@@ -509,7 +511,7 @@
                         font-family: Arial, Helvetica, sans-serif;
                     }
                     .vr_form_field_length_2 {
-                        width: 50px;
+                        width: 75px;
                         vertical-align: top;
                         padding: 4px;
                         text-align: right;
@@ -517,7 +519,7 @@
                         font-family: Arial, Helvetica, sans-serif;
                     }
                     .vr_form_field_rrp_2 {
-                        width: 50px;
+                        width: 65px;
                         vertical-align: top;
                         padding: 4px;
                         text-align: right;
@@ -529,9 +531,13 @@
             var report_text = generateVrFormItemsDataEntry('report');
             var temp_text = '';
             var replace_text_list = [
+                {"search_text":"vr_form_field_description_1", "replace_text":"vr_form_field_description_2"}, 
+                {"search_text":"vr_form_field_webbing_1", "replace_text":"vr_form_field_webbing_2"}, 
+                {"search_text":"vr_form_field_uom_1", "replace_text":"vr_form_field_uom_2"}, 
                 {"search_text":"vr_form_field_qty_1", "replace_text":"vr_form_field_qty_2"}, 
                 {"search_text":"vr_form_field_length_1", "replace_text":"vr_form_field_length_2"}, 
                 {"search_text":"vr_form_field_rrp_1", "replace_text":"vr_form_field_rrp_2"}, 
+                {"search_text":"null", "replace_text":""}
             ];
             var c1 = 0;
             for (c1 = 0; c1 < replace_text_list.length; c1++) {
