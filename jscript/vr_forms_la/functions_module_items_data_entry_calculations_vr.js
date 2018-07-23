@@ -247,6 +247,8 @@
             temp_array = total_vr_length_in_value_for_display.split('\'');
             total_gutter_lining_length_feet = temp_array[0];
             total_gutter_lining_length_inch = temp_array[1];
+            total_gutter_lining_length_feet = formatOutputValue('float', total_gutter_lining_length_feet);
+            total_gutter_lining_length_inch = formatOutputValue('float', total_gutter_lining_length_inch);
 
             // setVrFormItemDataEntryRowValuesByInternalRefName(
             //     'gutter_lining', 

@@ -499,6 +499,20 @@
                 }
                 total_calculation_process_done++;
             }
+            if (vr_form_system_info['access_mode'] == 'contract_bom_edit') {
+                if (total_calculation_process_done > 0) {
+                    switch (process_option) {
+                        case 2:
+                            setMandatoryNumericFields();
+                            copyVrFormItemsDataEntryFormValue();
+                            extractVrFormItemDataEntryPropertiesName();
+                            calculateTotalGutterLining();
+                            calculateLouvreRelatedInfo();
+                            break;
+                    }
+                }
+                total_calculation_process_done++;
+            }
         }
 
 
