@@ -1849,12 +1849,19 @@
             var c1 = 0;
             var vr_type_info = getVrTypeInfo();
             for (c1 = 0; c1 < parseInt(vr_type_info['number_of_bay']); c1++) {
-                document.getElementById('vr_length_feet_form_query_' + c1).disabled = decision_option;
-                document.getElementById('vr_length_inch_form_query_' + c1).disabled = decision_option;
+                if (document.getElementById('vr_length_feet_form_query_' + c1)) {
+                    document.getElementById('vr_length_feet_form_query_' + c1).disabled = decision_option;
+                }
+                if (document.getElementById('vr_length_inch_form_query_' + c1)) {
+                    document.getElementById('vr_length_inch_form_query_' + c1).disabled = decision_option;
+                }
             }
-            document.getElementById('vr_width_feet_form_query').disabled = decision_option;
-            document.getElementById('vr_width_inch_form_query').disabled = decision_option;
-
+            if (document.getElementById('vr_width_feet_form_query')) {
+                document.getElementById('vr_width_feet_form_query').disabled = decision_option;
+            }
+            if (document.getElementById('vr_width_inch_form_query')) {
+                document.getElementById('vr_width_inch_form_query').disabled = decision_option;
+            }
 
             var billing_info_fields = [
                 'vr_payment_vergola', 
