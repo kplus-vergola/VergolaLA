@@ -329,6 +329,7 @@
                 vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['vr_record_index'] = results['data']['last_insert_id_data_contract_items'];
                 vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['bom_form_item_dimensions_info']['item_dimension_record_index'] = results['data']['last_insert_id_data_contract_items_deminsions'];
                 hideBomFormItemDimensionPopup();
+                saveBomFormContractItemData(1);
             } else {
                 console.log('processSaveResultBomFormItemDimensionData > results:');
                 console.log(results);
