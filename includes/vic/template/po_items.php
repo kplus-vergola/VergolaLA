@@ -270,7 +270,7 @@ SELECT
 	( im.inv_qty * bm.qty ) AS m_qty,
 	bm.length,
 	( bm.qty * im.inv_qty ) AS ls_qty,
-	SUM( bm.qty * im.inv_qty ) AS ts_qty,	
+	SUM( b.qty * im.inv_qty ) AS ts_qty,	
 
 	CASE
 		
@@ -287,21 +287,21 @@ SELECT
 		CASE
 				
 				WHEN m.uom = 'Ea' THEN
-				SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
+				SUM( m.raw_cost * im.inv_qty * b.qty ) ELSE SUM(
 					(
 						m.raw_cost * im.inv_qty * (
-							floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
+							floor( ( ( b.length_feet * 12 ) + b.length_inch ) / m.length_per_ea_us ) + COALESCE (
 								(
 									(
-										( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+										( RIGHT ( SUBSTRING_INDEX( b.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( b.length_fraction, '/',- 1 ), 1 ) + 0 ) 
 									) 
 								),
 								0 
 							) 
-						) * bm.qty 
+						) * b.qty 
 					) 
 				) 
-			END ELSE SUM( m.raw_cost * im.inv_qty * bm.qty ) 
+			END ELSE SUM( m.raw_cost * im.inv_qty * b.qty ) 
 		END AS ls_amount,
 	CASE
 			
@@ -364,6 +364,7 @@ WHERE
 	
 	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
 	AND is_main_item = 1 
+	
 GROUP BY
 CASE
 		
@@ -388,7 +389,7 @@ SELECT
 	( im.inv_qty * bm.qty ) AS m_qty,
 	bm.length,
 	( bm.qty * im.inv_qty ) AS ls_qty,
-	SUM( bm.qty * im.inv_qty ) AS ts_qty,	
+	SUM( b.qty * im.inv_qty ) AS ts_qty,	
 
 	CASE
 		
@@ -405,21 +406,21 @@ SELECT
 		CASE
 				
 				WHEN m.uom = 'Ea' THEN
-				SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
+				SUM( m.raw_cost * im.inv_qty * b.qty ) ELSE SUM(
 					(
 						m.raw_cost * im.inv_qty * (
-							floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
+							floor( ( ( b.length_feet * 12 ) + b.length_inch ) / m.length_per_ea_us ) + COALESCE (
 								(
 									(
-										( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+										( RIGHT ( SUBSTRING_INDEX( b.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( b.length_fraction, '/',- 1 ), 1 ) + 0 ) 
 									) 
 								),
 								0 
 							) 
-						) * bm.qty 
+						) * b.qty 
 					) 
 				) 
-			END ELSE SUM( m.raw_cost * im.inv_qty * bm.qty ) 
+			END ELSE SUM( m.raw_cost * im.inv_qty * b.qty ) 
 		END AS ls_amount,
 	CASE
 			
@@ -482,6 +483,7 @@ WHERE
 	
 	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
 	AND is_main_item = 0 
+	
 GROUP BY
 CASE
 		
