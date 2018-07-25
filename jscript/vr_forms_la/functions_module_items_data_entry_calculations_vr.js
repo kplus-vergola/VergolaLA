@@ -258,28 +258,30 @@
             //     ]
             // );
 
-            adhoc_criteria2 = {
-                "search_info": [
-                   {"field_name": "vr_item_ref_name", "field_value": "IRV31"}
-                ], 
-                "search_ignore_info": [
-                ], 
-                "retrieve_info": [
-                   {"field_name": "vr_item_qty"}, 
-                   {"field_name": "vr_item_length_feet"}, 
-                   {"field_name": "vr_item_length_inch"}, 
-                   {"field_name": "vr_item_rrp"}
-                ]
-            };
-            vr_form_item_info2 = getVrFormItemInfoByAdhocCriteria(vr_form_items_data_entry, adhoc_criteria2);
-            if (vr_form_item_info2.length > 0) {
-                setVrFormItemDataEntryRowValuesByRowIndex(
-                    vr_form_item_info2[0]['row_index'], 
-                    [
-                        {"form_item_name":"vr_item_data_entry_length_feet", "variable_name":"vr_item_length_feet", "col_value":total_gutter_lining_length_feet}, 
-                        {"form_item_name":"vr_item_data_entry_length_inch", "variable_name":"vr_item_length_inch", "col_value":total_gutter_lining_length_inch}
+            if (vr_form_system_info['access_mode'] != 'contract_bom_edit') {
+                adhoc_criteria2 = {
+                    "search_info": [
+                       {"field_name": "vr_item_ref_name", "field_value": "IRV31"}
+                    ], 
+                    "search_ignore_info": [
+                    ], 
+                    "retrieve_info": [
+                       {"field_name": "vr_item_qty"}, 
+                       {"field_name": "vr_item_length_feet"}, 
+                       {"field_name": "vr_item_length_inch"}, 
+                       {"field_name": "vr_item_rrp"}
                     ]
-                );
+                };
+                vr_form_item_info2 = getVrFormItemInfoByAdhocCriteria(vr_form_items_data_entry, adhoc_criteria2);
+                if (vr_form_item_info2.length > 0) {
+                    setVrFormItemDataEntryRowValuesByRowIndex(
+                        vr_form_item_info2[0]['row_index'], 
+                        [
+                            {"form_item_name":"vr_item_data_entry_length_feet", "variable_name":"vr_item_length_feet", "col_value":total_gutter_lining_length_feet}, 
+                            {"form_item_name":"vr_item_data_entry_length_inch", "variable_name":"vr_item_length_inch", "col_value":total_gutter_lining_length_inch}
+                        ]
+                    );
+                }
             }
         }
 
