@@ -369,7 +369,7 @@ if(isset($_POST['contract'])){
 	// Get Date Quote 
 	//error_log("appointmentdate: ".$appointmentdate, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 
-	if ($appointmentdate != "") {
+	if ($appointmentdate != "" && $appointmentdate != '0000-00-00 00:00:00') {
 		echo "<tr><td><span class=\"ffinfo\"><label>Appointment Date</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($appointmentdate))."\" name=\"appointmentdate\" class=\"date_entered\" readonly=\"readonly\" /></span>";
 	}else{
 		echo "<tr><td><span class=\"ffinfo\"><label>Appointment Date</label><input type=\"text\" value=\"\" name=\"appointmentdate\" class=\"date_entered\" readonly=\"readonly\" /></span>";
