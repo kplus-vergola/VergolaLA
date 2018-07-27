@@ -599,6 +599,7 @@ var DatePicker = new Class({
 	
 	close: function(e, force) {
 		if (!$(this.picker)) return;
+		if (this.picker === null) return;
 		var clickOutside = ($chk(e) && e.target != this.picker && !this.picker.hasChild(e.target) && e.target != this.visual);
 		if (force || clickOutside) {
 			if (this.options.useFadeInOut) {

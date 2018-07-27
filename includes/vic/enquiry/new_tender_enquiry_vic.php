@@ -415,8 +415,426 @@ $('#ibtn').click(function(){
 });//]]>
 </script>
 
+
 <script src="<?php echo JURI::base().'jscript/jquery-ui.min.js'; ?>" type="text/javascript"></script>
+
+
+<style>
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 20px;
+        background-color: #ffffff;
+        border: 1px solid #999999;
+    }
+</style>
 <script type="text/javascript">
+    $(document).ready(function() {
+        var site_config = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/suburb_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {
+                $("#ssuburb").val(ui.item.suburb);
+                $("#ssuburbstate").val(ui.item.suburb_state);
+                $("#ssuburbpostcode").val(ui.item.suburb_postcode);
+                $("#ssuburb_id").val(ui.item.cf_id);
+            },
+            minLength:2
+        };
+        $("#ssuburb").autocomplete(site_config);
+
+        $("#ssuburbstate").keypress(function() {
+            $("#notification").html("Please choose a suburb in the autocomplete box.");
+            //$("#notification").appendTo("."+dataClass+" .notification-area");
+            $("#notification").removeClass('hide');
+            $("#notification").show();
+            setTimeout(
+                function() {
+                    $( "#notification" ).hide( "slow" );
+                }, 
+                7000
+            );
+            $("#ssuburb").css({"border-color": "red"});
+            $("#ssuburb").on("change", function() {
+                $(this).css({"border-color": "#97989a"});
+            });
+            $("#ssuburb").text("");
+            $("#ssuburb").focus();
+        });
+
+
+
+
+
+        var builder_config = [];
+
+        builder_config[0] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/suburb_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {
+                $("#bsuburb1").val(ui.item.suburb);
+                $("#bsuburbstate1").val(ui.item.suburb_state);
+                $("#bsuburbpostcode1").val(ui.item.suburb_postcode);
+                $("#bsuburb_id1").val(ui.item.cf_id);
+            },
+            minLength:2
+        };
+        $("#bsuburb1").autocomplete(builder_config[0]);
+
+        builder_config[1] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/suburb_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {
+                $("#bsuburb2").val(ui.item.suburb);
+                $("#bsuburbstate2").val(ui.item.suburb_state);
+                $("#bsuburbpostcode2").val(ui.item.suburb_postcode);
+                $("#bsuburb_id2").val(ui.item.cf_id);
+            },
+            minLength:2
+        };
+        $("#bsuburb2").autocomplete(builder_config[1]);
+
+        builder_config[2] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/suburb_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {
+                $("#bsuburb3").val(ui.item.suburb);
+                $("#bsuburbstate3").val(ui.item.suburb_state);
+                $("#bsuburbpostcode3").val(ui.item.suburb_postcode);
+                $("#bsuburb_id3").val(ui.item.cf_id);
+            },
+            minLength:2
+        };
+        $("#bsuburb3").autocomplete(builder_config[2]);
+
+        builder_config[3] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/suburb_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {
+                $("#bsuburb4").val(ui.item.suburb);
+                $("#bsuburbstate4").val(ui.item.suburb_state);
+                $("#bsuburbpostcode4").val(ui.item.suburb_postcode);
+                $("#bsuburb_id4").val(ui.item.cf_id);
+            },
+            minLength:2
+        };
+        $("#bsuburb4").autocomplete(builder_config[3]);
+
+        builder_config[4] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/suburb_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {
+                $("#bsuburb5").val(ui.item.suburb);
+                $("#bsuburbstate5").val(ui.item.suburb_state);
+                $("#bsuburbpostcode5").val(ui.item.suburb_postcode);
+                $("#bsuburb_id5").val(ui.item.cf_id);
+            },
+            minLength:2
+        };
+        $("#bsuburb5").autocomplete(builder_config[4]);
+
+        builder_config[5] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/suburb_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {
+                $("#bsuburb6").val(ui.item.suburb);
+                $("#bsuburbstate6").val(ui.item.suburb_state);
+                $("#bsuburbpostcode6").val(ui.item.suburb_postcode);
+                $("#bsuburb_id6").val(ui.item.cf_id);
+            },
+            minLength:2
+        };
+        $("#bsuburb6").autocomplete(builder_config[5]);
+
+
+
+
+
+        var buildername_config = [];
+
+        buildername_config[0] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/builder_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {    
+                $("#build_name1").val(ui.item.builder_name);
+                $("#build_contact1").val(ui.item.builder_contact);
+                $("#baddress_11").val(ui.item.builder_address1);
+                $("#baddress_21").val(ui.item.builder_address2);
+                $("#bsuburb1").val(ui.item.builder_suburb);
+                $("#bsuburbstate1").val(ui.item.builder_state);
+                $("#bsuburbpostcode1").val(ui.item.builder_postcode);
+                $("#b_wphone1").val(ui.item.builder_wkphone);
+                $("#b_mobile1").val(ui.item.builder_mobile);
+                $("#b_fax1").val(ui.item.builder_fax);
+                $("#b_email1").val(ui.item.builder_email);
+                $("#builder_id1").val(ui.item.cf_id);
+                $("#buildersuburbid1").val(ui.item.builder_suburbid);
+            },
+            minLength:2
+        };
+        $("#build_name1").autocomplete(buildername_config[0]);
+
+        buildername_config[1] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/builder_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {    
+                $("#build_name2").val(ui.item.builder_name);
+                $("#build_contact2").val(ui.item.builder_contact);
+                $("#baddress_12").val(ui.item.builder_address1);
+                $("#baddress_22").val(ui.item.builder_address2);
+                $("#bsuburb2").val(ui.item.builder_suburb);
+                $("#bsuburbstate2").val(ui.item.builder_state);
+                $("#bsuburbpostcode2").val(ui.item.builder_postcode);
+                $("#b_wphone2").val(ui.item.builder_wkphone);
+                $("#b_mobile2").val(ui.item.builder_mobile);
+                $("#b_fax2").val(ui.item.builder_fax);
+                $("#b_email2").val(ui.item.builder_email);
+                $("#builder_id2").val(ui.item.cf_id);
+                $("#buildersuburbid2").val(ui.item.builder_suburbid);
+            },
+            minLength:2
+        };
+        $("#build_name2").autocomplete(buildername_config[1]);
+
+        buildername_config[2] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/builder_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {    
+                $("#build_name3").val(ui.item.builder_name);
+                $("#build_contact3").val(ui.item.builder_contact);
+                $("#baddress_13").val(ui.item.builder_address1);
+                $("#baddress_23").val(ui.item.builder_address2);
+                $("#bsuburb3").val(ui.item.builder_suburb);
+                $("#bsuburbstate3").val(ui.item.builder_state);
+                $("#bsuburbpostcode3").val(ui.item.builder_postcode);
+                $("#b_wphone3").val(ui.item.builder_wkphone);
+                $("#b_mobile3").val(ui.item.builder_mobile);
+                $("#b_fax3").val(ui.item.builder_fax);
+                $("#b_email3").val(ui.item.builder_email);
+                $("#builder_id3").val(ui.item.cf_id);
+                $("#buildersuburbid3").val(ui.item.builder_suburbid);
+            },
+            minLength:2
+        };
+        $("#build_name3").autocomplete(buildername_config[2]);
+
+        buildername_config[3] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/builder_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {    
+                $("#build_name4").val(ui.item.builder_name);
+                $("#build_contact4").val(ui.item.builder_contact);
+                $("#baddress_14").val(ui.item.builder_address1);
+                $("#baddress_24").val(ui.item.builder_address2);
+                $("#bsuburb4").val(ui.item.builder_suburb);
+                $("#bsuburbstate4").val(ui.item.builder_state);
+                $("#bsuburbpostcode4").val(ui.item.builder_postcode);
+                $("#b_wphone4").val(ui.item.builder_wkphone);
+                $("#b_mobile4").val(ui.item.builder_mobile);
+                $("#b_fax4").val(ui.item.builder_fax);
+                $("#b_email4").val(ui.item.builder_email);
+                $("#builder_id4").val(ui.item.cf_id);
+                $("#buildersuburbid4").val(ui.item.builder_suburbid);
+            },
+            minLength:2
+        };
+        $("#build_name4").autocomplete(buildername_config[3]);
+
+        buildername_config[4] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/builder_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {    
+                $("#build_name5").val(ui.item.builder_name);
+                $("#build_contact5").val(ui.item.builder_contact);
+                $("#baddress_15").val(ui.item.builder_address1);
+                $("#baddress_25").val(ui.item.builder_address2);
+                $("#bsuburb5").val(ui.item.builder_suburb);
+                $("#bsuburbstate5").val(ui.item.builder_state);
+                $("#bsuburbpostcode5").val(ui.item.builder_postcode);
+                $("#b_wphone5").val(ui.item.builder_wkphone);
+                $("#b_mobile5").val(ui.item.builder_mobile);
+                $("#b_fax5").val(ui.item.builder_fax);
+                $("#b_email5").val(ui.item.builder_email);
+                $("#builder_id5").val(ui.item.cf_id);
+                $("#buildersuburbid5").val(ui.item.builder_suburbid);
+            },
+            minLength:2
+        };
+        $("#build_name5").autocomplete(buildername_config[4]);
+
+        buildername_config[5] = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/builder_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {    
+                $("#build_name6").val(ui.item.builder_name);
+                $("#build_contact6").val(ui.item.builder_contact);
+                $("#baddress_16").val(ui.item.builder_address1);
+                $("#baddress_26").val(ui.item.builder_address2);
+                $("#bsuburb6").val(ui.item.builder_suburb);
+                $("#bsuburbstate6").val(ui.item.builder_state);
+                $("#bsuburbpostcode6").val(ui.item.builder_postcode);
+                $("#b_wphone6").val(ui.item.builder_wkphone);
+                $("#b_mobile6").val(ui.item.builder_mobile);
+                $("#b_fax6").val(ui.item.builder_fax);
+                $("#b_email6").val(ui.item.builder_email);
+                $("#builder_id6").val(ui.item.cf_id);
+                $("#buildersuburbid6").val(ui.item.builder_suburbid);
+            },
+            minLength:2
+        };
+        $("#build_name6").autocomplete(buildername_config[5]);
+
+
+
+
+
+        var total_builder = 6;
+        var c1 = 0;
+
+        for (c1 = 1; c1 <= total_builder; c1++) {
+            $("#bsuburbstate" + c1).keypress(function() {
+                $("#notification").html("Please choose a suburb in the autocomplete box.");
+                //$("#notification").appendTo("."+dataClass+" .notification-area");
+                $("#notification").removeClass('hide');
+                $("#notification").show();
+                setTimeout(
+                    function() {
+                        $( "#notification" ).hide( "slow" );
+                    }, 
+                    7000
+                );
+                $("#bsuburb" + c1).css({"border-color": "red"});
+                $("#bsuburb" + c1).on("change", function() {
+                    $(this).css({"border-color": "#97989a"});
+                });
+                $("#bsuburb" + c1).text("");
+                $("#bsuburb" + c1).focus();
+            });
+        }
+    });
+</script>
+
+
+<script type="text/javascript">
+/*
   $(document).ready(function(){
     var site_config = {
     source: "includes/vic/suburb_vic.php",
@@ -497,15 +915,6 @@ $('#ibtn').click(function(){
     $("#build_name1").autocomplete(buildername1_config);
   });
 
-
- 
-</script>
- 
-
- 
-
-
-<script type="text/javascript">
   $(document).ready(function(){
     var buildername2_config = {
     source: "includes/vic/builder_vic.php",
@@ -528,10 +937,7 @@ $('#ibtn').click(function(){
     };
         $("#build_name2").autocomplete(buildername2_config);
   });
-</script>
 
-
-<script type="text/javascript">
   $(document).ready(function(){
     var builder2_config = {
     source: "includes/vic/suburb_vic.php",
@@ -546,9 +952,7 @@ $('#ibtn').click(function(){
         $("#bsuburb2").autocomplete(builder2_config);
 
   });
-</script>
 
-<script type="text/javascript">
   $(document).ready(function(){
     var buildername3_config = {
     source: "includes/vic/builder_vic.php",
@@ -571,10 +975,7 @@ $('#ibtn').click(function(){
     };
         $("#build_name3").autocomplete(buildername3_config);
   });
-</script>
 
-
-<script type="text/javascript">
   $(document).ready(function(){
     var builder3_config = {
     source: "includes/vic/suburb_vic.php",
@@ -589,10 +990,7 @@ $('#ibtn').click(function(){
         $("#bsuburb3").autocomplete(builder3_config);
 
   });
-</script>
 
-
-<script type="text/javascript">
   $(document).ready(function(){
     var buildername4_config = {
     source: "includes/vic/builder_vic.php",
@@ -615,10 +1013,7 @@ $('#ibtn').click(function(){
     };
         $("#build_name4").autocomplete(buildername4_config);
   });
-</script>
 
-
-<script type="text/javascript">
   $(document).ready(function(){
     var builder4_config = {
     source: "includes/vic/suburb_vic.php",
@@ -633,9 +1028,7 @@ $('#ibtn').click(function(){
         $("#bsuburb4").autocomplete(builder4_config);
 
   });
-</script>
 
-<script type="text/javascript">
   $(document).ready(function(){
     var buildername5_config = {
     source: "includes/vic/builder_vic.php",
@@ -658,10 +1051,7 @@ $('#ibtn').click(function(){
     };
         $("#build_name5").autocomplete(buildername5_config);
   });
-</script>
 
-
-<script type="text/javascript">
   $(document).ready(function(){
     var builder5_config = {
     source: "includes/vic/suburb_vic.php",
@@ -676,9 +1066,7 @@ $('#ibtn').click(function(){
         $("#bsuburb5").autocomplete(builder5_config);
 
   });
-</script>
 
-<script type="text/javascript">
   $(document).ready(function(){
     var buildername6_config = {
     source: "includes/vic/builder_vic.php",
@@ -701,10 +1089,7 @@ $('#ibtn').click(function(){
     };
         $("#build_name6").autocomplete(buildername6_config);
   });
-</script>
 
-
-<script type="text/javascript">
   $(document).ready(function(){
     var builder6_config = {
     source: "includes/vic/suburb_vic.php",
@@ -719,7 +1104,9 @@ $('#ibtn').click(function(){
         $("#bsuburb6").autocomplete(builder6_config);
 
   });
+*/
 </script>
+
 
 <script>
 function ssuburbchange(){

@@ -59,7 +59,7 @@ if (count($config) > 0) {
     }
 }
 // Truncate, encode and return the results
-$matches = array_slice($matches, 0, 5);
+// $matches = array_slice($matches, 0, 5);
 print json_encode($matches);
 exit;
 

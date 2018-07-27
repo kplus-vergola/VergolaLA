@@ -713,67 +713,99 @@ $('#ibtn').click(function(){
 </script>
 
 <script src="<?php echo JURI::base().'jscript/jquery-ui.min.js'; ?>" type="text/javascript"></script>
- 
+
+<style>
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 20px;
+    }
+</style>
 <script type="text/javascript">
-  $(document).ready(function(){
-  var builder_config = {
-    source: "includes/vic/suburb_vic.php",
-    select: function(event, ui){
-        $("#bsuburb").val(ui.item.suburb);
-        $("#bsuburbstate").val(ui.item.suburb_state);
-        $("#bsuburbpostcode").val(ui.item.suburb_postcode);
-    $("#bsuburb_id").val(ui.item.cf_id);  
-    },
-    minLength:1
-    };
-    $("#bsuburb").autocomplete(builder_config);
+    $(document).ready(function() {
+        var builder_config = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/suburb_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {
+                $("#bsuburb").val(ui.item.suburb);
+                $("#bsuburbstate").val(ui.item.suburb_state);
+                $("#bsuburbpostcode").val(ui.item.suburb_postcode);
+                $("#bsuburb_id").val(ui.item.cf_id);
+            },
+            minLength:2
+        };
+        $("#bsuburb").autocomplete(builder_config);
 
-  $(document).ready(function(){
-    var site_config = {
-    source: "includes/vic/suburb_vic.php",
-    select: function(event, ui){        
-        $("#ssuburb").val(ui.item.suburb);
-        $("#ssuburbstate").val(ui.item.suburb_state);
-        $("#ssuburbpostcode").val(ui.item.suburb_postcode);
-        $("#ssuburb_id").val(ui.item.cf_id);
-    },
-    minLength:1
-    };
+        var site_config = {
+            source: function(request, response) {
+                $.ajax({
+                    url: "includes/vic/suburb_vic.php", 
+                    dataType: "json", 
+                    cache: false, 
+                    type: "get", 
+                    data: {term: request.term}
+                }).done(function(data) {
+                    response(data);
+                });
+            }, 
+            select: function(event, ui) {
+                $("#ssuburb").val(ui.item.suburb);
+                $("#ssuburbstate").val(ui.item.suburb_state);
+                $("#ssuburbpostcode").val(ui.item.suburb_postcode);
+                $("#ssuburb_id").val(ui.item.cf_id);
+            },
+            minLength:2
+        };
         $("#ssuburb").autocomplete(site_config);
-  });
 
-  $("#bsuburbstate").keypress(function(){
-         $("#notification").html("Please choose a suburb in the autocomplete box.");   
-          //$("#notification").appendTo("."+dataClass+" .notification-area");
-          $("#notification").removeClass('hide');  
-          $("#notification").show(); 
-          setTimeout(function() {
-                $( "#notification" ).hide( "slow" );
-          }, 7000);
+        $("#bsuburbstate").keypress(function() {
+            $("#notification").html("Please choose a suburb in the autocomplete box.");   
+            //$("#notification").appendTo("."+dataClass+" .notification-area");
+            $("#notification").removeClass('hide');  
+            $("#notification").show(); 
+            setTimeout(
+                function() {
+                    $( "#notification" ).hide( "slow" );
+                }, 
+                7000
+            );
+            $("#bsuburb").css({"border-color": "red"});
+            $("#bsuburb").on("change", function() {
+                $(this).css({"border-color": "#97989a"});
+            });
+            $("#bsuburb").text(""); 
+            $("#bsuburb").focus(); 
+        });
 
-          
-          $("#bsuburb").css({ "border-color": "red"});
-          $("#bsuburb").one("change",function(){ $(this).css({ "border-color": "#97989a"}); });
-          $("#bsuburb").text(""); 
-          $("#bsuburb").focus(); 
+        $("#ssuburbstate").keypress(function() {
+            $("#notification").html("Please choose a suburb in the autocomplete box.");   
+            //$("#notification").appendTo("."+dataClass+" .notification-area");
+            $("#notification").removeClass('hide');  
+            $("#notification").show(); 
+            setTimeout(
+                function() {
+                    $( "#notification" ).hide( "slow" );
+                }, 
+                7000
+            );
+            $("#ssuburb").css({"border-color": "red"});
+            $("#ssuburb").on("change", function() {
+                $(this).css({"border-color": "#97989a"});
+            });
+            $("#ssuburb").text(""); 
+            $("#ssuburb").focus(); 
+        });
     });
-
-    $("#ssuburbstate").keypress(function(){
-         $("#notification").html("Please choose a suburb in the autocomplete box.");   
-          //$("#notification").appendTo("."+dataClass+" .notification-area");
-          $("#notification").removeClass('hide');  
-          $("#notification").show(); 
-          setTimeout(function() {
-                $( "#notification" ).hide( "slow" );
-          }, 7000);
-
-          
-          $("#ssuburb").css({ "border-color": "red"});
-          $("#ssuburb").one("change",function(){ $(this).css({ "border-color": "#97989a"}); });
-          $("#ssuburb").text(""); 
-          $("#ssuburb").focus(); 
-    });
-    });  
 </script>
 
 
