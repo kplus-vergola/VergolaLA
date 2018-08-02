@@ -9,7 +9,7 @@ if ($projectid != '') {
 	$ListProjName = $retrievedetails['project_name'];
 	$ListProjectID = $retrievedetails['projectid'];
 	//$ListContractValue = $retrievedetails['total_rrp'];
-	$ListContractValue = $retrievedetails['total_cost'];  
+	$ListContractValue = $retrievedetails['total_rrp_gst'];  
 	$ListSalesValue = $retrievedetails['sales_comm_cost']; 
 	$ListErectorsValue = $retrievedetails['install_comm_cost']; 
 
@@ -157,7 +157,7 @@ else {
 	$ListProjName = $retrievedetails['project_name'];
 	$ListProjectID = $retrievedetails['projectid']; 
 	//$ListContractValue = $retrievedetails['total_rrp']; 
-	$ListContractValue = $retrievedetails['total_cost']; 
+	$ListContractValue = $retrievedetails['total_rrp_gst']; 
 	$ListSalesValue = $retrievedetails['sales_comm_cost']; 
 	$ListErectorsValue = $retrievedetails['install_comm_cost'];
 

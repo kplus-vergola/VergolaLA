@@ -686,7 +686,7 @@ if(isset($_POST['download_pdf'])==false){
 
 //error_log("start loop: ".microtime(true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
 while ($record = mysql_fetch_assoc($loop)) {
-	$money =$record['total_cost'];
+	$money =$record['total_rrp_gst'];
     $html .= "<tr  class=\"pointer td-smaller\" onclick=location.href=\"" . JURI::base() . "contract-listing-vic/contract-folder-vic?quoteid={$record['quoteid']}&projectid={$record['projectid']}\" >".
     ($is_admin==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['sales_rep']):$record['sales_rep'])."</td>":"").
     "<td>{$record['projectid']}</td>".
