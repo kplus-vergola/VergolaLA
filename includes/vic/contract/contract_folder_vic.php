@@ -1,104 +1,136 @@
 <?php  
-date_default_timezone_set('America/Los_Angeles');
+date_default_timezone_set('Australia/Victoria');
 $form->data['date_entered'] = date(PHP_DFORMAT);
 $form->data['date_time'] = date('d-M-Y g:i A');
+
+$user = JFactory::getUser();
+$user_group = "";
+$is_admin = 0; $is_system_admin = 0; $is_sales_manager = 0; $is_construction_manager = 0;   $is_sales_consultant = 0; $is_reception = 0; $is_account_user = 0;
+if(isset($user->groups['10'])){
+  $is_system_admin = 1;
+  $is_admin = 1;
+  $user_group = "system_admin";
+}else if(isset($user->groups['26']) ){
+  $is_construction_manager = 1;
+  $is_admin = 1;
+  $user_group = "construction_manager";
+}else if( isset($user->groups['27'])){
+  $is_sales_manager = 1;
+  $is_admin = 1;
+  $user_group = "sales_manager";
+}else if( isset($user->groups['28'])){
+  $is_reception = 1; 
+  $user_group = "reception";
+}else if( isset($user->groups['29'])){
+  $is_account_user = 1; 
+  $user_group = "account_user"; 
+}else{
+  $is_sales_consultant = 1;
+  $user_group = "sales_consultant";
+}
 
 $drawid = isset($_POST['drawingid']) ? $_POST['drawingid'] : NULL;
 $picid = isset($_POST['picid']) ? $_POST['picid'] : NULL;
 $fileid = isset($_POST['fileid']) ? $_POST['fileid'] : NULL;
+$tab_active = isset($_REQUEST['tab']) ? $_REQUEST['tab'] : 'contract_details'; //default active contract_details else checklist
+$page_name = isset($_REQUEST['page_name']) ? $_REQUEST['page_name'] : '';
+$ref = "";
+if(isset($_REQUEST['ref'])){
+  $ref = $_REQUEST['ref']; 
+} 
+
+$contract_readonly = 0;
+if($page_name=="maintenancefolder"){
+    $contract_readonly = 1; 
+}
+//error_log("tab_active:".$tab_active, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 
 $projectid = mysql_real_escape_string($_REQUEST['projectid']);
 $resultp = mysql_query("SELECT * FROM ver_chronoforms_data_contract_list_vic WHERE projectid = '{$projectid}'");
 $_proj = mysql_fetch_assoc($resultp);
 
+//error_log("HERE 0: ", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 $cust_id = $_proj['quoteid'];
 //$QuoteIDAlpha = substr($cust_id, 0, 2);
 
 $sql = "SELECT * FROM ver_chronoforms_data_clientpersonal_vic WHERE clientid  = '$cust_id'";
-//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');   return;
+//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');   return;
 $result = mysql_query($sql);
 $retrieve = mysql_fetch_array($result);
-if (!$retrieve) {
-    die("Error: Data not found..");
-}
+if (!$retrieve) {die("Error: Data not found..");}
 $id = $retrieve['pid'];
 $cf_id = "0"; 
 //This is the Time Save 
-$now = time();  
+$now = time();
 
 //$result = mysql_query("SELECT * FROM ver_chronoforms_data_clientpersonal_vic WHERE pid  = '$id'");
 //$retrieve = mysql_fetch_array($result);
 //$retrieve = mysql_fetch_array($result);
  
-$ClientSuburbID = $retrieve['client_suburbid'];
-$ClientTitle = $retrieve['client_title'];
-$ClientFirstName = $retrieve['client_firstname']; 
-$ClientLastName = $retrieve['client_lastname'];
-$ClientAddress1 = $retrieve['client_address1'];
-$ClientAddress2 = $retrieve['client_address2'];
-$ClientSuburb = $retrieve['client_suburb'];
-$ClientState = $retrieve['client_state'];
-$ClientPostCode = $retrieve['client_postcode'];
-$ClientWPhone = $retrieve['client_wkphone'];
-$ClientHPhone = $retrieve['client_hmphone'];
-$ClientMobile = $retrieve['client_mobile'];
-$ClientOther = $retrieve['client_other'];
-$ClientEmail = $retrieve['client_email'];
-
-$SiteTitle = $retrieve['site_title'];
-$SiteFirstName = $retrieve['site_firstname'];
-$SiteLastName = $retrieve['site_lastname'];
-$SiteAddress1 = $retrieve['site_address1'];
-$SiteAddress2 = $retrieve['site_address2'];
-$SiteSuburbID = $retrieve['site_suburbid'];
-$SiteSuburb = $retrieve['site_suburb'];
-$SiteState = $retrieve['site_state'];
-$SitePostcode = $retrieve['site_postcode'];
-$SiteWKPhone = $retrieve['site_wkphone'];
-$SiteHMPhone = $retrieve['site_hmphone'];
-$SiteMobile = $retrieve['site_mobile'];
-$SiteOther = $retrieve['site_other'];
-$SiteEmail = $retrieve['site_email'];
+    $ClientSuburbID = $retrieve['client_suburbid'];
+    $ClientTitle = $retrieve['client_title'];
+    $ClientFirstName = $retrieve['client_firstname']; 
+    $ClientLastName = $retrieve['client_lastname'];
+    $ClientAddress1 = $retrieve['client_address1'];
+    $ClientAddress2 = $retrieve['client_address2'];
+    $ClientSuburb = $retrieve['client_suburb'];
+    $ClientState = $retrieve['client_state'];
+    $ClientPostCode = $retrieve['client_postcode'];
+    $ClientWPhone = $retrieve['client_wkphone'];
+    $ClientHPhone = $retrieve['client_hmphone'];
+    $ClientMobile = $retrieve['client_mobile'];
+    $ClientOther = $retrieve['client_other'];
+    $ClientEmail = $retrieve['client_email'];
+ 
+    //error_log("ClientFirstName: ".$ClientFirstName, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');   
     
-$date = $retrieve['datelodged'];
-$DateLodged = date(PHP_DFORMAT, strtotime($date));
-$datepoint = $retrieve['appointmentdate'];
-$AppointmentLodged = date(PHP_DFORMAT.' @ h:i A', strtotime($datepoint));
-$RepID = $retrieve['repid'];
-$RepIdent = $retrieve['repident'];
-$RepName = $retrieve['repname'];
-
-$LeadID = $retrieve['leadid'];
-$LeadName = $retrieve['leadname'];
-
-$EmployeeID = $retrieve['employeeid'];
-$ClientID = $retrieve['clientid'];
-$QuoteID = $ClientID;
+    $SiteTitle = $retrieve['site_title'];
+    $SiteFirstName = $retrieve['site_firstname'];
+    $SiteLastName = $retrieve['site_lastname'];
+    $SiteAddress1 = $retrieve['site_address1'];
+    $SiteAddress2 = $retrieve['site_address2'];
+    $SiteSuburbID = $retrieve['site_suburbid'];
+    $SiteSuburb = $retrieve['site_suburb'];
+    $SiteState = $retrieve['site_state'];
+    $SitePostcode = $retrieve['site_postcode'];
+    $SiteWKPhone = $retrieve['site_wkphone'];
+    $SiteHMPhone = $retrieve['site_hmphone'];
+    $SiteMobile = $retrieve['site_mobile'];
+    $SiteOther = $retrieve['site_other'];
+    $SiteEmail = $retrieve['site_email'];
+    
+    $date = $retrieve['datelodged'];
+    $DateLodged = date(PHP_DFORMAT, strtotime($date));
+    $datepoint = $retrieve['appointmentdate'];
+    $AppointmentLodged = "";
+    if(strlen($datepoint)>0){
+        $AppointmentLodged = date(PHP_DFORMAT.' @ h:i A', strtotime($datepoint));
+    }  
+    $RepID = $retrieve['repid'];
+    $RepIdent = $retrieve['repident'];
+    $RepName = $retrieve['repname'];
+    
+    $LeadID = $retrieve['leadid'];
+    $LeadName = $retrieve['leadname'];
+    
+    $EmployeeID = $retrieve['employeeid'];
+    $ClientID = $retrieve['clientid'];
+    $QuoteID = $ClientID;
+  $is_tender_quote = $_proj['is_tender_quote'];
 
 if(isset($_POST['update']))
 {   
-
- //Update variation value from Vergola Standard view
-$variation_amount = mysql_real_escape_string($_POST['variation_amount']);
-(floatval($variation_amount)<=0?$variation_amount=0:''); 
-
-$sql = "UPDATE ver_chronoforms_data_followup_vic SET 
-variation = {$variation_amount}
-WHERE projectid = '$projectid'";
-
-mysql_query($sql) or die(mysql_error());
-
-
+ 
 $deposit_paid_amount = mysql_real_escape_string($_POST['deposit_paid_amount']);
 $progress_claim_amount = mysql_real_escape_string($_POST['progress_claim_amount']);
 $final_payment_amount = mysql_real_escape_string($_POST['final_payment_amount']);
-//$variation_amount = mysql_real_escape_string($_POST['variation_amount']);
+$variation_amount = mysql_real_escape_string($_POST['variation_amount']);
  
 
 (floatval($deposit_paid_amount)<=0?$deposit_paid_amount=0:'');
 (floatval($progress_claim_amount)<=0?$progress_claim_amount=0:'');
 (floatval($final_payment_amount)<=0?$final_payment_amount=0:'');
-//(floatval($variation_amount)<=0?$variation_amount=0:''); 
+(floatval($variation_amount)<=0?$variation_amount=0:''); 
  
 $deposit_paid = "NULL";
 if (strlen($_POST['deposit_paid']) && $_POST['deposit_paid'] != "0000-00-00 00:00:00"){
@@ -128,380 +160,612 @@ final_payment = {$final_payment},
 deposit_paid_amount = {$deposit_paid_amount},
 progress_claim_amount = {$progress_claim_amount},
 final_payment_amount = {$final_payment_amount},
+variation_amount = {$variation_amount},
 variation_date = {$variation_date}
 WHERE projectid = '$projectid'";
 
-mysql_query($sql) or die(mysql_error());
+mysql_query($sql)or die(mysql_error());
 
-    $check_measurer = mysql_real_escape_string($_POST['checkmeasurer']); 
 
-    $check_measure_date = "NULL";
-    if (strlen($_POST['checkdate']) && $_POST['checkdate'] != "0000-00-00 00:00:00") {
-        $check_measure_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['checkdate'])))."'";
-    }
+$check_measurer = mysql_real_escape_string($_POST['checkmeasurer']); 
 
-    $recheck_measure_date = "NULL";
-    if (strlen($_POST['recheckdate']) && $_POST['recheckdate'] != "0000-00-00 00:00:00") {
-        $recheck_measure_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['recheckdate'])))."'";
-    }
+$check_measure_date = "NULL";
+if (strlen($_POST['checkdate']) && $_POST['checkdate'] != "0000-00-00 00:00:00"){
+  $check_measure_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['checkdate'])))."'";
+}
+//error_log("checkdate: ".$_POST['checkdate'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+//error_log("check_measure_date: ".$check_measure_date, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');  
 
-    $drawing_prepare_date = "NULL";
-    if (strlen($_POST['drawing_prepare_date']) && $_POST['drawing_prepare_date'] != "0000-00-00 00:00:00") {
-        $drawing_prepare_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['drawing_prepare_date'])))."'";
-    }
+$recheck_measure_date = "NULL";
+if (strlen($_POST['recheckdate']) && $_POST['recheckdate'] != "0000-00-00 00:00:00"){
+  $recheck_measure_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['recheckdate'])))."'";
+}
 
-    $drawing_prepare_date_followup = "NULL";
-    if (strlen($_POST['drawing_prepare_date_followup']) && $_POST['drawing_prepare_date_followup'] != "0000-00-00 00:00:00") {
-        $drawing_prepare_date_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['drawing_prepare_date_followup'])))."'";
-    }
+$drawing_prepare_date = "NULL";
+if (strlen($_POST['drawing_prepare_date']) && $_POST['drawing_prepare_date'] != "0000-00-00 00:00:00"){
+  $drawing_prepare_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['drawing_prepare_date'])))."'";
+}
 
-    $drawing_approve_date = "NULL"; 
-    if (strlen($_POST['drawingapprovedate']) && $_POST['drawingapprovedate'] != "0000-00-00 00:00:00") {
-        $drawing_approve_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['drawingapprovedate'])))."'";
-    }
-
-    $drawing_approve_date_followup = "NULL"; 
-    if (strlen($_POST['drawingapprovedatefollowup']) && $_POST['drawingapprovedatefollowup'] != "0000-00-00 00:00:00") {
-        $drawing_approve_date_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['drawingapprovedatefollowup'])))."'";
-    }
-
-    $building_permit_issued = "NULL";
-    if (strlen($_POST['building_permit_issued']) && $_POST['building_permit_issued'] != "0000-00-00 00:00:00") {
-        $building_permit_issued = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['building_permit_issued'])))."'";
-    }
-
-    $production_start_date = "NULL";
-    if (strlen($_POST['productionstart']) && $_POST['productionstart'] != "0000-00-00 00:00:00") {
-        $production_start_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['productionstart'])))."'";
-    }
-
-    $production_complete_date = "NULL";
-    if (strlen($_POST['productioncomplete']) && $_POST['productioncomplete'] != "0000-00-00 00:00:00") {
-        $production_complete_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['productioncomplete'])))."'";
-    }
-
-    $install_date = "NULL";
-    if (strlen($_POST['install_date']) && $_POST['install_date'] != "0000-00-00 00:00:00") {
-        $install_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['install_date'])))."'";
-    }
-
-    $erectors_name = mysql_real_escape_string($_POST['erectors_name']);
-
-    $client_notified_date = "NULL";
-    if (strlen($_POST['clientnotified']) && $_POST['clientnotified'] != "0000-00-00 00:00:00") {
-        $client_notified_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['clientnotified'])))."'";
-    }
-
-    $erector_notified_date = "NULL";
-    if (strlen($_POST['erectornotified']) && $_POST['erectornotified'] != "0000-00-00 00:00:00") {
-        $erector_notified_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['erectornotified'])))."'";
-    }
-
-    $warranty_start_date = "NULL";
-     if (strlen($_POST['warrantystart']) && $_POST['warrantystart'] != "0000-00-00 00:00:00") {
-        $warranty_start_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['warrantystart'])))."'";
-    }
+$drawing_prepare_date_followup = "NULL";
+if (strlen($_POST['drawing_prepare_date_followup']) && $_POST['drawing_prepare_date_followup'] != "0000-00-00 00:00:00"){
+  $drawing_prepare_date_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['drawing_prepare_date_followup'])))."'";
+}
  
-    $warranty_end_date = "NULL"; 
-    if (strlen($_POST['warrantyend']) && $_POST['warrantyend'] != "0000-00-00 00:00:00") {
-        $warranty_end_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['warrantyend'])))."'";
-    }
+$drawing_approve_date = "NULL"; 
+if (strlen($_POST['drawingapprovedate']) && $_POST['drawingapprovedate'] != "0000-00-00 00:00:00"){
+  $drawing_approve_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['drawingapprovedate'])))."'";
+}
 
-    $job_start_date = "NULL";
-    if (strlen($_POST['jobstart']) && $_POST['jobstart'] != "0000-00-00 00:00:00") {
-        $job_start_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['jobstart'])))."'";
-    }
+$drawing_approve_date_followup = "NULL"; 
+if (strlen($_POST['drawingapprovedatefollowup']) && $_POST['drawingapprovedatefollowup'] != "0000-00-00 00:00:00"){
+  $drawing_approve_date_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['drawingapprovedatefollowup'])))."'";
+}
 
-    $job_start_date_followup = "NULL";
-    if (strlen($_POST['jobstartfollowup']) && $_POST['jobstartfollowup'] != "0000-00-00 00:00:00") {
-        $job_start_date_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['jobstartfollowup'])))."'";
-    }
+$building_permit_issued = "NULL";
+if (strlen($_POST['building_permit_issued']) && $_POST['building_permit_issued'] != "0000-00-00 00:00:00"){
+  $building_permit_issued = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['building_permit_issued'])))."'";
+}
 
-    $job_end_date = "NULL";
-    if (strlen($_POST['jobend']) && $_POST['jobend'] != "0000-00-00 00:00:00") {
-        $job_end_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['jobend'])))."'";
-    }
+$production_start_date = "NULL";
+if (strlen($_POST['productionstart']) && $_POST['productionstart'] != "0000-00-00 00:00:00"){
+  $production_start_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['productionstart'])))."'";
+}
 
-    $final_inspection_date = "NULL";
-    if (strlen($_POST['final_inspection_date']) && $_POST['final_inspection_date'] != "0000-00-00 00:00:00") {
-        $final_inspection_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['final_inspection_date'])))."'";
-    } 
+$production_complete_date = "NULL";
+if (strlen($_POST['productioncomplete']) && $_POST['productioncomplete'] != "0000-00-00 00:00:00"){
+  $production_complete_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['productioncomplete'])))."'";
+}
 
-    $fw_orderdate = "NULL";
-    if (strlen($_POST['fw_orderdate']) && $_POST['fw_orderdate'] != "0000-00-00 00:00:00"){
-      $fw_orderdate = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['fw_orderdate'])))."'";
-    } 
+$install_date = "NULL";
+if (strlen($_POST['install_date']) && $_POST['install_date'] != "0000-00-00 00:00:00"){
+  $install_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['install_date'])))."'";
+}
 
-    $gutter_flashing_ordered = "NULL";
-    if (strlen($_POST['gutter_flashing_ordered']) && $_POST['gutter_flashing_ordered'] != "0000-00-00 00:00:00"){
-      $gutter_flashing_ordered = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['gutter_flashing_ordered'])))."'";
-    } 
+$erectors_name = mysql_real_escape_string($_POST['erectors_name']);
+$erectors_name2 = mysql_real_escape_string($_POST['erectors_name2']);
 
-    $louvers_ordered = "NULL";
-    if (strlen($_POST['louvers_ordered']) && $_POST['louvers_ordered'] != "0000-00-00 00:00:00"){
-      $louvers_ordered = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['louvers_ordered'])))."'";
-    } 
+$client_notified_date = "NULL";
+if (strlen($_POST['clientnotified']) && $_POST['clientnotified'] != "0000-00-00 00:00:00"){
+  $client_notified_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['clientnotified'])))."'";
+}
 
-    $schedule_completion = "NULL";
-    if (strlen($_POST['schedule_completion']) && $_POST['schedule_completion'] != "0000-00-00 00:00:00") {
-        $schedule_completion = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['schedule_completion'])))."'";
-    } 
+$erector_notified_date = "NULL";
+if (strlen($_POST['erectornotified']) && $_POST['erectornotified'] != "0000-00-00 00:00:00"){
+  $erector_notified_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['erectornotified'])))."'";
+}
 
-    $time_frame_letter = "NULL";
-    if (strlen($_POST['time_frame_letter']) && $_POST['time_frame_letter'] != "0000-00-00 00:00:00") {
-        $time_frame_letter = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['time_frame_letter'])))."'";
-    } 
+$warranty_start_date = "NULL";
+ if (strlen($_POST['warrantystart']) && $_POST['warrantystart'] != "0000-00-00 00:00:00"){
+  $warranty_start_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['warrantystart'])))."'";
+}
+ 
+$warranty_end_date = "NULL"; 
+if (strlen($_POST['warrantyend']) && $_POST['warrantyend'] != "0000-00-00 00:00:00"){
+  $warranty_end_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['warrantyend'])))."'";
+}
+
+$job_start_date = "NULL";
+if (strlen($_POST['jobstart']) && $_POST['jobstart'] != "0000-00-00 00:00:00"){
+  $job_start_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['jobstart'])))."'";
+}
+
+$job_start_date_followup = "NULL";
+if (strlen($_POST['jobstartfollowup']) && $_POST['jobstartfollowup'] != "0000-00-00 00:00:00"){
+  $job_start_date_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['jobstartfollowup'])))."'";
+}
+
+$job_end_date = "NULL";
+if (strlen($_POST['jobend']) && $_POST['jobend'] != "0000-00-00 00:00:00"){
+  $job_end_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['jobend'])))."'";
+}
+
+$final_inspection_date = "NULL";
+if (strlen($_POST['final_inspection_date']) && $_POST['final_inspection_date'] != "0000-00-00 00:00:00"){
+  $final_inspection_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['final_inspection_date'])))."'";
+} 
+
+$fw_orderdate = "NULL";
+if (strlen($_POST['fw_orderdate']) && $_POST['fw_orderdate'] != "0000-00-00 00:00:00"){
+  $fw_orderdate = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['fw_orderdate'])))."'";
+} 
+
+$gutter_flashing_ordered = "NULL";
+if (strlen($_POST['gutter_flashing_ordered']) && $_POST['gutter_flashing_ordered'] != "0000-00-00 00:00:00"){
+  $gutter_flashing_ordered = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['gutter_flashing_ordered'])))."'";
+} 
+
+$louvers_ordered = "NULL";
+if (strlen($_POST['louvers_ordered']) && $_POST['louvers_ordered'] != "0000-00-00 00:00:00"){
+  $louvers_ordered = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['louvers_ordered'])))."'";
+} 
+
+$handover_date = "NULL";
+$elect_warranty_end_date="NULL";
+if (strlen($_POST['handover_date']) && $_POST['handover_date'] != "0000-00-00 00:00:00"){
+  $_handover_date = date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['handover_date'])));
+  $handover_date = "'".$_handover_date."'";
+
+   
+  if($warranty_start_date=="NULL"){ 
+    $warranty_start_date = $handover_date;  
+  }
+
+  if($elect_warranty_end_date=="NULL"){ 
+    $elect_warranty_end_date = 'date_add('.$handover_date.',INTERVAL 2 YEAR)';
+  }
+  
+  if($warranty_end_date=="NULL"){ 
+    $warranty_end_date =  'date_add('.$handover_date.',INTERVAL 5 YEAR)';
+  }
+} 
+
+$fw_complete = "NULL";
+if (strlen($_POST['fw_complete']) && $_POST['fw_complete'] != "0000-00-00 00:00:00"){
+  $fw_complete = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['fw_complete'])))."'";
+} 
+
+$time_frame_letter = "NULL"; 
+if (strlen($_POST['time_frame_letter']) && $_POST['time_frame_letter'] != "0000-00-00 00:00:00"){
+  $time_frame_letter = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['time_frame_letter'])))."'";
+} 
+
+$schedule_completion = "NULL"; 
+if (strlen($_POST['schedule_completion']) && $_POST['schedule_completion'] != "0000-00-00 00:00:00"){
+  $schedule_completion = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['schedule_completion'])))."'";
+} 
 
 
-    $sql = "
-        UPDATE ver_chronoforms_data_contract_vergola_vic SET 
-        check_measurer = '{$check_measurer}',
-        check_measure_date = {$check_measure_date},
-        recheck_measure_date = {$recheck_measure_date},
-        drawing_prepare_date = {$drawing_prepare_date},
-        drawing_prepare_date_followup = {$drawing_prepare_date_followup},
-        drawing_approve_date = {$drawing_approve_date},
-        drawing_approve_date_followup = {$drawing_approve_date_followup},
-        building_permit_issued ={$building_permit_issued},
-        production_start_date ={$production_start_date},
-        production_complete_date = {$production_complete_date},
-        install_date = {$install_date},
-        erectors_name = '{$erectors_name}',
-        client_notified_date = {$client_notified_date},
-        erector_notified_date = {$erector_notified_date},
-        warranty_start_date = {$warranty_start_date},
-        warranty_end_date = {$warranty_end_date},
-        job_start_date = {$job_start_date},
-        job_start_date_followup = {$job_start_date_followup},
-        job_end_date = {$job_end_date},
-        final_inspection_date = {$final_inspection_date},
-        fw_orderdate = {$fw_orderdate},
-        gutter_flashing_ordered = {$gutter_flashing_ordered},
-        louvers_ordered = {$louvers_ordered},
-        schedule_completion = {$schedule_completion},
-        time_frame_letter = {$time_frame_letter}
-        WHERE projectid = '$projectid'
-    "; 
-    mysql_query($sql) or die(mysql_error());
 
-    $citypermit_application_date = "NULL";
-    if (strlen($_POST['citypermitdate']) && $_POST['citypermitdate'] != "0000-00-00 00:00:00") {
-        $citypermit_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['citypermitdate'])))."'";
-    }
+$sql = "UPDATE ver_chronoforms_data_contract_vergola_vic SET 
+check_measurer = '{$check_measurer}',
+check_measure_date = {$check_measure_date},
+recheck_measure_date = {$recheck_measure_date},
+drawing_prepare_date = {$drawing_prepare_date},
+drawing_prepare_date_followup = {$drawing_prepare_date_followup},
+drawing_approve_date = {$drawing_approve_date},
+drawing_approve_date_followup = {$drawing_approve_date_followup},
+building_permit_issued ={$building_permit_issued},
+production_start_date ={$production_start_date},
+production_complete_date = {$production_complete_date},
+install_date = {$install_date},
+erectors_name = '{$erectors_name}',
+erectors_name2 = '{$erectors_name2}',
+client_notified_date = {$client_notified_date},
+erector_notified_date = {$erector_notified_date},
+warranty_start_date = {$warranty_start_date},
+elect_warranty_end_date = {$elect_warranty_end_date},
+warranty_end_date = {$warranty_end_date},
+job_start_date = {$job_start_date},
+job_start_date_followup = {$job_start_date_followup},
+job_end_date = {$job_end_date},
+final_inspection_date = {$final_inspection_date},
+fw_orderdate = {$fw_orderdate},
+gutter_flashing_ordered = {$gutter_flashing_ordered},
+louvers_ordered = {$louvers_ordered},
+handover_date = {$handover_date},
+fw_complete = {$fw_complete},
+time_frame_letter = {$time_frame_letter},
+schedule_completion = {$schedule_completion} 
+WHERE projectid = '$projectid'"; 
+//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); exit();
+mysql_query($sql) or die(mysql_error()); 
 
-    $citypermit_application_approved_date = "NULL";
-    if (strlen($_POST['citypermitapproveddate']) && $_POST['citypermitapproveddate'] != "0000-00-00 00:00:00") {
-        $citypermit_application_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['citypermitapproveddate'])))."'";
-    }
 
+$planning_application_date = "NULL";
+if (strlen($_POST['planningdate']) && $_POST['planningdate'] != "0000-00-00 00:00:00"){
+  $planning_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['planningdate'])))."'";
+}
+
+$planning_approval_date = "NULL";
+if (strlen($_POST['planningapprove']) && $_POST['planningapprove'] != "0000-00-00 00:00:00"){
+  $planning_approval_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['planningapprove'])))."'";
+}
+
+$warranty_insurance_date = "NULL";
+if (strlen($_POST['warrantyinsurance']) && $_POST['warrantyinsurance'] != "0000-00-00 00:00:00"){
+  $warranty_insurance_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['warrantyinsurance'])))."'";
+}
+ 
+$certifier_date = "NULL"; 
+if (strlen($_POST['certifier']) && $_POST['certifier'] != "0000-00-00 00:00:00"){
+  $certifier_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['certifier'])))."'";
+}
+
+$da_date = "NULL"; 
+if (strlen($_POST['development']) && $_POST['development'] != "0000-00-00 00:00:00"){
+  $da_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['development'])))."'";
+} 
+
+// $stat_req_easement = mysql_real_escape_string($_POST['stat_req_easement']); 
+$stat_req_planning = mysql_real_escape_string($_POST['stat_req_planning']);  
+$con_note_number = mysql_real_escape_string($_POST['con_note_number']);
+
+$m_o_d = mysql_real_escape_string($_POST['m_o_d']);
+$m_o_d_followup = "NULL"; 
+if (strlen($_POST['m_o_d_followup']) && $_POST['m_o_d_followup'] != "0000-00-00 00:00:00"){
+  $m_o_d_followup= "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['m_o_d_followup'])))."'";
+}
+
+$stat_req_easement_waterboard_approval_date = "NULL"; 
+if (strlen($_POST['stat_req_easement_waterboard_approval_date']) && $_POST['stat_req_easement_waterboard_approval_date'] != "0000-00-00 00:00:00"){
+  $stat_req_easement_waterboard_approval_date= "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['stat_req_easement_waterboard_approval_date'])))."'";
+}
+
+$stat_req_easement_waterboard_followup = "NULL"; 
+if (strlen($_POST['stat_req_easement_waterboard_followup']) && $_POST['stat_req_easement_waterboard_followup'] != "0000-00-00 00:00:00"){
+  $stat_req_easement_waterboard_followup= "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['stat_req_easement_waterboard_followup'])))."'";
+}
+
+
+$stat_req_easement_council_approval_date = "NULL"; 
+if (strlen($_POST['stat_req_easement_council_approval_date']) && $_POST['stat_req_easement_council_approval_date'] != "0000-00-00 00:00:00"){
+  $stat_req_easement_council_approval_date= "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['stat_req_easement_council_approval_date'])))."'";
+}
+
+$stat_req_easement_council_followup = "NULL"; 
+if (strlen($_POST['stat_req_easement_council_followup']) && $_POST['stat_req_easement_council_followup'] != "0000-00-00 00:00:00"){
+  $stat_req_easement_council_followup= "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['stat_req_easement_council_followup'])))."'";
+}
+
+$stat_req_planning_approval_date = "NULL"; 
+if (strlen($_POST['stat_req_planning_approval_date']) && $_POST['stat_req_planning_approval_date'] != "0000-00-00 00:00:00"){
+  $stat_req_planning_approval_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['stat_req_planning_approval_date'])))."'";
+} 
+
+$permit_application_date = "NULL"; 
+if (strlen($_POST['permit_application_date']) && $_POST['permit_application_date'] != "0000-00-00 00:00:00"){
+  $permit_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['permit_application_date'])))."'";
+}
+
+$engineering_approved_date = "NULL"; 
+if (strlen($_POST['engineering_approved_date']) && $_POST['engineering_approved_date'] != "0000-00-00 00:00:00"){
+  $engineering_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['engineering_approved_date'])))."'";
+}
+
+$engineering_approved_date_followup = "NULL"; 
+if (strlen($_POST['engineering_approved_date_followup']) && $_POST['engineering_approved_date_followup'] != "0000-00-00 00:00:00"){
+  $engineering_approved_date_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['engineering_approved_date_followup'])))."'";
+}
+
+$permit_approved_date = "NULL"; 
+if (strlen($_POST['permit_approved_date']) && $_POST['permit_approved_date'] != "0000-00-00 00:00:00"){
+  $permit_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['permit_approved_date'])))."'";
+} 
+
+$citb = "NULL"; 
+if (strlen($_POST['citb']) && $_POST['citb'] != "0000-00-00 00:00:00"){
+  $citb = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['citb'])))."'";
+} 
+
+$dev_application_date = "NULL"; 
+if (strlen($_POST['dev_application_date']) && $_POST['dev_application_date'] != "0000-00-00 00:00:00"){
+  $dev_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['dev_application_date'])))."'";
+} 
+
+$bldg_rules_application = "NULL"; 
+if (strlen($_POST['bldg_rules_application']) && $_POST['bldg_rules_application'] != "0000-00-00 00:00:00"){
+  $bldg_rules_application = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['bldg_rules_application'])))."'";
+} 
+
+$bldg_rules_approval = "NULL"; 
+if (strlen($_POST['bldg_rules_approval']) && $_POST['bldg_rules_approval'] != "0000-00-00 00:00:00"){
+  $bldg_rules_approval = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['bldg_rules_approval'])))."'";
+} 
+
+$planning_application_followup = "NULL"; 
+if (strlen($_POST['planning_application_followup']) && $_POST['planning_application_followup'] != "0000-00-00 00:00:00"){
+  $planning_application_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['planning_application_followup'])))."'";
+} 
+
+ 
+$sql = "UPDATE ver_chronoforms_data_contract_statutory_vic SET 
+planning_application_date = {$planning_application_date},
+planning_approval_date = {$planning_approval_date},
+warranty_insurance_date = {$warranty_insurance_date},
+certifier_date = {$certifier_date},
+da_date = {$da_date}, 
+stat_req_easement_waterboard_approval_date = {$stat_req_easement_waterboard_approval_date},
+stat_req_easement_waterboard_followup = {$stat_req_easement_waterboard_followup},
+stat_req_easement_council_approval_date = {$stat_req_easement_council_approval_date},
+stat_req_easement_council_followup = {$stat_req_easement_council_followup},
+stat_req_planning = '{$stat_req_planning}',
+stat_req_planning_approval_date = {$stat_req_planning_approval_date},
+m_o_d = '{$m_o_d}',
+m_o_d_followup = {$m_o_d_followup},
+contract_note_number = '{$con_note_number}', 
+permit_application_date = {$permit_application_date},
+engineering_approved_date = {$engineering_approved_date},
+engineering_approved_date_followup = {$engineering_approved_date_followup},
+permit_approved_date = {$permit_approved_date},
+citb = {$citb},
+dev_application_date = {$dev_application_date},
+bldg_rules_application = {$bldg_rules_application},
+bldg_rules_approval = {$bldg_rules_approval},
+planning_application_followup = {$planning_application_followup}
+
+WHERE projectid = '$projectid'"; 
+
+//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');  exit();
+mysql_query($sql)or die(mysql_error()); 
+  
+
+$getclientid = $ClientID;   
+$checknotes = implode(", ", $_POST['notestxt']);
+$cnt = count($_POST['date_notes']);
+$cnt2 = count($_POST['username_notes']);
+$cnt3 = count($_POST['notestxt']);
+
+
+if ($cnt > 0 && $cnt == $cnt2 && $cnt2 == $cnt3 && $checknotes != '') {
+    $insertArr = array();
     
-    $engr_active = "NULL";
-    if (isset($_POST['engractive']) && $_POST['engractive'] != "") {
-    $engr_active = "'".mysql_real_escape_string($_POST['engractive'])."'";    
-    }
-    
-    //$erectors_name = mysql_real_escape_string($_POST['erectors_name']);
+    for ($i=0; $i<$cnt; $i++) {
 
-    $sitespec_engr_date = "NULL";
-    if (strlen($_POST['sitespecengrdate']) && $_POST['sitespecengrdate'] != "0000-00-00 00:00:00") {
-        $sitespec_engr_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sitespecengrdate'])))."'";
-    }
+        $insertArr[] = "('$getclientid', '" . mysql_real_escape_string($_POST['date_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['username_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['notestxt'][$i]) . "')";
+}
 
-    $sitespec_engr_approved_date = "NULL";
-    if (strlen($_POST['sitespecengrapproveddate']) && $_POST['sitespecengrapproveddate'] != "0000-00-00 00:00:00") {
-        $sitespec_engr_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sitespecengrapproveddate'])))."'";
-    }
 
-    $strata_active = "NULL";
-    if (isset($_POST['strataactive']) && $_POST['strataactive'] != "") {
-        $strata_active = "'".mysql_real_escape_string($_POST['strataactive'])."'";
-    }
+ $queryn = "INSERT INTO ver_chronoforms_data_notes_vic (clientid, datenotes, username, content) VALUES " . implode(", ", $insertArr);
+ 
+ mysql_query($queryn) or trigger_error("Insert failed: " . mysql_error());
 
-    $strata_date = "NULL";
-    if (strlen($_POST['stratadate']) && $_POST['stratadate'] != "0000-00-00 00:00:00") {
-        $strata_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['stratadate'])))."'";
-    }
+}
 
-    $strata_approved_date = "NULL";
-    if (strlen($_POST['strataapproveddate']) && $_POST['strataapproveddate'] != "0000-00-00 00:00:00") {
-        $strata_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['strataapproveddate'])))."'";
-    }
 
-    $coastal_active = "NULL";
-    if (isset($_POST['coastalactive']) && $_POST['coastalactive'] != "") {
-        $coastal_active = "'".mysql_real_escape_string($_POST['coastalactive'])."'";
-    }
 
-    $coastal_date = "NULL";
-    if (strlen($_POST['coastaldate']) && $_POST['coastaldate'] != "0000-00-00 00:00:00") {
-        $coastal_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['coastaldate'])))."'";
-    }
-
-    $coastal_approved_date = "NULL";
-    if (strlen($_POST['coastalapproveddate']) && $_POST['coastalapproveddate'] != "0000-00-00 00:00:00") {
-        $coastal_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['coastalapproveddate'])))."'";
-    }
-
-    $sql = "
-        UPDATE ver_chronoforms_data_contract_statutory_vic SET 
-        citypermit_application_date = {$citypermit_application_date},
-        citypermit_application_approved_date = {$citypermit_application_approved_date},
-        sitespec_engr_date = {$sitespec_engr_date},
-        sitespec_engr_approved_date = {$sitespec_engr_approved_date},
-        strata_date = {$strata_date},
-        strata_approved_date = {$strata_approved_date},
-        coastal_date = {$coastal_date},
-        coastal_approved_date = {$coastal_approved_date},
-        engr_active = {$engr_active},
-        strata_active = {$strata_active},
-        coastal_active = {$coastal_active}
-        WHERE projectid = '$projectid'
-    "; 
-    mysql_query($sql)or die(mysql_error());
-
-    $getclientid = $ClientID;   
-    $checknotes = implode(", ", $_POST['notestxt']);
-    $cnt = count($_POST['date_notes']);
-    $cnt2 = count($_POST['username_notes']);
-    $cnt3 = count($_POST['notestxt']);
-    if ($cnt > 0 && $cnt == $cnt2 && $cnt2 == $cnt3 && $checknotes != '') {
-        $insertArr = array();
-        for ($i=0; $i<$cnt; $i++) {
-            $insertArr[] = "('$getclientid', '" . mysql_real_escape_string($_POST['date_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['username_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['notestxt'][$i]) . "')";
-        }
-        $queryn = "
-            INSERT INTO ver_chronoforms_data_notes_vic 
-            (clientid, datenotes, username, content) 
-            VALUES " . 
-            implode(", ", $insertArr);
-        mysql_query($queryn) or trigger_error("Insert failed: " . mysql_error());
-    }
     //header('Location:'.JURI::base().'contract-listing-vic');      
 }
 
-if (isset($_FILES['pic'])) {
-    // upload pic from Pics tab
-    foreach ($_FILES['pic']['tmp_name'] as $key => $tmp_name) {
-        //This is the directory where images will be saved 
-        $path = "images/pic/{$ClientID}";
-        if (!file_exists($path)) {
+
+
+if(isset($_FILES['pic'])){  // upload pic from Pics tab
+
+      foreach ($_FILES['pic']['tmp_name'] as $key => $tmp_name){
+      //This is the directory where images will be saved 
+         
+          $path = "images/pic/{$ClientID}";
+          if (!file_exists($path)) {
             mkdir($path, 0777, true);
-        }
-        $file_name = $_FILES['pic']['name'][0];
-        $file_name = pathinfo($_FILES['pic']['name'][$key], PATHINFO_FILENAME); 
-        $target=$path."/{$file_name}_{$now}";  
-        $target=$target.'.'.pathinfo($_FILES['pic']['name'][$key], PATHINFO_EXTENSION);  
-        if (move_uploaded_file($tmp_name, $target)) {
-            $query = "
-                INSERT INTO ver_chronoforms_data_pics_vic 
-                (clientid, datestamp, photo, file_name, upload_type) 
-                VALUES
-                ('$ClientID', '$datestamp', '$target', '{$file_name}', 'pic')
-            ";
-            mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
-        }
-    }
-}
+          }
 
-if (isset($_FILES['photo'])) {
-    // upload drawing photo from Drawing tab
-    //error_log(" RepIdent: ".$RepIdent, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
-    foreach ($_FILES['photo']['tmp_name'] as $key => $tmp_name) {
-        //This is the directory where images will be saved 
-        $path = "images/drawings/{$ClientID}";
-        if (!file_exists($path)) {
+          // $file_name = $_FILES['pic']['name'][0];
+          // $file_name = pathinfo($_FILES['pic']['name'][$key], PATHINFO_FILENAME); 
+          // $target=$path."/{$file_name}_{$now}";  
+          // $target=$target.'.'.pathinfo($_FILES['pic']['name'][$key], PATHINFO_EXTENSION);  
+          $file_name = pathinfo($_FILES['pic']['name'][$key], PATHINFO_FILENAME).'.'.pathinfo($_FILES['pic']['name'][$key], PATHINFO_EXTENSION); 
+          $target=$path."/{$file_name}_{$now}";  
+          $target=$target.'.'.pathinfo($_FILES['pic']['name'][$key], PATHINFO_EXTENSION);   
+
+      if (move_uploaded_file($tmp_name, $target)) {
+
+  $query = "INSERT INTO ver_chronoforms_data_pics_vic (clientid, datestamp, photo, file_name, upload_type) VALUES  ('$ClientID', NOW(), '$target', '{$file_name}', 'pic')";
+   mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
+
+              
+              }
+      }
+}
+  
+
+ 
+if(isset($_FILES['photo'])){ // upload drawing photo from Drawing tab
+        //error_log(" RepIdent: ".$RepIdent, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+      foreach ($_FILES['photo']['tmp_name'] as $key => $tmp_name){
+          //This is the directory where images will be saved 
+          $path = "images/drawings/{$ClientID}";
+          if (!file_exists($path)) {
             mkdir($path, 0777, true);
-        }
-        $file_name = $_FILES['photo']['name'][0];
-        $file_name = pathinfo($_FILES['photo']['name'][$key], PATHINFO_FILENAME); 
-        $target=$path."/{$file_name}_{$now}";  
-        $target=$target.'.'.pathinfo($_FILES['photo']['name'][$key], PATHINFO_EXTENSION);  
+          }
 
-        if (move_uploaded_file($tmp_name, $target)) {
-            $query = "
-                INSERT INTO ver_chronoforms_data_drawings_vic 
-                (clientid, photo, file_name) 
-                VALUES 
-                ('$ClientID', '$target','{$file_name}')
-            ";
-            mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
-        }
-    }
-}
+          // $file_name = $_FILES['photo']['name'][0];
+          // $file_name = pathinfo($_FILES['photo']['name'][$key], PATHINFO_FILENAME); 
+          // $target=$path."/{$file_name}_{$now}";  
+          // $target=$target.'.'.pathinfo($_FILES['photo']['name'][$key], PATHINFO_EXTENSION);  
+          $file_name = pathinfo($_FILES['photo']['name'][$key], PATHINFO_FILENAME).'.'.pathinfo($_FILES['photo']['name'][$key], PATHINFO_EXTENSION); 
+          $target=$path."/{$file_name}_{$now}";  
+          $target=$target.'.'.pathinfo($_FILES['photo']['name'][$key], PATHINFO_EXTENSION);  
 
-if (isset($_FILES['doc'])) {  
-    //Upload file from Files tab
-    foreach ($_FILES['doc']['tmp_name'] as $key => $tmp_name) {
+
+      if (move_uploaded_file($tmp_name, $target)) { 
+          $query = "INSERT INTO ver_chronoforms_data_drawings_vic (clientid, photo, file_name) VALUES  ('$ClientID', '$target','{$file_name}')";
+          mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
+            
+          }
+      }
+  }
+ 
+  
+if(isset($_FILES['doc'])){  //Upload file from Files tab
+      //error_log("RepIdent:".$RepIdent, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+      foreach ($_FILES['doc']['tmp_name'] as $key => $tmp_name){
         $path = "images/file_upload/{$ClientID}";
         if (!file_exists($path)) {
-            mkdir($path, 0777, true);
+          mkdir($path, 0777, true);
         }
-        //This is the directory where images will be saved 
-        $file_name = $_FILES['doc']['name'][0];
-        $file_name = pathinfo($_FILES['doc']['name'][$key], PATHINFO_FILENAME); 
-        $target=$path."/{$file_name}_{$now}";  
-        $target=$target.'.'.pathinfo($_FILES['doc']['name'][$key], PATHINFO_EXTENSION);     
-        if (move_uploaded_file($tmp_name, $target)) {
-            $query = "
-                INSERT INTO ver_chronoforms_data_pics_vic 
-                (clientid, datestamp, photo, upload_type, file_name) 
-                VALUES 
-                ('$ClientID', '$datestamp', '$target','file','{$file_name}')
-            ";
-            mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
-        }
-    }
-}
 
-if (isset($_POST['delete-pic'])) {
+         //This is the directory where images will be saved  
+         // $file_name = $_FILES['doc']['name'][0];
+         //  $file_name = pathinfo($_FILES['doc']['name'][$key], PATHINFO_FILENAME); 
+         //  $target=$path."/{$file_name}_{$now}";  
+         //  $target=$target.'.'.pathinfo($_FILES['doc']['name'][$key], PATHINFO_EXTENSION);
+          //error_log($ext, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+          $file_name = pathinfo($_FILES['doc']['name'][$key], PATHINFO_FILENAME).'.'.pathinfo($_FILES['doc']['name'][$key], PATHINFO_EXTENSION); 
+          $target=$path."/{$file_name}_{$now}";  
+          $target=$target.'.'.pathinfo($_FILES['doc']['name'][$key], PATHINFO_EXTENSION);    
+          
+          $upload_type = $_POST['upload_type']; 
+
+      if (move_uploaded_file($tmp_name, $target)) {
+
+  //$query = "INSERT INTO ver_chronoforms_data_pics_vic (clientid, datestamp, photo, upload_type, file_name) VALUES  ('$ClientID', '$datestamp', '$target','file','{$file_name}')";
+        $query = "INSERT INTO ver_chronoforms_data_pics_vic (clientid, datestamp, photo, upload_type, file_name) VALUES  ('$ClientID', NOW(), '$target','{$upload_type}','{$file_name}')";
+   mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
+      //error_log($query, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
+              
+              }
+      }
+ }
+
+
+
+if(isset($_FILES['signed_doc'])){  //Upload file from Files tab
+      //error_log(print_r($_POST,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+      $doc_id = mysql_real_escape_string($_POST['doc_id']);
+      foreach ($_FILES['signed_doc']['tmp_name'] as $key => $tmp_name){
+        $path = "images/file_upload/{$ClientID}";
+        if (!file_exists($path)) {
+          mkdir($path, 0777, true);
+        }
+
+  //This is the directory where images will be saved 
+          
+          // $file_name = $_FILES['signed_doc']['name'][0];
+          // $file_name = pathinfo($_FILES['signed_doc']['name'][$key], PATHINFO_FILENAME); 
+          // $target=$path."/{$file_name}_{$now}";  
+          // $target=$target.'.'.pathinfo($_FILES['signed_doc']['name'][$key], PATHINFO_EXTENSION);    
+          
+          $file_name = pathinfo($_FILES['signed_doc']['name'][$key], PATHINFO_FILENAME).'.'.pathinfo($_FILES['signed_doc']['name'][$key], PATHINFO_EXTENSION); 
+          $target=$path."/{$file_name}_{$now}";  
+          $target=$target.'.'.pathinfo($_FILES['signed_doc']['name'][$key], PATHINFO_EXTENSION);
+          
+          $upload_type = $_POST['upload_type'];
+          
+          //error_log($ext, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
+
+      if (move_uploaded_file($tmp_name, $target)) {
+
+        //$query = "UPDATE  ver_chronoforms_data_letters_vic SET uploaded_filename='{$file_name}' WHERE cf_id={$doc_id} ";
+         $query = "INSERT INTO ver_chronoforms_data_pics_vic (clientid, datestamp, photo, upload_type, file_name, ref_id) VALUES  ('$ClientID', '$datestamp', '$target','{$upload_type}','{$file_name}', {$doc_id})";
+         mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
+        //error_log($query, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
+              
+              }
+      }
+
+      $query = "UPDATE  ver_chronoforms_data_letters_vic SET has_upload_file=1 WHERE cf_id={$doc_id} ";
+      mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
+
+ }  
+
+
+  if(isset($_FILES['upload_doc'])){  //Upload file from Files tab
+      //error_log(print_r($_POST,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+      //$doc_id = mysql_real_escape_string($_POST['doc_id']);
+      foreach ($_FILES['upload_doc']['tmp_name'] as $key => $tmp_name){
+        $path = "images/file_upload/{$ClientID}";
+        if (!file_exists($path)) {
+          mkdir($path, 0777, true);
+        }
+
+  //This is the directory where images will be saved 
+          
+          //$file_name = $_FILES['upload_doc']['name'][0];
+          $file_name = pathinfo($_FILES['upload_doc']['name'][$key], PATHINFO_FILENAME).'.'.pathinfo($_FILES['upload_doc']['name'][$key], PATHINFO_EXTENSION); 
+          $target=$path."/{$file_name}_{$now}";  
+          $target=$target.'.'.pathinfo($_FILES['upload_doc']['name'][$key], PATHINFO_EXTENSION); 
+
+          $upload_type = $_POST['upload_type'];
+          
+          //error_log($ext, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
+
+        if (move_uploaded_file($tmp_name, $target)) {
+
+        //$query = "UPDATE  ver_chronoforms_data_letters_vic SET uploaded_filename='{$file_name}' WHERE cf_id={$doc_id} ";
+         $query = "INSERT INTO ver_chronoforms_data_pics_vic (clientid, datestamp, photo, upload_type, file_name) VALUES  ('$ClientID', NOW(), '$target','{$upload_type}','{$file_name}')";
+         mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
+       //error_log($query, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
+              
+              }
+      }
+
+
+
+      //$query = "UPDATE  ver_chronoforms_data_letters_vic SET has_upload_file=1 WHERE cf_id={$doc_id} ";
+      //mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
+      //header('Location:'.JURI::base().'client-listing-vic/client-folder-vic?pid='.$id);
+
+ }  
+
+
+if(isset($_POST['delete-pic'])) {
+     //error_log('Inside delete-pic', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
     $DrawInfo = mysql_query("SELECT * FROM ver_chronoforms_data_pics_vic WHERE cf_id  = '$picid'");
     $RetDrawInfo = mysql_fetch_array($DrawInfo); if (!$DrawInfo) {die("Error: Data not found..");}
     $RetPhoto=$RetDrawInfo['photo'];
-    if (!unlink($RetPhoto)) {
-        echo ("Error deleting $file");
-    } else {
+       
+    if (!unlink($RetPhoto))
+    {
+       echo ("Error deleting $file");
+    }
+    else
+    {
         mysql_query("DELETE from ver_chronoforms_data_pics_vic WHERE cf_id = '$picid'") or die(mysql_error());  
     }
+     
 }
 
-if (isset($_POST['delete-drawing'])) {
+if(isset($_POST['delete-drawing'])) {
+    //error_log('Inside delete-drawing', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
+      
     $DrawInfo = mysql_query("SELECT * FROM ver_chronoforms_data_drawings_vic WHERE cf_id  = '$drawid'");
     $RetDrawInfo = mysql_fetch_array($DrawInfo); if (!$DrawInfo) {die("Error: Data not found..");}
     $RetPhoto=$RetDrawInfo['photo'];
-    if (!unlink($RetPhoto)) {
+       
+    if (!unlink($RetPhoto))
+    {
         echo ("Error deleting $file");
-    } else {
+    }
+    else
+    {
         mysql_query("DELETE from ver_chronoforms_data_drawings_vic WHERE cf_id = '$drawid'") or die(mysql_error());  
     }
-    //header('Location:'.JURI::base().'contract-listing-vic/contract-folder-vic?quoteid='.$cust_id);
+        //header('Location:'.JURI::base().'contract-listing-vic/contract-folder-vic?quoteid='.$cust_id);
 }
 
-if (isset($_POST['delete-file'])) {
+if(isset($_POST['delete-file'])) {
+     //error_log('Inside delete-pic', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
     $DrawInfo = mysql_query("SELECT * FROM ver_chronoforms_data_pics_vic WHERE cf_id  = '$fileid'");
     $RetDrawInfo = mysql_fetch_array($DrawInfo); if (!$DrawInfo) {die("Error: Data not found..");}
     $RetPhoto=$RetDrawInfo['photo'];
-    if (!unlink($RetPhoto)) {
+       
+    if (!unlink($RetPhoto))
+    {
        echo ("Error deleting $file");
-    } else {
+    }
+    else
+    {
         mysql_query("DELETE from ver_chronoforms_data_pics_vic WHERE cf_id = '$fileid'") or die(mysql_error());  
     }
+     
 }
 
-if (isset($_POST['delete_pdf'])) { 
-    $cf_id = $_POST['pdf_cf_id'];
-    //error_log('Inside delete delete_pdf: ', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
-    mysql_query("
-        DELETE from ver_chronoforms_data_letters_vic 
-        WHERE cf_id = '$cf_id'
-    ") or die(mysql_error()); 
-    $result = array('success' => true, 'note' => '');
-    echo json_encode($result);
-    exit();
-    //header('Location:'.JURI::base().'client-listing-vic');  
+
+
+
+if(isset($_POST['delete_pdf']))
+{ 
+  $cf_id = $_POST['pdf_cf_id'];
+  //error_log('Inside delete delete_pdf: ', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+  mysql_query("DELETE from ver_chronoforms_data_letters_vic WHERE cf_id = '$cf_id'")
+        or die(mysql_error()); 
+  
+  $result = array('success' => true, 'note' => '');
+
+  echo json_encode($result);
+  exit();
+  
+  //header('Location:'.JURI::base().'client-listing-vic');  
 }   
 
-if (isset($_POST['delete'])) {  
+//error_log('outside delete : ', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+//error_log(print_r($_POST,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+
+
+if(isset($_POST['delete']))
+{   
     //mysql_query("DELETE from ver_chronoforms_data_clientpersonal_vic WHERE pid = '$id'") or die(mysql_error()); 
+    //echo "Deleted";
+    //error_log('Inside delete : ', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
     mysql_query("START TRANSACTION");
 
     $rcontract = mysql_query("DELETE from ver_chronoforms_data_contract_list_vic WHERE projectid = '$projectid'");
@@ -510,21 +774,53 @@ if (isset($_POST['delete'])) {
     $rcstatutory = mysql_query("DELETE from ver_chronoforms_data_contract_statutory_vic WHERE projectid = '$projectid'"); 
     $rcitems = mysql_query("DELETE from ver_chronoforms_data_contract_items_vic WHERE projectid = '$projectid'"); 
     $rccontractDeminsions = mysql_query("DELETE from ver_chronoforms_data_contract_items_deminsions WHERE projectid = '$projectid'"); 
-
+    $rcbom = mysql_query("DELETE from ver_chronoforms_data_contract_bom_vic WHERE projectid = '$projectid'"); 
+    $rcbom_m = mysql_query("DELETE from ver_chronoforms_data_contract_bom_meterial_vic WHERE projectid = '$projectid'"); 
+    $rletter = mysql_query("DELETE FROM ver_chronoforms_data_letters_vic WHERE clientid='{$cust_id}' AND template_type='check list - gutter flashing' OR template_type='check list' ");  // no need to be included in filter parameter for commit because the content could be included or not.  
+    
+ 
     $rfollowup = mysql_query("UPDATE ver_chronoforms_data_followup_vic SET status = 'Quoted', date_contract_system_created=NULL, date_won=NULL WHERE projectid = '$projectid'");
+
     $rclient = mysql_query("UPDATE ver_chronoforms_data_clientpersonal_vic SET status = 'Quoted' WHERE clientid = '{$cust_id}' ");
  
-    if ($rfollowup AND $rclient AND $rcontract AND $rcdetails AND $rcvergola AND $rcstatutory AND $rcitems AND $rccontractDeminsions) {
+    //error_log("rfollowup:".$rfollowup. " rclient:".$rclient." rcontract:".$rcontract." rcdetails:".$rcdetails." rcvergola:".$rcvergola." rcstatutory:".$rcstatutory." rcitems:".$rcitems." rccontractDeminsions".$rccontractDeminsions , 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+
+    if ($rfollowup AND $rclient AND $rcontract AND $rcdetails AND $rcvergola AND $rcstatutory AND $rcitems AND $rccontractDeminsions and $rcbom and $rcbom_m) {
         mysql_query("COMMIT");
     } else {        
         mysql_query("ROLLBACK");
     }
+       
 
+  if($ref!=""){
+
+    header('Location:'.JURI::base().$ref);  
+  }else if($is_tender_quote){
+    
+    header('Location:'.JURI::base().'tender-listing-vic/tender-folder-vic?tenderid='.$retrieve['tenderid']);  
+  }else{ 
     header('Location:'.JURI::base().'client-listing-vic/client-folder-vic?cid='.$cust_id);  
+  }  
+
+    //header('Location:'.JURI::base().'client-listing-vic/client-folder-vic?cid='.$cust_id);    
+
 }
 
-if (isset($_POST['close'])) {   
-    header('Location:'.JURI::base().'contract-listing-vic');        
+ 
+if(isset($_POST['close']))
+{   
+   
+    if($ref!=""){
+    header('Location:'.JURI::base().$ref);  
+  }else if($is_tender_quote){
+    //error_log(' HERE A : ', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+    header('Location:'.JURI::base().'tender-listing-vic/tender-folder-vic?tenderid='.$retrieve['tenderid']);  
+  }else{
+    //error_log(' HERE B : ', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+    //header('Location:'.JURI::base().'client-listing-vic/client-folder-vic?cid='.$cust_id);  
+    header('Location:'.JURI::base().'contract-listing-vic');  
+  }  
+
 }
 ?>
 
@@ -544,35 +840,52 @@ if (isset($_POST['close'])) {
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/client-folder.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/contract-folder.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/lightbox.css'; ?>" />
+<script src="<?php echo JURI::base().'jscript/jquery-ui-1.11.4/jquery-ui.min.js'; ?>"></script> 
+<link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/jquery-ui-1.11.4/jquery-ui.min.css'; ?>" />
  
 <style>
-#tbl-letters tr:nth-child(1), #tbl-letters2 tr:nth-child(1), #tbl-letters3 tr:nth-child(1) {
-    display: none;
+.tbl-letters tr:nth-child(1), #tbl-letters2 tr:nth-child(1), #tbl-letters3 tr:nth-child(1) {
+  display: none;
 }
-#tbl-pdf td:nth-child(1), #tbl-letters td:nth-child(1), #tbl-letters2 td:nth-child(1), #tbl-letters3 td:nth-child(1) {
-    width: 180px;
+
+.tbl-pdf td:nth-child(1), #tbl-letters td:nth-child(1), #tbl-letters2 td:nth-child(1), #tbl-letters3 td:nth-child(1) {
+  width: 180px;
 }
-#tbl-pdf td:nth-child(2), #tbl-letters td:nth-child(2), #tbl-letters2 td:nth-child(2), #tbl-letters3 td:nth-child(2) {
-    width: 90px;
+
+.tbl-pdf td:nth-child(2), #tbl-letters td:nth-child(2), #tbl-letters2 td:nth-child(2), #tbl-letters3 td:nth-child(2) {
+  width: 90px;
 }
-#tbl-pdf td:nth-child(3), #tbl-letters td:nth-child(3), #tbl-letters2 td:nth-child(3), #tbl-letters3 td:nth-child(3) {
-    width: 140px;
+
+.tbl-pdf td:nth-child(3), #tbl-letters td:nth-child(3), #tbl-letters2 td:nth-child(3), #tbl-letters3 td:nth-child(3) {
+  width: 140px;
 }
+
+.tbl-pdf tr th{
+  padding: 5px;
+}
+
 #template_link {
-    background-color: #4285F4;
-    border: 1px solid #026695;
-    color: #FFFFFF;
-    cursor: pointer;
-    margin: 5px 0;
-    padding: 5px;
-    width: auto;
-    display: inline-block;
+  background-color: #4285F4;
+  border: 1px solid #026695;
+  color: #FFFFFF;
+  cursor: pointer;
+  margin: 5px 0;
+  padding: 5px;
+  width: auto;
+  display: inline-block;
+}
+
+.tbl-pdf td{
+  padding: 5px;
 }
 </style>
 </head>
 
 <body>
 <form method="post" enctype="multipart/form-data" class="Chronoform hasValidation" id="chronoform_Client_Folder_Vic">
+<input type='hidden' name='doc_id' id='doc_id' / >
+<input type='hidden' name='upload_type' id='upload_type' / >
+<input type='hidden' name='user_group' id='user_group' value="<?php echo $user_group; ?>" / >
 <div id="tabs_wrapper" class="client-builder-tab">
   <div id="tabs_container">
     <ul id="client-builder-tabs" class="shadetabs">
@@ -583,11 +896,11 @@ if (isset($_POST['close'])) {
     
     <!-- Client Tab --> 
     <div id="client" class="tab_content" style="display: block;">
-    <?php if (true) { //set true bec. all clients are all in one table and no need switch table for different id. ?>
+    <?php if (true){ //set true bec. all clients are all in one table and no need switch table for different id. ?>
       <div id="client-layer">
          <p><?php echo $retrieve['clientid']; ?></p>
         <?php
-        if ($retrieve['is_builder'] == "1") {
+        if ($retrieve['is_builder'] == "1"){
         ?>
         <p><?php echo $retrieve['builder_name']; ?>  &nbsp; <a href ="<?php echo JURI::base()."new-client-enquiry-vic?pid={$retrieve['pid']}&client_type=b"; ?> ">Edit</a></p>
        
@@ -609,14 +922,13 @@ if (isset($_POST['close'])) {
         <?php if ($ClientEmail!='') {echo "<p><label class='info'>Email</label>: " .$ClientEmail. "</p>"; } else {echo "";} ?>
         <!-- End of Info Filing -->
         
-        <?php 
-      if ($ClientAddress1==$SiteAddress1 && $ClientAddress2==$SiteAddress2) {echo "<div style='display:none'>";} 
-      else {echo "<div class='site-address'> <h1 class='section-heading'>Site Address:</h1>";} ?>
-        <p><?php echo $SiteAddress1; ?></p>
-        <?php if ( $SiteAddress2!='') {echo "<p>" .  $SiteAddress2 . "</p>";} else {echo "";} ?>
-        <!--- Site Suburb -->
-        <p><?php echo $SiteSuburb; ?> <?php echo $SiteState; ?> <?php echo $SitePostcode; ?></p>
-      </div>
+        <div class='site-address' > <h1 >Site Address:</h1> 
+            <p> <?php echo $SiteTitle ; ?> <?php echo $SiteFirstName; ?> <?php echo $SiteLastName; ?>  </p>
+            <p><?php echo $SiteAddress1; ?></p>
+            <?php if ( $SiteAddress2!='') {echo "<p>" .  $SiteAddress2 . "</p>";} else {echo "";} ?>
+            <!--- Site Suburb -->
+            <p><?php echo $SiteSuburb; ?> <?php echo $SiteState; ?> <?php echo $SitePostcode; ?></p>
+        </div>
      <?php } else { ?>
         <div id="client-layer">
         <p><?php echo $BuildName; ?> </p>
@@ -652,54 +964,21 @@ if (isset($_POST['close'])) {
   </div>
   <!--- End of Site Address --> 
   
-</div>
-</div>
+</div> </div>
 
 
 <!-------------------------------------------------------- Info Quotes -------------------------------------------------------->
-<div id="tabs_wrapper" class="quote-tab">
-    <?php 
-        //error_log("projectid outside: ".$projectid, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
-        include "contract_details_vic.php"; 
-    ?>
+<div id="tabs_wrapper" class="tab_content quote-tab">
+    <?php if($page_name=="maintenancefolder"){ 
+        include "maintenance_details_vic.php";
+    }else{  
+        //error_log("was here: 0", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
+        include "contract_details_vic.php";     
+    } ?>
+
 </div>    
-    <!-- Quote Details Tab -->
-    
-    <div id="quotedetails" class="tab_content" style="display: block;">    
-      <?php //include "contract_quotes_vic.php"; ?>
-    </div>
-    
-     <!-- Bill of Materials Tab -->
-      <?php 
-      $user = JFactory::getUser();
-$groups = $user->get('groups');
-      foreach($groups as $group) {
-    if ($group == '10') { ?>
-    <div id="billofmaterials" class="tab_content" style="display: block;">    
-      <?php //include "contract_bom_vic.php"; ?>
-    </div>
-    <?php } else {echo "";} } ?>
-    
-     <!-- Purchase Order Tab -->
-      <?php foreach($groups as $group) {
-    if ($group == '10' || false) { ?>
-    <div id="purchaseorder" class="tab_content" style="display: none;">    
-      <?php //include "contract_po_vic.php"; ?>
-    </div>
-    <?php } else {echo "";} } ?>
-     <!-- Check List  Tab -->
-      <?php foreach($groups as $group) {
-    if ($group == '10') { ?>
-    <div id="checklist" class="tab_content" style="display: block;">    
-      Checklist Here
-    </div>
-    <?php } else {echo "";} } ?>
-  </div>
+     
 </div>
-</div>
-
-
-
 <!------------------------------------------------------------- Enquiry Tracker Tab ------------------------------------------------>
 <!-- <div id="tabs_wrapper" class="info-tab-contract-folder"> -->
 <div id="tabs_wrapper" class="info-tab">
@@ -973,7 +1252,7 @@ $groups = $user->get('groups');
             <label class="input jobstart"><span class="visible">Job Start: </span><input type="text" value="<?php echo $contract_vergola['fjob_start_date']; ?>" name="jobstart" class="date_entered"></label> 
             <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered"></label> 
             <label class="input jobend"><span class="visible">Job Complete: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered"></label>
-			<!--<label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>-->
+            <!--<label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>-->
           </div>
 
           <div class="label-input-row">      
@@ -1238,340 +1517,589 @@ $groups = $user->get('groups');
 </div>
 
  
-    <!------------------------------------------------- Notes Content Tab -------------------------------------------------------------->
-            <!-- --------------------------------------- Begin of Tab Content ------------------------------------------------ -->
-    <div id="tabs_wrapper" class="notes-tab">
-        <div id="tabs_container">
-            <ul id="notes-tabs" class="shadetabs">
-                <li><a href="#" rel="notes" class="selected">Notes</a></li>
-                <!--
-                <li><a href="#" rel="letter">Quotes</a></li>
-                <li><a href="#" rel="contracts">Contract</a></li>
-                -->
-                <li><a href="#" rel="sales">Sales</a></li>
-                <li><a href="#" rel="documents">Correspondence</a></li>
-                <li><a href="#" rel="statdocs">Statutory</a></li>
-                <li><a href="#" rel="pics">Photos</a></li>
-                <li><a href="#" rel="drawing">Drawings</a></li>
-                <li><a href="#" rel="files">General</a></li>
-            </ul>
-        </div>
-        <div id="tabs_content_container"> 
-                <!---------------------------------------------------------------- Notes Tab ------------------------------------------------------>
-                <!-- Removing This Temporarily ----- <input type='button' name="btnadd" id="btnadd" value='Add Notes' onClick="addRowEntry('tbl-notes');"> -->
-                <div id="notes" class="tab_content" style="display: block;">
-                  <table id="tbl-notes">
-                    <?php $user =& JFactory::getUser(); $userName = $user->get( 'name' ); ?>
-                    <tr>
-                      <td class="tbl-content"><textarea name="notestxt[]" id="notestxt"></textarea>
-                      <div class="layer-date">Date: <input type="text" id="date_display" name="date_display" class="datetime_display" value="<?php print(Date(PHP_DFORMAT)); ?>" readonly>
-                      <input type="hidden" id="date_notes" name="date_notes[]" class="date_time" value="<?php print(Date(PHP_DFORMAT." H:i:s")); ?>" readonly> 
-                      </div>
-                      <div class="layer-whom">By Whom: <input type="text" id="username_notes" name="username_notes[]" class="username" value="<?php echo $userName; ?>" readonly></div>  
-                      </td> 
-                    </tr>
-                  </table>
-                  <table id="tbl-content">
-                    <?php
-            $resultnotes = mysql_query("SELECT cf_id, date_created, username, content FROM ver_chronoforms_data_notes_vic WHERE clientid = '$ClientID' ORDER by cf_id DESC");
-            $i=1;
-            if (!$resultnotes) {
-                echo 'Could not run query: ' . mysql_error();
-                exit;
+<!------------------------------------------------- Notes Content Tab -------------------------------------------------------------->
+<div id="tabs_wrapper" class="notes-tab">
+  <div id="tabs_container">
+    <ul id="notes-tabs" class="shadetabs">
+      <li><a href="#" rel="notes" class="selected">Notes</a></li>
+      <li><a href="#" rel="sales">Sales</a></li>
+      <li><a href="#" rel="documents">Correspondence</a></li>
+      <li><a href="#" rel="statdocs">Statutory</a></li>
+      <li><a href="#" rel="photos">Photos</a></li>  
+      <li><a href="#" rel="drawing">Drawings</a></li> 
+      <li><a href="#" rel="general">General</a></li> 
+    </ul>
+  </div>
+  <div id="tabs_content_container"> 
+    
+    <!---------------------------------------------------------------- Notes Tab ------------------------------------------------------>
+    <!-- Removing This Temporarily ----- <input type='button' name="btnadd" id="btnadd" value='Add Notes' onClick="addRowEntry('tbl-notes');"> -->
+    <div id="notes" class="tab_content" style="display: block;">
+      
+      <table id="tbl-notes">
+        <?php $user =& JFactory::getUser(); $userName = $user->get( 'name' ); ?>
+        <tr>
+          <td class="tbl-content"><textarea name="notestxt[]" id="notestxt"></textarea>
+          <div class="layer-date">Date: <input type="text" id="date_display" name="date_display" class="datetime_display" value="<?php print(Date(PHP_DFORMAT)); ?>" readonly>
+          <input type="hidden" id="date_notes" name="date_notes[]" class="date_time" value="<?php print(Date(PHP_DFORMAT." H:i:s")); ?>" readonly> 
+          </div>
+          <div class="layer-whom">By Whom: <input type="text" id="username_notes" name="username_notes[]" class="username" value="<?php echo $userName; ?>" readonly></div>  
+          </td> 
+        </tr>
+      </table>
+      <table id="tbl-content">
+        <?php
+$resultnotes = mysql_query("SELECT cf_id, date_created, username, content FROM ver_chronoforms_data_notes_vic WHERE clientid = '$ClientID' ORDER by cf_id DESC");
+$i=1;
+if (!$resultnotes) {
+    echo 'Could not run query: ' . mysql_error();
+    exit;
+}
+
+  while($row = mysql_fetch_row($resultnotes))
+    {
+
+echo "
+<tr><td class=\"tbl-content\"><h1>Notes ". $i++ ."</h1><p>$row[3]</p>
+<div class=\"layer-date\">Date: " .date(PHP_DFORMAT, strtotime ($row[1])) . "</div>
+<div class=\"layer-whom\">By Whom: $row[2]</div>
+</td>
+</tr>";
+    }
+?>
+      </table>
+    </div>
+
+    
+   <!---------------------------------------------------- Sales Tab  -->
+    
+    <div id="sales" class="tab_content"> 
+           
+      <div class="modification-button-holder"> 
+          <!-- <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=TemplateResidential_With_Frame" style="margin-right:5px;">Residential – Frame</a>
+          <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=TemplateResidential_With_No_Frame" style="margin-right:5px;">Residential – No Frame</a> 
+          <a id="template_link" href="<?php echo JURI::base().'images/template/welcome_book.pdf'; ?> " download  style="margin-right:5px;">Welcome Book</a>
+
+          <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Sales_Contract" style="margin-right:5px;">Sales Contract - Residential</a>
+          <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Clients_Authority" style="margin-right:5px;">Clients Authority</a>
+          <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Colour_Chart" style="margin-right:5px;">Colour Chart</a>
+          
+          <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Contract_Variation_Letter" style="margin-right:5px;">Contract Variation Letter</a> -->
+
+          <!-- from previous quotes section -->
+                         <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?pid=<?php echo $id ?>?option=com_chronoforms&tmpl=component&chronoform=TemplateResidential"><!-- Template Residential -->Frame</a>
+                         <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?pid=<?php echo $id ?>?option=com_chronoforms&tmpl=component&chronoform=TemplateBuilder-NoFrame"><!-- Template Builder-No Frame -->Drop In</a> 
+                         <!-- from previous contract section -->
+                         <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Sales_Contract" style="margin-right:5px;">Sales Contract<!-- - Residential --></a>
+                         <!-- <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Clients_Authority" style="margin-right:5px;">Clients Authority</a> -->
+                         <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Colour_Chart" style="margin-right:5px;">Colour Chart</a>
+                         <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Contract_Variation_Letter" style="margin-right:5px;">Contract Variation Letter</a>
+                         <a id="template_link" href="<?php echo JURI::base().'images/template/welcome_book.pdf'; ?> " download  style="margin-right:5px;">Welcome Book</a>
+      </div>
+
+   
+      <div class="drawing-tbl">
+        <table class="tbl-pdf">
+          <tr>
+            <th>Filename</th>
+            <th>Date Created</th>
+            <th>Download PDF</th>
+            <th>Uploaded Doc</th> 
+            <th> </th> 
+          </tr> 
+          <?php 
+
+ // $data = mysql_query("SELECT * FROM ver_chronoforms_data_letters_vic WHERE template_name LIKE '%Residential with%' ORDER BY datecreated DESC") 
+ // or die(mysql_error()); 
+  $sql = "SELECT * FROM ver_chronoforms_data_letters_vic  WHERE (template_name LIKE '%Residential with%' OR template_name LIKE 'Sales Contract - Residential%' OR template_name LIKE 'Client Authority%' OR template_name LIKE 'Contract Variation Letter%' OR template_name LIKE 'Color Chart%')   AND clientid='{$ClientID}'   ORDER BY datecreated DESC";
+   $data = mysql_query($sql); 
+//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+while($info = mysql_fetch_array( $data )) 
+{  
+      //error_log("db clientid: ".$info['clientid']." ClientID:".$ClientID, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+      Print "<tr>";
+      Print "<td> {$info['template_name']}</td> ";
+      Print "<td>" . date(PHP_DFORMAT,strtotime($info['datecreated'])) . " </td>";
+      Print "<td style='border:none;'><a rel=\"nofollow\" onclick=\"window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;\" href=\"index.php?pid=".$info['cf_id']."?option=com_chronoforms&tmpl=component&chronoform=Download-PDF\">Click Here <img src='".JURI::base()."templates/".$mainframe->getTemplate()."/images/file_pdf.png' /></a></td>";
+
+      echo "<td>";
+      if($info['has_upload_file']==1){
+          echo '<div> 
+                <ul style="list-style-type: none; margin: 5px 0 5px 10px;padding: 0;"  >';
+         
+            $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND (upload_type ='signed_doc' OR upload_type ='signed_sales_doc') AND ref_id={$info['cf_id']} ");
+            $thumbnail = "";
+            while($row = mysql_fetch_array($resultimg))
+            { 
+              if(strtolower(substr($row['photo'],-3))=="pdf"){
+                  $thumbnail = JURI::base()."images/file_pdf.png";
+              }else if(strtolower(substr($row['photo'],-3))=="doc" || substr($row['photo'],-4)=="docx"){
+                  $thumbnail = JURI::base()."images/doc_logo.png";
+              }else if(strtolower(substr($row['photo'],-3))=="xls" || substr($row['photo'],-4)=="xlsx"){
+                  $thumbnail = JURI::base()."images/excel-logo.jpg";
+              }else{
+                  $thumbnail = JURI::base()."images/file-icon.jpg";
+              } 
+             echo "<li><a href=\"".$row['photo']."\" download class='remove-link'>  <img src=\"{$thumbnail}\" height=\"20px\" style='display:inline'> ".$row['file_name']."</a>    <span class=\"ui-icon ui-icon-closethick\" style='display:inline-block; cursor: pointer;' onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   > </span></li>";
             }
-              while($row = mysql_fetch_row($resultnotes))
-                {
-            echo "
-            <tr><td class=\"tbl-content\"><h1>Notes </h1><p>$row[3]</p>
-            <div class=\"layer-date\">Date: " .date(PHP_DFORMAT, strtotime ($row[1])) . "</div>
-            <div class=\"layer-whom\">By Whom: $row[2]</div>
+          echo "</ul>
+          </div>";
+       
+      } 
+      Print "<input type='file' name='signed_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
+                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$(\"#upload_type\").val(\"signed_sales_doc\"); $(\"#doc_id\").val(\"{$info['cf_id']}\"); $(\"#chronoform_Client_Folder_Vic\").submit();'>  "; 
+      echo "</td>"; 
+
+      Print "<td> <a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\" class='remove-link'  >Delete</a> </td> </tr>"; 
+ 
+ } 
+
+              $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='upload_sales_doc' ");
+              if (!$resultimg) {
+                  echo 'Could not run query: ' . mysql_error();
+                  exit;
+              }
+              $thumbnail = "";
+              while($row = mysql_fetch_array($resultimg))
+              {
+                  if(strtolower(substr($row['photo'],-3))=="pdf"){
+                      $thumbnail = JURI::base()."images/file_pdf.png";
+                  }else if(strtolower(substr($row['photo'],-3))=="doc" || substr($row['photo'],-4)=="docx"){
+                      $thumbnail = JURI::base()."images/doc_logo.png";
+                  }else if(strtolower(substr($row['photo'],-3))=="xls" || substr($row['photo'],-4)=="xlsx"){
+                      $thumbnail = JURI::base()."images/excel-logo.jpg";
+                  }else{
+                      $thumbnail = JURI::base()."images/file-icon.jpg";
+                  }
+
+              echo "<tr>
+                      <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
+              echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>";
+              echo "<td  >  </td>";
+              echo "<td></td>";  
+              echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a>  </td>"; 
+
+              echo "</tr>";
+
+              }
+      
+ ?>
+        </table>
+        
+      </div> 
+      <br/><br/>
+      <table id="tbl-pic">
+          <tr>
+            <td class="tbl-upload">
+                <input type='file' name='upload_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
+                  
+                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("upload_sales_doc"); $("#chronoform_Client_Folder_Vic").submit();'>
             </td>
-            </tr>";
-                }
-            ?>
-                  </table>
-                </div>
+          </tr>
+      </table>
 
-            <!-- ----- Sales (combination of previous quotes and contract) ----- -->
-            <div id="sales" class="tab_content"> 
-                <!-- from previous quotes section -->
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?pid=<?php echo $id ?>?option=com_chronoforms&tmpl=component&chronoform=TemplateResidential"><!-- Template Residential -->Frame</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?pid=<?php echo $id ?>?option=com_chronoforms&tmpl=component&chronoform=TemplateBuilder-NoFrame"><!-- Template Builder-No Frame -->Drop In</a> 
-                <!-- from previous contract section -->
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Sales_Contract" style="margin-right:5px;">Sales Contract<!-- - Residential --></a>
-                <!-- <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Clients_Authority" style="margin-right:5px;">Clients Authority</a> -->
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Colour_Chart" style="margin-right:5px;">Colour Chart</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Contract_Variation_Letter" style="margin-right:5px;">Contract Variation Letter</a>
-                <a id="template_link" href="<?php echo JURI::base().'images/template/welcome_book.pdf'; ?> " download  style="margin-right:5px;">Welcome Book</a>
-                <div id="drawing-tbl">
-                    <table id="tbl-pdf">
-                        <tr>
-                            <td>Filename</td>
-                            <td>Date Created</td>
-                            <td>Download PDF</td>
-                        </tr>
-                        <?php 
-                        $data = mysql_query("
-                            SELECT * FROM ver_chronoforms_data_letters_vic 
-                            WHERE (
-                                template_name LIKE 'Sales Contract - Residential%' 
-                                OR template_name LIKE 'Client Authority%' 
-                                OR template_name LIKE 'Contract Variation Letter%' 
-                                OR template_name LIKE 'Color Chart%') 
-                                AND clientid='{$ClientID}' 
-                                ORDER BY datecreated DESC
-                        ") or die(mysql_error()); 
-                        while($info = mysql_fetch_array( $data )) 
-                        { 
-                            if ($info['clientid'] == $ClientID) {
-                                Print "<tr>"; 
-                                Print "<td><a rel=\"nofollow\" onclick=\"window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;\" href=\"index.php?pid=".$info['cf_id']."?option=com_chronoforms&tmpl=component&chronoform=Letters_TemplateUpdate_PDF_Vic\">".$info['template_name'] . "</a></td> "; 
-                                Print "<td>" . date(PHP_DFORMAT,strtotime($info['datecreated'])) . " </td>";
-                                Print "<td style='border:none;'><a rel=\"nofollow\" onclick=\"window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;\" href=\"index.php?pid=".$info['cf_id']."?option=com_chronoforms&tmpl=component&chronoform=Download-PDF\">Click Here <img src='".JURI::base()."templates/".$mainframe->getTemplate()."/images/file_pdf.png' /></a></td> ";
-                                Print "<td> <a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\" class='remove-link'  >Delete</a> </td> </tr>";
-                            } 
-                        } 
-                        ?>
-                    </table>
-                </div>
-            </div>
+    </div>
+    <!-------------------------------------------- END of Sales Tab -->
 
-            <!-- ----- Correspndence Docs ----- -->
-            <div id="documents" class="tab_content" style="display: block;"> 
-                <!-- <a id="template_link" href="<?php echo JURI::base().'images/template/time_frame_letter.docx'; ?> " download  style="margin-right:5px;">Time frame Letter</a>         -->
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Time_Frame_Letter" style="margin-right:5px;">Time Frame Letter</a>
-                <!-- <a id="template_link" href="<?php echo JURI::base().'images/template/proposed_drawings_letter.docx'; ?> " download  style="margin-right:5px;">Proposed Drawings</a> -->
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Proposed_Drawings" style="margin-right:5px;">Proposed Drawings</a>
-                <!-- <a id="template_link" href="<?php echo JURI::base().'images/template/amended_proposed_drawings.docx'; ?> " download  style="margin-right:5px;">Amended Proposed Drawings</a>  -->
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Amended_Proposed_Drawings" style="margin-right:5px;">Amended Proposed Drawings</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Proposed_Drawing_Rescode" style="margin-right:5px;">Proposed Drawing Rescode</a>
-                <br/>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Res_Code_Letter" style="margin-right:5px;">Res Code Letter</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Protection_Work_Notice_Client" style="margin-right:5px;">Protection Work Notice Client</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Protection_Work_Notice_Neighbour" style="margin-right:5px;">Protection Work Notice Neighbour</a>
-                <a id="template_link" href="<?php echo JURI::base().'images/template/protection_work_notice_forms.pdf'; ?> " download  style="margin-right:5px;">Protection Work Notice forms</a>
-                <div id="drawing-tbl">
-                    <table id="tbl-pdf">
-                        <tr>
-                            <td>Filename</td>
-                            <td>Date Created</td>
-                            <td>Download PDF</td>
-                        </tr>
-                        <?php 
-                        $data = mysql_query("
-                            SELECT * FROM ver_chronoforms_data_letters_vic 
-                            WHERE template_name LIKE 'Time Frame Letter%' 
-                            OR template_name LIKE 'Proposed Drawing%' 
-                            OR template_name LIKE 'Amended Proposed Drawing%' 
-                            OR template_name LIKE 'Proposed Drawing Rescode%' 
-                            OR template_name LIKE 'Res Code Letter%' 
-                            OR template_name LIKE 'Protection Work Notice Client%' 
-                            OR template_name  LIKE 'Protection Work Notice Neighbour%' 
-                            ORDER BY datecreated DESC
-                        ") or die(mysql_error()); 
-                        while($info = mysql_fetch_array( $data )) { 
-                            if ($info['clientid'] == $ClientID) {
-                                Print "<tr>"; 
-                                Print "<td>". $info['template_name'] . "</td> "; 
-                                Print "<td>" . date(PHP_DFORMAT,strtotime($info['datecreated'])) . " </td>";
-                                Print "<td style='border:none;'><a rel=\"nofollow\" href=\"index.php?pid=".$info['cf_id']."?option=com_chronoforms&tmpl=component&chronoform=Download-PDF\">Click Here <img src='".JURI::base()."templates/".$mainframe->getTemplate()."/images/file_pdf.png'  /></a></td> ";
-                                Print "<td> <a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\" class='remove-link'  >Delete</a> </td> </tr>";
-                            } 
-                        } 
-                        ?>
-                    </table>
-                </div>
-            </div> 
+    <!-------------------------------------------- Correspndence Doc  Tab -->
+    <div id="documents" class="tab_content" style="display: block;"> 
+        
+      <div class="modification-button-holder">          
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Time_Frame_Letter" style="margin-right:5px;">Time Frame Letter</a>
+        <!-- <a id="template_link" href="<?php echo JURI::base().'images/template/proposed_drawings_letter.docx'; ?> " download  style="margin-right:5px;">Proposed Drawings</a> -->
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Proposed_Drawings" style="margin-right:5px;">Proposed Drawings</a>
+        <!-- <a id="template_link" href="<?php echo JURI::base().'images/template/amended_proposed_drawings.docx'; ?> " download  style="margin-right:5px;">Amended Proposed Drawings</a>  -->
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Amended_Proposed_Drawings" style="margin-right:5px;">Amended Proposed Drawings</a>
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Proposed_Drawing_Rescode" style="margin-right:5px;">Proposed Drawing Rescode</a><br/>
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Res_Code_Letter" style="margin-right:5px;">Res Code Letter</a>
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Protection_Work_Notice_Client" style="margin-right:5px;">Protection Work Notice Client</a>
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Protection_Work_Notice_Neighbour" style="margin-right:5px;">Protection Work Notice Neighbour</a>
+        <a id="template_link" href="<?php echo JURI::base().'images/template/protection_work_notice_forms.pdf'; ?> " download  style="margin-right:5px;">Protection Work Notice forms</a>
+      </div>
+      <br/>
 
+        <div class="drawing-tbl">
+          <table class="tbl-pdf">
+            <tr>
+              <th>Filename</th>
+              <th>Date Created</th>
+              <th>Download PDF</th> 
+              <th>Uploaded Doc</th>  
+              <th>&nbsp; </th> 
+            </tr>
+            <?php 
 
-            <!-- ----- Stat Docs ----- -->
-            <div id="statdocs" class="tab_content" style="display: block;">
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Planning_Application_Letter" style="margin-right:5px;">Planning Application Letter</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Amendment_Planning_Permit" style="margin-right:5px;">Amendment Planning Permit</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Replacement_Drawing_Letter" style="margin-right:5px;">Replacement Drawing Letter</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Building_Appeals_Board" style="margin-right:5px;">Building Appeals Board</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Build_Over_Easement" style="margin-right:5px;">Build Over Easement</a>
-                <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Report_And_Consent" style="margin-right:5px;">Report and Consent</a>
-                <div id="drawing-tbl">
-                    <table id="tbl-pdf">
-                        <tr>
-                            <td>Filename</td>
-                            <td>Date Created</td>
-                            <td>Download PDF</td>
-                        </tr>
-                        <?php
-                        $data = mysql_query("
-                            SELECT * FROM ver_chronoforms_data_letters_vic 
-                            WHERE template_name LIKE 'Replacement Drawing Letter%' 
-                            OR template_name LIKE 'Planning Application Letter%' 
-                            OR template_name LIKE 'Amendment Planning Permit%' 
-                            OR template_name LIKE 'Building Appeals Board%' 
-                            OR template_name LIKE 'Build Over Easement%' 
-                            OR template_name LIKE 'Report And Consent%' 
-                            ORDER BY datecreated DESC
-                        ") or die(mysql_error()); 
-                        while($info = mysql_fetch_array( $data )) 
-                        { 
-                            if ($info['clientid'] == $ClientID) {
-                                Print "<tr>"; 
-                                Print "<td>". $info['template_name'] . "</td> "; 
-                                Print "<td>" . date(PHP_DFORMAT,strtotime($info['datecreated'])) . " </td>";
-                                Print "<td style='border:none;'><a rel=\"nofollow\" onclick=\"window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;\" href=\"index.php?pid=".$info['cf_id']."?option=com_chronoforms&tmpl=component&chronoform=Download-PDF\">Click Here <img src='".JURI::base()."templates/".$mainframe->getTemplate()."/images/file_pdf.png'  /></a></td>  ";
-                                Print "<td> <a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\" class='remove-link'  >Delete</a> </td> </tr>";
-                            } 
-                        }
-                        ?>
-                    </table>
-                </div>
-            </div>
+           $sql = "SELECT * FROM ver_chronoforms_data_letters_vic  WHERE clientid='{$ClientID}' AND (template_name LIKE 'Time Frame Letter%' OR template_name LIKE 'Proposed Drawing%' OR template_name LIKE 'Amended Proposed Drawing%' OR template_name LIKE 'Proposed Drawing Rescode%' OR template_name LIKE 'Res Code Letter%'  OR template_name LIKE 'Protection Work Notice Client%' OR template_name  LIKE 'Protection Work Notice Neighbour%')  ORDER BY datecreated DESC";
+           $data = mysql_query($sql) 
+           or die(mysql_error()); 
 
-            <!-- ----- Pics Tab ----- -->
-            <div id="pics" class="tab_content" style="display: block;">
-                <!-- <INPUT type="button" value="Add Row" onclick="addRow('tbl-pic')" /> -->
-                <INPUT type="submit" name="delete-pic" value="Delete Picture"   />
-                <input type="hidden" value="" id="picid" name="picid" />
-                <div id="drawing-tbl">
-                    <br/>
-                    <ul id="tbl-imgpic" class="picture-block">
-                        <?php
-                        $resultimg = mysql_query("
-                            SELECT cf_id, clientid, photo, file_name 
-                            FROM ver_chronoforms_data_pics_vic 
-                            WHERE clientid = '$ClientID' 
-                            AND upload_type ='pic' 
-                        ");
-                        if (!$resultimg) {
-                            echo 'Could not run query: ' . mysql_error();
-                            exit;
-                        }
-                        $thumbnail = "";
-                        while($row = mysql_fetch_array($resultimg))
-                        {
-                            if (substr($row[2],-3)=="pdf") {
-                              $thumbnail = JURI::base()."images/pdf_logo.jpg";
-                            }else if (substr($row[2],-3)=="doc" || substr($row[2],-4)=="docx") {
-                              $thumbnail = JURI::base()."images/doc_logo.png";
-                            }else if (substr($row[2],-3)=="xls" || substr($row[2],-4)=="xlsx") {
-                              $thumbnail = JURI::base()."images/excel-logo.jpg";
-                            }else{
-                              $thumbnail = JURI::base().$row[2];
-                            }
-                            //$a_file_name = explode("/", $row[2]);
-                            //$file_name = $a_file_name[3];
-                            echo "<li>  <a href=\"$row[2]\" download><img src=\"{$thumbnail}\" height=\"75px\" ></a><br/> <input type=\"checkbox\" class=\"chkpic\" name=\"chk\" value=\"$row[0]\"/> {$row['file_name']} </li>";
-                        }
-                        ?>
-                    </ul>
-                    <br/>
-                    <table id="tbl-pic">
-                        <tr> 
-                            <td class="tbl-upload"> 
-                                <input type="file" name="pic[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf">                 
-                                <!-- <input type="submit" value="Save" id="bsbtn" name="save" class="bbtn">   -->
-                                <input id="bsbtn" class="bbtn" type="submit" name="update" value="Save">
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+            //error_log(" sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 
-            <!-- ----- Drawing Tab ----- -->
-            <div id="drawing" class="tab_content">
-                <!--<INPUT type="button" value="Add Row" onclick="addRow('tbl-draw')" /> -->
-                <INPUT type="submit" name="delete-drawing" value="Delete Drawing"  />
-                <input type="hidden" value="" id="drawingid" name="drawingid" />
-                <div id="drawing-tbl">
-                    <br/>
-                    <ul id="tbl-img" class="picture-block">
-                        <?php
-                        $resultimg = mysql_query("
-                            SELECT cf_id, clientid, photo, file_name 
-                            FROM ver_chronoforms_data_drawings_vic 
-                            WHERE clientid = '$ClientID'
-                        ");
-                        if (!$resultimg) {
-                            echo 'Could not run query: ' . mysql_error();
-                            exit;
-                        }
-                        while($row = mysql_fetch_array($resultimg))
-                        {
-                            if (substr($row[2],-3)=="pdf") {
-                                $thumbnail = JURI::base()."images/pdf_logo.jpg";
-                            }else if (substr($row[2],-3)=="doc" || substr($row[2],-4)=="docx") {
-                                $thumbnail = JURI::base()."images/doc_logo.png";
-                            }else if (substr($row[2],-3)=="xls" || substr($row[2],-4)=="xlsx") {
-                                $thumbnail = JURI::base()."images/excel-logo.jpg";
-                            }else{
-                                $thumbnail = JURI::base().$row[2];
-                            }
-                            echo "   <li><a href=\"$row[2]\" download><img src=\"{$thumbnail}\" height=\"75px\" ></a><br/><input type=\"checkbox\" class=\"chkdraw\" name=\"chk\" value=\"$row[0]\"/> {$row[3]}</li>";
-                        }
-                        ?>
-                    </ul>
-                    <br/>
-                    <table id="tbl-draw">
-                        <tr> 
-                            <td class="tbl-upload">
-                                <input type="file" name="photo[]" multiple="multiple">
-                                <input id="bsbtn" class="bbtn" type="submit" name="update" value="Update">
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+           while($info = mysql_fetch_array( $data )) 
+           {  
+              if(strtolower(substr($row['photo'],-3))=="pdf"){
+                  $thumbnail = JURI::base()."images/file_pdf.png";
+              }else if(strtolower(substr($row['photo'],-3))=="doc" || substr($row['photo'],-4)=="docx"){
+                  $thumbnail = JURI::base()."images/doc_logo.png";
+              }else if(strtolower(substr($row['photo'],-3))=="xls" || substr($row['photo'],-4)=="xlsx"){
+                  $thumbnail = JURI::base()."images/excel-logo.jpg";
+              }else{
+                  $thumbnail = JURI::base()."images/file-icon.jpg";
+              }
 
-            <!-- ----- General Tab (previously Files) ----- -->
-            <div id="files" class="tab_content" style="display: block;"> 
-                <input type="submit" name="delete-file" value="Delete File"  />
-                <input type="hidden" value="" id="fileid" name="fileid" />
-                <br/><br/>
-                <ul id="tbl-imgpic" class="picture-block" >
-                    <?php
-                    $resultimg = mysql_query("
-                        SELECT cf_id, clientid, photo, file_name 
-                        FROM ver_chronoforms_data_pics_vic 
-                        WHERE clientid = '$ClientID' 
-                        AND upload_type ='file' 
-                    ");
-                    if (!$resultimg) {
-                        echo 'Could not run query: ' . mysql_error();
-                        exit;
-                    }
-                    $thumbnail = "";
-                    while($row = mysql_fetch_row($resultimg)) {
-                        if (substr($row[2],-3)=="pdf") {
-                            $thumbnail = JURI::base()."images/pdf_logo.jpg";
-                        }else if (substr($row[2],-3)=="doc" || substr($row[2],-4)=="docx") {
-                            $thumbnail = JURI::base()."images/doc_logo.png";
-                        }else if (substr($row[2],-3)=="xls" || substr($row[2],-4)=="xlsx") {
-                            $thumbnail = JURI::base()."images/excel-logo.jpg";
-                        }else{
-                            $thumbnail = JURI::base().$row[2];
-                        }
-                        echo "<li><a href=\"$row[2]\" download><img src=\"{$thumbnail}\" height=\"75px\" ></a><br/><input type=\"checkbox\" class=\"chkfile\" name=\"chk\" value=\"$row[0]\"/> {$row[3]}</li>";
-                    }
-                    ?>
-                </ul>
-                <br/>
-                <table id="tbl-pic">
-                    <tr>
-                        <td class="tbl-upload">
-                            <input type="file" name="doc[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt"> 
-                            <input type="submit" value="Save" id="btn_save_file" name="save_file" class="bbtn">  
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <!-- --------------------------------------- End of Tab Content   ------------------------------------------------ -->
+              Print "<tr>"; 
+              Print "<td>". $info['template_name'] . "</td> "; 
+              Print "<td>" . date(PHP_DFORMAT,strtotime($info['datecreated'])) . " </td>";
+              Print "<td style='border:none;'><a rel=\"nofollow\" href=\"index.php?pid=".$info['cf_id']."?option=com_chronoforms&tmpl=component&chronoform=Download-PDF\">Click Here <img src='".JURI::base()."templates/".$mainframe->getTemplate()."/images/file_pdf.png'  /></a></td>  ";
+            
+            echo "<td>";
+            if($info['has_upload_file']==1){
+                echo '<div> 
+                      <ul style="list-style-type: none; margin: 5px 0 5px 10px;padding: 0;"  >';
+               
+                  $sql = "SELECT cf_id, clientid, photo, file_name FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='signed_correspondence_doc' AND ref_id={$info['cf_id']} ";
+                  $resultimg = mysql_query($sql);
+
+                  $thumbnail = "";
+                  while($row = mysql_fetch_array($resultimg))
+                  { 
+                    if(strtolower(substr($row['photo'],-3))=="pdf"){
+                        $thumbnail = JURI::base()."images/file_pdf.png";
+                    }else if(strtolower(substr($row['photo'],-3))=="doc" || substr($row['photo'],-4)=="docx"){
+                        $thumbnail = JURI::base()."images/doc_logo.png";
+                    }else if(strtolower(substr($row['photo'],-3))=="xls" || substr($row['photo'],-4)=="xlsx"){
+                        $thumbnail = JURI::base()."images/excel-logo.jpg";
+                    }else{
+                        $thumbnail = JURI::base()."images/file-icon.jpg";
+                    } 
+                   echo "<li><a href=\"".$row['photo']."\" download class='remove-link'>  <img src=\"{$thumbnail}\" height=\"20px\" style='display:inline'> ".$row['file_name']."</a>    <span class=\"ui-icon ui-icon-closethick\" style='display:inline-block; cursor: pointer;' onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   > </span></li>";
+                  }
+                echo "</ul>
+                </div>";
+             
+            } 
+            Print "<input type='file' name='signed_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
+                        <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$(\"#upload_type\").val(\"signed_correspondence_doc\"); $(\"#doc_id\").val(\"{$info['cf_id']}\"); $(\"#chronoform_Client_Folder_Vic\").submit();'>  "; 
+            echo "</td>"; 
+
+              Print "<td> <a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\"   class='remove-link'  >Delete</a> </td> </tr>";
+           
+           }
+
+           
+
+           $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='upload_correspondence_doc' ");
+              if (!$resultimg) {
+                  echo 'Could not run query: ' . mysql_error();
+                  exit;
+              } 
+
+              while($row = mysql_fetch_array($resultimg))
+              {  
+                echo "<tr>
+                      <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
+                echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>";
+                echo "<td  >  </td>"; 
+                echo "<td  >  </td>"; 
+                echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a> </td>";  
+                echo "</tr>";
+
+              } 
+
+           ?>
+          </table>
         </div>
+
+         <br/><br/>
+        <table id="tbl-pic">
+          <tr>
+            <td class="tbl-upload">
+                <input type='file' name='upload_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'>
+                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("upload_correspondence_doc"); $("#chronoform_Client_Folder_Vic").submit();'>
+            </td>
+          </tr>
+      </table>
+
+    </div>  
+    <!-------------------------------------------- END of Correspondence  Tab -->
+     
+ 
+    <!-------------------------------------------- Stat Docs Tab-->
+    <div id="statdocs" class="tab_content" style="display: block;">
+      <div class="modification-button-holder">
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Planning_Application_Letter" style="margin-right:5px;">Planning Application Letter</a>
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Amendment_Planning_Permit" style="margin-right:5px;">Amendment Planning Permit</a>
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Replacement_Drawing_Letter" style="margin-right:5px;">Replacement Drawing Letter</a>
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Building_Appeals_Board" style="margin-right:5px;">Building Appeals Board</a> <br/>
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Build_Over_Easement" style="margin-right:5px;">Build Over Easement</a>
+        <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Report_And_Consent" style="margin-right:5px;">Report and Consent</a>
+      </div>
+      <br/>
+        <div class="drawing-tbl">
+          <table class="tbl-pdf">
+            <tr>
+              <th>Filename</th>
+              <th>Date Created</th>
+              <th>Download PDF</th>
+              <th>Uploaded Doc</th>
+              <th> &nbsp; </th>
+            </tr>
+            <?php 
+
+           $data = mysql_query("SELECT * FROM ver_chronoforms_data_letters_vic  WHERE  clientid='{$ClientID}' AND (template_name LIKE 'Replacement Drawing Letter%' OR   template_name LIKE 'Planning Application Letter%' OR template_name LIKE 'Amendment Planning Permit%' OR template_name LIKE 'Building Appeals Board%' OR template_name  LIKE 'Build Over Easement%' OR template_name LIKE 'Report And Consent%') ORDER BY datecreated DESC") 
+           or die(mysql_error()); 
+
+           while($info = mysql_fetch_array( $data )) 
+           { 
+              Print "<tr>"; 
+              Print "<td>". $info['template_name'] . "</td> "; 
+              Print "<td>" . date(PHP_DFORMAT,strtotime($info['datecreated'])) . " </td>";
+
+              Print "<td style='border:none;'><a rel=\"nofollow\" onclick=\"window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;\" href=\"index.php?pid=".$info['cf_id']."?option=com_chronoforms&tmpl=component&chronoform=Download-PDF\">Click Here <img src='".JURI::base()."templates/".$mainframe->getTemplate()."/images/file_pdf.png'  /></a></td> ";
+
+              echo "<td>";
+              if($info['has_upload_file']==1){
+                  echo '<div> 
+                        <ul style="list-style-type: none; margin: 5px 0 5px 10px;padding: 0;"  >';
+                 
+                    $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='signed_stat_doc' AND ref_id={$info['cf_id']} ");
+                    $thumbnail = "";
+                    while($row = mysql_fetch_array($resultimg))
+                    { 
+                      if(strtolower(substr($row['photo'],-3))=="pdf"){
+                          $thumbnail = JURI::base()."images/file_pdf.png";
+                      }else if(strtolower(substr($row['photo'],-3))=="doc" || substr($row['photo'],-4)=="docx"){
+                          $thumbnail = JURI::base()."images/doc_logo.png";
+                      }else if(strtolower(substr($row['photo'],-3))=="xls" || substr($row['photo'],-4)=="xlsx"){
+                          $thumbnail = JURI::base()."images/excel-logo.jpg";
+                      }else{
+                          $thumbnail = JURI::base()."images/file-icon.jpg";
+                      } 
+                     echo "<li><a href=\"".$row['photo']."\" download class='remove-link'>  <img src=\"{$thumbnail}\" height=\"20px\" style='display:inline'> ".$row['file_name']."</a>    <span class=\"ui-icon ui-icon-closethick\" style='display:inline-block; cursor: pointer;' onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   > </span></li>";
+                    }
+                  echo "</ul>
+                  </div>";
+               
+              } 
+
+              Print "<input type='file' name='signed_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
+                          <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$(\"#upload_type\").val(\"signed_stat_doc\"); $(\"#doc_id\").val(\"{$info['cf_id']}\"); $(\"#chronoform_Client_Folder_Vic\").submit();'>  "; 
+              echo "</td>";
+
+            Print "<td> <a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\" class='remove-link'  >Delete</a> </td> </tr>";
+          
+           } 
+
+           $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='upload_stat_doc' ");
+              if (!$resultimg) {
+                  echo 'Could not run query: ' . mysql_error();
+                  exit;
+              } 
+
+              while($row = mysql_fetch_array($resultimg))
+              { 
+              echo "<tr>
+                      <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
+              echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>";
+              echo "<td  >  </td>"; 
+              echo "<td  >  </td>"; 
+              echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a> </td>"; 
+
+              echo "</tr>";
+
+              } 
+           
+
+           ?>
+          </table>
+        </div>
+
+         <br/><br/>
+         <table id="tbl-pic">
+            <tr>
+              <td class="tbl-upload">
+                   <input type='file' name='upload_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'>
+                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("upload_stat_doc"); $("#chronoform_Client_Folder_Vic").submit();'>  
+              </td>
+            </tr>
+        </table> 
+       
+
     </div>
+    <!---------------------------------------------- END Statutory Tab -->
+ 
+    
+    <!---------------------------------------------- Photos Tab -->
+    <div id="photos" class="tab_content" style="display: block;">
+      <!-- <INPUT type="button" value="Add Row" onclick="addRow('tbl-pic')" /> <input type="submit" name="delete-pic" value="Delete Picture" onclick="deleteRow('tbl-pic');deleteRow2('tbl-imgpic')" />   -->
+      <input type="submit" name="delete-pic" id="btn_picid" class="bbtn btn-delete" value="Delete Picture" style="margin-left: -1000px;float: left;"  />
+      <input type="hidden" value="" id="picid" name="picid" />
+      <div id="drawing-tbl">
+        <br/> 
+       <table class="tbl-pdf" cellpadding="10">
+            <tr>
+              <th>Filename</th>
+              <th>Date Created</th>    
+              <th>&nbsp; </th>  
+            </tr>
+          <?php
+$resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID' AND upload_type ='pic' ");
+if (!$resultimg) {
+    echo 'Could not run query: ' . mysql_error();
+    exit;
+}
+   while($row = mysql_fetch_assoc($resultimg))
+      {
+        echo "<tr>
+                <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
+        echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>"; 
+        echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a> </td>"; 
+
+        echo "</tr>";
+      }     
+   
+?>
+        </table>
+        <br/>
+        <table id="tbl-pic" >
+          <tr> 
+            <td class="tbl-upload">
+                <input type="file" name="pic[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf, .odt">                 
+                <input type="submit" value="Save" id="bsbtn" name="save_pic" class="bbtn btn-save">  
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div> 
+    <!---------------------------------------------- END Photos Tab -->
 
 
-    <div id="_tabs_wrapper" class="button-tab">
-        <input type="submit" value="Cancel Contract" id="bsbtn" name="delete" class="bbtn" onclick="return confirm('Are you sure you want to cancel contract?');">
-        <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn">
-        <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn">
+     <!---------------------------------------------- Drawing Tab -->
+    
+    <div id="drawing" class="tab_content">
+      <!--<INPUT type="button" value="Add Row" onclick="addRow('tbl-draw')" /> onclick="deleteRow('tbl-draw');deleteRow2('tbl-img')" -->
+      <input type="submit" id="delete_drawing" name="delete-drawing" class="bbtn btn-delete" value="Delete Drawing" style="margin-left: -1000px;float: left;"  />
+      <input type="hidden" value="" id="drawingid" name="drawingid" />
+      <div id="drawing-tbl">
+        <br/>
+        <table class="tbl-pdf" cellpadding="10">
+          <tr>
+            <th>Filename</th>
+            <th>Date Created</th>    
+            <th>&nbsp; </th>  
+          </tr>
+        <?php
+$resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_drawings_vic WHERE clientid = '$ClientID'");
+if (!$resultimg) {
+    echo 'Could not run query: ' . mysql_error();
+    exit;
+}
+
+ 
+      while($row = mysql_fetch_assoc($resultimg))
+      {
+        echo "<tr>
+                <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
+        echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>"; 
+        echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#drawingid').val('".$row["cf_id"]."'); $('#delete_drawing').click();}\"   class='remove-link'  >Delete</a> </td>";  
+        echo "</tr>";
+      }              
+
+?>
+        </table>
+        <br/>
+        <table id="tbl-draw">
+          <tr> 
+            <td class="tbl-upload">
+                <input type="file" name="photo[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf">
+                <input type="submit" value="Save" id="bsbtn" name="save_drawing" class="bbtn btn-save">
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
+    <!---------------------------------------------- END of Drawing Tab -->
+
+
+    <!---------------------------------------------- General Tab -->
+    <div id="general" class="tab_content" style="display: block;">  
+        <br/>
+        <div class="drawing-tbl">
+          <table class="tbl-pdf" cellpadding="10">
+            <tr>
+              <th>Filename</th>
+              <th>Date Created</th>
+              <th>&nbsp; </th>  
+            </tr>
+            <?php
+                $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='file' ");
+                if (!$resultimg) {
+                    echo 'Could not run query: ' . mysql_error();
+                    exit;
+                }
+
+                //error_log(" resultimg sql:"."SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='file' ", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+                //$thumbnail = "";
+                while($row = mysql_fetch_assoc($resultimg))
+                {
+                  echo "<tr>
+                          <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
+                  echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>"; 
+                  echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a> </td>"; 
+
+                  echo "</tr>";
+                  
+                }
+                  
+            ?>
+          </table>
+          
+          <br/><br/>
+
+          <table id="tbl-pic">
+            <tr>
+            <td class="tbl-upload">
+                  <input type="file" name="doc[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt"> 
+                  <!-- <input type="submit" value="Save" id="btn_save_file" name="save_file" class="bbtn btn-save"> -->
+
+                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("file"); $("#chronoform_Client_Folder_Vic").submit();'>    
+              </td>
+            </tr>
+          </table>
+
+        </div>
+        
+    </div>
+    <!---------------------------------------------- END of General Tab -->
+    
+    </div>
+  </div>
+</div>
+  <!----------------------------------------- End of ALL Tab Content -------------------------------------------------->
+
+<?php if($page_name=="maintenancefolder"){ ?>
+    
+
+<?php }else if($is_system_admin || $is_construction_manager || $is_account_user){ ?>
+<div id="tabs_wrapper" class="button-tab">
+  <input type="submit" value="Cancel Contract" id="bsbtn" name="delete" class="bbtn" onclick="return confirm('Are you sure you want to cancel contract?');">
+  <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn">
+  <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn">
+</div>
+<?php }else if($is_reception){ ?>
+  <div id="tabs_wrapper" class="button-tab">
+     <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn">   
+     <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn"> 
+  </div>
+ 
+<?php }else{ ?>
+  <div id="tabs_wrapper" class="button-tab">
+    <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn">    
+    <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn"> 
+  </div>  
+  
+<?php } ?>
+
 </form>
 
 <form method="post" class="" id="form_pdf">  
@@ -1579,6 +2107,12 @@ $groups = $user->get('groups');
     <input type="hidden" name="pdf_cf_id" id="pdf_cf_id"  />
 </form>
 
+<form method="post"  action="" id="form_generate_checklist">  
+  <input type="hidden" name="generate_load_list"   />
+  <input type="hidden" name="clientid" value="<?php echo $QuoteID; ?>"  />
+  <input type="hidden" name="projectid" value="<?php echo $projectid; ?>"  />
+  
+</form>
 
 <script type="text/javascript">
 
@@ -1588,7 +2122,7 @@ clientbuilder.setselectedClassTarget("link") //"link" or "linkparent"
 clientbuilder.init()
   
 var quoteinfo=new ddtabcontent("contract-tabs")
-quoteinfo.setpersist(true)
+quoteinfo.setpersist(false)
 quoteinfo.setselectedClassTarget("link") //"link" or "linkparent"
 quoteinfo.init()
  
@@ -1605,7 +2139,7 @@ noteinfo.setselectedClassTarget("link") //"link" or "linkparent"
 noteinfo.init()
 
 
-$(document).ready(function() {
+$(document).ready(function(){
   $('.chkdraw').change(function() {
      $('#drawingid').val($(this).val()); 
      var o = $(this);
@@ -1635,6 +2169,9 @@ $(document).ready(function() {
      
     });
   
+    $(".disabled-div input" ).prop( "disabled", true );
+    $(".disabled-div select" ).prop( "disabled", true );
+
   
   });
  
@@ -1675,8 +2212,8 @@ $(document).ready(function() {
             for(var i=0; i<rowCount; i++) {
                 var row = table.rows[i];
                 var chkbox = row.cells[0].childNodes[0];
-                if (null != chkbox && true == chkbox.checked) {
-                    if (rowCount <= 1) {
+                if(null != chkbox && true == chkbox.checked) {
+                    if(rowCount <= 1) {
                         alert("Cannot delete all the rows.");
                         break;
                     }
@@ -1700,8 +2237,8 @@ $(document).ready(function() {
             for(var i=0; i<rowCount; i++) {
                 var row = table.rows[i];
                 var chkbox = row.cells[0].childNodes[0];
-                if (null != chkbox && true == chkbox.checked) {
-                    if (rowCount <= 0) {
+                if(null != chkbox && true == chkbox.checked) {
+                    if(rowCount <= 0) {
                         alert("Cannot delete all the rows.");
                         break;
                     }
@@ -1743,7 +2280,7 @@ var frmWar = document.getElementById("warrantyinsuranceid");
 var frmCert = document.getElementById("certifierid")
 var frmDev = document.getElementById("developmentid");
 
-if (frmTYPE.options[frmTYPE.selectedIndex].value == "By Vergola")
+if(frmTYPE.options[frmTYPE.selectedIndex].value == "By Vergola")
  {
     frmPlan.disabled = false;
     frmApp.disabled = false;
@@ -1765,21 +2302,17 @@ else
 }
 
 $(document).ready(function() {
-if ($('#council option:selected').val() == 'By Vergola') {
+if ($('#council option:selected').val() == 'By Vergola'){
     $('#statutory-approval').show();
   }else{
     $('#statutory-approval').hide();
   }
 });
 
-$(document).ready(function() {
-if ($('#engractive option:selected').val() == 'No') {
-    $('#sitespecengrapproveddate').disabled();
-  }
-});
 
-function delete_pdf_letter(event,o) {
-  if (confirm('Are you sure you want to delete document?')) {
+
+function delete_pdf_letter(event,o){
+  if(confirm('Are you sure you want to delete document?')){
     // alert("deleting"); 
     event.preventDefault();
     //var d = event.target.attributes;
@@ -1798,18 +2331,18 @@ function delete_pdf_letter(event,o) {
         dataType: 'json',   
         data: iData,  
         success: function(data) {         
-          if (data.success==true) {  
+          if(data.success==true){  
             //console.log(data); 
             // window.href("");
             // $(o).parent().parent("tr").remove();
             // //console.log($(o).parent().parent().remove());
-            //  $(o).fadeTo("slow", 0.01, function() {
+            //  $(o).fadeTo("slow", 0.01, function(){
             //     $(this).slideUp("slow", function() { //slide up
             //            $(this).remove(); //then remove from the DOM
             //        });
             //  });
 
-            $(o).parent().parent("tr").slideUp(250, function() { $(this).remove() } );
+            $(o).parent().parent("tr").slideUp(250, function(){ $(this).remove() } );
 
           }else{
             $("#notification .message").show().addClass('error'); 
@@ -1823,10 +2356,7 @@ function delete_pdf_letter(event,o) {
     }
   } 
 
-// var disableField = function () {
-//   var state = document.getElementById("engractiveid").selected = 'Yes';
-//   document.getElementById("sitespecengrapproveddateid").disabled = state;
-// }​;​
+
 
 </script>
 
@@ -1835,7 +2365,7 @@ function delete_pdf_letter(event,o) {
 
 
 <?php
-function list_statutory($name="",$selected=null) {  
+function list_statutory($name="",$selected=null){  
   $sqlcolour = "SELECT * FROM ver_chronoforms_data_colour_vic ORDER BY colour";
   $resultcolour = mysql_query ($sqlcolour);
   $r = "<select class='colour' name='{$name}' style='padding:2px 2px 2px 130px;' >";
@@ -1850,7 +2380,7 @@ function list_statutory($name="",$selected=null) {
   return $r;
 }
 
-function list_Stat_Req_Planning($name="",$selected=null) {  
+function list_Stat_Req_Planning($name="",$selected=null){  
   $sqlcolour = "SELECT * FROM ver_chronoforms_data_colour_vic ORDER BY colour";
   $resultcolour = mysql_query ($sqlcolour);
   $r = "<select class='colour' name='{$name}' style='padding:2px 2px 2px 130px;'>";
@@ -1864,4 +2394,5 @@ function list_Stat_Req_Planning($name="",$selected=null) {
   $r .= "</select>";
   return $r;
 }
+
 ?>
