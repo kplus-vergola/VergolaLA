@@ -57,7 +57,9 @@ $sql = "SELECT * FROM ver_chronoforms_data_clientpersonal_vic WHERE clientid  = 
 //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');   return;
 $result = mysql_query($sql);
 $retrieve = mysql_fetch_array($result);
+         
 if (!$retrieve) {die("Error: Data not found..");}
+ 
 $id = $retrieve['pid'];
 $cf_id = "0"; 
 //This is the Time Save 
@@ -83,6 +85,19 @@ $now = time();
     $ClientEmail = $retrieve['client_email'];
  
     //error_log("ClientFirstName: ".$ClientFirstName, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');   
+                       
+                       
+                       
+                       
+                       
+                     
+                   
+                       
+                     
+                     
+                     
+                   
+                   
     
     $SiteTitle = $retrieve['site_title'];
     $SiteFirstName = $retrieve['site_firstname'];
@@ -120,7 +135,27 @@ $now = time();
 
 if(isset($_POST['update']))
 {   
- 
+  //Update variation value from Vergola Standard view
+$variation_amount = mysql_real_escape_string($_POST['variation_amount']);
+(floatval($variation_amount)<=0?$variation_amount=0:''); 
+
+$sql = "UPDATE ver_chronoforms_data_followup_vic SET 
+variation = {$variation_amount}
+WHERE projectid = '$projectid'";
+
+mysql_query($sql) or die(mysql_error());
+
+                
+                                     
+                             
+
+                           
+                 
+                
+
+                    
+
+
 $deposit_paid_amount = mysql_real_escape_string($_POST['deposit_paid_amount']);
 $progress_claim_amount = mysql_real_escape_string($_POST['progress_claim_amount']);
 $final_payment_amount = mysql_real_escape_string($_POST['final_payment_amount']);
@@ -166,8 +201,12 @@ WHERE projectid = '$projectid'";
 
 mysql_query($sql)or die(mysql_error());
 
+                                     
 
+                 
+                                            
 $check_measurer = mysql_real_escape_string($_POST['checkmeasurer']); 
+   
 
 $check_measure_date = "NULL";
 if (strlen($_POST['checkdate']) && $_POST['checkdate'] != "0000-00-00 00:00:00"){
@@ -302,7 +341,33 @@ if (strlen($_POST['handover_date']) && $_POST['handover_date'] != "0000-00-00 00
 $fw_complete = "NULL";
 if (strlen($_POST['fw_complete']) && $_POST['fw_complete'] != "0000-00-00 00:00:00"){
   $fw_complete = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['fw_complete'])))."'";
+                           
+                             
+                             
+                                     
+                             
+                                     
+                              
+                            
+                                 
+                     
+                       
+                             
+                             
+                           
+                         
+                       
+                               
+                     
+                             
+                     
+                               
+                       
+                           
 } 
+                    
+     
+                      
 
 $time_frame_letter = "NULL"; 
 if (strlen($_POST['time_frame_letter']) && $_POST['time_frame_letter'] != "0000-00-00 00:00:00"){
@@ -314,7 +379,18 @@ if (strlen($_POST['schedule_completion']) && $_POST['schedule_completion'] != "0
   $schedule_completion = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['schedule_completion'])))."'";
 } 
 
+  
+              
+                                  
+                                        
+   
+  
+                                     
 
+                 
+                                                  
+                                                               
+   
 
 $sql = "UPDATE ver_chronoforms_data_contract_vergola_vic SET 
 check_measurer = '{$check_measurer}',
@@ -350,6 +426,10 @@ WHERE projectid = '$projectid'";
 //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); exit();
 mysql_query($sql) or die(mysql_error()); 
 
+              
+                                    
+                                          
+   
 
 $planning_application_date = "NULL";
 if (strlen($_POST['planningdate']) && $_POST['planningdate'] != "0000-00-00 00:00:00"){
@@ -379,12 +459,24 @@ if (strlen($_POST['development']) && $_POST['development'] != "0000-00-00 00:00:
 // $stat_req_easement = mysql_real_escape_string($_POST['stat_req_easement']); 
 $stat_req_planning = mysql_real_escape_string($_POST['stat_req_planning']);  
 $con_note_number = mysql_real_escape_string($_POST['con_note_number']);
+   
 
 $m_o_d = mysql_real_escape_string($_POST['m_o_d']);
 $m_o_d_followup = "NULL"; 
 if (strlen($_POST['m_o_d_followup']) && $_POST['m_o_d_followup'] != "0000-00-00 00:00:00"){
   $m_o_d_followup= "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['m_o_d_followup'])))."'";
+                           
+                                   
+                   
+                             
+                     
+                             
+                   
+                     
 }
+                    
+     
+                       
 
 $stat_req_easement_waterboard_approval_date = "NULL"; 
 if (strlen($_POST['stat_req_easement_waterboard_approval_date']) && $_POST['stat_req_easement_waterboard_approval_date'] != "0000-00-00 00:00:00"){
@@ -507,6 +599,9 @@ if ($cnt > 0 && $cnt == $cnt2 && $cnt2 == $cnt3 && $checknotes != '') {
 
  $queryn = "INSERT INTO ver_chronoforms_data_notes_vic (clientid, datenotes, username, content) VALUES " . implode(", ", $insertArr);
  
+                           
+             
+                    
  mysql_query($queryn) or trigger_error("Insert failed: " . mysql_error());
 
 }
@@ -539,6 +634,11 @@ if(isset($_FILES['pic'])){  // upload pic from Pics tab
       if (move_uploaded_file($tmp_name, $target)) {
 
   $query = "INSERT INTO ver_chronoforms_data_pics_vic (clientid, datestamp, photo, file_name, upload_type) VALUES  ('$ClientID', NOW(), '$target', '{$file_name}', 'pic')";
+                              
+                                   
+            
+                                       
+        
    mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
 
               
@@ -549,6 +649,7 @@ if(isset($_FILES['pic'])){  // upload pic from Pics tab
 
  
 if(isset($_FILES['photo'])){ // upload drawing photo from Drawing tab
+                      
         //error_log(" RepIdent: ".$RepIdent, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
       foreach ($_FILES['photo']['tmp_name'] as $key => $tmp_name){
           //This is the directory where images will be saved 
@@ -582,6 +683,10 @@ if(isset($_FILES['doc'])){  //Upload file from Files tab
         if (!file_exists($path)) {
           mkdir($path, 0777, true);
         }
+                         
+                                          
+                         
+                                               
 
          //This is the directory where images will be saved  
          // $file_name = $_FILES['doc']['name'][0];
@@ -598,7 +703,11 @@ if(isset($_FILES['doc'])){  //Upload file from Files tab
       if (move_uploaded_file($tmp_name, $target)) {
 
   //$query = "INSERT INTO ver_chronoforms_data_pics_vic (clientid, datestamp, photo, upload_type, file_name) VALUES  ('$ClientID', '$datestamp', '$target','file','{$file_name}')";
+                                
+                       
+             
         $query = "INSERT INTO ver_chronoforms_data_pics_vic (clientid, datestamp, photo, upload_type, file_name) VALUES  ('$ClientID', NOW(), '$target','{$upload_type}','{$file_name}')";
+        
    mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
       //error_log($query, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
               
@@ -616,6 +725,8 @@ if(isset($_FILES['signed_doc'])){  //Upload file from Files tab
         if (!file_exists($path)) {
           mkdir($path, 0777, true);
         }
+   
+ 
 
   //This is the directory where images will be saved 
           
@@ -669,6 +780,16 @@ if(isset($_FILES['signed_doc'])){  //Upload file from Files tab
           //error_log($ext, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
 
         if (move_uploaded_file($tmp_name, $target)) {
+            
+                              
+                                   
+             
+                                      
+        
+                                          
+     
+   
+ 
 
         //$query = "UPDATE  ver_chronoforms_data_letters_vic SET uploaded_filename='{$file_name}' WHERE cf_id={$doc_id} ";
          $query = "INSERT INTO ver_chronoforms_data_pics_vic (clientid, datestamp, photo, upload_type, file_name) VALUES  ('$ClientID', NOW(), '$target','{$upload_type}','{$file_name}')";
@@ -747,6 +868,8 @@ if(isset($_POST['delete_pdf']))
   $cf_id = $_POST['pdf_cf_id'];
   //error_log('Inside delete delete_pdf: ', 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
   mysql_query("DELETE from ver_chronoforms_data_letters_vic WHERE cf_id = '$cf_id'")
+                           
+                
         or die(mysql_error()); 
   
   $result = array('success' => true, 'note' => '');
@@ -924,6 +1047,7 @@ if(isset($_POST['close']))
         
         <div class='site-address' > <h1 >Site Address:</h1> 
             <p> <?php echo $SiteTitle ; ?> <?php echo $SiteFirstName; ?> <?php echo $SiteLastName; ?>  </p>
+                                                 
             <p><?php echo $SiteAddress1; ?></p>
             <?php if ( $SiteAddress2!='') {echo "<p>" .  $SiteAddress2 . "</p>";} else {echo "";} ?>
             <!--- Site Suburb -->
@@ -965,10 +1089,11 @@ if(isset($_POST['close']))
   <!--- End of Site Address --> 
   
 </div> </div>
+    
 
 
 <!-------------------------------------------------------- Info Quotes -------------------------------------------------------->
-<div id="tabs_wrapper" class="tab_content quote-tab">
+<div id="tabs_wrapper" class="quote-tab">
     <?php if($page_name=="maintenancefolder"){ 
         include "maintenance_details_vic.php";
     }else{  
@@ -977,8 +1102,75 @@ if(isset($_POST['close']))
     } ?>
 
 </div>    
-     
+    <!-- Quote Details Tab -->
+    
+    <div id="quotedetails" class="tab_content" style="display: block;">    
+      <?php //include "contract_quotes_vic.php"; ?>
+    </div>
+    
+     <!-- Bill of Materials Tab -->
+      <?php 
+      $user = JFactory::getUser();
+$groups = $user->get('groups');
+      foreach($groups as $group) {
+    if ($group == '10') { ?>
+    <div id="billofmaterials" class="tab_content" style="display: block;">    
+      <?php //include "contract_bom_vic.php"; ?>
+    </div>
+    <?php } else {echo "";} } ?>
+    
+     <!-- Purchase Order Tab -->
+      <?php foreach($groups as $group) {
+    if ($group == '10' || false) { ?>
+    <div id="purchaseorder" class="tab_content" style="display: none;">    
+      <?php //include "contract_po_vic.php"; ?>
+    </div>
+    <?php } else {echo "";} } ?>
+     <!-- Check List  Tab -->
+      <?php foreach($groups as $group) {
+    if ($group == '10') { ?>
+    <div id="checklist" class="tab_content" style="display: block;">    
+      Checklist Here
+    </div>
+    <?php } else {echo "";} } ?>
+  </div>
+</div>     
+  
+                                       
+                           
+      
+  
+                   
+      
+                  
+                 
+                  
+              
+                                        
+                        
+      
+                
+  
+                
+                    
+                   
+                                       
+                         
+      
+                
+               
+                    
+              
+                                    
+          
+      
+                
+    
+    
 </div>
+
+
+
 <!------------------------------------------------------------- Enquiry Tracker Tab ------------------------------------------------>
 <!-- <div id="tabs_wrapper" class="info-tab-contract-folder"> -->
 <div id="tabs_wrapper" class="info-tab">
@@ -1518,10 +1710,16 @@ if(isset($_POST['close']))
 
  
 <!------------------------------------------------- Notes Content Tab -------------------------------------------------------------->
+                                                                  
 <div id="tabs_wrapper" class="notes-tab">
   <div id="tabs_container">
     <ul id="notes-tabs" class="shadetabs">
       <li><a href="#" rel="notes" class="selected">Notes</a></li>
+          
+                              
+                                 
+           
+                                  
       <li><a href="#" rel="sales">Sales</a></li>
       <li><a href="#" rel="documents">Correspondence</a></li>
       <li><a href="#" rel="statdocs">Statutory</a></li>
@@ -1553,8 +1751,134 @@ $resultnotes = mysql_query("SELECT cf_id, date_created, username, content FROM v
 $i=1;
 if (!$resultnotes) {
     echo 'Could not run query: ' . mysql_error();
+           
+       
+                             
+         
+          
+                                     
+                                                 
+                              
+         
+           
+         
+        
+              
+            
+
+                                 
+                           
+                           
+                                                                                                                                                                                                     
+                                                                                                                                                                                                           
+                             
+                                                                                                                                                                                                                                 
+                                                                                                                                                                                                                              
+                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                 
+                                                                                 
+                    
+                    
+              
+                       
+                         
+                         
+                          
+               
+                
+                       
+                                       
+                   
+                                           
+                                      
+                                           
+                                    
+                               
+                             
+                          
+                              
+           
+                                                                                 
+                   
+                                  
+                                                  
+                                                                                                                                                                                                                                             
+
+                  
+                            
+                    
+                                                      
+             
+                                                                                                                                  
+                      
+                                     
+                
+                                        
+                                          
+                                                            
+                                          
+                                                            
+                                          
+                  
+                                           
+                
+                                                                                                                                                                                                                        
+               
+                   
+                  
+             
+            
+                                                                               
+                                                                                                                                 
+                  
+
+                                                                                      
+         
+           
+
+                                                                                                          
+                        
+                                         
     exit;
+                 
+                        
+                                     
+                 
+                                          
+                                            
+                                                              
+                                            
 }
+                                            
+                    
+                                             
+                   
+
+                    
+                                                       
+                                                    
+                           
+                         
+                                                                                                                    
+
+                       
+
+                 
+            
+           
+                
+            
+               
+                
+                      
+                
+                           
+                                                                                
+                  
+                                                                                                      
+                 
+                 
+                
 
   while($row = mysql_fetch_row($resultnotes))
     {
@@ -1718,6 +2042,20 @@ while($info = mysql_fetch_array( $data ))
       </div>
       <br/>
 
+                           
+                                       
+                                                                                               
+                                                                                                                                                                                                                         
+                                                                                              
+                                                                                                                                                                                                                         
+                                                                                                    
+                                                                                                                                                                                                                                 
+                                                                                                                                                                                                                                 
+           
+                                                                                                                                                                                                                       
+                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                         
+                                                                                                 
         <div class="drawing-tbl">
           <table class="tbl-pdf">
             <tr>
@@ -1726,15 +2064,96 @@ while($info = mysql_fetch_array( $data ))
               <th>Download PDF</th> 
               <th>Uploaded Doc</th>  
               <th>&nbsp; </th> 
+                       
+                                       
+                                      
+                                    
+                                        
+                                        
+                                   
+                                           
+                                             
+                           
+                          
+                                  
+                                 
+                        
+                                         
+                                                      
+                                                                                                                                                       
             </tr>
             <?php 
+              
+              
+              
+            
+           
 
            $sql = "SELECT * FROM ver_chronoforms_data_letters_vic  WHERE clientid='{$ClientID}' AND (template_name LIKE 'Time Frame Letter%' OR template_name LIKE 'Proposed Drawing%' OR template_name LIKE 'Amended Proposed Drawing%' OR template_name LIKE 'Proposed Drawing Rescode%' OR template_name LIKE 'Res Code Letter%'  OR template_name LIKE 'Protection Work Notice Client%' OR template_name  LIKE 'Protection Work Notice Neighbour%')  ORDER BY datecreated DESC";
            $data = mysql_query($sql) 
            or die(mysql_error()); 
 
             //error_log(" sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+                                       
+                                                                                                                                                                                                                                   
+                                                                                                                                                                                                                                 
+                                                                                                                                                                                                                                   
+                                                                                                                                                                                                                               
+                                                                                                                                                                                                                           
+                                                                                                                                                                                                                           
+                    
+                    
+              
+                       
+                         
+                         
+               
+               
+                       
+                                       
+                                           
+                                         
+                                         
+                                      
+                                     
+                                    
+                           
+                          
+                                  
+              
+                                 
+                        
+                                         
+                                                      
+                                                                                                                                                                                                                                                  
+                                                                                           
+                
+             
+              
+              
+            
+          
 
+                     
+                                     
+                                              
+                                          
+                                    
+                    
+             
+                                
+               
+                          
+                                   
+                                 
+                             
+                           
+               
+                      
+                                     
+                 
+             
+                    
            while($info = mysql_fetch_array( $data )) 
            {  
               if(strtolower(substr($row['photo'],-3))=="pdf"){
@@ -1746,6 +2165,24 @@ while($info = mysql_fetch_array( $data ))
               }else{
                   $thumbnail = JURI::base()."images/file-icon.jpg";
               }
+                                   
+                               
+                                                                                                                
+             
+              
+             
+             
+                    
+               
+                          
+                                                                     
+                                                         
+                                                    
+                 
+               
+              
+            
+          
 
               Print "<tr>"; 
               Print "<td>". $info['template_name'] . "</td> "; 
@@ -1759,6 +2196,38 @@ while($info = mysql_fetch_array( $data ))
                
                   $sql = "SELECT cf_id, clientid, photo, file_name FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='signed_correspondence_doc' AND ref_id={$info['cf_id']} ";
                   $resultimg = mysql_query($sql);
+                            
+               
+                      
+                                     
+                 
+             
+                                   
+             
+                              
+                                        
+                                                
+                                        
+                                                
+                                          
+                  
+                                  
+               
+                                                                                                            
+             
+              
+             
+             
+                     
+               
+                           
+                                            
+                                                      
+                 
+               
+              
+            
+          
 
                   $thumbnail = "";
                   while($row = mysql_fetch_array($resultimg))
@@ -1863,6 +2332,15 @@ while($info = mysql_fetch_array( $data ))
                         <ul style="list-style-type: none; margin: 5px 0 5px 10px;padding: 0;"  >';
                  
                     $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='signed_stat_doc' AND ref_id={$info['cf_id']} ");
+                                 
+                               
+                           
+                        
+             
+                    
+                                   
+               
+           
                     $thumbnail = "";
                     while($row = mysql_fetch_array($resultimg))
                     { 
@@ -1877,6 +2355,7 @@ while($info = mysql_fetch_array( $data ))
                       } 
                      echo "<li><a href=\"".$row['photo']."\" download class='remove-link'>  <img src=\"{$thumbnail}\" height=\"20px\" style='display:inline'> ".$row['file_name']."</a>    <span class=\"ui-icon ui-icon-closethick\" style='display:inline-block; cursor: pointer;' onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   > </span></li>";
                     }
+            
                   echo "</ul>
                   </div>";
                
@@ -2309,6 +2788,17 @@ if ($('#council option:selected').val() == 'By Vergola'){
   }
 });
 
+$(document).ready(function() {
+if ($('#engractive option:selected').val() == 'No') {
+    $('#sitespecengrapproveddate').disabled();
+  }
+});
+
+                
+                           
+                        
+   
+   
 
 
 function delete_pdf_letter(event,o){
@@ -2357,6 +2847,9 @@ function delete_pdf_letter(event,o){
   } 
 
 
+                                      
+                                      
+       
 
 </script>
 
