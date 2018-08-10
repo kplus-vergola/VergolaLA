@@ -77,11 +77,11 @@ if ($projectid != '') {
 	$Council = $retrievestatutory['council'];
 	$CityPermitDate = $retrievestatutory['citypermit_application_date'];
 	$CityPermitApprovedDate = $retrievestatutory['citypermit_application_approved_date'];
-	$SiteSpecEngrDate = $retrievestatutory['sitespec_engr_date'];
+	$SiteSpecEngrDate = $retrievestatutory['sitespec_engr_approved_date'];
 	$SiteSpecEngrApprovedDate = $retrievestatutory['sitespec_engr_approved_date'];
-	$StrataDate = $retrievestatutory['strata_date'];
+	$StrataDate = $retrievestatutory['strata_approved_date'];
 	//Additional values contract details -Joy Handsome(23Jan2018)
-	$CoastalDate = $retrievestatutory['coastal_date'];
+	$CoastalDate = $retrievestatutory['coastal_approved_date'];
 
 
 	// Get Contract Details

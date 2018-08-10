@@ -43,3 +43,5 @@ define('JS_DFORMAT',                'dd-M-yyyy');
 
 define('SQL_DATE_FORMAT_01',        '%d-%b-%Y');
 define('SQL_DATETIME_FORMAT_01',    '%d-%b-%Y @ %h:%i %p');
+
+define('SQL_DFORMAT_21', '%Y-%m-%d');

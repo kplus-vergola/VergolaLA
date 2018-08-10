@@ -319,7 +319,7 @@ if (strlen($_POST['louvers_ordered']) && $_POST['louvers_ordered'] != "0000-00-0
 } 
 
 $handover_date = "NULL";
-$elect_warranty_end_date="NULL";
+// $elect_warranty_end_date="NULL";
 if (strlen($_POST['handover_date']) && $_POST['handover_date'] != "0000-00-00 00:00:00"){
   $_handover_date = date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['handover_date'])));
   $handover_date = "'".$_handover_date."'";
@@ -329,9 +329,9 @@ if (strlen($_POST['handover_date']) && $_POST['handover_date'] != "0000-00-00 00
     $warranty_start_date = $handover_date;  
   }
 
-  if($elect_warranty_end_date=="NULL"){ 
-    $elect_warranty_end_date = 'date_add('.$handover_date.',INTERVAL 2 YEAR)';
-  }
+  // if($elect_warranty_end_date=="NULL"){ 
+  //   $elect_warranty_end_date = 'date_add('.$handover_date.',INTERVAL 2 YEAR)';
+  // }
   
   if($warranty_end_date=="NULL"){ 
     $warranty_end_date =  'date_add('.$handover_date.',INTERVAL 5 YEAR)';
@@ -409,7 +409,6 @@ erectors_name2 = '{$erectors_name2}',
 client_notified_date = {$client_notified_date},
 erector_notified_date = {$erector_notified_date},
 warranty_start_date = {$warranty_start_date},
-elect_warranty_end_date = {$elect_warranty_end_date},
 warranty_end_date = {$warranty_end_date},
 job_start_date = {$job_start_date},
 job_start_date_followup = {$job_start_date_followup},
@@ -423,11 +422,69 @@ fw_complete = {$fw_complete},
 time_frame_letter = {$time_frame_letter},
 schedule_completion = {$schedule_completion} 
 WHERE projectid = '$projectid'"; 
+// elect_warranty_end_date = {$elect_warranty_end_date},
 //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); exit();
 mysql_query($sql) or die(mysql_error()); 
 
               
-                                    
+                            
+
+
+
+
+
+
+$city_permit_application_date = "NULL"; 
+if (strlen($_POST['citypermitdate']) && $_POST['citypermitdate'] != "0000-00-00 00:00:00"){
+  $city_permit_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['citypermitdate'])))."'";
+}
+$city_permit_approved_date = "NULL"; 
+if (strlen($_POST['citypermitapproveddate']) && $_POST['citypermitapproveddate'] != "0000-00-00 00:00:00"){
+  $city_permit_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['citypermitapproveddate'])))."'";
+}
+
+
+$site_spec_engineering_dates_enabled = "No";
+if (strlen($_POST['engractive'])){
+  $site_spec_engineering_dates_enabled = "'".mysql_real_escape_string($_POST['engractive'])."'";
+}
+$site_spec_engineering_application_date = "NULL"; 
+if (strlen($_POST['sitespecengrdate']) && $_POST['sitespecengrdate'] != "0000-00-00 00:00:00"){
+  $site_spec_engineering_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sitespecengrdate'])))."'";
+}
+$site_spec_engineering_approved_date = "NULL"; 
+if (strlen($_POST['sitespecengrapproveddate']) && $_POST['sitespecengrapproveddate'] != "0000-00-00 00:00:00"){
+  $site_spec_engineering_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sitespecengrapproveddate'])))."'";
+}
+
+
+$hoa_dates_enabled = "No";
+if (strlen($_POST['strataactive'])){
+  $hoa_dates_enabled = "'".mysql_real_escape_string($_POST['strataactive'])."'";
+}
+$hoa_application_date = "NULL"; 
+if (strlen($_POST['stratadate']) && $_POST['stratadate'] != "0000-00-00 00:00:00"){
+  $hoa_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['stratadate'])))."'";
+}
+$hoa_approved_date = "NULL"; 
+if (strlen($_POST['strataapproveddate']) && $_POST['strataapproveddate'] != "0000-00-00 00:00:00"){
+  $hoa_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['strataapproveddate'])))."'";
+}
+
+
+$coastal_dates_enabled = "No";
+if (strlen($_POST['coastalactive'])){
+  $coastal_dates_enabled = "'".mysql_real_escape_string($_POST['coastalactive'])."'";
+}
+$coastal_application_date = "NULL"; 
+if (strlen($_POST['coastaldate']) && $_POST['coastaldate'] != "0000-00-00 00:00:00"){
+  $coastal_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['coastaldate'])))."'";
+}
+$coastal_approved_date = "NULL"; 
+if (strlen($_POST['coastalapproveddate']) && $_POST['coastalapproveddate'] != "0000-00-00 00:00:00"){
+  $coastal_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['coastalapproveddate'])))."'";
+}
+        
                                           
    
 
@@ -465,14 +522,6 @@ $m_o_d = mysql_real_escape_string($_POST['m_o_d']);
 $m_o_d_followup = "NULL"; 
 if (strlen($_POST['m_o_d_followup']) && $_POST['m_o_d_followup'] != "0000-00-00 00:00:00"){
   $m_o_d_followup= "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['m_o_d_followup'])))."'";
-                           
-                                   
-                   
-                             
-                     
-                             
-                   
-                     
 }
                     
      
@@ -551,6 +600,17 @@ if (strlen($_POST['planning_application_followup']) && $_POST['planning_applicat
 
  
 $sql = "UPDATE ver_chronoforms_data_contract_statutory_vic SET 
+citypermit_application_date = {$city_permit_application_date},
+citypermit_application_approved_date = {$city_permit_approved_date},
+engr_active = {$site_spec_engineering_dates_enabled},
+sitespec_engr_date = {$site_spec_engineering_application_date},
+sitespec_engr_approved_date = {$site_spec_engineering_approved_date},
+strata_active = {$hoa_dates_enabled},
+strata_date = {$hoa_application_date},
+strata_approved_date = {$hoa_approved_date},
+coastal_active = {$coastal_dates_enabled},
+coastal_date = {$coastal_application_date},
+coastal_approved_date = {$coastal_approved_date},
 planning_application_date = {$planning_application_date},
 planning_approval_date = {$planning_approval_date},
 warranty_insurance_date = {$warranty_insurance_date},
@@ -963,9 +1023,11 @@ if(isset($_POST['close']))
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/client-folder.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/contract-folder.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/lightbox.css'; ?>" />
+<!--
 <script src="<?php echo JURI::base().'jscript/jquery-ui-1.11.4/jquery-ui.min.js'; ?>"></script> 
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/jquery-ui-1.11.4/jquery-ui.min.css'; ?>" />
- 
+-->
+
 <style>
 .tbl-letters tr:nth-child(1), #tbl-letters2 tr:nth-child(1), #tbl-letters3 tr:nth-child(1) {
   display: none;
@@ -1260,18 +1322,17 @@ $groups = $user->get('groups');
     $result = mysql_query("
         SELECT             
             *, 
-            DATE_FORMAT(citypermit_application_date,'" . SQL_DATE_FORMAT_01 . "') AS fcitypermit_application_date, 
-            DATE_FORMAT(citypermit_application_approved_date,'" . SQL_DATE_FORMAT_01 . "') AS fcitypermit_application_approved_date, 
-            DATE_FORMAT(sitespec_engr_date,'" . SQL_DATE_FORMAT_01 . "') AS fsitespec_engr_date,
-            DATE_FORMAT(sitespec_engr_approved_date,'" . SQL_DATE_FORMAT_01 . "') AS fsitespec_engr_approved_date, 
-            DATE_FORMAT(strata_date,'" . SQL_DATE_FORMAT_01 . "') AS fstrata_date, 
-            DATE_FORMAT(strata_approved_date,'" . SQL_DATE_FORMAT_01 . "') AS fstrata_approved_date, 
-            DATE_FORMAT(coastal_date,'" . SQL_DATE_FORMAT_01 . "') AS fcoastal_date, 
-            DATE_FORMAT(coastal_approved_date,'" . SQL_DATE_FORMAT_01 . "') AS fcoastal_approved_date,
+            DATE_FORMAT(citypermit_application_date,'" . SQL_DFORMAT_21 . "') AS fcitypermit_application_date, 
+            DATE_FORMAT(citypermit_application_approved_date,'" . SQL_DFORMAT_21 . "') AS fcitypermit_application_approved_date, 
+            DATE_FORMAT(sitespec_engr_date,'" . SQL_DFORMAT_21 . "') AS fsitespec_engr_date,
+            DATE_FORMAT(sitespec_engr_approved_date,'" . SQL_DFORMAT_21 . "') AS fsitespec_engr_approved_date, 
+            DATE_FORMAT(strata_date,'" . SQL_DFORMAT_21 . "') AS fstrata_date, 
+            DATE_FORMAT(strata_approved_date,'" . SQL_DFORMAT_21 . "') AS fstrata_approved_date, 
+            DATE_FORMAT(coastal_date,'" . SQL_DFORMAT_21 . "') AS fcoastal_date, 
+            DATE_FORMAT(coastal_approved_date,'" . SQL_DFORMAT_21 . "') AS fcoastal_approved_date,
             engr_active AS fengr_active,
             strata_active AS fstrata_active,
             coastal_active AS fcoastal_active
-
             FROM ver_chronoforms_data_contract_statutory_vic 
             WHERE quoteid = '$cust_id' 
             AND projectid = '$ListProjectID'
@@ -1452,14 +1513,19 @@ $groups = $user->get('groups');
 
             <label class="input warrantystart"><span class="visible">Warranty Start: </span><input type="text" value="<?php echo $contract_vergola['fwarranty_start_date']; ?>" name="warrantystart" class="date_entered"></label>
             <label class="input warrantyend"><span class="visible">Warranty End: </span><input type="text" value="<?php echo $contract_vergola['fwarranty_end_date']; ?>" name="warrantyend" class="date_entered"></label>
-            <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
+
+            <label class="input checkmeasure">
+                <span class="visible">Con Note #: </span>
+                <input type="text" value="<?php echo $contract_stat['contract_note_number']; ?>" name="con_note_number" id="con_note_number" class=""  >                
+            </label>
           </div>      
     </div>
     <!-- End of Vergola Standard --->
     
- <!--- Start of Statutory Approval -->
-     <div id="statutory" class="tab_content" >
-      <div class="label-input-row" >  
+    <!--- Start of Statutory Approval -->
+    <div id="statutory" class="tab_content" >
+        <!--         
+        <div class="label-input-row" >  
             <input type="hidden" name="council" id="council" value="By Vergola" />
             <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
             <label class="input citypermitdate" ><span class="visible">City Permit Application: </span><input type="text" style="width:90px; text-align:right; " name="citypermitdate" id="citypermitdateid" class="date_entered" value="<?php echo $contract_stat['fcitypermit_application_date']; ?>">
@@ -1467,7 +1533,8 @@ $groups = $user->get('groups');
             <label class="input " ><span class="visible">City Permit Approval: </span><input type="text" style="width:90px; text-align:right;" value="<?php echo $contract_stat['fcitypermit_application_approved_date']; ?>" name="citypermitapproveddate" id="citypermitapproveddateid" class="date_entered">
             </label>
         </div>      
-<!--         <script type="text/javascript">
+
+        <script type="text/javascript">
         function changetextbox()
         {
             if (document.getElementById("engractive").value === "No") {
@@ -1479,65 +1546,67 @@ $groups = $user->get('groups');
             }
         }
         </script>
-  -->       
+        -->       
 
-  <!-- begin: enable/disable engr date field -->
-  <link rel="stylesheet" href="/jscript/custom_datepicker_1/datepicker_1.css" type="text/css" />
-  <script type="text/javascript">
-  $(document).ready(function() {
-      initialiseEngrDateFieldEntry();
-  });
+        <!-- begin: enable/disable engr date field -->
+        <!--
+        <link rel="stylesheet" href="/jscript/custom_datepicker_1/datepicker_1.css" type="text/css" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+          initialiseEngrDateFieldEntry();
+        });
 
-  function initialiseEngrDateFieldEntry() {
-      var target_date_fields = {
-          "engractive": [
-                  "sitespecengrdateid", 
-                  "sitespecengrapproveddateid"
-          ]
-      };
-      var c1 = 0;
-      var c2 = 0;
+        function initialiseEngrDateFieldEntry() {
+          var target_date_fields = {
+              "engractive": [
+                      "sitespecengrdateid", 
+                      "sitespecengrapproveddateid"
+              ]
+          };
+          var c1 = 0;
+          var c2 = 0;
 
-      for (c1 in target_date_fields) {
-          for (c2 = 0; c2 < target_date_fields[c1].length; c2++) {
-              $('#' + target_date_fields[c1][c2]).addClass("hasDatePicker").datepicker({
-                  dateFormat: 'd-M-yy'
-              });
-          }
-      }
-  }
-
-  function enableEngrDateFieldEntry(date_field_id, is_enabled) {
-      var target_date_fields = {
-          "engractive": [
-                  "sitespecengrdateid", 
-                  "sitespecengrapproveddateid"
-          ]
-      };
-      var c1 = 0;
-      console.log('enableEngrDateFieldEntry:');
-      console.log(is_enabled);
-      console.log(target_date_fields[date_field_id]);
-
-      if (target_date_fields[date_field_id] && target_date_fields[date_field_id].length > 0) {
-          for (c1 = 0; c1 < target_date_fields[date_field_id].length; c1++) {
-              if (is_enabled == 'Yes') {
-                  $('#' + target_date_fields[date_field_id][c1]).prop("disabled", false);
-                  $('#' + target_date_fields[date_field_id][c1]).addClass("hasDatePicker").datepicker({
+          for (c1 in target_date_fields) {
+              for (c2 = 0; c2 < target_date_fields[c1].length; c2++) {
+                  $('#' + target_date_fields[c1][c2]).addClass("hasDatePicker").datepicker({
                       dateFormat: 'd-M-yy'
                   });
-                  console.log($('#' + target_date_fields[date_field_id][c1]));
-              } else if (is_enabled == 'No') {
-                  $('#' + target_date_fields[date_field_id][c1]).removeClass("hasDatePicker").datepicker();
-                  $('#' + target_date_fields[date_field_id][c1]).prop("disabled", true);
-                  console.log($('#' + target_date_fields[date_field_id][c1]));
               }
           }
-      }
-  }
-  </script>
-  <!-- end: enable/disable engr date field -->
+        }
 
+        function enableEngrDateFieldEntry(date_field_id, is_enabled) {
+          var target_date_fields = {
+              "engractive": [
+                      "sitespecengrdateid", 
+                      "sitespecengrapproveddateid"
+              ]
+          };
+          var c1 = 0;
+          console.log('enableEngrDateFieldEntry:');
+          console.log(is_enabled);
+          console.log(target_date_fields[date_field_id]);
+
+          if (target_date_fields[date_field_id] && target_date_fields[date_field_id].length > 0) {
+              for (c1 = 0; c1 < target_date_fields[date_field_id].length; c1++) {
+                  if (is_enabled == 'Yes') {
+                      $('#' + target_date_fields[date_field_id][c1]).prop("disabled", false);
+                      $('#' + target_date_fields[date_field_id][c1]).addClass("hasDatePicker").datepicker({
+                          dateFormat: 'd-M-yy'
+                      });
+                      console.log($('#' + target_date_fields[date_field_id][c1]));
+                  } else if (is_enabled == 'No') {
+                      $('#' + target_date_fields[date_field_id][c1]).removeClass("hasDatePicker").datepicker();
+                      $('#' + target_date_fields[date_field_id][c1]).prop("disabled", true);
+                      console.log($('#' + target_date_fields[date_field_id][c1]));
+                  }
+              }
+          }
+        }
+        </script>
+        -->
+        <!-- end: enable/disable engr date field -->
+        <!--
         <div class="label-input-row">             
             <label class="input " ><span class="visible" >Enable Date Entry: </span>
             <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="engractive" id="engractive" class="" onchange="enableEngrDateFieldEntry(this.id, this.value)">
@@ -1552,9 +1621,11 @@ $groups = $user->get('groups');
             <label class="input " ><span class="visible">Site Spec Engr'ng Approval: </span>
                 <input type="text" style="width:90px; text-align:right;" value="<?php echo $contract_stat['fsitespec_engr_approved_date']; ?>" name="sitespecengrapproveddate" id="sitespecengrapproveddateid" class=""></label>       
         </div>
+        -->
 
 
         <!-- begin: enable/disable strata date field -->
+        <!--
         <link rel="stylesheet" href="/jscript/custom_datepicker_1/datepicker_1.css" type="text/css" />
         <script type="text/javascript">
         $(document).ready(function() {
@@ -1609,7 +1680,9 @@ $groups = $user->get('groups');
             }
         }
         </script>
+        -->
         <!-- end: enable/disable strata date field -->        
+        <!--
         <div class="label-input-row" >         
             <label class="input " style="color: black"><span class="visible" >Enable Date Entry: </span>
             <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="strataactive" id="strataactive" class="" onchange="enableStrataDateFieldEntry(this.id, this.value)">
@@ -1625,9 +1698,11 @@ $groups = $user->get('groups');
                 <span class="visible">HoA Application Approval: </span>
                 <input <?php if ($contract_stat['fstrata_active'] !='Yes') {echo disabled; } else {echo "";} ?> type="text" style="width:90px; text-align:right;" value="<?php echo $contract_stat['fstrata_approved_date']; ?>" name="strataapproveddate" id="strataapproveddateid" class="" /></label>                
         </div>
+        -->
 
 
         <!-- begin: enable/disable coastal date field -->
+        <!--
         <link rel="stylesheet" href="/jscript/custom_datepicker_1/datepicker_1.css" type="text/css" />
         <script type="text/javascript">
         $(document).ready(function() {
@@ -1682,7 +1757,9 @@ $groups = $user->get('groups');
             }
         }
         </script>
+        -->
         <!-- end: enable/disable coastal date field -->                
+        <!--
         <div class="label-input-row" >             
             <label class="input" style=""><span class="visible" style="">Enable Date Entry: </span>
             <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="coastalactive" id="coastalactive" class="" onchange="enableCoastalDateFieldEntry(this.id, this.value)">
@@ -1699,9 +1776,89 @@ $groups = $user->get('groups');
                     value="<?php echo $contract_stat['fcoastal_approved_date']; ?>" name="coastalapproveddate" id="coastalapproveddateid" class="" />   
             </label>          
         </div>
+        -->
 
-        
-        
+        <!-- begin: enable/disable date fields settings -->
+        <link rel="stylesheet" href="/jscript/custom_datepicker_1/datepicker_1.css" type="text/css" />
+        <script type="text/javascript" src="<?php echo JURI::base().'jscript/date_field_entry_switch.js'; ?>"></script>
+        <script type="text/javascript">
+        var target_date_fields_11 = [
+            {
+                "date_enabler":{"field_id":"citypermitactive", "field_value":"Yes"}, 
+                "date_fields": [
+                    {"field_id":"citypermitdateid", "field_value":"<?php echo $contract_stat['fcitypermit_application_date']; ?>"}, 
+                    {"field_id":"citypermitapproveddateid", "field_value":"<?php echo $contract_stat['fcitypermit_application_approved_date']; ?>"}
+                ]
+            }, 
+            {
+                "date_enabler":{"field_id":"engractive", "field_value":"<?php echo $contract_stat['fengr_active']; ?>"}, 
+                "date_fields": [
+                    {"field_id":"sitespecengrdateid", "field_value":"<?php echo $contract_stat['fsitespec_engr_date']; ?>"}, 
+                    {"field_id":"sitespecengrapproveddateid", "field_value":"<?php echo $contract_stat['fsitespec_engr_approved_date']; ?>"}
+                ]
+            }, 
+            {
+                "date_enabler":{"field_id":"strataactive", "field_value":"<?php echo $contract_stat['fstrata_active']; ?>"}, 
+                "date_fields": [
+                    {"field_id":"stratadateid", "field_value":"<?php echo $contract_stat['fstrata_date']; ?>"}, 
+                    {"field_id":"strataapproveddateid", "field_value":"<?php echo $contract_stat['fstrata_approved_date']; ?>"}
+                ]
+            }, 
+            {
+                "date_enabler":{"field_id":"coastalactive", "field_value":"<?php echo $contract_stat['fcoastal_active']; ?>"}, 
+                "date_fields": [
+                    {"field_id":"coastaldateid", "field_value":"<?php echo $contract_stat['fcoastal_date']; ?>"}, 
+                    {"field_id":"coastalapproveddateid", "field_value":"<?php echo $contract_stat['fcoastal_approved_date']; ?>"}
+                ]
+            }
+        ];
+        </script>
+        <!-- end: enable/disable date fields settings -->
+
+        <div class="label-input-row">   
+            <input type="hidden" name="council" id="council" value="By Vergola" />
+            <label class="input " ><span class="visible" >Enable Date Entry: </span>
+                <select class="visible" style="width:60px; text-align:left;margin-left: 120px" disabled="disabled" name="citypermitactive" id="citypermitactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>          
+            </label>
+            <label class="input planningdate"><span class="visible">City Permit Appl.: </span><input type="text" name="citypermitdate" id="citypermitdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input planningapprove"><span class="visible">City Permit Appr.: </span><input type="text" name="citypermitapproveddate" id="citypermitapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+        </div>
+
+        <div class="label-input-row">   
+            <label class="input " ><span class="visible" >Enable Date Entry: </span>
+                <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="engractive" id="engractive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>          
+            </label>
+            <label class="input planningdate"><span class="visible">Site Spec. Egnr. Appl.: </span><input type="text" name="sitespecengrdate" id="sitespecengrdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input planningapprove"><span class="visible">Site Spec. Egnr. Appr.: </span><input type="text" name="sitespecengrapproveddate" id="sitespecengrapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+        </div>
+
+        <div class="label-input-row">   
+            <label class="input " ><span class="visible" >Enable Date Entry: </span>
+                <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="strataactive" id="strataactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>          
+            </label>
+            <label class="input planningdate"><span class="visible">HoA Appl.: </span><input type="text" name="stratadate" id="stratadateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input planningapprove"><span class="visible">HoA Appr.: </span><input type="text" name="strataapproveddate" id="strataapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+        </div>
+
+        <div class="label-input-row">   
+            <label class="input " ><span class="visible" >Enable Date Entry: </span>
+                <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="coastalactive" id="coastalactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>          
+            </label>
+            <label class="input planningdate"><span class="visible">Coastal Appl.: </span><input type="text" name="coastaldate" id="coastaldateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input planningapprove"><span class="visible">Coastal Appr.: </span><input type="text" name="coastalapproveddate" id="coastalapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+        </div>
     </div>
     <!-- End of Statutory Approval -->
     
