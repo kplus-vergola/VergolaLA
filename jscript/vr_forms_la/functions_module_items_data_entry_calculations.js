@@ -382,6 +382,13 @@
             var total_commission_final = 0.0;
             var total_commission_installer_payment = 0.0;
 
+            var previous_total_payment_sub_total = 0.0;
+            var previous_total_payment_tax = 0.0;
+            var temp_previous_total_payment_tax = 0.0;
+            var previous_total_payment_total = 0.0;
+            var temp_text1 = '';
+            var temp_text2 = '';
+
             for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
                 if (vr_form_items_data_entry[c1]['vr_section_ref_name'] != 'Disbursements') {
                     total_payment_vr_items_rrp += parseFloat(vr_form_items_data_entry[c1]['vr_item_rrp']);
@@ -392,9 +399,35 @@
             }
 
             total_payment_vergola = total_payment_vr_items_rrp / vr_form_system_info['payment_vergola_commission_percentage'];
-
             total_payment_sub_total = total_payment_vergola + total_payment_disbursement_sub_total;
-            total_payment_tax = total_payment_sub_total * vr_form_system_info['payment_tax_percentage'];
+
+            if (document.getElementById('vr_payment_tax_form_billing').value.length > 0) {
+                if (!isNaN(document.getElementById('vr_payment_tax_form_billing').value)) {
+                    temp_text1 = document.getElementById('vr_payment_tax_form_billing').value;
+                    temp_text2 = temp_text1.replace(',', '');
+                    previous_total_payment_tax = parseFloat(temp_text2);
+                }
+
+                if (document.getElementById('vr_payment_sub_total_form_billing').value.length > 0) {
+                    temp_text1 = document.getElementById('vr_payment_sub_total_form_billing').value;
+                    temp_text2 = temp_text1.replace(',', '');
+                    previous_total_payment_sub_total = parseFloat(temp_text2);
+                }
+
+                temp_previous_total_payment_tax = previous_total_payment_sub_total * vr_form_system_info['payment_tax_percentage'];
+                temp_text1 = formatOutputValue('float', temp_previous_total_payment_tax);
+                temp_text2 = temp_text1.replace(',', '');
+                temp_previous_total_payment_tax = parseFloat(temp_text2);
+
+                if (previous_total_payment_tax != temp_previous_total_payment_tax) {
+                    total_payment_tax = previous_total_payment_tax;
+                } else {
+                    total_payment_tax = total_payment_sub_total * vr_form_system_info['payment_tax_percentage'];
+                }
+            } else {
+                total_payment_tax = total_payment_sub_total * vr_form_system_info['payment_tax_percentage'];
+            }
+
             total_payment_total = total_payment_sub_total + total_payment_tax;
 
             total_payment_deposit = total_payment_total * vr_form_system_info['payment_deposit_percentage'];
@@ -435,40 +468,7 @@
 
 
         function adjustPaymentTaxManually() {
-            var total_payment_sub_total = 0.0;
-            var total_payment_tax = 0.0;
-            var total_payment_total = 0.0;
-            var temp_text1 = '';
-            var temp_text2 = '';
-
-            if (document.getElementById('vr_payment_sub_total_form_billing').value.length > 0) {
-                temp_text1 = document.getElementById('vr_payment_sub_total_form_billing').value;
-                temp_text2 = temp_text1.replace(',', '');
-                total_payment_sub_total = parseFloat(temp_text2);
-            }
-
-            if (document.getElementById('vr_payment_tax_form_billing').value.length > 0) {
-                temp_text1 = document.getElementById('vr_payment_tax_form_billing').value;
-                temp_text2 = temp_text1.replace(',', '');
-                total_payment_tax = parseFloat(temp_text2);
-            }
-
-            if (document.getElementById('vr_payment_total_form_billing').value.length > 0) {
-                temp_text1 = document.getElementById('vr_payment_total_form_billing').value;
-                temp_text2 = temp_text1.replace(',', '');
-                total_payment_total = parseFloat(temp_text2);
-            }
-
-            if (total_payment_tax == 0) {
-                total_payment_tax = total_payment_sub_total * vr_form_system_info['payment_tax_percentage'];
-                total_payment_total = total_payment_sub_total + total_payment_tax;
-            } else {
-                total_payment_total = total_payment_sub_total + total_payment_tax;
-            }
-
-            document.getElementById('vr_payment_sub_total_form_billing').value = formatOutputValue('float', total_payment_sub_total);
-            document.getElementById('vr_payment_tax_form_billing').value = formatOutputValue('float', total_payment_tax);
-            document.getElementById('vr_payment_total_form_billing').value = formatOutputValue('float', total_payment_total);
+            assignVrFormBillingInfo();
         }
 
 
@@ -494,6 +494,9 @@
                             calculateLouvreRelatedInfo();
                             assignSubtotalPriceToVrFormItemsDataEntry();
                             assignVrFormBillingInfo();
+                            break;
+                        case 3:
+                            // no action
                             break;
                     }
                 }

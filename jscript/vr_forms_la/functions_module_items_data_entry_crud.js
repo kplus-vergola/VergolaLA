@@ -116,8 +116,8 @@
 
                 vr_item_config_saved_data_list[document.getElementById('vr_type_form_query').value] = results['data']['vr_form_items_data_entry'];
 
-                processVrFrameworkTypeFormQueries(2);
-                processVrDimensionFormQueries(2);
+                processVrFrameworkTypeFormQueries(3);
+                processVrDimensionFormQueries(3);
 
                 if (document.getElementById('vr_type_form_query').value == 'VR8' || 
                     document.getElementById('vr_type_form_query').value == 'VR9') {
