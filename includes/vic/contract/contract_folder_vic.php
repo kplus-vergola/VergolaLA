@@ -1382,38 +1382,38 @@ $groups = $user->get('groups');
 
       <span class="vs-label"><label>Deposit Paid:</label> 
         <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="depositdate" name="deposit_paid_amount" class="" value="<?php echo $PaymentDepositValue; ?>" /> </td>
-        <td><input style="text-align: right;" type="text" id="depositdate" name="deposit_paid" class="date_entered" value="<?php if ($contract_detail['deposit_paid']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['deposit_paid'])); } else {echo "";} ?>"/></td></span>
+        <td><input style="text-align: right;" type="text" id="depositdate" name="deposit_paid" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['deposit_paid']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['deposit_paid'])); } else {echo "";} ?>"/></td></span>
       
       <span class="vs-label"><label>Progress Claim:</label>
         <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="progressclaim" name="progress_claim_amount" class="" value="<?php echo $PaymentProgressValue; ?>" /> </td>
-        <td><input style="text-align: right;" type="text"  id="progressclaim" name="progress_claim" class="date_entered" value="<?php if ($contract_detail['progress_claim']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['progress_claim'])); } else {echo "";} ?>"/></td></span>
+        <td><input style="text-align: right;" type="text"  id="progressclaim" name="progress_claim" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['progress_claim']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['progress_claim'])); } else {echo "";} ?>"/></td></span>
 
       <span class="vs-label"><label>Final Payment:</label>
         <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="finalpayment" name="final_payment_amount" class="" value="<?php echo $PaymentFinalValue; ?>" /> </td>
-        <td><input style="text-align: right;" type="text" id="finalpayment" name="final_payment" class="date_entered" value="<?php if ($contract_detail['final_payment']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['final_payment'])); } else {echo "";} ?>"/></td></span>
+        <td><input style="text-align: right;" type="text" id="finalpayment" name="final_payment" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['final_payment']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['final_payment'])); } else {echo "";} ?>"/></td></span>
 
       <span class="vs-label"><label>Variation:</label>
-        <td>&#36; <input style="text-align: right;" type="text" id="variationdate" name="variation_amount" class="" value="<?php echo $PaymentVariationValue; ?>" /></td> <td><input style="text-align: right;" type="text" id="variationdate" name="variation_date" class="date_entered" value="<?php if ($contract_detail['variation_date']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['variation_date'])); } else {echo "";} ?>"/>
-          </td>
+        <td>&#36; <input style="text-align: right;" type="text" id="variationdate" name="variation_amount" class="" value="<?php echo $PaymentVariationValue; ?>" /></td> 
+        <td><input style="text-align: right;" type="text" id="variationdate" name="variation_date" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['variation_date']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['variation_date'])); } else {echo "";} ?>"/></td>
       </span>
 
      
      <div class="label-input-row">
         <label class="input legend"><span class="visible">Check Measurer: </span><input type="text" value="<?php echo $contract_vergola['check_measurer']; ?>" name="checkmeasurer" class=""></label>
-        <label class="input checkmeasure"><span class="visible">Check Measure: </span><input type="text" value="<?php echo $contract_vergola['fcheck_measure_date']; ?>" name="checkdate" class="date_entered"></label>
-        <label class="input recheckmeasure"><span class="visible">Re-Check Measure: </span><input type="text" value="<?php echo $contract_vergola['frecheck_measure_date']; ?>" name="recheckdate" class="date_entered"></label> 
+        <label class="input checkmeasure"><span class="visible">Check Measure: </span><input type="text" value="<?php echo $contract_vergola['fcheck_measure_date']; ?>" name="checkdate" class="date_entered" autocomplete="off"></label>
+        <label class="input recheckmeasure"><span class="visible">Re-Check Measure: </span><input type="text" value="<?php echo $contract_vergola['frecheck_measure_date']; ?>" name="recheckdate" class="date_entered" autocomplete="off"></label> 
      </div>
 
      <div class="label-input-row">
-         <label class="input timeframeletter"><span class="visible">Time Frame Letter: </span><input type="text" value="<?php echo $contract_vergola['ftime_frame_letter']; ?>" name="time_frame_letter" class="date_entered"></label>
+         <label class="input timeframeletter"><span class="visible">Time Frame Letter: </span><input type="text" value="<?php echo $contract_vergola['ftime_frame_letter']; ?>" name="time_frame_letter" class="date_entered" autocomplete="off"></label>
          <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
          <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
      </div>
 
     <div class="label-input-row">
-        <label class="input drawingdate"><span class="visible">Drawing & Prep.: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_prepare_date']; ?>" name="drawing_prepare_date" class="date_entered"></label>
-        <label class="input drawingapprovedatefollowup"><span class="visible">Followup: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_prepare_date_followup']; ?>" name="drawing_prepare_date_followup" class="date_entered"></label>
-        <label class="input drawingapprovedate"><span class="visible">Drawing Approve: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_approve_date']; ?>" name="drawingapprovedate" class="date_entered"></label>
+        <label class="input drawingdate"><span class="visible">Drawing & Prep.: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_prepare_date']; ?>" name="drawing_prepare_date" class="date_entered" autocomplete="off"></label>
+        <label class="input drawingapprovedatefollowup"><span class="visible">Followup: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_prepare_date_followup']; ?>" name="drawing_prepare_date_followup" class="date_entered" autocomplete="off"></label>
+        <label class="input drawingapprovedate"><span class="visible">Drawing Approve: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_approve_date']; ?>" name="drawingapprovedate" class="date_entered" autocomplete="off"></label>
     </div>
     
   <!--   <div class="label-input-row">
@@ -1423,13 +1423,13 @@ $groups = $user->get('groups');
      </div>  -->
 
     <div class="label-input-row"> 
-        <label class="input productionstart"><span class="visible">Framework Ordered: </span><input type="text" value="<?php echo $contract_vergola['ffw_orderdate']; ?>" name="fw_orderdate" class="date_entered"></label>
-        <label class="input productionstart"><span class="visible">Gutter/Flashing: </span><input type="text" value="<?php echo $contract_vergola['fgutter_flashing_ordered']; ?>" name="gutter_flashing_ordered" class="date_entered"></label>
-        <label class="input productionstart"><span class="visible">Louvers Ordered: </span><input type="text" value="<?php echo $contract_vergola['flouvers_ordered']; ?>" name="louvers_ordered" class="date_entered"></label>
+        <label class="input productionstart"><span class="visible">Framework Ordered: </span><input type="text" value="<?php echo $contract_vergola['ffw_orderdate']; ?>" name="fw_orderdate" class="date_entered" autocomplete="off"></label>
+        <label class="input productionstart"><span class="visible">Gutter/Flashing: </span><input type="text" value="<?php echo $contract_vergola['fgutter_flashing_ordered']; ?>" name="gutter_flashing_ordered" class="date_entered" autocomplete="off"></label>
+        <label class="input productionstart"><span class="visible">Louvers Ordered: </span><input type="text" value="<?php echo $contract_vergola['flouvers_ordered']; ?>" name="louvers_ordered" class="date_entered" autocomplete="off"></label>
     </div>  
 
     <div class="label-input-row">     
-    <label class="input productioncomplete"><span class="visible">Framework Completed: </span><input type="text" value="<?php echo $contract_vergola['fproduction_complete_date']; ?>" name="productioncomplete" class="date_entered"></label>
+    <label class="input productioncomplete"><span class="visible">Framework Completed: </span><input type="text" value="<?php echo $contract_vergola['fproduction_complete_date']; ?>" name="productioncomplete" class="date_entered" autocomplete="off"></label>
     <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
     <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
     </div>
@@ -1437,11 +1437,11 @@ $groups = $user->get('groups');
     <div class="label-input-row">  
         <label class="input checkmeasure">
             <span class="visible">Sched. Install Date: </span>
-            <input type="text" value="<?php echo $contract_vergola['finstall_date']; ?>" name="install_date" class="date_entered">
+            <input type="text" value="<?php echo $contract_vergola['finstall_date']; ?>" name="install_date" class="date_entered" autocomplete="off">
         </label>
         <label class="input checkmeasure">
             <span class="visible">Sched. Install Completion: </span>
-            <input type="text" value="<?php echo $contract_vergola['fschedule_completion']; ?>" name="schedule_completion" class="date_entered">
+            <input type="text" value="<?php echo $contract_vergola['fschedule_completion']; ?>" name="schedule_completion" class="date_entered" autocomplete="off">
         </label>
         <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
         <!-- <label class="input checkmeasure">
@@ -1496,23 +1496,23 @@ $groups = $user->get('groups');
             <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
             </div>
     <div class="label-input-row">       
-            <label class="input clientnotified"><span class="visible">Client Notified: </span><input type="text" value="<?php echo $contract_vergola['fclient_notified_date']; ?>" name="clientnotified" class="date_entered"></label>
-            <label class="input erectornotified"><span class="visible">Installer Notified: </span><input type="text" value="<?php echo $contract_vergola['ferector_notified_date']; ?>" name="erectornotified" class="date_entered"></label>
+            <label class="input clientnotified"><span class="visible">Client Notified: </span><input type="text" value="<?php echo $contract_vergola['fclient_notified_date']; ?>" name="clientnotified" class="date_entered" autocomplete="off"></label>
+            <label class="input erectornotified"><span class="visible">Installer Notified: </span><input type="text" value="<?php echo $contract_vergola['ferector_notified_date']; ?>" name="erectornotified" class="date_entered" autocomplete="off"></label>
             <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
           </div>  
           
           <div class="label-input-row"> 
-            <label class="input jobstart"><span class="visible">Job Start: </span><input type="text" value="<?php echo $contract_vergola['fjob_start_date']; ?>" name="jobstart" class="date_entered"></label> 
-            <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered"></label> 
-            <label class="input jobend"><span class="visible">Job Complete: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered"></label>
+            <label class="input jobstart"><span class="visible">Job Start: </span><input type="text" value="<?php echo $contract_vergola['fjob_start_date']; ?>" name="jobstart" class="date_entered" autocomplete="off"></label> 
+            <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered" autocomplete="off"></label> 
+            <label class="input jobend"><span class="visible">Job Complete: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered" autocomplete="off"></label>
             <!--<label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>-->
           </div>
 
           <div class="label-input-row">      
-            <label class="input jobend"><span class="visible">Final Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffinal_inspection_date']; ?>" name="final_inspection_date" class="date_entered" style=" " ></label> 
+            <label class="input jobend"><span class="visible">Final Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffinal_inspection_date']; ?>" name="final_inspection_date" class="date_entered" autocomplete="off" style=" " ></label> 
 
-            <label class="input warrantystart"><span class="visible">Warranty Start: </span><input type="text" value="<?php echo $contract_vergola['fwarranty_start_date']; ?>" name="warrantystart" class="date_entered"></label>
-            <label class="input warrantyend"><span class="visible">Warranty End: </span><input type="text" value="<?php echo $contract_vergola['fwarranty_end_date']; ?>" name="warrantyend" class="date_entered"></label>
+            <label class="input warrantystart"><span class="visible">Warranty Start: </span><input type="text" value="<?php echo $contract_vergola['fwarranty_start_date']; ?>" name="warrantystart" class="date_entered" autocomplete="off"></label>
+            <label class="input warrantyend"><span class="visible">Warranty End: </span><input type="text" value="<?php echo $contract_vergola['fwarranty_end_date']; ?>" name="warrantyend" class="date_entered" autocomplete="off"></label>
 
             <label class="input checkmeasure">
                 <span class="visible">Con Note #: </span>

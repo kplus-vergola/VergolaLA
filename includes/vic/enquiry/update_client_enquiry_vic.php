@@ -700,7 +700,7 @@ function ssuburbchange(){
     <div id="tabs_content_container">
       <div id="tracker" class="tab_content_default" style="display: block;">
         <label class="input"><span id="date-entered">Date Entered:</span>
-          <input type="text" id="idate" name="idate" class="date_entered" value="<?php print(Date("d-M-Y")); ?>">
+          <input type="text" id="idate" name="idate" class="date_entered" autocomplete="off" value="<?php print(Date("d-M-Y")); ?>">
         </label>
         <input type="submit" value="Send Mail" id="ibtn" name="sendmail" class="btn">
         <!--- Sales Rep -->
@@ -861,7 +861,7 @@ echo "</select></label>";
        echo '<input type=\'hidden\' id=\'usermail\' name=\'usermail\' value=\''.$userEmail.'\' readonly>';?>
         <div class="input-group date form_datetime col-md-5" data-date-format="dd-M-yyyy @ HH:ii P" data-link-field="dtp_appointment" style="display:inline-block">
           <label class='input'><span id='date-entered'>Appointment: </span>
-            <input type="text" id="iappointment" name="iappointment" class="form-control" value="" readonly>
+            <input type="text" id="iappointment" name="iappointment" class="form-control" autocomplete="off" value="" readonly>
           </label>
           <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span> </div>
         <input type="hidden" id="dtp_appointment" name="dtp_appointment" value="" />

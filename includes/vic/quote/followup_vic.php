@@ -370,23 +370,23 @@ if(isset($_POST['contract'])){
 	//error_log("appointmentdate: ".$appointmentdate, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 
 	if ($appointmentdate != "" && $appointmentdate != '0000-00-00 00:00:00') {
-		echo "<tr><td><span class=\"ffinfo\"><label>Appointment Date</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($appointmentdate))."\" name=\"appointmentdate\" class=\"date_entered\" readonly=\"readonly\" /></span>";
+		echo "<tr><td><span class=\"ffinfo\"><label>Appointment Date</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($appointmentdate))."\" name=\"appointmentdate\" class=\"date_entered\" autocomplete=\"off\" readonly=\"readonly\" /></span>";
 	}else{
-		echo "<tr><td><span class=\"ffinfo\"><label>Appointment Date</label><input type=\"text\" value=\"\" name=\"appointmentdate\" class=\"date_entered\" readonly=\"readonly\" /></span>";
+		echo "<tr><td><span class=\"ffinfo\"><label>Appointment Date</label><input type=\"text\" value=\"\" name=\"appointmentdate\" class=\"date_entered\" autocomplete=\"off\" readonly=\"readonly\" /></span>";
 	}	
 	// Get Quote Delivered
 	if ($DateDelivered != "") {
-	echo "<span class=\"ffinfo\"><label>Quote Delivered</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($DateDelivered))."\" name=\"qdelivered\" class=\"date_entered\" /></span>";} 
-	else { echo "<span class=\"ffinfo\"><label>Date Delivered</label><input type=\"text\" value=\"\" name=\"qdelivered\" class=\"date_entered\" /></span>";}
+	echo "<span class=\"ffinfo\"><label>Quote Delivered</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($DateDelivered))."\" name=\"qdelivered\" class=\"date_entered\" autocomplete=\"off\" /></span>";} 
+	else { echo "<span class=\"ffinfo\"><label>Date Delivered</label><input type=\"text\" value=\"\" name=\"qdelivered\" class=\"date_entered\" autocomplete=\"off\" /></span>";}
 	
 	// Get Follow Up Date 1
 	if ($DateFF1 != "") {
-	echo "<span class=\"ffinfo\"><span class=\"ffinfo\"><label>Next Follow up</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($DateFF1))."\" name=\"ffdate1\" class=\"date_entered\" /></span>"; }
-	else {echo " <span class=\"ffinfo\"><label>Next Follow Up</label><input type=\"text\" value=\"\" name=\"ffdate1\" class=\"date_entered\" /></span>";}
+	echo "<span class=\"ffinfo\"><span class=\"ffinfo\"><label>Next Follow up</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($DateFF1))."\" name=\"ffdate1\" class=\"date_entered\" autocomplete=\"off\" /></span>"; }
+	else {echo " <span class=\"ffinfo\"><label>Next Follow Up</label><input type=\"text\" value=\"\" name=\"ffdate1\" class=\"date_entered\" autocomplete=\"off\" /></span>";}
 
 	if ($date_contract_signed != "") {
-	echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($date_contract_signed))."\" name=\"date_contract_signed\" class=\"date_entered\" /></span>";} 
-	else { echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"\" name=\"date_contract_signed\" class=\"date_entered\" /></span>";} 
+	echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($date_contract_signed))."\" name=\"date_contract_signed\" class=\"date_entered\" autocomplete=\"off\" /></span>";} 
+	else { echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"\" name=\"date_contract_signed\" class=\"date_entered\" autocomplete=\"off\" /></span>";} 
 	
 	echo "</td><td>";
 	 
