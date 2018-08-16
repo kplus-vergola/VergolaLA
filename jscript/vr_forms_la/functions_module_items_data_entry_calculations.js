@@ -402,9 +402,9 @@
             total_payment_sub_total = total_payment_vergola + total_payment_disbursement_sub_total;
 
             if (document.getElementById('vr_payment_tax_form_billing').value.length > 0) {
-                if (!isNaN(document.getElementById('vr_payment_tax_form_billing').value)) {
-                    temp_text1 = document.getElementById('vr_payment_tax_form_billing').value;
-                    temp_text2 = temp_text1.replace(',', '');
+                temp_text1 = document.getElementById('vr_payment_tax_form_billing').value;
+                temp_text2 = temp_text1.replace(',', '');
+                if (!isNaN(temp_text2)) {
                     previous_total_payment_tax = parseFloat(temp_text2);
                 }
 
@@ -474,6 +474,9 @@
 
         function calculateVrFormItemsDataEntryValues(process_option) {
             if (vr_form_system_info['access_mode'] != 'quote_view' && vr_form_system_info['access_mode'] != 'contract_bom_edit') {
+                if (vr_form_system_info['access_mode'] == 'quote_add') {
+                    total_calculation_process_done++;
+                }
                 if (total_calculation_process_done > 0) {
                     switch (process_option) {
                         case 1:

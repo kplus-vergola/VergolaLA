@@ -1772,7 +1772,13 @@
         }
 
 
-        function disableVrFormItemsDataEntryMode(decision_option) {
+        function disableVrFormFrameworkAndVrTypesDataEntryMode(decision_option) {
+            document.getElementById('vr_framework_type_form_query').disabled = decision_option;
+            document.getElementById('vr_type_form_query').disabled = decision_option;
+        }
+
+
+        function disableVrFormDataEntryMode(decision_option) {
             var c1 = 0;
             var data_entry_input_types = ['Select Box', 'Input Box', 'Input Box Caution', 'Input Box Autofill'];
 

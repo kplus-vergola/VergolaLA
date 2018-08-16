@@ -397,9 +397,7 @@
 
             if (document.getElementById('vr_framework_type_form_query').value != 'null' && 
                 document.getElementById('vr_type_form_query').value != 'null') {
-                if (vr_form_items_data_entry.length == 0) {
-                    jsonDecodeVrFormItemsConfig();
-                }
+                jsonDecodeVrFormItemsConfig();
 
                 /* --- begin framework type == drop-in processing --- */
                 if (document.getElementById('vr_framework_type_form_query').value == 'Drop-In') {

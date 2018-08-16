@@ -168,8 +168,12 @@
                 document.getElementById('project_name_form_bom').innerHTML = vr_form_queries_info['vr_project_name'];
                 document.getElementById('contract_id_form_bom').innerHTML = vr_form_system_info['project_id'];
 
+                if (vr_form_system_info['access_mode'] == 'quote_edit') {
+                    disableVrFormFrameworkAndVrTypesDataEntryMode(true);
+                }
+
                 if (vr_form_system_info['access_mode'] == 'quote_view') {
-                    disableVrFormItemsDataEntryMode(true);
+                    disableVrFormDataEntryMode(true);
                 }
             } else {
                 console.log('processRetrieveResult > results:');
@@ -256,7 +260,7 @@
             }
 
             if (vr_form_system_info['access_mode'] == 'quote_view') {
-                disableVrFormItemsDataEntryMode(true);
+                disableVrFormDataEntryMode(true);
             }
         }
 
