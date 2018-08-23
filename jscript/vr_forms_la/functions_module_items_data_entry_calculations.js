@@ -430,16 +430,31 @@
 
             total_payment_total = total_payment_sub_total + total_payment_tax;
 
-            total_payment_deposit = total_payment_total * vr_form_system_info['payment_deposit_percentage'];
-            if (total_payment_deposit < vr_form_system_info['payment_deposit_minimum']) {
-                total_payment_deposit = vr_form_system_info['payment_deposit_minimum'];
-            }
-            if (total_payment_deposit > vr_form_system_info['payment_deposit_maximum']) {
-                total_payment_deposit = vr_form_system_info['payment_deposit_maximum'];
+            switch (vr_form_system_info['payment_deposit_calculation_method']) {
+                case 'percentage':
+                    total_payment_deposit = total_payment_total * vr_form_system_info['payment_deposit_percentage'];
+                    break;
+                case 'range':
+                    total_payment_deposit = total_payment_total * vr_form_system_info['payment_deposit_percentage'];
+                    if (total_payment_deposit < vr_form_system_info['payment_deposit_minimum']) {
+                        total_payment_deposit = vr_form_system_info['payment_deposit_minimum'];
+                    }
+                    if (total_payment_deposit > vr_form_system_info['payment_deposit_maximum']) {
+                        total_payment_deposit = vr_form_system_info['payment_deposit_maximum'];
+                    }
+                    break;
+                case 'fixed_amount':
+                    total_payment_deposit = vr_form_system_info['payment_deposit_fixed_amount'];
+                    break;
             }
 
             total_payment_progress_payment = total_payment_total * vr_form_system_info['payment_progress_payment_percentage'];
             total_payment_final_payment = total_payment_total - total_payment_deposit - total_payment_progress_payment;
+
+            if (total_payment_final_payment < 0) {
+                total_payment_progress_payment = total_payment_total - total_payment_deposit;
+                total_payment_final_payment = total_payment_total - total_payment_deposit - total_payment_progress_payment;
+            }
 
             total_commission_sales_commission = total_payment_vergola * vr_form_system_info['commission_sales_commission_percentage'];
             total_commission_pay1 = total_commission_sales_commission * vr_form_system_info['commission_pay1_percentage'];

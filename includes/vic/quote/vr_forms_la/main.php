@@ -237,9 +237,12 @@ if (isset($_REQUEST['api_mode'])) {
     $vr_item_default_dimensions_list = json_encode($vr_item_default_dimensions_list);
 
 
+    $vr_form_system_info['payment_deposit_calculation_method'] = 'range'; /* percentage, range, fixed_amount */
     $vr_form_system_info['payment_deposit_percentage'] = 0.1;
     $vr_form_system_info['payment_deposit_minimum'] = 0;
     $vr_form_system_info['payment_deposit_maximum'] = 1000;
+    $vr_form_system_info['payment_deposit_fixed_amount'] = 1000;
+
     $vr_form_system_info['payment_progress_payment_percentage'] = 0.65;
     $vr_form_system_info['commission_pay1_percentage'] = 0.4;
     $vr_form_system_info['commission_pay2_percentage'] = 0.3;
