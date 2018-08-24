@@ -316,10 +316,12 @@ $now = time();
 if(isset($_FILES['photo'])){ 
     foreach ($_FILES['photo']['tmp_name'] as $key => $tmp_name){
 //This is the directory where images will be saved 
+		$file_name = pathinfo($_FILES['photo']['name'][$key], PATHINFO_FILENAME).'.'.pathinfo($_FILES['photo']['name'][$key], PATHINFO_EXTENSION); 
         $target="images/drawings/$now-";
         $target=$target.$_FILES['photo']['name'][$key]; 
         if (move_uploaded_file($tmp_name, $target)) {
-$query = "INSERT INTO ver_chronoforms_data_drawings_vic (clientid, photo) VALUES  ('" . mysql_real_escape_string($getclientid) . "', '" . mysql_real_escape_string($target) . "')";
+$query = "INSERT INTO ver_chronoforms_data_drawings_vic (clientid, photo, file_name) VALUES  ('" . mysql_real_escape_string($getclientid) . "', '" . mysql_real_escape_string($target) . "', '" . mysql_real_escape_string($file_name) . "')";
+//$query = "INSERT INTO ver_chronoforms_data_drawings_vic (clientid, photo, file_name) VALUES  ('$ClientID', '$target','{$file_name}')";
  mysql_query($query) or trigger_error("Insert failed: " . mysql_error());
             }
     }
