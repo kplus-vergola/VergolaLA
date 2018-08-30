@@ -186,27 +186,28 @@ $variation_date = "NULL";
 if (strlen($_POST['variation_date']) && $_POST['variation_date'] != "0000-00-00 00:00:00"){
   $variation_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['variation_date'])))."'";
 }
- 
- 
-$sql = "UPDATE ver_chronoforms_data_contract_details_vic SET 
-deposit_paid = {$deposit_paid},
-progress_claim = {$progress_claim},
-final_payment = {$final_payment},
-deposit_paid_amount = {$deposit_paid_amount},
-progress_claim_amount = {$progress_claim_amount},
-final_payment_amount = {$final_payment_amount},
-variation_amount = {$variation_amount},
-variation_date = {$variation_date}
-WHERE projectid = '$projectid'";
 
-mysql_query($sql)or die(mysql_error());
+$enable_update_contract_details = false;
+if (isset($_POST['deposit_paid_amount'])) {
+    $enable_update_contract_details = true;
+}
 
-                                     
+if ($enable_update_contract_details == true) {
+    $sql = "UPDATE ver_chronoforms_data_contract_details_vic SET 
+    deposit_paid = {$deposit_paid},
+    progress_claim = {$progress_claim},
+    final_payment = {$final_payment},
+    deposit_paid_amount = {$deposit_paid_amount},
+    progress_claim_amount = {$progress_claim_amount},
+    final_payment_amount = {$final_payment_amount},
+    variation_amount = {$variation_amount},
+    variation_date = {$variation_date}
+    WHERE projectid = '$projectid'";
+    mysql_query($sql)or die(mysql_error());
+}
 
-                 
-                                            
+
 $check_measurer = mysql_real_escape_string($_POST['checkmeasurer']); 
-   
 
 $check_measure_date = "NULL";
 if (strlen($_POST['checkdate']) && $_POST['checkdate'] != "0000-00-00 00:00:00"){
@@ -341,29 +342,6 @@ if (strlen($_POST['handover_date']) && $_POST['handover_date'] != "0000-00-00 00
 $fw_complete = "NULL";
 if (strlen($_POST['fw_complete']) && $_POST['fw_complete'] != "0000-00-00 00:00:00"){
   $fw_complete = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['fw_complete'])))."'";
-                           
-                             
-                             
-                                     
-                             
-                                     
-                              
-                            
-                                 
-                     
-                       
-                             
-                             
-                           
-                         
-                       
-                               
-                     
-                             
-                     
-                               
-                       
-                           
 } 
                     
      
@@ -379,59 +357,44 @@ if (strlen($_POST['schedule_completion']) && $_POST['schedule_completion'] != "0
   $schedule_completion = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['schedule_completion'])))."'";
 } 
 
-  
-              
-                                  
-                                        
-   
-  
-                                     
+$enable_update_contract_vergola = false;
+if (isset($_POST['checkdate'])) {
+    $enable_update_contract_vergola = true;
+}
 
-                 
-                                                  
-                                                               
-   
-
-$sql = "UPDATE ver_chronoforms_data_contract_vergola_vic SET 
-check_measurer = '{$check_measurer}',
-check_measure_date = {$check_measure_date},
-recheck_measure_date = {$recheck_measure_date},
-drawing_prepare_date = {$drawing_prepare_date},
-drawing_prepare_date_followup = {$drawing_prepare_date_followup},
-drawing_approve_date = {$drawing_approve_date},
-drawing_approve_date_followup = {$drawing_approve_date_followup},
-building_permit_issued ={$building_permit_issued},
-production_start_date ={$production_start_date},
-production_complete_date = {$production_complete_date},
-install_date = {$install_date},
-erectors_name = '{$erectors_name}',
-erectors_name2 = '{$erectors_name2}',
-client_notified_date = {$client_notified_date},
-erector_notified_date = {$erector_notified_date},
-warranty_start_date = {$warranty_start_date},
-warranty_end_date = {$warranty_end_date},
-job_start_date = {$job_start_date},
-job_start_date_followup = {$job_start_date_followup},
-job_end_date = {$job_end_date},
-final_inspection_date = {$final_inspection_date},
-fw_orderdate = {$fw_orderdate},
-gutter_flashing_ordered = {$gutter_flashing_ordered},
-louvers_ordered = {$louvers_ordered},
-handover_date = {$handover_date},
-fw_complete = {$fw_complete},
-time_frame_letter = {$time_frame_letter},
-schedule_completion = {$schedule_completion} 
-WHERE projectid = '$projectid'"; 
-// elect_warranty_end_date = {$elect_warranty_end_date},
-//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); exit();
-mysql_query($sql) or die(mysql_error()); 
-
-              
-                            
-
-
-
-
+if ($enable_update_contract_vergola == true) {
+    $sql = "UPDATE ver_chronoforms_data_contract_vergola_vic SET 
+    check_measurer = '{$check_measurer}',
+    check_measure_date = {$check_measure_date},
+    recheck_measure_date = {$recheck_measure_date},
+    drawing_prepare_date = {$drawing_prepare_date},
+    drawing_prepare_date_followup = {$drawing_prepare_date_followup},
+    drawing_approve_date = {$drawing_approve_date},
+    drawing_approve_date_followup = {$drawing_approve_date_followup},
+    building_permit_issued ={$building_permit_issued},
+    production_start_date ={$production_start_date},
+    production_complete_date = {$production_complete_date},
+    install_date = {$install_date},
+    erectors_name = '{$erectors_name}',
+    erectors_name2 = '{$erectors_name2}',
+    client_notified_date = {$client_notified_date},
+    erector_notified_date = {$erector_notified_date},
+    warranty_start_date = {$warranty_start_date},
+    warranty_end_date = {$warranty_end_date},
+    job_start_date = {$job_start_date},
+    job_start_date_followup = {$job_start_date_followup},
+    job_end_date = {$job_end_date},
+    final_inspection_date = {$final_inspection_date},
+    fw_orderdate = {$fw_orderdate},
+    gutter_flashing_ordered = {$gutter_flashing_ordered},
+    louvers_ordered = {$louvers_ordered},
+    handover_date = {$handover_date},
+    fw_complete = {$fw_complete},
+    time_frame_letter = {$time_frame_letter},
+    schedule_completion = {$schedule_completion} 
+    WHERE projectid = '$projectid'"; 
+    mysql_query($sql) or die(mysql_error()); 
+}
 
 
 $city_permit_application_date = "NULL"; 
@@ -598,48 +561,51 @@ if (strlen($_POST['planning_application_followup']) && $_POST['planning_applicat
   $planning_application_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['planning_application_followup'])))."'";
 } 
 
- 
-$sql = "UPDATE ver_chronoforms_data_contract_statutory_vic SET 
-citypermit_application_date = {$city_permit_application_date},
-citypermit_application_approved_date = {$city_permit_approved_date},
-engr_active = {$site_spec_engineering_dates_enabled},
-sitespec_engr_date = {$site_spec_engineering_application_date},
-sitespec_engr_approved_date = {$site_spec_engineering_approved_date},
-strata_active = {$hoa_dates_enabled},
-strata_date = {$hoa_application_date},
-strata_approved_date = {$hoa_approved_date},
-coastal_active = {$coastal_dates_enabled},
-coastal_date = {$coastal_application_date},
-coastal_approved_date = {$coastal_approved_date},
-planning_application_date = {$planning_application_date},
-planning_approval_date = {$planning_approval_date},
-warranty_insurance_date = {$warranty_insurance_date},
-certifier_date = {$certifier_date},
-da_date = {$da_date}, 
-stat_req_easement_waterboard_approval_date = {$stat_req_easement_waterboard_approval_date},
-stat_req_easement_waterboard_followup = {$stat_req_easement_waterboard_followup},
-stat_req_easement_council_approval_date = {$stat_req_easement_council_approval_date},
-stat_req_easement_council_followup = {$stat_req_easement_council_followup},
-stat_req_planning = '{$stat_req_planning}',
-stat_req_planning_approval_date = {$stat_req_planning_approval_date},
-m_o_d = '{$m_o_d}',
-m_o_d_followup = {$m_o_d_followup},
-contract_note_number = '{$con_note_number}', 
-permit_application_date = {$permit_application_date},
-engineering_approved_date = {$engineering_approved_date},
-engineering_approved_date_followup = {$engineering_approved_date_followup},
-permit_approved_date = {$permit_approved_date},
-citb = {$citb},
-dev_application_date = {$dev_application_date},
-bldg_rules_application = {$bldg_rules_application},
-bldg_rules_approval = {$bldg_rules_approval},
-planning_application_followup = {$planning_application_followup}
+$enable_update_contract_statutory = false;
+if (isset($_POST['citypermitdate'])) {
+    $enable_update_contract_statutory = true;
+}
 
-WHERE projectid = '$projectid'"; 
+if ($enable_update_contract_statutory == true) {
+    $sql = "UPDATE ver_chronoforms_data_contract_statutory_vic SET 
+    citypermit_application_date = {$city_permit_application_date},
+    citypermit_application_approved_date = {$city_permit_approved_date},
+    engr_active = {$site_spec_engineering_dates_enabled},
+    sitespec_engr_date = {$site_spec_engineering_application_date},
+    sitespec_engr_approved_date = {$site_spec_engineering_approved_date},
+    strata_active = {$hoa_dates_enabled},
+    strata_date = {$hoa_application_date},
+    strata_approved_date = {$hoa_approved_date},
+    coastal_active = {$coastal_dates_enabled},
+    coastal_date = {$coastal_application_date},
+    coastal_approved_date = {$coastal_approved_date},
+    planning_application_date = {$planning_application_date},
+    planning_approval_date = {$planning_approval_date},
+    warranty_insurance_date = {$warranty_insurance_date},
+    certifier_date = {$certifier_date},
+    da_date = {$da_date}, 
+    stat_req_easement_waterboard_approval_date = {$stat_req_easement_waterboard_approval_date},
+    stat_req_easement_waterboard_followup = {$stat_req_easement_waterboard_followup},
+    stat_req_easement_council_approval_date = {$stat_req_easement_council_approval_date},
+    stat_req_easement_council_followup = {$stat_req_easement_council_followup},
+    stat_req_planning = '{$stat_req_planning}',
+    stat_req_planning_approval_date = {$stat_req_planning_approval_date},
+    m_o_d = '{$m_o_d}',
+    m_o_d_followup = {$m_o_d_followup},
+    contract_note_number = '{$con_note_number}', 
+    permit_application_date = {$permit_application_date},
+    engineering_approved_date = {$engineering_approved_date},
+    engineering_approved_date_followup = {$engineering_approved_date_followup},
+    permit_approved_date = {$permit_approved_date},
+    citb = {$citb},
+    dev_application_date = {$dev_application_date},
+    bldg_rules_application = {$bldg_rules_application},
+    bldg_rules_approval = {$bldg_rules_approval},
+    planning_application_followup = {$planning_application_followup}
+    WHERE projectid = '$projectid'"; 
+    mysql_query($sql)or die(mysql_error()); 
+}
 
-//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');  exit();
-mysql_query($sql)or die(mysql_error()); 
-  
 
 $getclientid = $ClientID;   
 $checknotes = implode(", ", $_POST['notestxt']);
