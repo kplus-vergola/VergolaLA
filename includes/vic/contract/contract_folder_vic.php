@@ -188,7 +188,8 @@ if (strlen($_POST['variation_date']) && $_POST['variation_date'] != "0000-00-00 
 }
 
 $enable_update_contract_details = false;
-if (isset($_POST['deposit_paid_amount'])) {
+// if (isset($_POST['deposit_paid_amount'])) {
+if (isset($_POST['deposit_paid'])) {	
     $enable_update_contract_details = true;
 }
 
@@ -1325,27 +1326,7 @@ $groups = $user->get('groups');
 
      <!--- Start of Vergola Standard -->
     <div id="standard" class="tab_content">
-      <!--
-      <span class="vs-label"><label>Deposit Paid:</label> <input type="text" id="depositdate" name="deposit_paid_amount" class="" value="<?php echo $deposit_paid_amount; ?>" /> <input type="text" id="depositdate" name="deposit_paid" class="date_entered" value="<?php if ($DepositDate!="") {echo date(PHP_DFORMAT,strtotime($DepositDate)); } else {echo "";} ?>"/></span>
-      -->
-
-
-      <!-- <span class="vs-label"><label>Deposit Paid:</label> <input type="text" id="depositdate" name="deposit_paid_amount" class="" value="<?php echo " $".number_format($deposit_paid_amount,2,".",","); ?>" /> <input type="text" id="depositdate" name="deposit_paid" class="date_entered" value="<?php if ($DepositDate!="") {echo date(PHP_DFORMAT,strtotime($DepositDate)); } else {echo "";} ?>"/></span>
-      <span class="vs-label"><label>Progress Claim:</label> <input type="text" id="progressclaim" name="progress_claim_amount" class="" value="<?php echo " $".number_format($progress_claim_amount,2,".",","); ?>" /> <input type="text" id="progressclaim" name="progress_claim" class="date_entered" value="<?php if ($ProgressClaim!="") {echo date(PHP_DFORMAT,strtotime($ProgressClaim)); } else {echo "";} ?>"/></span>
-      <span class="vs-label"><label>Final Payment:</label> <input type="text" id="finalpayment" name="final_payment_amount" class="" value="<?php echo " $".number_format($final_payment_amount,2,".",","); ?>" /> <input type="text" id="finalpayment" name="final_payment" class="date_entered" value="<?php if ($FinalPayment!="") {echo date(PHP_DFORMAT,strtotime($FinalPayment)); } else {echo "";} ?>"/></span>
-      <span class="vs-label"><label>Variation:</label> <input type="text" id="finalpayment" name="final_payment_amount" class="" value="<?php echo " $".number_format($final_payment_amount,2,".",","); ?>" /> <input type="text" id="finalpayment" name="final_payment" class="date_entered" value="<?php if ($FinalPayment!="") {echo date(PHP_DFORMAT,strtotime($FinalPayment)); } else {echo "";} ?>"/></span> -->
-
-
-
-
-     <!--  <span class="vs-label"><label>Deposit Paid:</label> <input style="text-align: right;" type="text" disabled="disabled" id="depositdate" name="deposit_paid_amount" class="" value="<?php echo " $".number_format($PaymentDepositValue,2,".",","); ?>" /> <input style="text-align: right;" type="text" id="depositdate" name="deposit_paid" class="date_entered" value="<?php if ($contract_detail['deposit_paid']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['deposit_paid'])); } else {echo "";} ?>"/></span>
-      <span class="vs-label"><label>Progress Claim:</label> <input style="text-align: right;" type="text" disabled="disabled" id="progressclaim" name="progress_claim_amount" class="" value="<?php echo " $".number_format($PaymentProgressValue,2,".",","); ?>" /> <input style="text-align: right;" type="text"  id="progressclaim" name="progress_claim" class="date_entered" value="<?php if ($contract_detail['progress_claim']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['progress_claim'])); } else {echo "";} ?>"/></span>
-
-      <span class="vs-label"><label>Final Payment:</label> <input style="text-align: right;" type="text" disabled="disabled" id="finalpayment" name="final_payment_amount" class="" value="<?php echo " $".number_format($PaymentFinalValue,2,".",","); ?>" /> <input style="text-align: right;" type="text" id="finalpayment" name="final_payment" class="date_entered" value="<?php if ($contract_detail['final_payment']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['final_payment'])); } else {echo "";} ?>"/></span>
-
-      <span class="vs-label"><label>Variation:</label> <input style="text-align: right;" type="text" id="variationdate" name="variation_amount" class="" value="<?php echo " $".number_format($PaymentVariationValue,2,".",","); ?>" /> <input style="text-align: right;" type="text" id="variationdate" name="variation_date" class="date_entered" value="<?php if ($contract_detail['variation_date']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['variation_date'])); } else {echo "";} ?>"/></span> -->      
-      
-
+     
       <span class="vs-label"><label>Deposit Paid:</label> 
         <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="depositdate" name="deposit_paid_amount" class="" value="<?php echo $PaymentDepositValue; ?>" /> </td>
         <td><input style="text-align: right;" type="text" id="depositdate" name="deposit_paid" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['deposit_paid']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['deposit_paid'])); } else {echo "";} ?>"/></td></span>
