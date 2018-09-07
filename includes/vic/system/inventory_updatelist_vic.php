@@ -103,8 +103,21 @@ if(isset($_POST['save']) || isset($_POST['save_new']))
         //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
         mysql_query($sql) or die(mysql_error()); //echo "Saved! #a"; 
         }else{
-          
-        }
+          // echo ("Do not update photo");
+		  $sql = "UPDATE `ver_chronoforms_data_inventory_vic` SET   
+			 inventoryid = '$id',
+			 section ='$section_save', 
+			 category ='$category_save',  
+			 description ='$name_save', 
+			 -- photo ='$pic_save',  
+			 uom ='$uom_save',
+			 rrp ='$rrp_save', 
+			 cost ='$cost_save'         
+			 WHERE inventoryid = '$id'";
+
+			 mysql_query($sql) or die(mysql_error()); //echo "Saved! #a"; 
+        
+		}
     }
 
     if (isset($_POST['save_new'])) { 
