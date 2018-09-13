@@ -35,7 +35,7 @@
             {"ref_name":"VR1", "display_name":"Single Bay VR1", "display_order":"2", "bay_orientation":"vertical", "number_of_bay":"1", "bay_roof_shape":"flat"},
             {"ref_name":"VR2", "display_name":"Double Bay VR2", "display_order":"3", "bay_orientation":"vertical", "number_of_bay":"2", "bay_roof_shape":"flat"},
             {"ref_name":"VR3", "display_name":"Double Bay VR3", "display_order":"4", "bay_orientation":"horizontal", "number_of_bay":"2", "bay_roof_shape":"flat"},
-            {"ref_name":"VR3G", "display_name":"Double Bay VR3 - Gutter", "display_order":"5", "bay_orientation":"horizontal", "number_of_bay":"2", "bay_roof_shape":"flat"},
+            {"ref_name":"VR3G", "display_name":"Double Bay VR3 - Thru-Gutter", "display_order":"5", "bay_orientation":"horizontal", "number_of_bay":"2", "bay_roof_shape":"flat"},
             {"ref_name":"VR4", "display_name":"Triple Bay VR4", "display_order":"6", "bay_orientation":"vertical", "number_of_bay":"3", "bay_roof_shape":"flat"}, 
             {"ref_name":"VR5", "display_name":"Triple Bay VR5", "display_order":"7", "bay_orientation":"horizontal", "number_of_bay":"3", "bay_roof_shape":"flat"}, 
             {"ref_name":"VR6", "display_name":"Quadruple Bay VR6", "display_order":"8", "bay_orientation":"vertical", "number_of_bay":"4", "bay_roof_shape":"flat"}, 
