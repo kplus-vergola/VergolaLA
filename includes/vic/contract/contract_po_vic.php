@@ -10,6 +10,13 @@
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/contract-folder.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/lightbox.css'; ?>" />
 
+<link rel="stylesheet" type="text/css" href="<?php echo JURI::base().'jscript/vr_forms_la/style_form_items_data_entry.css'; ?>" />
+
+        <?php
+        include 'config_general.php';
+        include 'config_module_items_data_entry.php';
+        ?>
+		
 <?php 
 $is_jump_to_download_pdf = 0;
 $view = $_REQUEST['view']; 
@@ -136,6 +143,43 @@ function cbo_supplier($supplier_id=null,$name=null){
 }
 
 $process_po = 0; 
+
+// Convert the value of fractions to match with the values from the BOM module
+$config_vr_fractions_output_format = array(
+    '1/32' => '1/32', 
+    '2/32' => '1/16', 
+    '3/32' => '3/32', 
+    '4/32' => '1/8', 
+    '5/32' => '5/32', 
+    '6/32' => '6/32', 
+    '7/32' => '7/32', 
+    '8/32' => '1/4', 
+    '9/32' => '9/32', 
+    '10/32' => '10/32', 
+    '11/32' => '11/32', 
+    '12/32' => '3/8', 
+    '13/32' => '13/32', 
+    '14/32' => '14/32', 
+    '15/32' => '15/32', 
+    '16/32' => '1/2', 
+    '17/32' => '17/32', 
+    '18/32' => '18/32', 
+    '19/32' => '19/32', 
+    '20/32' => '5/8', 
+    '21/32' => '21/32', 
+    '22/32' => '22/32', 
+    '23/32' => '23/32', 
+    '24/32' => '3/4', 
+    '25/32' => '25/32', 
+    '26/32' => '26/32', 
+    '27/32' => '27/32', 
+    '28/32' => '7/8', 
+    '29/32' => '29/32', 
+    '30/32' => '30/32', 
+    '31/32' => '31/32' 
+);
+
+
   
 ?>
 
@@ -341,13 +385,11 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 		 	<!-- </th><th> Qty </th><th> Length </th> </th><th> UOM </th> <th>Cost</th> <th >Supplier</th>  <th>Amount </th>  -->
 	</tr>
 	
-	<!-- <tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td><td><?php if($bm['length_fraction']=="Inches" && METRIC_SYSTEM == "inch") {echo get_feet_value($bm['length']);}else if($bm['uom']=="Inches"){echo $bm['length'];} ?></td><td><?php echo $bm['uom']; ?></td><td><?php echo $bm['uom'] + 111; ?><td> &nbsp; </td><td> </td></tr>
-
-	<tr>
-		 <th  colspan='7'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 123 Raw Materials</th> 
-	</tr> -->
+	
 	<tr><td><?php echo $bm['description']; ?></td><td><?php echo number_format($bm['qty']); ?></td><td><?php if($bm['uom']=="Inches") echo get_feet_value($bm['length']); ?></td>
-		<td><?php if($bm['length_fraction']!="null") {echo $bm['length_fraction'];} ?></td> <td><?php echo $bm['uom']; ?></td>
+		<!-- <td><?php if($bm['length_fraction']!="null") {echo $bm['length_fraction'];} ?></td> -->
+		<td><?php if($bm['length_fraction']!="null") {echo $config_vr_fractions_output_format[$bm['length_fraction']];} ?></td> 
+		<td><?php echo $bm['uom']; ?></td>
 		<td> &nbsp; </td><td> &nbsp; </td><td> &nbsp;  </td></tr>
 	<tr>
 		 <th  colspan='7'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Raw Materials</th> 
@@ -515,12 +557,9 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 					</td> 
 					<td ><?php echo number_format($m_qty); ?></td>
 					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Inches") echo get_feet_value($m['bm_length']); ?></td> 
-					<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> 
-					<!-- <td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Inches") echo $m['length']; ?></td>  -->
-					<!-- <td ><?php if($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Mtrs") echo $m_length; ?></td>  -->
+					<!-- <td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> -->
+					<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $config_vr_fractions_output_format[$bm['length_fraction']];} ?></td> 
 					<td><?php echo $m['uom']; ?></td> 
-					<!-- <td style="text-align:right"> $ <?php echo number_format($m['raw_cost'],2); ?> </td> -->
-					<!-- <td style="text-align:left;width: 15%"> <?php echo $m['company_name']; ?></td>  -->
 					<td style="text-align:right"> $<input type="text" class="number" value="<?php echo number_format($m['raw_cost'],2); ?>" name="raw_cost[]" style="width: 80%; text-align:right;" /> </td>
 					<td > <?php echo cbo_supplier($m['supplierid'],"supplierid[]"); ?></td> 
 					<td style=""> $ <?php echo number_format($m['ls_amount_guttering'],2) ?> </td> 
@@ -658,6 +697,10 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 					</td> 
 					<td ><?php echo number_format($m_qty); ?></td>
 					<td ><?php if($m['uom']=="Mtrs" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Mtrs") echo $m_length; ?></td> 
+					
+					<!-- <td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> 
+					<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $config_vr_fractions_output_format[$bm['length_fraction']];} ?></td> -->
+					
 					<td><?php echo $m['uom']; ?></td> 
 					<td style="text-align:right"> $<input type="text" value="<?php echo number_format($m['raw_cost'],2); ?>" name="raw_cost[]" style="width: 80%; text-align:right;" /> </td>
 					<td > <?php echo cbo_supplier($m['supplierid'],"supplierid[]"); ?></td> 

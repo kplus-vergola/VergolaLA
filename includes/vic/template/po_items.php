@@ -33,6 +33,40 @@ if(isset($_POST['add']))
 	 
 }
 
+$config_vr_fractions_output_format = array(
+    '1/32' => '1/32', 
+    '2/32' => '1/16', 
+    '3/32' => '3/32', 
+    '4/32' => '1/8', 
+    '5/32' => '5/32', 
+    '6/32' => '6/32', 
+    '7/32' => '7/32', 
+    '8/32' => '1/4', 
+    '9/32' => '9/32', 
+    '10/32' => '10/32', 
+    '11/32' => '11/32', 
+    '12/32' => '3/8', 
+    '13/32' => '13/32', 
+    '14/32' => '14/32', 
+    '15/32' => '15/32', 
+    '16/32' => '1/2', 
+    '17/32' => '17/32', 
+    '18/32' => '18/32', 
+    '19/32' => '19/32', 
+    '20/32' => '5/8', 
+    '21/32' => '21/32', 
+    '22/32' => '22/32', 
+    '23/32' => '23/32', 
+    '24/32' => '3/4', 
+    '25/32' => '25/32', 
+    '26/32' => '26/32', 
+    '27/32' => '27/32', 
+    '28/32' => '7/8', 
+    '29/32' => '29/32', 
+    '30/32' => '30/32', 
+    '31/32' => '31/32' 
+);
+
 
 ?>
 
@@ -233,6 +267,9 @@ $supplier = mysql_fetch_array($qSupplier);
 			<th width="50">
 				 <b>Length</b> 
 			</th>
+			<th width="50">
+				 <b>Fraction</b> 
+			</th>
 			<th width="40">
 				 <b>UOM</b> 
 			</th> 
@@ -338,6 +375,7 @@ SELECT
 	bm.raw_cost,
 	bm.qty AS bm_qty,
 	bm.supplierid,
+	bm.length_fraction AS length_fraction,
 	-- CONCAT('SQL1','   ',m.raw_description) AS raw_description,
 	m.raw_description,
 	m.is_per_length,
@@ -451,6 +489,7 @@ SELECT
 		END AS s_length,
 		( ( bm.length_feet * 12 ) + bm.length_inch ) AS 1_length,
 
+	bm.length_fraction AS length_fraction,
 	bm.projectid,
 	bm.inventoryid,
 	bm.materialid,
@@ -588,6 +627,7 @@ CASE
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:($is_group==1?$m['ts_qty']:$m['ls_qty']))); ?></td>  -->
 
 						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?></td>
+						<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?></td> 
 						<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 						<td><?php echo $m['colour']; ?></td>
 						<td><?php echo $m['finish']; ?></td>
@@ -735,6 +775,7 @@ CASE
 	<td colspan="2"><?php echo $m['raw_description']; ?></td>  
 	<td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td>
 	<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?></td>
+	<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?></td> 
 	<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
 	<td> &nbsp; </td>
 	<td> &nbsp; </td>
