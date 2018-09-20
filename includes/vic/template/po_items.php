@@ -299,6 +299,8 @@ if($section=="Vergola"){
 
 
 // $sql = "SELECT bm.id,m.qty,(im.inv_qty*bm.qty) AS m_qty,(bm.qty*im.inv_qty) AS ls_qty,bm.length,CASE WHEN m.uom='Mtrs' THEN bm.raw_cost*(im.inv_qty*bm.qty)*bm.length ELSE bm.raw_cost*(im.inv_qty*bm.qty) END AS ls_amount,bm.projectid,bm.inventoryid,bm.materialid,bm.raw_cost,bm.qty AS bm_qty,bm.supplierid,m.raw_description,m.is_per_length,m.length_per_ea,m.uom,s.company_name,inv.photo,b.colour,b.finish FROM ver_chronoforms_data_contract_bom_meterial_vic AS bm JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id=bm.contract_item_cf_id JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=bm.inventoryid JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid=bm.inventoryid AND im.materialid=bm.materialid JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=im.materialid JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=bm.supplierid WHERE bm.projectid='{$projectid}' AND b.projectid='{$projectid}' ".($is_reorder==1?" AND inv.inventoryid='{$inventoryid}' ":" AND bm.section='{$section}' ")." AND bm.supplierid='{$supplierid}' AND m.is_main_item=1 { $ order_by}  "; // ORDER BY is_per_length DESC, bm.id, b.length DESC, b.qty DESC
+
+// $sql = "SELECT m.qty,(bm.qty) AS 1 _qty,(im.inv_qty*bm.qty) AS m_qty,bm.length,(bm.qty*im.inv_qty) AS ls_qty,SUM(b.qty*im.inv_qty) AS ts_qty,CASE WHEN m.is_per_length=1 THEN CASE WHEN m.uom='Ea' THEN SUM(im.inv_qty*bm.qty) ELSE SUM(floor(((bm.length_feet*12)+bm.length_inch)/m.length_per_ea_us)) END ELSE SUM(im.inv_qty*bm.qty) END AS ls_qty,CASE WHEN m.is_per_length=1 THEN CASE WHEN m.uom='Ea' THEN SUM(m.raw_cost*im.inv_qty*b.qty) ELSE SUM((m.raw_cost*im.inv_qty*(floor(((b.length_feet*12)+b.length_inch)/m.length_per_ea_us)+COALESCE ((((RIGHT (SUBSTRING_INDEX(bm.length_fraction,'/',1),1)+0)/(LEFT (SUBSTRING_INDEX(bm.length_fraction,'/',-1),1)+0))),0))*b.qty)) END ELSE SUM(m.raw_cost*im.inv_qty*b.qty) END AS ls_amount,CASE WHEN m.is_per_length=1 THEN CASE WHEN m.uom='Ea' THEN (m.raw_cost*im.inv_qty*bm.qty) ELSE ((m.raw_cost*im.inv_qty*floor((((bm.length_feet*12)+bm.length_inch)/m.length_per_ea_us)+COALESCE ((((RIGHT (SUBSTRING_INDEX(bm.length_fraction,'/',1),1)+0)/(LEFT (SUBSTRING_INDEX(bm.length_fraction,'/',-1),1)+0))),0))*bm.qty)) END ELSE (m.raw_cost*im.inv_qty*bm.qty) END AS 1 _amount,CASE WHEN m.is_per_length=1 THEN SUM((bm.length_feet*12)+bm.length_inch) END AS s_length,((bm.length_feet*12)+bm.length_inch) AS 1 _length,bm.raw_cost,bm.qty AS bm_qty,bm.length_fraction AS length_fraction,m.raw_description,m.uom,s.company_name,inv.photo,b.colour,b.finish FROM ver_chronoforms_data_contract_bom_meterial_vic AS bm JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid=bm.inventoryid JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id=bm.contract_item_cf_id JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid=b.inventoryid JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id=im.materialid JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid=bm.supplierid WHERE bm.projectid='{$projectid}' AND b.projectid='{$projectid}' AND s.supplierid='{$supplierid}' ".($is_reorder==" 1 "?" AND b.inventoryid='{$inventoryid}' ":" AND inv.section='{$section}' ")." AND is_main_item=1 GROUP BY CASE WHEN inv.section='Guttering' OR inv.section='Flashings' THEN bm.id ELSE bm.materialid END,bm.length_fraction,b.length,b.colour ORDER BY m.cf_id ASC,m.is_per_length DESC,bm.length DESC,bm.qty DESC,FIELD(inv.category,'Post Fixings','Beam Fixings','Intermediates','Beams') DESC; "
 $sql = "
 SELECT
 	bm.id,
@@ -324,13 +326,13 @@ SELECT
 		CASE
 				
 				WHEN m.uom = 'Ea' THEN
-				SUM( m.raw_cost * im.inv_qty * b.qty ) ELSE SUM(
+				SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
 					(
 						m.raw_cost * im.inv_qty * (
-							floor( ( ( b.length_feet * 12 ) + b.length_inch ) / m.length_per_ea_us ) + COALESCE (
+							floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
 								(
 									(
-										( RIGHT ( SUBSTRING_INDEX( b.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( b.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+										( RIGHT ( SUBSTRING_INDEX( b.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
 									) 
 								),
 								0 
@@ -339,7 +341,32 @@ SELECT
 					) 
 				) 
 			END ELSE SUM( m.raw_cost * im.inv_qty * b.qty ) 
-		END AS ls_amount,
+		END AS ls_amount_,
+	
+		CASE
+								
+								WHEN m.is_per_length = 1 THEN
+							CASE
+									
+									WHEN m.uom = 'Ea' THEN
+									SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
+										(
+											m.raw_cost * im.inv_qty * floor(
+												( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
+													(
+														(
+															( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+														) 
+													),
+													0 
+												) 
+											) * bm.qty 
+										) 
+									) 
+								END ELSE SUM( m.raw_cost * im.inv_qty * bm.qty ) 
+							END AS ls_amount,
+
+							
 	CASE
 			
 			WHEN m.is_per_length = 1 THEN
@@ -410,6 +437,7 @@ CASE
 		OR inv.section = 'Flashings' THEN
 			bm.id ELSE bm.materialid 
 		END,
+		length_fraction,
 		b.length,
 		b.colour 
 	ORDER BY
@@ -459,7 +487,32 @@ SELECT
 					) 
 				) 
 			END ELSE SUM( m.raw_cost * im.inv_qty * b.qty ) 
-		END AS ls_amount,
+		END AS ls_amount_,
+		
+		CASE
+								
+								WHEN m.is_per_length = 1 THEN
+							CASE
+									
+									WHEN m.uom = 'Ea' THEN
+									SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
+										(
+											m.raw_cost * im.inv_qty * floor(
+												( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
+													(
+														(
+															( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+														) 
+													),
+													0 
+												) 
+											) * bm.qty 
+										) 
+									) 
+								END ELSE SUM( m.raw_cost * im.inv_qty * bm.qty ) 
+							END AS ls_amount,
+
+							
 	CASE
 			
 			WHEN m.is_per_length = 1 THEN
