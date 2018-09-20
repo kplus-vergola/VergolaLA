@@ -1,3 +1,8 @@
+<?php
+include 'includes/vic/config_custom.php';
+?>
+
+
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/jquery-ui-1.11.4/jquery-ui.min.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/jquery-ui-1.11.4/jquery-ui.theme.min.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/new-enquiry.css'; ?>" />
@@ -271,7 +276,15 @@ function set_notification($msg){
 	</tr>
 	<tr>
 		<td class="row1">Suspend</td>
+		<!--
 		<td class="row2"><input type="text" name="block" value="<?php echo $Block ?>"/></td>
+		-->
+		<td class="row1" >
+			<select name='block' style="width: 60px;">
+				<option value='0'  <?php echo ($Block=="0" ? "selected":""); ?> >No</option>
+				<option value='1'  <?php echo ($Block=="1" ? "selected":""); ?>  >Yes</option> 
+			</select>
+		</td>
 	</tr>
 	<tr>
 		<td class="row1">Phone</td>
@@ -298,8 +311,8 @@ function set_notification($msg){
 	  	
  		//$group &= $user['groups'];
 
-		if($user->groups['10']==10){
-			 
+		if($user->groups['10']==10 || $user->groups['29']==29){
+			/*
 			$cbo_rep_type = "
 					<select name='usergroup_id'>
 						<option value='9' ".(isset($sel_user->groups['9']) ? "selected":"").">User</option>
@@ -309,8 +322,22 @@ function set_notification($msg){
 						
 					</select>	
 			";
-
-
+			*/
+			$cbo_rep_type = '<select name="usergroup_id">';
+			foreach ($config_custom['user_groups'] as $user_group_key => $user_group_value) {
+				$append_option = true;
+				if ($user_group_key == '10' && !isset($user->groups[$user_group_key])) {
+					$append_option = false;
+				}
+				if ($append_option == true) {
+					$selected = '';
+					if (isset($sel_user->groups[$user_group_key])) {
+						$selected = 'selected';
+					}
+					$cbo_rep_type .= '<option value="' . $user_group_key . '" ' . $selected . '>' . $user_group_value . '</option>';
+				}
+			}
+			$cbo_rep_type .= '</select>';
 	?>
 		<tr>
 			<td class="row1">Usergroup </td>

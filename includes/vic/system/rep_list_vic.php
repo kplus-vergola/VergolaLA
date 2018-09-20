@@ -1,4 +1,9 @@
 <?php
+include 'includes/vic/config_custom.php';
+?>
+
+
+<?php
 //our pagination function is now in this file
 function pagination($current_page_number, $total_records_found, $query_string = null)
 {
@@ -55,6 +60,8 @@ if ($search)
 //this return the total number of records returned by our query
 $total_records = mysql_num_rows(mysql_query($sql));
 
+$sql .= " ORDER BY Block, name ";
+
 //now we limit our query to the number of results we want per page
 $sql .= " LIMIT $start, " . NUMBER_PER_PAGE;
 
@@ -73,8 +80,12 @@ echo "</div>";
 
 $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error());
 	echo "<table class='listing-table table-bordered'><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Mobile</th><th>Usergroup</th></tr></thead><tbody>";
+
+$user =& JFactory::getUser();
 while ($record = mysql_fetch_assoc($loop)){
 	$sel_user =& JFactory::getUser($record['id']);
+
+	/*
 	$user_group_name = "";
 	if($sel_user->groups['10']){
 		$user_group_name = "Admin";
@@ -84,6 +95,28 @@ while ($record = mysql_fetch_assoc($loop)){
 		$user_group_name = "User";
 	}
 	echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "rep-listing-vic/rep-updatelist-vic?id={$record['id']}' ><td>{$record['name']}</td>" . "<td>{$record['username']}</td>" . "<td>{$record['email']}</td>" . "<td>{$record['Phone']}</td>" . "<td>{$record['Mobile']}</td>" . "<td>{$user_group_name}</td></tr>";
+	*/
+
+	$user_group_name = '';
+	foreach ($sel_user->groups as $group_key => $group_value) {
+		if (isset($config_custom['user_groups'][$group_value])) {
+			$user_group_name = $config_custom['user_groups'][$group_value];
+		}
+	}
+
+	$css_style_user_status = 'style="color: #008000;"';
+	if (isset($record['block']) && $record['block'] == '1') {
+		$css_style_user_status = 'style="color: #ff0000;"';
+	}
+
+	$output_record = true;
+	if (isset($sel_user->groups['10']) && !isset($user->groups['10'])) {
+		$output_record = false;
+	}
+
+	if ($output_record == true) {
+		echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "rep-listing-vic/rep-updatelist-vic?id={$record['id']}' ><td {$css_style_user_status}>{$record['name']}</td>" . "<td>{$record['username']}</td>" . "<td>{$record['email']}</td>" . "<td>{$record['Phone']}</td>" . "<td>{$record['Mobile']}</td>" . "<td>{$user_group_name}</td></tr>";
+	}
 }
 
 echo "</tbody></table>"; 
