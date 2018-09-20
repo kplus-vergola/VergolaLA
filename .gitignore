@@ -1,4 +1,5 @@
 # ignore folder(s)
+/administrator/cache/
 /cache/
 /images/drawings/
 /images/file_upload/
