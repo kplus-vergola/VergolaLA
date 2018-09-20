@@ -328,45 +328,16 @@ SELECT
 				WHEN m.uom = 'Ea' THEN
 				SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
 					(
-						m.raw_cost * im.inv_qty * (
-							floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
-								(
-									(
-										( RIGHT ( SUBSTRING_INDEX( b.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
-									) 
-								),
-								0 
-							) 
+					m.raw_cost * im.inv_qty * 
+						(FLOOR(((bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + 
+							(COALESCE (((LEFT (SUBSTRING_INDEX(bm.length_fraction,'/',-2),2)+0) / 
+								(RIGHT (SUBSTRING_INDEX(bm.length_fraction,'/',2),2)+0)),0) 
+							)
 						) * b.qty 
 					) 
 				) 
 			END ELSE SUM( m.raw_cost * im.inv_qty * b.qty ) 
-		END AS ls_amount_,
-	
-		CASE
-								
-								WHEN m.is_per_length = 1 THEN
-							CASE
-									
-									WHEN m.uom = 'Ea' THEN
-									SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
-										(
-											m.raw_cost * im.inv_qty * floor(
-												( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
-													(
-														(
-															( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
-														) 
-													),
-													0 
-												) 
-											) * bm.qty 
-										) 
-									) 
-								END ELSE SUM( m.raw_cost * im.inv_qty * bm.qty ) 
-							END AS ls_amount,
-
-							
+		END AS ls_amount,
 	CASE
 			
 			WHEN m.is_per_length = 1 THEN
@@ -472,47 +443,18 @@ SELECT
 		CASE
 				
 				WHEN m.uom = 'Ea' THEN
-				SUM( m.raw_cost * im.inv_qty * b.qty ) ELSE SUM(
+				SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
 					(
-						m.raw_cost * im.inv_qty * (
-							floor( ( ( b.length_feet * 12 ) + b.length_inch ) / m.length_per_ea_us ) + COALESCE (
-								(
-									(
-										( RIGHT ( SUBSTRING_INDEX( b.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( b.length_fraction, '/',- 1 ), 1 ) + 0 ) 
-									) 
-								),
-								0 
-							) 
+					m.raw_cost * im.inv_qty * 
+						(FLOOR(((bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + 
+							(COALESCE (((LEFT (SUBSTRING_INDEX(bm.length_fraction,'/',-2),2)+0) / 
+								(RIGHT (SUBSTRING_INDEX(bm.length_fraction,'/',2),2)+0)),0) 
+							)
 						) * b.qty 
 					) 
 				) 
 			END ELSE SUM( m.raw_cost * im.inv_qty * b.qty ) 
-		END AS ls_amount_,
-		
-		CASE
-								
-								WHEN m.is_per_length = 1 THEN
-							CASE
-									
-									WHEN m.uom = 'Ea' THEN
-									SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
-										(
-											m.raw_cost * im.inv_qty * floor(
-												( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
-													(
-														(
-															( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
-														) 
-													),
-													0 
-												) 
-											) * bm.qty 
-										) 
-									) 
-								END ELSE SUM( m.raw_cost * im.inv_qty * bm.qty ) 
-							END AS ls_amount,
-
-							
+		END AS ls_amount,
 	CASE
 			
 			WHEN m.is_per_length = 1 THEN
@@ -682,8 +624,9 @@ CASE
 						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?></td>
 						<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?></td> 
 						<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
-						<td><?php echo $m['colour']; ?></td>
-						<td><?php echo $m['finish']; ?></td>
+						<!-- <td><?php echo $m['colour']; ?></td> -->
+						<td><?php echo ($m['colour'] == null?"":$m['colour']); ?></td>
+						<td><?php echo ($m['finish'] == "null"?" ":$m['finish']); ?></td>
 						<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>
 						<td style="text-align:right;">$<?php echo number_format(($m_amount>0?$m_amount:$m['ls_amount']),2); ?></td>
 					</tr>  
