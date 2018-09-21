@@ -1,5 +1,5 @@
 <?php
-include 'includes/vic/config_custom.php';
+include 'includes/vic/custom_processes_user.php';
 ?>
 
 
@@ -324,17 +324,17 @@ function set_notification($msg){
 			";
 			*/
 			$cbo_rep_type = '<select name="usergroup_id">';
-			foreach ($config_custom['user_groups'] as $user_group_key => $user_group_value) {
+			foreach ($custom_configs_user['user_groups'] as $key1 => $value1) {
 				$append_option = true;
-				if ($user_group_key == '10' && !isset($user->groups[$user_group_key])) {
+				if ($key1 == '10' && $key1 != $current_signed_in_user_group_key) {
 					$append_option = false;
 				}
 				if ($append_option == true) {
 					$selected = '';
-					if (isset($sel_user->groups[$user_group_key])) {
+					if (isset($sel_user->groups[$key1])) {
 						$selected = 'selected';
 					}
-					$cbo_rep_type .= '<option value="' . $user_group_key . '" ' . $selected . '>' . $user_group_value . '</option>';
+					$cbo_rep_type .= '<option value="' . $key1 . '" ' . $selected . '>' . $value1 . '</option>';
 				}
 			}
 			$cbo_rep_type .= '</select>';

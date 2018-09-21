@@ -1,5 +1,5 @@
 <?php
-include 'includes/vic/config_custom.php';
+include 'includes/vic/custom_processes_user.php';
 ?>
 
 
@@ -97,12 +97,8 @@ while ($record = mysql_fetch_assoc($loop)){
 	echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "rep-listing-vic/rep-updatelist-vic?id={$record['id']}' ><td>{$record['name']}</td>" . "<td>{$record['username']}</td>" . "<td>{$record['email']}</td>" . "<td>{$record['Phone']}</td>" . "<td>{$record['Mobile']}</td>" . "<td>{$user_group_name}</td></tr>";
 	*/
 
-	$user_group_name = '';
-	foreach ($sel_user->groups as $group_key => $group_value) {
-		if (isset($config_custom['user_groups'][$group_value])) {
-			$user_group_name = $config_custom['user_groups'][$group_value];
-		}
-	}
+	$user_group_key = $custom_functions_user->getUserGroupKey($sel_user->groups);
+	$user_group_name = $custom_configs_user['user_groups'][$user_group_key];
 
 	$css_style_user_status = 'style="color: #008000;"';
 	if (isset($record['block']) && $record['block'] == '1') {
@@ -110,7 +106,7 @@ while ($record = mysql_fetch_assoc($loop)){
 	}
 
 	$output_record = true;
-	if (isset($sel_user->groups['10']) && !isset($user->groups['10'])) {
+	if (isset($sel_user->groups['10']) && $current_signed_in_user_group_key != '10') {
 		$output_record = false;
 	}
 

@@ -1,5 +1,8 @@
 <?php
-$config_custom = array(
+/* ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
+/* ===== begin custom configs user ===== */
+/* ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
+$custom_configs_user = array(
     'user_groups' => array(
         '10' => 'System Admin', /* Victoria Admin */
         '29' => 'Accounts', /* Victoria Account User */
@@ -584,4 +587,42 @@ $config_custom = array(
         /* end Victoria Users */
     )
 );
+/* ===== end custom configs user ===== */
+?>
+
+
+
+
+
+<?php
+/* ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
+/* ===== begin custom functions user ===== */
+/* ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
+class CustomFunctionsUser {
+    function getUserGroupKey($user_group_info) {
+        $user_group_key = '';
+
+        foreach ($user_group_info as $key1 => $value1) {
+            $user_group_key = $key1;
+        }
+
+        return $user_group_key;
+    }
+}
+/* ===== end custom functions user ===== */
+?>
+
+
+
+
+
+<?php
+/* ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
+/* ===== begin custom processes user ===== */
+/* ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
+$current_signed_in_user_info = JFactory::getUser();
+
+$custom_functions_user = new CustomFunctionsUser();
+$current_signed_in_user_group_key = $custom_functions_user->getUserGroupKey($current_signed_in_user_info->groups);
+/* ===== end custom processes user ===== */
 ?>
