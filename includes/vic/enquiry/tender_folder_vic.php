@@ -1,3 +1,10 @@
+<?php
+include 'includes/vic/custom_processes_user.php';
+
+$current_signed_in_user_access_profiles = $custom_configs_user['user_access_profiles'][$current_signed_in_user_group_key]['tender-folder-vic'];
+?>
+
+
 <script src="<?php echo JURI::base().'jscript/jsapi.js'; ?>"></script>
 <script src="<?php echo JURI::base().'jscript/jquery.min.js'; ?>"></script>
 <script src="<?php echo JURI::base().'jscript/labels.js'; ?>"></script>
@@ -2106,7 +2113,12 @@ builderinfo.init()
         <label class="input"><span id="date-entered">Date Entered:</span>
           <input type="text" id="idate" name="idate" class="date_entered" value="<?php echo $DateLodged; ?>">
         </label>
-        <input type="submit" value="Send Mail" id="ibtn" name="sendmail" class="btn">
+
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['tab enquiry tracker']['send mail'] == true) {
+        ?>
+	        <input type="submit" value="Send Mail" id="ibtn" name="sendmail" class="btn">
+        <?php } //end if?>
         
         <!--- Sales Rep --->
         <?php
@@ -2284,8 +2296,12 @@ echo "</select></label>";
     <div id="tabs_content_container">
     <div id="draw" class="tab_content_default" style="display: block;">
     <!--<INPUT type="button" value="Add Drawing" onclick="addRow('tbl-draw')" /> -->
-    <INPUT type="button" value="Delete Drawing" onclick="deleteRow('tbl-draw')" />
 
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['tab drawings']['delete'] == true) {
+        ?>
+		    <INPUT type="button" value="Delete Drawing" onclick="deleteRow('tbl-draw')" />
+        <?php } //end if?>
         
         <table id="tbl-draw">
         <tr>
@@ -2350,6 +2366,12 @@ echo "
   </div>
   <div id="_tabs_wrapper" class="button-tab">
     <input type="submit" value="Cancel" id="bcbtn" name="cancel" class="bbtn" onclick=location.href='<?php echo JURI::base().'tender-listing-vic'; ?> />
-    <input type="submit" value="Save" id="bsbtn" name="save" class="bbtn">
+
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['record action']['save'] == true) {
+        ?>
+		    <input type="submit" value="Save" id="bsbtn" name="save" class="bbtn">
+        <?php } //end if?>
+
   </div>
 </form>

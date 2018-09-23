@@ -1,3 +1,10 @@
+<?php
+include 'includes/vic/custom_processes_user.php';
+
+$current_signed_in_user_access_profiles = $custom_configs_user['user_access_profiles'][$current_signed_in_user_group_key]['contract-folder-vic'];
+?>
+
+
 <?php  
 date_default_timezone_set('Australia/Victoria');
 $form->data['date_entered'] = date(PHP_DFORMAT);
@@ -189,7 +196,7 @@ if (strlen($_POST['variation_date']) && $_POST['variation_date'] != "0000-00-00 
 
 $enable_update_contract_details = false;
 // if (isset($_POST['deposit_paid_amount'])) {
-if (isset($_POST['deposit_paid'])) {	
+if (isset($_POST['deposit_paid'])) {    
     $enable_update_contract_details = true;
 }
 
@@ -1051,15 +1058,17 @@ if(isset($_POST['close']))
     <?php if (true){ //set true bec. all clients are all in one table and no need switch table for different id. ?>
       <div id="client-layer">
          <p><?php echo $retrieve['clientid']; ?></p>
-        <?php
-        if ($retrieve['is_builder'] == "1"){
+
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['tab client details']['edit'] == true) {
         ?>
-        <p><?php echo $retrieve['builder_name']; ?>  &nbsp; <a href ="<?php echo JURI::base()."new-client-enquiry-vic?pid={$retrieve['pid']}&client_type=b"; ?> ">Edit</a></p>
-       
-        <?php }else{ ?>
-        <p><?php echo $ClientTitle; ?> <?php echo $ClientFirstName; ?> <?php echo $ClientLastName; ?> &nbsp; <a href ="<?php echo JURI::base()."new-client-enquiry-vic?pid={$retrieve['pid']}"; ?> ">Edit</a></p>
-        
-        <?php } ?>
+            <?php if ($retrieve['is_builder'] == "1"){ ?>
+            <p><?php echo $retrieve['builder_name']; ?>  &nbsp; <a href ="<?php echo JURI::base()."new-client-enquiry-vic?pid={$retrieve['pid']}&client_type=b"; ?> ">Edit</a></p>
+            <?php }else{ ?>
+            <p><?php echo $ClientTitle; ?> <?php echo $ClientFirstName; ?> <?php echo $ClientLastName; ?> &nbsp; <a href ="<?php echo JURI::base()."new-client-enquiry-vic?pid={$retrieve['pid']}"; ?> ">Edit</a></p>
+            <?php } ?>
+        <?php } //end if?>
+
         <p><?php echo $ClientAddress1; ?></p>
         <?php if ($ClientAddress2!='') {echo "<p>" . $ClientAddress2 . "</p>";} else {echo "";} ?>
         <!--- Client Suburb -->
@@ -2074,12 +2083,21 @@ while($info = mysql_fetch_array( $data ))
           </div>";
        
       } 
-      Print "<input type='file' name='signed_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
-                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$(\"#upload_type\").val(\"signed_sales_doc\"); $(\"#doc_id\").val(\"{$info['cf_id']}\"); $(\"#chronoform_Client_Folder_Vic\").submit();'>  "; 
-      echo "</td>"; 
 
-      Print "<td> <a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\" class='remove-link'  >Delete</a> </td> </tr>"; 
- 
+    //process user_access_profiles
+    if ($current_signed_in_user_access_profiles['tab sales']['save'] == true) {
+        echo "<input type='file' name='signed_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
+              <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$(\"#upload_type\").val(\"signed_sales_doc\"); $(\"#doc_id\").val(\"{$info['cf_id']}\"); $(\"#chronoform_Client_Folder_Vic\").submit();'>  "; 
+    } //end if
+    echo "</td>"; 
+
+    echo "<td>";
+    //process user_access_profiles
+    if ($current_signed_in_user_access_profiles['tab sales']['delete'] == true) {
+        echo "<a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\" class='remove-link'  >Delete</a>"; 
+    } //end if
+    echo "<td>";
+    echo "</tr>";
  } 
 
               $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='upload_sales_doc' ");
@@ -2100,15 +2118,19 @@ while($info = mysql_fetch_array( $data ))
                       $thumbnail = JURI::base()."images/file-icon.jpg";
                   }
 
-              echo "<tr>
+                echo "<tr>
                       <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
-              echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>";
-              echo "<td  >  </td>";
-              echo "<td></td>";  
-              echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a>  </td>"; 
+                echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>";
+                echo "<td  >  </td>";
+                echo "<td></td>";  
 
-              echo "</tr>";
-
+                echo "<td>";
+                //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab sales']['delete'] == true) {
+                    echo "<a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a>"; 
+                } //end if
+                echo "</td>";
+                echo "</tr>";
               }
       
  ?>
@@ -2119,9 +2141,14 @@ while($info = mysql_fetch_array( $data ))
       <table id="tbl-pic">
           <tr>
             <td class="tbl-upload">
-                <input type='file' name='upload_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
-                  
-                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("upload_sales_doc"); $("#chronoform_Client_Folder_Vic").submit();'>
+
+                <?php //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab sales']['save'] == true) {
+                ?>
+                    <input type='file' name='upload_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
+                    <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("upload_sales_doc"); $("#chronoform_Client_Folder_Vic").submit();'>
+                <?php } //end if?>
+
             </td>
           </tr>
       </table>
@@ -2351,15 +2378,22 @@ while($info = mysql_fetch_array( $data ))
                 </div>";
              
             } 
-            Print "<input type='file' name='signed_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
-                        <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$(\"#upload_type\").val(\"signed_correspondence_doc\"); $(\"#doc_id\").val(\"{$info['cf_id']}\"); $(\"#chronoform_Client_Folder_Vic\").submit();'>  "; 
+
+            //process user_access_profiles
+            if ($current_signed_in_user_access_profiles['tab correspondence']['save'] == true) {
+                echo "<input type='file' name='signed_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
+                      <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$(\"#upload_type\").val(\"signed_correspondence_doc\"); $(\"#doc_id\").val(\"{$info['cf_id']}\"); $(\"#chronoform_Client_Folder_Vic\").submit();'>  "; 
+            } //end if
             echo "</td>"; 
 
-              Print "<td> <a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\"   class='remove-link'  >Delete</a> </td> </tr>";
-           
+            echo "<td>";
+            //process user_access_profiles
+            if ($current_signed_in_user_access_profiles['tab correspondence']['delete'] == true) {
+                echo "<a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\"   class='remove-link'  >Delete</a>";
+            } //end if
+            echo "</td>";
+            echo "</tr>";
            }
-
-           
 
            $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='upload_correspondence_doc' ");
               if (!$resultimg) {
@@ -2374,9 +2408,14 @@ while($info = mysql_fetch_array( $data ))
                 echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>";
                 echo "<td  >  </td>"; 
                 echo "<td  >  </td>"; 
-                echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a> </td>";  
-                echo "</tr>";
 
+                echo "<td>";
+                //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab correspondence']['delete'] == true) {
+                    echo "<a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a>";  
+                } //end if
+                echo "</td>";
+                echo "</tr>";
               } 
 
            ?>
@@ -2387,8 +2426,14 @@ while($info = mysql_fetch_array( $data ))
         <table id="tbl-pic">
           <tr>
             <td class="tbl-upload">
-                <input type='file' name='upload_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'>
-                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("upload_correspondence_doc"); $("#chronoform_Client_Folder_Vic").submit();'>
+
+                <?php //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab correspondence']['save'] == true) {
+                ?>
+                    <input type='file' name='upload_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'>
+                    <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("upload_correspondence_doc"); $("#chronoform_Client_Folder_Vic").submit();'>
+                <?php } //end if?>
+
             </td>
           </tr>
       </table>
@@ -2465,12 +2510,20 @@ while($info = mysql_fetch_array( $data ))
                
               } 
 
-              Print "<input type='file' name='signed_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
-                          <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$(\"#upload_type\").val(\"signed_stat_doc\"); $(\"#doc_id\").val(\"{$info['cf_id']}\"); $(\"#chronoform_Client_Folder_Vic\").submit();'>  "; 
-              echo "</td>";
+                //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab statutory']['save'] == true) {
+                    echo "<input type='file' name='signed_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'> 
+                    <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$(\"#upload_type\").val(\"signed_stat_doc\"); $(\"#doc_id\").val(\"{$info['cf_id']}\"); $(\"#chronoform_Client_Folder_Vic\").submit();'>  "; 
+                } //end if
+                echo "</td>";
 
-            Print "<td> <a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\" class='remove-link'  >Delete</a> </td> </tr>";
-          
+                echo "<td>";
+                //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab statutory']['delete'] == true) {
+                    echo "<a rel=\"nofollow\" onclick=\"delete_pdf_letter(event,this)\" cf_id=\"{$info['cf_id']}\" class='remove-link'  >Delete</a>";
+                } //end if
+                echo "</td>";
+                echo "</tr>";
            } 
 
            $resultimg = mysql_query("SELECT cf_id, clientid, photo, file_name, datestamp FROM ver_chronoforms_data_pics_vic WHERE clientid = '$ClientID'  AND upload_type ='upload_stat_doc' ");
@@ -2481,17 +2534,20 @@ while($info = mysql_fetch_array( $data ))
 
               while($row = mysql_fetch_array($resultimg))
               { 
-              echo "<tr>
-                      <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
-              echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>";
-              echo "<td  >  </td>"; 
-              echo "<td  >  </td>"; 
-              echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a> </td>"; 
+                echo "<tr>
+                  <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
+                echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>";
+                echo "<td  >  </td>"; 
+                echo "<td  >  </td>"; 
 
-              echo "</tr>";
-
+                echo "<td>";
+                //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab statutory']['delete'] == true) {
+                    echo "<a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a>"; 
+                } //end if
+                echo "</td>";
+                echo "</tr>";
               } 
-           
 
            ?>
           </table>
@@ -2501,8 +2557,14 @@ while($info = mysql_fetch_array( $data ))
          <table id="tbl-pic">
             <tr>
               <td class="tbl-upload">
-                   <input type='file' name='upload_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'>
-                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("upload_stat_doc"); $("#chronoform_Client_Folder_Vic").submit();'>  
+
+                <?php //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab statutory']['save'] == true) {
+                ?>
+                    <input type='file' name='upload_doc[]' multiple='multiple' accept='.jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt'>
+                    <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("upload_stat_doc"); $("#chronoform_Client_Folder_Vic").submit();'>  
+                <?php } //end if?>
+
               </td>
             </tr>
         </table> 
@@ -2515,7 +2577,13 @@ while($info = mysql_fetch_array( $data ))
     <!---------------------------------------------- Photos Tab -->
     <div id="photos" class="tab_content" style="display: block;">
       <!-- <INPUT type="button" value="Add Row" onclick="addRow('tbl-pic')" /> <input type="submit" name="delete-pic" value="Delete Picture" onclick="deleteRow('tbl-pic');deleteRow2('tbl-imgpic')" />   -->
-      <input type="submit" name="delete-pic" id="btn_picid" class="bbtn btn-delete" value="Delete Picture" style="margin-left: -1000px;float: left;"  />
+
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['tab photos']['delete'] == true) {
+        ?>
+            <input type="submit" name="delete-pic" id="btn_picid" class="bbtn btn-delete" value="Delete Picture" style="margin-left: -1000px;float: left;"  />
+        <?php } //end if?>
+
       <input type="hidden" value="" id="picid" name="picid" />
       <div id="drawing-tbl">
         <br/> 
@@ -2536,8 +2604,13 @@ if (!$resultimg) {
         echo "<tr>
                 <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
         echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>"; 
-        echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a> </td>"; 
 
+        echo "<td>";
+        //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['tab photos']['delete'] == true) {
+            echo "<a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a>"; 
+        } //end if
+        echo "</td>";
         echo "</tr>";
       }     
    
@@ -2547,8 +2620,14 @@ if (!$resultimg) {
         <table id="tbl-pic" >
           <tr> 
             <td class="tbl-upload">
-                <input type="file" name="pic[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf, .odt">                 
-                <input type="submit" value="Save" id="bsbtn" name="save_pic" class="bbtn btn-save">  
+
+                <?php //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab photos']['save'] == true) {
+                ?>
+                    <input type="file" name="pic[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf, .odt">                 
+                    <input type="submit" value="Save" id="bsbtn" name="save_pic" class="bbtn btn-save">  
+                <?php } //end if?>
+
             </td>
           </tr>
         </table>
@@ -2561,7 +2640,13 @@ if (!$resultimg) {
     
     <div id="drawing" class="tab_content">
       <!--<INPUT type="button" value="Add Row" onclick="addRow('tbl-draw')" /> onclick="deleteRow('tbl-draw');deleteRow2('tbl-img')" -->
-      <input type="submit" id="delete_drawing" name="delete-drawing" class="bbtn btn-delete" value="Delete Drawing" style="margin-left: -1000px;float: left;"  />
+
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['tab drawings']['delete'] == true) {
+        ?>
+            <input type="submit" id="delete_drawing" name="delete-drawing" class="bbtn btn-delete" value="Delete Drawing" style="margin-left: -1000px;float: left;"  />
+        <?php } //end if?>
+
       <input type="hidden" value="" id="drawingid" name="drawingid" />
       <div id="drawing-tbl">
         <br/>
@@ -2584,7 +2669,13 @@ if (!$resultimg) {
         echo "<tr>
                 <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
         echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>"; 
-        echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#drawingid').val('".$row["cf_id"]."'); $('#delete_drawing').click();}\"   class='remove-link'  >Delete</a> </td>";  
+
+        echo "<td>";
+        //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['tab drawings']['delete'] == true) {
+            echo "<a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#drawingid').val('".$row["cf_id"]."'); $('#delete_drawing').click();}\"   class='remove-link'  >Delete</a>";  
+        } //end if
+        echo "</td>";
         echo "</tr>";
       }              
 
@@ -2594,8 +2685,14 @@ if (!$resultimg) {
         <table id="tbl-draw">
           <tr> 
             <td class="tbl-upload">
-                <input type="file" name="photo[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf">
-                <input type="submit" value="Save" id="bsbtn" name="save_drawing" class="bbtn btn-save">
+
+                <?php //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab drawings']['save'] == true) {
+                ?>
+                    <input type="file" name="photo[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf">
+                    <input type="submit" value="Save" id="bsbtn" name="save_drawing" class="bbtn btn-save">
+                <?php } //end if?>
+
             </td>
           </tr>
         </table>
@@ -2625,13 +2722,17 @@ if (!$resultimg) {
                 //$thumbnail = "";
                 while($row = mysql_fetch_assoc($resultimg))
                 {
-                  echo "<tr>
+                    echo "<tr>
                           <td><a href=\"{$row['photo']}\" download>{$row['file_name']}</a></td>";
-                  echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>"; 
-                  echo "<td> <a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a> </td>"; 
+                    echo "<td>" . date(PHP_DFORMAT,strtotime($row['datestamp'])) . " </td>"; 
 
-                  echo "</tr>";
-                  
+                    echo "<td>";
+                    //process user_access_profiles
+                    if ($current_signed_in_user_access_profiles['tab general']['delete'] == true) {
+                        echo "<a rel=\"nofollow\" onclick=\"if(confirm('Are you sure you want to delete?')){"."$('#picid').val('".$row["cf_id"]."'); $('#btn_picid').click();}\"   class='remove-link'  >Delete</a>"; 
+                    } //end if
+                    echo "</td>";
+                    echo "</tr>";
                 }
                   
             ?>
@@ -2642,10 +2743,15 @@ if (!$resultimg) {
           <table id="tbl-pic">
             <tr>
             <td class="tbl-upload">
-                  <input type="file" name="doc[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt"> 
-                  <!-- <input type="submit" value="Save" id="btn_save_file" name="save_file" class="bbtn btn-save"> -->
 
-                  <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("file"); $("#chronoform_Client_Folder_Vic").submit();'>    
+                <?php //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['tab general']['save'] == true) {
+                ?>
+                    <input type="file" name="doc[]" multiple="multiple" accept=".jpg,.png,.bmp,.gif,.pdf, .doc, .docx, .xls, .xlsx, .odt"> 
+                    <!-- <input type="submit" value="Save" id="btn_save_file" name="save_file" class="bbtn btn-save"> -->
+                    <input type='button' value='Save' id='' name='' class='bbtn btn-delete' onclick='$("#upload_type").val("file"); $("#chronoform_Client_Folder_Vic").submit();'>    
+                <?php } //end if?>
+
               </td>
             </tr>
           </table>
@@ -2665,20 +2771,41 @@ if (!$resultimg) {
 
 <?php }else if($is_system_admin || $is_construction_manager || $is_account_user){ ?>
 <div id="tabs_wrapper" class="button-tab">
-  <input type="submit" value="Cancel Contract" id="bsbtn" name="delete" class="bbtn" onclick="return confirm('Are you sure you want to cancel contract?');">
-  <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn">
-  <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn">
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['record action']['cancel contract'] == true) {
+        ?>
+            <input type="submit" value="Cancel Contract" id="bsbtn" name="delete" class="bbtn" onclick="return confirm('Are you sure you want to cancel contract?');">
+        <?php } //end if?>
+
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['record action']['update'] == true) {
+        ?>
+            <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn">
+        <?php } //end if?>
+
+        <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn">
 </div>
 <?php }else if($is_reception){ ?>
   <div id="tabs_wrapper" class="button-tab">
-     <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn">   
-     <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn"> 
+
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['record action']['update'] == true) {
+        ?>
+            <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn"> 
+        <?php } //end if?>
+
+        <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn">   
   </div>
  
 <?php }else{ ?>
   <div id="tabs_wrapper" class="button-tab">
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['record action']['update'] == true) {
+        ?>
+            <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn"> 
+        <?php } //end if?>
+
     <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn">    
-    <input type="submit" value="Update" id="bsbtn" name="update" class="bbtn"> 
   </div>  
   
 <?php } ?>

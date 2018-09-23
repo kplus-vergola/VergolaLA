@@ -420,17 +420,25 @@ if(isset($_POST['contract'])){
  	echo " <input type=\"hidden\" value=\"{$Status}\" name=\"status\" id=\"costing_status\" />";
 
 
-	echo "<input type=\"button\" value=\"Not Interested\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Not Interested')\" />";
-	echo "<input type=\"button\" value=\"Costed\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Costed')\"/>";
-	echo "<input type=\"button\" value=\"Quoted\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Quoted')\" />";
-	echo "<input type=\"button\" value=\"Under Consideration\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Under Consideration')\" />";
-	echo "<input type=\"button\" value=\"Future Project\"  class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Future Project')\" />";
-	echo "<input type=\"button\" value=\"Won\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Won')\"/>";
-	echo "<input type=\"button\" value=\"Lost\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Lost')\"/>";
+	//process user_access_profiles
+	if ($current_signed_in_user_access_profiles['tab follow up']['project status'] == true) {
+		echo "<input type=\"button\" value=\"Not Interested\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Not Interested')\" />";
+		echo "<input type=\"button\" value=\"Costed\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Costed')\"/>";
+		echo "<input type=\"button\" value=\"Quoted\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Quoted')\" />";
+		echo "<input type=\"button\" value=\"Under Consideration\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Under Consideration')\" />";
+		echo "<input type=\"button\" value=\"Future Project\"  class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Future Project')\" />";
+		echo "<input type=\"button\" value=\"Won\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Won')\"/>";
+		echo "<input type=\"button\" value=\"Lost\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Lost')\"/>";
+	} //end if
 
-	if($is_admin==1){
+	// if($is_admin==1){
+	// 	echo "<input type=\"submit\" value=\"Create Contract\" name=\"contract\" id=\"contract\"  />";
+	// }
+
+	//process user_access_profiles
+	if ($current_signed_in_user_access_profiles['tab follow up']['create contract'] == true) {
 		echo "<input type=\"submit\" value=\"Create Contract\" name=\"contract\" id=\"contract\"  />";
-	}
+	} //end if
 	 
    echo "</td></tr></table>";
 	

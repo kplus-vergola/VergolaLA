@@ -23,6 +23,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
+                    'project status' => true, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
@@ -39,6 +40,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
+                    'project status' => true, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
@@ -55,6 +57,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
+                    'project status' => true, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
@@ -105,6 +108,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
                     'future project' => false, 'won' => false, 'lost' => false, 
+                    'project status' => false, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => false, 'delete' => false), 
@@ -121,6 +125,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
                     'future project' => false, 'won' => false, 'lost' => false, 
+                    'project status' => false, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => false, 'delete' => false), 
@@ -137,6 +142,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
                     'future project' => false, 'won' => false, 'lost' => false, 
+                    'project status' => false, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => false, 'delete' => false), 
@@ -187,6 +193,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
                     'future project' => false, 'won' => false, 'lost' => false, 
+                    'project status' => false, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => false, 'delete' => false), 
@@ -203,6 +210,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
                     'future project' => false, 'won' => false, 'lost' => false, 
+                    'project status' => false, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => false, 'delete' => false), 
@@ -219,6 +227,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
                     'future project' => false, 'won' => false, 'lost' => false, 
+                    'project status' => false, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => false, 'delete' => false), 
@@ -269,6 +278,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
                     'future project' => false, 'won' => false, 'lost' => false, 
+                    'project status' => false, 
                     'create contract' => false
                 ), 
                 'tab sales' => array('save' => false, 'delete' => false), 
@@ -285,6 +295,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
                     'future project' => false, 'won' => false, 'lost' => false, 
+                    'project status' => false, 
                     'create contract' => false
                 ), 
                 'tab sales' => array('save' => false, 'delete' => false), 
@@ -301,6 +312,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
                     'future project' => false, 'won' => false, 'lost' => false, 
+                    'project status' => false, 
                     'create contract' => false
                 ), 
                 'tab sales' => array('save' => false, 'delete' => false), 
@@ -351,6 +363,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
+                    'project status' => true, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
@@ -367,6 +380,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
+                    'project status' => true, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
@@ -383,6 +397,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
+                    'project status' => true, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
@@ -433,6 +448,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
+                    'project status' => true, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
@@ -449,6 +465,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
+                    'project status' => true, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
@@ -465,6 +482,7 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
+                    'project status' => true, 
                     'create contract' => true
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
@@ -515,7 +533,8 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
-                    'create contract' => true
+                    'project status' => true, 
+                    'create contract' => false
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
                 'tab correspondence' => array('save' => true, 'delete' => true), 
@@ -531,7 +550,8 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
-                    'create contract' => true
+                    'project status' => true, 
+                    'create contract' => false
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
                 'tab correspondence' => array('save' => true, 'delete' => true), 
@@ -547,7 +567,8 @@ $custom_configs_user = array(
                 'tab follow up' => array(
                     'not interested' => true, 'costed' => true, 'quoted' => true, 'under consideration' => true, 
                     'future project' => true, 'won' => true, 'lost' => true, 
-                    'create contract' => true
+                    'project status' => true, 
+                    'create contract' => false
                 ), 
                 'tab sales' => array('save' => true, 'delete' => true), 
                 'tab correspondence' => array('save' => true, 'delete' => true), 
@@ -625,4 +646,18 @@ $current_signed_in_user_info = JFactory::getUser();
 $custom_functions_user = new CustomFunctionsUser();
 $current_signed_in_user_group_key = $custom_functions_user->getUserGroupKey($current_signed_in_user_info->groups);
 /* ===== end custom processes user ===== */
+
+
+/*
+//testing
+$current_signed_in_user_group_key = '10'; //Victoria Admin
+$current_signed_in_user_group_key = '29'; //Victoria Account User
+$current_signed_in_user_group_key = '26'; //Victoria Operation Manager
+$current_signed_in_user_group_key = '30'; //Victoria Site Manager
+$current_signed_in_user_group_key = '28'; //Victoria Reception User
+$current_signed_in_user_group_key = '27'; //Victoria Sales Manager
+$current_signed_in_user_group_key = '9'; //Victoria Users
+*/
+
+$current_signed_in_user_group_key = '9'; //Victoria Users
 ?>

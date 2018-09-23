@@ -458,15 +458,35 @@ while($row = mysql_fetch_assoc($resultlist))
 	  $user = JFactory::getUser();
     $groups = $user->get('groups');
 	  
-
-foreach($groups as $group) {
+    /*
+	foreach($groups as $group) {
     if($group == '10' || $group == '26' || $group == '27') { 
       echo "<li><a href=\"".JURI::base()."contract-listing-vic/contract-folder-vic/contract-bom-vic?quoteid=".$QuoteID."&projectid=".$projectid."\">Bill of Materials</a></li>";
       //echo "<li><a href=\"#\" rel=\"purchaseorder\">Purchase Order</a></li>";
-      echo "<li><a href=\"".JURI::base()."contract-listing-vic/contract-folder-vic/contract-po-vic?quoteid=".$QuoteID."&projectid=".$projectid."\">Purchase Order</a></li>";
+      echo "<li><a href=\"".JURI::base()."contract-listing-vic/contract-folder-vic/contract-po-vic?quoteid=".$QuoteID."&projectid=".$projectid."&page_name=po\">Purchase Order</a></li>";
+      echo "<li><a href=\"".JURI::base()."contract-listing-vic/contract-folder-vic/contract-po-vic?quoteid=".$QuoteID."&projectid=".$projectid."&page_name=po&view=summary\">PO Summary</a></li>";
       echo "<li><a href=\"#\" rel=\"checklist\">Check List</a></li>";
-    } else { echo " ";} } ?>
-      
+    } else { echo " ";} }
+    */
+    ?>
+
+        <?php //process user_access_profiles
+        if ($current_signed_in_user_access_profiles['tab bill of materials']['show'] == true) {
+			echo "<li><a href=\"".JURI::base()."contract-listing-vic/contract-folder-vic/contract-bom-vic?quoteid=".$QuoteID."&projectid=".$projectid."\">Bill of Materials</a></li>";
+        } //end if
+
+        if ($current_signed_in_user_access_profiles['tab purchase order']['show'] == true) {
+			echo "<li><a href=\"".JURI::base()."contract-listing-vic/contract-folder-vic/contract-po-vic?quoteid=".$QuoteID."&projectid=".$projectid."&page_name=po\">Purchase Order</a></li>";
+        } //end if
+
+        if ($current_signed_in_user_access_profiles['tab po summary']['show'] == true) {
+			echo "<li><a href=\"".JURI::base()."contract-listing-vic/contract-folder-vic/contract-po-vic?quoteid=".$QuoteID."&projectid=".$projectid."&page_name=po&view=summary\">PO Summary</a></li>";
+        } //end if
+
+        if ($current_signed_in_user_access_profiles['tab check list']['show'] == true) {
+			echo "<li><a href=\"#\" rel=\"checklist\">Check List</a></li>";
+        } //end if
+        ?>
 
     </ul>
     

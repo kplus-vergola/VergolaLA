@@ -133,6 +133,13 @@ if (isset($_REQUEST['api_mode'])) {
     }
 
 
+    //process user_access_profiles
+    if ($current_signed_in_user_access_profiles['record action']['save'] == false && 
+        $current_signed_in_user_access_profiles['record action']['delete'] == false) {
+        $vr_form_system_info['access_mode'] = 'quote_view2';
+    }
+
+
     if (isset($_REQUEST['project_id'])) {
         $vr_form_system_info['project_id'] = mysql_real_escape_string($_REQUEST['project_id']);
         $vr_form_system_info['quote_id'] = '';
@@ -254,6 +261,7 @@ if (isset($_REQUEST['api_mode'])) {
     switch ($vr_form_system_info['access_mode']) {
         case 'quote_add':
         case 'quote_edit':
+        case 'quote_view2':
             $vr_form_url_info['previous'] = JURI::base() . 'client-listing-vic/client-folder-vic?cid='. $vr_form_system_info['quote_id'];
             break;
         case 'quote_view':
