@@ -168,12 +168,18 @@
                 document.getElementById('project_name_form_bom').innerHTML = vr_form_queries_info['vr_project_name'];
                 document.getElementById('contract_id_form_bom').innerHTML = vr_form_system_info['project_id'];
 
-                if (vr_form_system_info['access_mode'] == 'quote_edit') {
-                    disableVrFormFrameworkAndVrTypesDataEntryMode(true);
-                }
-
-                if (vr_form_system_info['access_mode'] == 'quote_view') {
-                    disableVrFormDataEntryMode(true);
+                switch (vr_form_system_info['access_mode']) {
+                    case 'quote_edit':
+                        disableVrFormFrameworkAndVrTypesDataEntryMode(true);
+                        processVrFormRecordActionMode();
+                        break;
+                    case 'quote_view':
+                        disableVrFormDataEntryMode(true);
+                        processVrFormRecordActionMode();
+                        break;
+                    case 'contract_bom_edit':
+                        processVrFormRecordActionMode();
+                        break;
                 }
             } else {
                 console.log('processRetrieveResult > results:');

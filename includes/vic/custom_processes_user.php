@@ -69,10 +69,10 @@ $custom_configs_user = array(
                 'record action' => array('save' => true, 'delete' => true)
             ), 
             'add-quote-vic' => array(
-                'record action' => array('save' => true, 'delete' => true)
+                'record action' => array('save' => true, 'save and close' => true)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => true, 'delete' => true)
+                'record action' => array('save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => true), 
@@ -89,7 +89,11 @@ $custom_configs_user = array(
                 'record action' => array('update' => true, 'cancel contract' => true)
             ), 
             'add-quote-vic > contract_bom' => array(
-                'record action' => array('remove' => true, 'save' => true, 'process order' => true)
+                'button bill of materials' => array('show' => true), 
+                'button purchase order' => array('show' => true), 
+                'button po summary' => array('show' => true), 
+                'button check list' => array('show' => true), 
+                'record action' => array('remove' => true, 'save' => true, 'process order' => true, 'cancel order' => true, 'add vr items' => true)
             ), 
             'contract-po-vic' => array(
                 'record action' => array('cancel po' => true, 'save and process po' => true)
@@ -154,10 +158,10 @@ $custom_configs_user = array(
                 'record action' => array('save' => false, 'delete' => false)
             ), 
             'add-quote-vic' => array(
-                'record action' => array('save' => false, 'delete' => false)
+                'record action' => array('save' => false, 'save and close' => false)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => false, 'delete' => false)
+                'record action' => array('save' => false, 'save and close' => false, 'delete' => false, 'download pdf' => false, 'duplicate' => false, 'add vr items' => false)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => true), 
@@ -174,7 +178,11 @@ $custom_configs_user = array(
                 'record action' => array('update' => true, 'cancel contract' => true)
             ), 
             'add-quote-vic > contract_bom' => array(
-                'record action' => array('remove' => true, 'save' => true, 'process order' => true)
+                'button bill of materials' => array('show' => true), 
+                'button purchase order' => array('show' => true), 
+                'button po summary' => array('show' => true), 
+                'button check list' => array('show' => true), 
+                'record action' => array('remove' => true, 'save' => true, 'process order' => true, 'cancel order' => true, 'add vr items' => true)
             ), 
             'contract-po-vic' => array(
                 'record action' => array('cancel po' => true, 'save and process po' => true)
@@ -239,10 +247,10 @@ $custom_configs_user = array(
                 'record action' => array('save' => false, 'delete' => false)
             ), 
             'add-quote-vic' => array(
-                'record action' => array('save' => false, 'delete' => false)
+                'record action' => array('save' => false, 'save and close' => false)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => false, 'delete' => false)
+                'record action' => array('save' => false, 'save and close' => false, 'delete' => false, 'download pdf' => false, 'duplicate' => false, 'add vr items' => false)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => true), 
@@ -259,7 +267,11 @@ $custom_configs_user = array(
                 'record action' => array('update' => true, 'cancel contract' => true)
             ), 
             'add-quote-vic > contract_bom' => array(
-                'record action' => array('remove' => true, 'save' => true, 'process order' => true)
+                'button bill of materials' => array('show' => true), 
+                'button purchase order' => array('show' => true), 
+                'button po summary' => array('show' => true), 
+                'button check list' => array('show' => true), 
+                'record action' => array('remove' => true, 'save' => true, 'process order' => true, 'cancel order' => true, 'add vr items' => true)
             ), 
             'contract-po-vic' => array(
                 'record action' => array('cancel po' => true, 'save and process po' => true)
@@ -324,10 +336,10 @@ $custom_configs_user = array(
                 'record action' => array('save' => false, 'delete' => false)
             ), 
             'add-quote-vic' => array(
-                'record action' => array('save' => false, 'delete' => false)
+                'record action' => array('save' => false, 'save and close' => false)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => false, 'delete' => false)
+                'record action' => array('save' => false, 'save and close' => false, 'delete' => false, 'download pdf' => false, 'duplicate' => false, 'add vr items' => false)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
@@ -344,7 +356,11 @@ $custom_configs_user = array(
                 'record action' => array('update' => false, 'cancel contract' => false)
             ), 
             'add-quote-vic > contract_bom' => array(
-                'record action' => array('remove' => false, 'save' => false, 'process order' => false)
+                'button bill of materials' => array('show' => true), 
+                'button purchase order' => array('show' => true), 
+                'button po summary' => array('show' => true), 
+                'button check list' => array('show' => true), 
+                'record action' => array('remove' => false, 'save' => false, 'process order' => false, 'cancel order' => false, 'add vr items' => false)
             ), 
             'contract-po-vic' => array(
                 'record action' => array('cancel po' => false, 'save and process po' => false)
@@ -409,10 +425,10 @@ $custom_configs_user = array(
                 'record action' => array('save' => true, 'delete' => true)
             ), 
             'add-quote-vic' => array(
-                'record action' => array('save' => true, 'delete' => true)
+                'record action' => array('save' => true, 'save and close' => true)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => true, 'delete' => true)
+                'record action' => array('save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
@@ -429,7 +445,11 @@ $custom_configs_user = array(
                 'record action' => array('update' => false, 'cancel contract' => false)
             ), 
             'add-quote-vic > contract_bom' => array(
-                'record action' => array('remove' => false, 'save' => false, 'process order' => false)
+                'button bill of materials' => array('show' => true), 
+                'button purchase order' => array('show' => true), 
+                'button po summary' => array('show' => true), 
+                'button check list' => array('show' => true), 
+                'record action' => array('remove' => false, 'save' => false, 'process order' => false, 'cancel order' => false, 'add vr items' => false)
             ), 
             'contract-po-vic' => array(
                 'record action' => array('cancel po' => false, 'save and process po' => false)
@@ -494,10 +514,10 @@ $custom_configs_user = array(
                 'record action' => array('save' => true, 'delete' => true)
             ), 
             'add-quote-vic' => array(
-                'record action' => array('save' => true, 'delete' => true)
+                'record action' => array('save' => true, 'save and close' => true)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => true, 'delete' => true)
+                'record action' => array('save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
@@ -514,7 +534,11 @@ $custom_configs_user = array(
                 'record action' => array('update' => false, 'cancel contract' => false)
             ), 
             'add-quote-vic > contract_bom' => array(
-                'record action' => array('remove' => false, 'save' => false, 'process order' => false)
+                'button bill of materials' => array('show' => true), 
+                'button purchase order' => array('show' => true), 
+                'button po summary' => array('show' => true), 
+                'button check list' => array('show' => true), 
+                'record action' => array('remove' => false, 'save' => false, 'process order' => false, 'cancel order' => false, 'add vr items' => false)
             ), 
             'contract-po-vic' => array(
                 'record action' => array('cancel po' => false, 'save and process po' => false)
@@ -579,10 +603,10 @@ $custom_configs_user = array(
                 'record action' => array('save' => true, 'delete' => true)
             ), 
             'add-quote-vic' => array(
-                'record action' => array('save' => true, 'delete' => true)
+                'record action' => array('save' => true, 'save and close' => true)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => true, 'delete' => true)
+                'record action' => array('save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
@@ -599,7 +623,11 @@ $custom_configs_user = array(
                 'record action' => array('update' => false, 'cancel contract' => false)
             ), 
             'add-quote-vic > contract_bom' => array(
-                'record action' => array('remove' => false, 'save' => false, 'process order' => false)
+                'button bill of materials' => array('show' => false), 
+                'button purchase order' => array('show' => false), 
+                'button po summary' => array('show' => false), 
+                'button check list' => array('show' => false), 
+                'record action' => array('remove' => false, 'save' => false, 'process order' => false, 'cancel order' => false, 'add vr items' => false)
             ), 
             'contract-po-vic' => array(
                 'record action' => array('cancel po' => false, 'save and process po' => false)
@@ -646,4 +674,24 @@ $current_signed_in_user_info = JFactory::getUser();
 $custom_functions_user = new CustomFunctionsUser();
 $current_signed_in_user_group_key = $custom_functions_user->getUserGroupKey($current_signed_in_user_info->groups);
 /* ===== end custom processes user ===== */
+
+
+/*
+//testing
+$current_signed_in_user_group_key = '10'; //Victoria Admin
+
+$current_signed_in_user_group_key = '29'; //Victoria Account User
+$current_signed_in_user_group_key = '26'; //Victoria Operation Manager
+$current_signed_in_user_group_key = '30'; //Victoria Site Manager
+
+$current_signed_in_user_group_key = '28'; //Victoria Reception User
+$current_signed_in_user_group_key = '27'; //Victoria Sales Manager
+$current_signed_in_user_group_key = '9'; //Victoria Users
+*/
+// print_r($current_signed_in_user_group_key);
+// exit;
+$csiugk_list = array('10', '29', '26', '30', '28', '27', '9');
+if (isset($_GET['csiugk']) && in_array($_GET['csiugk'], $csiugk_list)) {
+    $current_signed_in_user_group_key = $_GET['csiugk'];
+}
 ?>

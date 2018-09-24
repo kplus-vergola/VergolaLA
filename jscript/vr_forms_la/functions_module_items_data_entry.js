@@ -1891,6 +1891,116 @@
         }
 
 
+        function processVrFormRecordActionMode() {
+            var target_button_ids = [];
+            var c1 = 0;
+
+            switch (vr_form_system_info['access_mode']) {
+                case 'quote_edit':
+                    if (current_signed_in_user_access_profiles['record action']['delete'] == false) {
+                        target_button_ids.push('button_delete_vr_form_items_data_entry');
+                    }
+                    if (current_signed_in_user_access_profiles['record action']['download pdf'] == false) {
+                        target_button_ids.push('button_download_vr_form_items_data_entry');
+                    }
+                    if (current_signed_in_user_access_profiles['record action']['duplicate'] == false) {
+                        target_button_ids.push('button_duplicate_vr_form_items_data_entry');
+                    }
+                    if (current_signed_in_user_access_profiles['record action']['save'] == false) {
+                        target_button_ids.push('button_save_vr_form_items_data_entry');
+                    }
+                    if (current_signed_in_user_access_profiles['record action']['save and close'] == false) {
+                        target_button_ids.push('button_save_and_exit_vr_form_items_data_entry');
+                    }
+                    break;
+                case 'quote_view':
+                case 'contract_bom_edit':
+                    if (current_signed_in_user_access_profiles['record action']['remove'] == false) {
+                        for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                            target_button_ids.push('button_remove_vr_form_item_data_entry_' + c1);
+                        }
+                    }
+                    if (current_signed_in_user_access_profiles['record action']['save'] == false) {
+                        target_button_ids.push('button_save_bom_vr_form_bom_framework');
+                        target_button_ids.push('button_save_bom_vr_form_bom_fittings');
+                        target_button_ids.push('button_save_bom_vr_form_bom_gutters');
+                        target_button_ids.push('button_save_bom_vr_form_bom_flashing');
+                        target_button_ids.push('button_save_bom_vr_form_bom_downpipe');
+                        target_button_ids.push('button_save_bom_vr_form_bom_vergola_system');
+                        target_button_ids.push('button_save_bom_vr_form_bom_misc_items');
+                        target_button_ids.push('button_save_bom_vr_form_bom_extras');
+                        target_button_ids.push('button_save_bom_vr_form_bom_disbursements');
+                    }
+                    if (current_signed_in_user_access_profiles['record action']['process order'] == false) {
+                        target_button_ids.push('button_process_order_form_bom_framework');
+                        target_button_ids.push('button_process_order_form_bom_fittings');
+                        target_button_ids.push('button_process_order_form_bom_gutters');
+                        target_button_ids.push('button_process_order_form_bom_flashing');
+                        target_button_ids.push('button_process_order_form_bom_downpipe');
+                        target_button_ids.push('button_process_order_form_bom_vergola_system');
+                        target_button_ids.push('button_process_order_form_bom_misc_items');
+                        target_button_ids.push('button_process_order_form_bom_extras');
+                        target_button_ids.push('button_process_order_form_bom_disbursements');
+                    }
+                    if (current_signed_in_user_access_profiles['record action']['cancel order'] == false) {
+                        target_button_ids.push('button_cancel_order_form_bom_framework');
+                        target_button_ids.push('button_cancel_order_form_bom_fittings');
+                        target_button_ids.push('button_cancel_order_form_bom_gutters');
+                        target_button_ids.push('button_cancel_order_form_bom_flashing');
+                        target_button_ids.push('button_cancel_order_form_bom_downpipe');
+                        target_button_ids.push('button_cancel_order_form_bom_vergola_system');
+                        target_button_ids.push('button_cancel_order_form_bom_misc_items');
+                        target_button_ids.push('button_cancel_order_form_bom_extras');
+                        target_button_ids.push('button_cancel_order_form_bom_disbursements');
+                    }
+                    break;
+            }
+
+            if (current_signed_in_user_access_profiles['record action']['add vr items'] == false) {
+                target_button_ids.push('button_add_vr_form_item_data_entry_framework');
+                target_button_ids.push('button_add_vr_form_item_data_entry_fittings');
+                target_button_ids.push('button_add_vr_form_item_data_entry_gutters');
+
+                target_button_ids.push('button_add_vr_form_item_data_entry_flashing');
+                target_button_ids.push('button_add_vr_form_item_data_entry_downpipe');
+                target_button_ids.push('button_add_vr_form_item_data_entry_vergola_system');
+
+                target_button_ids.push('button_add_vr_form_item_data_entry_misc_items');
+                target_button_ids.push('button_add_vr_form_item_data_entry_extras');
+                target_button_ids.push('button_add_vr_form_item_data_entry_disbursements');
+            }
+
+            if (current_signed_in_user_access_profiles['button bill of materials']['show'] == false) {
+                target_button_ids.push('button_bom_form_bom_1');
+                target_button_ids.push('button_bom_form_bom_2');
+            }
+            if (current_signed_in_user_access_profiles['button purchase order']['show'] == false) {
+                target_button_ids.push('button_po_form_bom_1');
+                target_button_ids.push('button_po_form_bom_2');
+            }
+            if (current_signed_in_user_access_profiles['button po summary']['show'] == false) {
+                target_button_ids.push('button_po_summary_form_bom_1');
+                target_button_ids.push('button_po_summary_form_bom_2');
+            }
+            if (current_signed_in_user_access_profiles['button check list']['show'] == false) {
+                target_button_ids.push('button_check_list_form_bom_1');
+                target_button_ids.push('button_check_list_form_bom_2');
+            }
+
+            var c1 = 0;
+            var c2 = 0;
+            var temp_object1 = null;
+
+            for (c1 = 0; c1 < target_button_ids.length; c1++) {
+                temp_object1 = document.querySelectorAll('#' + target_button_ids[c1]);
+                for (c2 = 0; c2 < temp_object1.length; c2++) {
+                    // temp_object1[c2].disabled = true;
+                    temp_object1[c2].style.display = 'none';
+                }
+            }
+        }
+
+
         function showVrFormItemDataEntryLog(form_item_id) {
             if (enable_vr_form_item_calculation_log == true) {
                 if (document.getElementById(form_item_id)) {

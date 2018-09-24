@@ -1,3 +1,10 @@
+<?php
+include 'includes/vic/custom_processes_user.php';
+
+$current_signed_in_user_access_profiles = $custom_configs_user['user_access_profiles'][$current_signed_in_user_group_key]['contract-po-vic'];
+?>
+
+
 <script src="<?php echo JURI::base().'jscript/jsapi.js'; ?>"></script>
 <script src="<?php echo JURI::base().'jscript/jquery.min.js'; ?>"></script>
 <script src="<?php echo JURI::base().'jscript/jquery-ui.min.js'; ?>" type="text/javascript"></script>
@@ -305,8 +312,10 @@ $config_vr_fractions_output_format = array(
 			
 			
 			if($process_po==0 && $is_summary_view==0 ){
-				echo "<input type=\"submit\" class=\"btn\" value=\"Save & Process PO\" name=\"update_materials\"  style=\"width:180px; padding: 5px; line-height: 1em;\"  \> ";
-
+                //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['record action']['save and process po'] == true) {
+                    echo "<input type=\"submit\" class=\"btn\" value=\"Save & Process PO\" name=\"update_materials\"  style=\"width:180px; padding: 5px; line-height: 1em;\"  \> ";
+                } //end if
 			}else 
 			if($process_po==1 && $is_summary_view==1){
 
@@ -343,7 +352,10 @@ $config_vr_fractions_output_format = array(
 		}
 
 			if($has_materials && $process_po && $is_summary_view==0){
-				echo "<input type=\"submit\" class=\"btn\" value=\"Cancel PO\" name=\"cancel_process_po\"  style=\"width:100px; padding: 5px; line-height: 1em;\"  \> ";
+                //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['record action']['cancel'] == true) {
+                    echo "<input type=\"submit\" class=\"btn\" value=\"Cancel PO\" name=\"cancel_process_po\"  style=\"width:100px; padding: 5px; line-height: 1em;\"  \> ";
+                } //end if
 			} 
 			
 		?>
@@ -619,8 +631,10 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 			
 
 			if($process_po==0){
-				echo "<input type=\"submit\" class=\"btn\" value=\"Save & Process PO\" name=\"update_materials\"  style=\"width:180px; padding: 5px; line-height: 1em;\"  \> ";
-
+                //process user_access_profiles
+                if ($current_signed_in_user_access_profiles['record action']['save and process po'] == true) {
+                    echo "<input type=\"submit\" class=\"btn\" value=\"Save & Process PO\" name=\"update_materials\"  style=\"width:180px; padding: 5px; line-height: 1em;\"  \> ";
+                } //end if
 			}else{
 
 				$titleID = $ListProjectID."_"."frame"."_".mt_rand();

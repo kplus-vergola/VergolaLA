@@ -441,4 +441,7 @@
 
 
         var vr_item_default_dimensions_list = <?php echo $vr_item_default_dimensions_list; ?>;
+
+
+        var current_signed_in_user_access_profiles = <?php echo json_encode($current_signed_in_user_access_profiles); ?>;
 </script>
