@@ -651,13 +651,15 @@ $current_signed_in_user_group_key = $custom_functions_user->getUserGroupKey($cur
 /*
 //testing
 $current_signed_in_user_group_key = '10'; //Victoria Admin
+
 $current_signed_in_user_group_key = '29'; //Victoria Account User
 $current_signed_in_user_group_key = '26'; //Victoria Operation Manager
 $current_signed_in_user_group_key = '30'; //Victoria Site Manager
+
 $current_signed_in_user_group_key = '28'; //Victoria Reception User
 $current_signed_in_user_group_key = '27'; //Victoria Sales Manager
 $current_signed_in_user_group_key = '9'; //Victoria Users
 */
 
-// $current_signed_in_user_group_key = '9'; //Victoria Users
+$current_signed_in_user_group_key = '9'; //Victoria Users
 ?>

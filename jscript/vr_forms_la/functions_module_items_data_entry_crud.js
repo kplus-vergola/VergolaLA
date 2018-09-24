@@ -172,7 +172,7 @@
                     disableVrFormFrameworkAndVrTypesDataEntryMode(true);
                 }
 
-                if (vr_form_system_info['access_mode'] == 'quote_view' || vr_form_system_info['access_mode'] == 'quote_view2') {
+                if (vr_form_system_info['access_mode'] == 'quote_view') {
                     disableVrFormDataEntryMode(true);
                 }
             } else {

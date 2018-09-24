@@ -454,7 +454,7 @@
                 /* --- end framework type == framework processing --- */
 
                 generateVrFormItemsDataEntry('form');
-                // hideFormArea('vr_form_queries_button_area_1');
+                hideFormArea('vr_form_queries_button_area_1');
                 setTimeout(
                     function () {
                         calculateVrFormItemsDataEntryValues(process_option);

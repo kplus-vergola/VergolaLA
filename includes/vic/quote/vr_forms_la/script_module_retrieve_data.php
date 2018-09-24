@@ -64,7 +64,6 @@ if (isset($api_data['access_mode'])) {
     switch ($api_data['access_mode']) {
         case 'quote_edit':
         case 'quote_view':
-        case 'quote_view2':
             $target_data_source = 'data_quote';
             $target_sql_template = $sql_template_retrieve_data_quote;
             break;

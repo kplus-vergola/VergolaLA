@@ -1984,21 +1984,6 @@
                     showFormArea('bom_form_buttons_area_2');
                     retrieveVrFormData();
                     break;
-                case 'quote_view2':
-                    hideFormArea('bom_form_buttons_area_1');
-                    hideFormArea('bom_form_queries_table_area');
-                    showFormArea('vr_form_queries_table_area');
-                    showFormArea('vr_form_queries_button_area_1');
-                    hideFormArea('vr_form_queries_button_area_21');
-                    hideFormArea('vr_form_queries_button_area_31');
-                    hideFormArea('vr_form_queries_button_area_41');
-                    showFormArea('vr_form_billing_table_area');
-                    hideFormArea('vr_form_queries_button_area_22');
-                    hideFormArea('vr_form_queries_button_area_32');
-                    hideFormArea('vr_form_queries_button_area_42');
-                    hideFormArea('bom_form_buttons_area_2');
-                    retrieveVrFormData();
-                    break;
                 case 'contract_bom_edit':
                     showFormArea('bom_form_buttons_area_1');
                     showFormArea('bom_form_queries_table_area');
