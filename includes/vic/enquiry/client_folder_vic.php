@@ -1248,6 +1248,8 @@ if (!$resultimg) {
      $("#ref").val(ref[1]);
   }
   //alert(ref);
+  // $(".disabled-div input" ).prop( "disabled", true );
+  // $(".disabled-div select" ).prop( "disabled", true );
   });
   var noteinfo=new ddtabcontent("notes-tabs")
   noteinfo.setpersist(true)

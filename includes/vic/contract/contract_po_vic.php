@@ -353,7 +353,7 @@ $config_vr_fractions_output_format = array(
 
 			if($has_materials && $process_po && $is_summary_view==0){
                 //process user_access_profiles
-                if ($current_signed_in_user_access_profiles['record action']['cancel'] == true) {
+                if ($current_signed_in_user_access_profiles['record action']['cancel po'] == true) {
                     echo "<input type=\"submit\" class=\"btn\" value=\"Cancel PO\" name=\"cancel_process_po\"  style=\"width:100px; padding: 5px; line-height: 1em;\"  \> ";
                 } //end if
 			} 

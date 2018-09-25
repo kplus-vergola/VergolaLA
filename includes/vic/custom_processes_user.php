@@ -72,7 +72,7 @@ $custom_configs_user = array(
                 'record action' => array('save' => true, 'save and close' => true)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
+                'record action' => array('remove' => true, 'save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => true), 
@@ -161,7 +161,7 @@ $custom_configs_user = array(
                 'record action' => array('save' => false, 'save and close' => false)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => false, 'save and close' => false, 'delete' => false, 'download pdf' => false, 'duplicate' => false, 'add vr items' => false)
+                'record action' => array('remove' => false, 'save' => false, 'save and close' => false, 'delete' => false, 'download pdf' => false, 'duplicate' => false, 'add vr items' => false)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => true), 
@@ -250,7 +250,7 @@ $custom_configs_user = array(
                 'record action' => array('save' => false, 'save and close' => false)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => false, 'save and close' => false, 'delete' => false, 'download pdf' => false, 'duplicate' => false, 'add vr items' => false)
+                'record action' => array('remove' => false, 'save' => false, 'save and close' => false, 'delete' => false, 'download pdf' => false, 'duplicate' => false, 'add vr items' => false)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => true), 
@@ -339,7 +339,7 @@ $custom_configs_user = array(
                 'record action' => array('save' => false, 'save and close' => false)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => false, 'save and close' => false, 'delete' => false, 'download pdf' => false, 'duplicate' => false, 'add vr items' => false)
+                'record action' => array('remove' => false, 'save' => false, 'save and close' => false, 'delete' => false, 'download pdf' => false, 'duplicate' => false, 'add vr items' => false)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
@@ -428,7 +428,7 @@ $custom_configs_user = array(
                 'record action' => array('save' => true, 'save and close' => true)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
+                'record action' => array('remove' => true, 'save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
@@ -517,7 +517,7 @@ $custom_configs_user = array(
                 'record action' => array('save' => true, 'save and close' => true)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
+                'record action' => array('remove' => true, 'save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
@@ -606,7 +606,7 @@ $custom_configs_user = array(
                 'record action' => array('save' => true, 'save and close' => true)
             ), 
             'add-quote-vic > quote_edit' => array(
-                'record action' => array('save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
+                'record action' => array('remove' => true, 'save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
             ), 
             'contract-folder-vic' => array(
                 'tab client details' => array('edit' => false), 

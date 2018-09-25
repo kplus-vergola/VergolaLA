@@ -1915,11 +1915,6 @@
                     break;
                 case 'quote_view':
                 case 'contract_bom_edit':
-                    if (current_signed_in_user_access_profiles['record action']['remove'] == false) {
-                        for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
-                            target_button_ids.push('button_remove_vr_form_item_data_entry_' + c1);
-                        }
-                    }
                     if (current_signed_in_user_access_profiles['record action']['save'] == false) {
                         target_button_ids.push('button_save_bom_vr_form_bom_framework');
                         target_button_ids.push('button_save_bom_vr_form_bom_fittings');
@@ -1953,7 +1948,30 @@
                         target_button_ids.push('button_cancel_order_form_bom_extras');
                         target_button_ids.push('button_cancel_order_form_bom_disbursements');
                     }
+
+                    if (current_signed_in_user_access_profiles['button bill of materials']['show'] == false) {
+                        target_button_ids.push('button_bom_form_bom_1');
+                        target_button_ids.push('button_bom_form_bom_2');
+                    }
+                    if (current_signed_in_user_access_profiles['button purchase order']['show'] == false) {
+                        target_button_ids.push('button_po_form_bom_1');
+                        target_button_ids.push('button_po_form_bom_2');
+                    }
+                    if (current_signed_in_user_access_profiles['button po summary']['show'] == false) {
+                        target_button_ids.push('button_po_summary_form_bom_1');
+                        target_button_ids.push('button_po_summary_form_bom_2');
+                    }
+                    if (current_signed_in_user_access_profiles['button check list']['show'] == false) {
+                        target_button_ids.push('button_check_list_form_bom_1');
+                        target_button_ids.push('button_check_list_form_bom_2');
+                    }
                     break;
+            }
+
+            if (current_signed_in_user_access_profiles['record action']['remove'] == false) {
+                for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+                    target_button_ids.push('button_remove_vr_form_item_data_entry_' + c1);
+                }
             }
 
             if (current_signed_in_user_access_profiles['record action']['add vr items'] == false) {
@@ -1970,23 +1988,6 @@
                 target_button_ids.push('button_add_vr_form_item_data_entry_disbursements');
             }
 
-            if (current_signed_in_user_access_profiles['button bill of materials']['show'] == false) {
-                target_button_ids.push('button_bom_form_bom_1');
-                target_button_ids.push('button_bom_form_bom_2');
-            }
-            if (current_signed_in_user_access_profiles['button purchase order']['show'] == false) {
-                target_button_ids.push('button_po_form_bom_1');
-                target_button_ids.push('button_po_form_bom_2');
-            }
-            if (current_signed_in_user_access_profiles['button po summary']['show'] == false) {
-                target_button_ids.push('button_po_summary_form_bom_1');
-                target_button_ids.push('button_po_summary_form_bom_2');
-            }
-            if (current_signed_in_user_access_profiles['button check list']['show'] == false) {
-                target_button_ids.push('button_check_list_form_bom_1');
-                target_button_ids.push('button_check_list_form_bom_2');
-            }
-
             var c1 = 0;
             var c2 = 0;
             var temp_object1 = null;
@@ -1994,7 +1995,6 @@
             for (c1 = 0; c1 < target_button_ids.length; c1++) {
                 temp_object1 = document.querySelectorAll('#' + target_button_ids[c1]);
                 for (c2 = 0; c2 < temp_object1.length; c2++) {
-                    // temp_object1[c2].disabled = true;
                     temp_object1[c2].style.display = 'none';
                 }
             }
