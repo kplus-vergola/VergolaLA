@@ -431,7 +431,7 @@ $custom_configs_user = array(
                 'record action' => array('remove' => true, 'save' => true, 'save and close' => true, 'delete' => true, 'download pdf' => true, 'duplicate' => true, 'add vr items' => true)
             ), 
             'contract-folder-vic' => array(
-                'tab client details' => array('edit' => false), 
+                'tab client details' => array('edit' => true), 
                 'tab bill of materials' => array('show' => true), 
                 'tab purchase order' => array('show' => true), 
                 'tab po summary' => array('show' => true), 
@@ -442,7 +442,7 @@ $custom_configs_user = array(
                 'tab photos' => array('save' => true, 'delete' => true), 
                 'tab drawings' => array('save' => true, 'delete' => true), 
                 'tab general' => array('save' => true, 'delete' => true), 
-                'record action' => array('update' => false, 'cancel contract' => false)
+                'record action' => array('update' => true, 'cancel contract' => false)
             ), 
             'add-quote-vic > contract_bom' => array(
                 'button bill of materials' => array('show' => true), 
