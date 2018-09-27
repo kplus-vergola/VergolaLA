@@ -39,7 +39,8 @@ if (isset($user->groups['10'])) {
 	$is_admin = 1;
 }else if( isset($user->groups['29'])){
 	$is_account_user = 1; 
-	/* temporary simulate account user as top admin */
+	// return;
+	/* temporary simulate account user as top admin: set group key */
 	$is_top_admin = 1;
 	$is_admin = 1;
 	$user->groups = array('10' => '10');
@@ -3078,4 +3079,10 @@ $sales_table .= "</table>";
 	}
 </script> 
 
- 
+
+<?php
+if ($is_account_user) {
+	/* temporary simulate account user as top admin: return group key */
+	$user->groups = array('29' => '29');
+}
+?>
