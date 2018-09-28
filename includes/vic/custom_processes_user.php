@@ -196,7 +196,7 @@ $custom_configs_user = array(
         /* ===== ===== ===== ===== ===== */
         '26' => array(
             'client-folder-vic' => array(
-                'tab client details' => array('edit' => false), 
+                'tab client details' => array('edit' => true), 
                 'tab costing info' => array('add new costing' => false, 'view costing' => true, 'view contract' => true), 
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
