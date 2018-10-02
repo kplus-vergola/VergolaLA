@@ -347,13 +347,13 @@ $custom_configs_user = array(
                 'tab purchase order' => array('show' => true), 
                 'tab po summary' => array('show' => true), 
                 'tab check list' => array('show' => true), 
-                'tab sales' => array('save' => false, 'delete' => false), 
-                'tab correspondence' => array('save' => false, 'delete' => false), 
-                'tab statutory' => array('save' => false, 'delete' => false), 
-                'tab photos' => array('save' => false, 'delete' => false), 
-                'tab drawings' => array('save' => false, 'delete' => false), 
-                'tab general' => array('save' => false, 'delete' => false), 
-                'record action' => array('update' => false, 'cancel contract' => false)
+                'tab sales' => array('save' => true, 'delete' => true), 
+                'tab correspondence' => array('save' => true, 'delete' => true), 
+                'tab statutory' => array('save' => true, 'delete' => true), 
+                'tab photos' => array('save' => true, 'delete' => true), 
+                'tab drawings' => array('save' => true, 'delete' => true), 
+                'tab general' => array('save' => true, 'delete' => true), 
+                'record action' => array('update' => true, 'cancel contract' => false)
             ), 
             'add-quote-vic > contract_bom' => array(
                 'button bill of materials' => array('show' => true), 
