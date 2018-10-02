@@ -12,15 +12,15 @@ $form->data['date_time'] = date('d-M-Y g:i A');
 
 $user = JFactory::getUser();
 $user_group = "";
-$is_admin = 0; $is_system_admin = 0; $is_sales_manager = 0; $is_construction_manager = 0;   $is_sales_consultant = 0; $is_reception = 0; $is_account_user = 0;
+$is_admin = 0; $is_system_admin = 0; $is_sales_manager = 0; $is_operation_manager = 0;   $is_sales_consultant = 0; $is_reception = 0; $is_account_user = 0; $is_site_manager = 0;
 if(isset($user->groups['10'])){
   $is_system_admin = 1;
   $is_admin = 1;
   $user_group = "system_admin";
 }else if(isset($user->groups['26']) ){
-  $is_construction_manager = 1;
+  $is_operation_manager = 1;
   $is_admin = 1;
-  $user_group = "construction_manager";
+  $user_group = "operation_manager";
 }else if( isset($user->groups['27'])){
   $is_sales_manager = 1;
   $is_admin = 1;
@@ -31,6 +31,10 @@ if(isset($user->groups['10'])){
 }else if( isset($user->groups['29'])){
   $is_account_user = 1; 
   $user_group = "account_user"; 
+}else if(isset($user->groups['30']) ){
+  $is_site_manager = 1;
+  $is_admin = 1;
+  $user_group = "site_manager";
 }else{
   $is_sales_consultant = 1;
   $user_group = "sales_consultant";
@@ -1334,8 +1338,7 @@ $groups = $user->get('groups');
 ?>
 
      <!--- Start of Vergola Standard -->
-    <div id="standard" class="tab_content">
-     
+    <div id="standard" class="tab_content <?php echo ($is_operation_manager || $is_system_admin || $is_account_user ? "":"disabled-div"); ?>">
       <span class="vs-label"><label>Deposit Paid:</label> 
         <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="depositdate" name="deposit_paid_amount" class="" value="<?php echo $PaymentDepositValue; ?>" /> </td>
         <td><input style="text-align: right;" type="text" id="depositdate" name="deposit_paid" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['deposit_paid']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['deposit_paid'])); } else {echo "";} ?>"/></td></span>
@@ -1479,7 +1482,7 @@ $groups = $user->get('groups');
     <!-- End of Vergola Standard --->
     
     <!--- Start of Statutory Approval -->
-    <div id="statutory" class="tab_content" >
+    <div id="statutory" class="tab_content  <?php echo ($is_operation_manager || $is_system_admin || $is_account_user ? "":"disabled-div"); ?>">
         <!--         
         <div class="label-input-row" >  
             <input type="hidden" name="council" id="council" value="By Vergola" />
@@ -2769,7 +2772,7 @@ if (!$resultimg) {
 <?php if($page_name=="maintenancefolder"){ ?>
     
 
-<?php }else if($is_system_admin || $is_construction_manager || $is_account_user){ ?>
+<?php }else if($is_system_admin || $is_operation_manager || $is_account_user){ ?>
 <div id="tabs_wrapper" class="button-tab">
         <?php //process user_access_profiles
         if ($current_signed_in_user_access_profiles['record action']['cancel contract'] == true) {
@@ -3021,7 +3024,7 @@ if ($('#council option:selected').val() == 'By Vergola'){
 
 $(document).ready(function() {
 if ($('#engractive option:selected').val() == 'No') {
-    $('#sitespecengrapproveddate').disabled();
+    // $('#sitespecengrapproveddate').disabled();
   }
 });
 

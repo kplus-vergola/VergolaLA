@@ -27,12 +27,12 @@
 //top_admin is Jit user $user->groups['10']
 $user = JFactory::getUser();
 
-$is_admin = 0; $is_manager = 0; $is_construction = 0; $is_top_admin = 0; $is_user = 0; $is_reception = 0; $is_account_user = 0; $is_site_manager = 0;
+$is_admin = 0; $is_manager = 0; $is_operation_manager = 0; $is_top_admin = 0; $is_user = 0; $is_reception = 0; $is_account_user = 0; $is_site_manager = 0;
 if(isset($user->groups['10'])){
 	$is_top_admin = 1;
 	$is_admin = 1;
 }else if(isset($user->groups['26']) ){
-	$is_construction = 1;
+	$is_operation_manager = 1;
 	$is_admin = 1;
 }else if( isset($user->groups['27'])){
 	$is_manager = 1;
@@ -49,7 +49,7 @@ if(isset($user->groups['10'])){
 	$user->groups = array('10' => '10');
 }else if( isset($user->groups['30'])){
 	$is_site_manager = 1; 
-	return;
+	$is_admin = 1;
 }else{
 	$is_user = 1;
 }
