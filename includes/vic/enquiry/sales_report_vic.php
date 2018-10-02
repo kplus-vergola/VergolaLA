@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/jquery-ui-1.11.4/jquery-ui.min.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/jquery-ui-1.11.4/jquery-ui.theme.min.css'; ?>" />
-<link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/client-folder.css'; ?>" />
+<link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/client-folder.css?v='.mt_rand(); ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/Chart.js/css/demo.css'; ?>" />
 
 <link rel="stylesheet" href="<?php echo JURI::base().'components/com_chronoforms/css/datepicker/datepicker_dashboard.css'; ?> " type="text/css" />
@@ -8,6 +8,10 @@
  
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/datetime/css/bootstrap.min.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/datetime/css/bootstrap-datetimepicker.min.css'; ?>" /> 
+<link rel='stylesheet' type="text/css" href='<?php echo JURI::base();?>jscript/fullcalendar-3.5.1/fullcalendar.css' />
+<link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/custom.css?v='.mt_rand(); ?>" /> 
+
+
  
 <script charset="UTF-8" type="text/javascript" src="<?php echo JURI::base().'jscript/datetime/js/jquery-1.8.3.min.js'; ?>"></script> 
 <script src="<?php echo JURI::base().'jscript/jquery-ui-1.11.4/jquery-ui.min.js'; ?>"></script>
@@ -17,6 +21,11 @@
 
 <script charset="UTF-8" type="text/javascript" src="<?php echo JURI::base().'jscript/datetime/js/bootstrap-datetimepicker.js'; ?>"></script> 
 <script charset="UTF-8" type="text/javascript" src="<?php echo JURI::base().'components/com_chronoforms/js/datepicker/datepicker.js'; ?>"></script>  
+<script charset="UTF-8" type="text/javascript" src='<?php echo JURI::base();?>jscript/moment.js'></script>
+<script charset="UTF-8" type="text/javascript" src='<?php echo JURI::base();?>jscript/fullcalendar-3.5.1/fullcalendar.min.js'></script>
+
+
+
 
 
 <?php
@@ -24,6 +33,7 @@
 //$user->groups['26'] //  is victoria office manager
 //$user->groups['27'] //  is victoria sales manager
 //$user->groups['9'] //9 is consultants general user
+
 //top_admin is Jit user $user->groups['10']
 $user = JFactory::getUser();
 
@@ -54,7 +64,10 @@ if(isset($user->groups['10'])){
 	$is_user = 1;
 }
   
+
 //Set the filter of the selected consultant
+
+
 if (isset($_POST['command']) && $_POST['command']=="save_status" ) {
 	$cf_id = mysql_real_escape_string($_POST['cf_id']);
 	$status = mysql_real_escape_string($_POST['status']);
@@ -71,6 +84,7 @@ if (isset($_POST['command']) && $_POST['command']=="save_status" ) {
 	$result = mysql_query($sql);
 
 	$r = mysql_fetch_assoc($result);
+
 	$followup_field = "";
 
 	//$sql = "UPDATE ver_chronoforms_data_followup_vic SET status='{$status}', ffdate1='{$followup_date}' WHERE cf_id = {$cf_id}"; 
@@ -85,6 +99,7 @@ if (isset($_POST['command']) && $_POST['command']=="save_status" ) {
 		";
 		$r = mysql_query($sql);
 
+
 		$sql2 = "
 			UPDATE ver_chronoforms_data_clientpersonal_vic 
 			SET appointmentdate='{$followup_date}' 
@@ -93,6 +108,7 @@ if (isset($_POST['command']) && $_POST['command']=="save_status" ) {
 			LIMIT 1
 		";
 		mysql_query($sql2);
+
 	} else if ($status == "Quoted") {
 		$sql = "
 			UPDATE ver_chronoforms_data_followup_vic 
@@ -100,6 +116,7 @@ if (isset($_POST['command']) && $_POST['command']=="save_status" ) {
 			WHERE cf_id = {$cf_id}
 		"; 
 		mysql_query($sql);
+
 	} else if ($status == "Lost") {
 		$sql = "
 			UPDATE ver_chronoforms_data_followup_vic 
@@ -107,6 +124,7 @@ if (isset($_POST['command']) && $_POST['command']=="save_status" ) {
 			WHERE cf_id = {$cf_id}
 		"; 
 		mysql_query($sql);
+
 	} else if ($status == "Won") {
 		$sql = "
 			UPDATE ver_chronoforms_data_followup_vic 
@@ -115,23 +133,29 @@ if (isset($_POST['command']) && $_POST['command']=="save_status" ) {
 		"; 
 		mysql_query($sql);
 	}    
+
 }
 
 if (isset($_POST['command'])&& $_POST['command']=="save_is_done" ) {
+
 	$cf_id = mysql_real_escape_string($_POST['cf_id']);
 	$is_done = mysql_real_escape_string($_POST['is_done']);
 
 	$sql = "
 		UPDATE ver_chronoforms_data_followup_vic 
+
 		SET is_done={$is_done} 
 		WHERE cf_id = {$cf_id}
 	";
 	mysql_query($sql);
 	echo "";
 	exit();
+
 }
 
+
 if (isset($user->groups['10']) || isset($user->groups['26']) || isset($user->groups['27'])) { 
+
 	$rep_id = "all";
 	$rep_filter = "";
 	
@@ -147,6 +171,8 @@ if (isset($user->groups['10']) || isset($user->groups['26']) || isset($user->gro
 	//$qry_filter = " rep_id IN (SELECT RepID FROM ver_users WHERE usertype='{$user->usertype}') AND "; 
 } 
 
+
+
 define("NUMBER_PER_PAGE", 20); //number of records per page of the search results
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $start = ($page-1) * NUMBER_PER_PAGE;
@@ -157,6 +183,7 @@ function pagination($current_page_number, $total_records_found, $query_string = 
 	$page = 1; 
 	$paging = "";
 
+
 	if ($total_records_found) {
 		$paging = "Page: ";
 	}
@@ -164,18 +191,27 @@ function pagination($current_page_number, $total_records_found, $query_string = 
 	{
 		if ($page != $current_page_number) {
 			$paging .= "<a href=\"". JURI::base() . "?page=$page" . (($query_string) ? "&$query_string" : "") . "\">";
+
 		}
 		if ($page == $current_page_number) {
 			$paging .= "<span class=\"current\">$page</span>";} else {$paging .= "$page";
+
+
 		}
 		if ($page != $current_page_number) {
 			$paging .= "</a>";
+
 		}
 		$page++;
 	}
 
 	return $paging;
+
 }
+
+
+
+
 
 //---------------- PREV YEAR Sales
 $year = date('Y');  
@@ -195,12 +231,21 @@ $user =& JFactory::getUser();
 if ($is_user) {
 	$qry_filter = " rep_id='{$user->RepID}' AND ";
 	 $consultant_filter = " consultant_id='{$user->RepID}' AND ";
+
 } else if ($rep_id=="all" && $is_user==0) {
+
 	//$qry_filter = " rep_id IN (SELECT RepID FROM ver_users WHERE usertype='{$user->usertype}') AND "; 
+
+
+
+
 	$sql = "
 		SELECT RepID 
 		FROM ver_users 
 		WHERE usertype='{$user->usertype}' 
+
+
+
 		AND block=0 
 	";
 	$qResult = mysql_query($sql);
@@ -210,25 +255,37 @@ if ($is_user) {
 		$i++;
 	}
 	 
+
+
 	$qry_filter = "  rep_id IN ('".implode("','", $ar_rep_id)."') AND "; 
 	if ($is_top_admin) {
 		$consultant_filter = " 1=1 AND "; 
 	} else {
 		$consultant_filter = " 1=1 AND  rep_id IN ('".implode("','", $ar_rep_id)."') AND "; 
 	}
+
+
 } else if ($rep_id!="all" && $is_user==0) { 
+
 	$qry_filter = " rep_id='{$rep_id}' AND ";
 	$consultant_filter = " consultant_id='{$rep_id}' AND ";
+
 } else if ($rep_id!="all" && $is_admin==1) { 
+
 	$qry_filter = " rep_id='{$rep_id}' AND ";
 	$consultant_filter = " consultant_id='{$rep_id}' AND ";
+
 } else { 
+
 	return; 
 } 
+
+
 
 if ($is_user==1) {
 	$qry_filter2 = " repident='{$user->RepID}' AND   ";
 	//$consultant_filter2 = " consultant_id='{$user->RepID}' AND   ";
+
 } else if ($rep_id=="all") {
 	$qry_filter2 = " repident IN ('".implode("','", $ar_rep_id)."') AND  ";
 	//$consultant_filter2 = " 1=1 AND ";
@@ -236,6 +293,10 @@ if ($is_user==1) {
 	$qry_filter2 = " repident='{$rep_id}' AND   ";
 	//$consultant_filter2 = " consultant_id'{$rep_id}' AND ";
 }
+
+
+
+
 
 $sql = "
 	SELECT *, 
@@ -247,6 +308,9 @@ $sql = "
 "; //rep_id='{$user->RepID}' AND
 $qResult = mysql_query($sql); 
 if (mysql_num_rows($qResult)<1) {
+
+
+
 	$sql = "
 		SELECT *, 
 			DATE_FORMAT(target_date,'%Y-%m') AS yearMonth, 
@@ -260,13 +324,18 @@ if (mysql_num_rows($qResult)<1) {
 }
 $r = mysql_fetch_assoc($qResult);
 
+
 $tFrom = substr($r['dateFromTo'], 0,10);
 $tTo = substr($r['dateFromTo'], -10,10);
 
 //add filter to find the query from the start of the target date.
 
+
+
 $dFrom = date("Y-m-01", strtotime($tFrom));
 $dTo = date("Y-m-t", strtotime($tTo));
+
+
 
 $sales_amount1_assoc = array(); // storage of this year sales amount
 $sales_amount2_assoc = array(); 
@@ -275,6 +344,9 @@ $sales_period2 = array();
 $sales_target2 = array();
 $sales_amount = array();
 $sales_amount_last_yr = array();
+
+
+
 
 // $sql = "
 // 	SELECT 
@@ -296,12 +368,17 @@ $sql = "
 	GROUP BY YEAR(s.contract_date), MONTH(s.contract_date)
 ";
 
+
+
+
 // } else {
 // 	$qry_filter = " rep_id='{$user->RepID}' AND ";
 // 	$sql = "SELECT rep_id, SUM(total_rrp) as sales_amount, DATE_FORMAT(contractdate,'%Y-%m') as yearMonth FROM ver_chronoforms_data_contract_list_vic AS c WHERE {$qry_filter}  contractdate BETWEEN '{$dFrom}' AND '{$dTo}' GROUP BY YEAR(c.contractdate), MONTH(c.contractdate)";
 // }
 
+
 $qSales = mysql_query($sql); 
+
 
 $i=0;$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; 
 	 
@@ -309,9 +386,12 @@ mysql_data_seek($qResult, 0);
 
 while ($r = mysql_fetch_assoc($qResult)) { 
 	$sales = array();  
+
 	while ($s = mysql_fetch_assoc($qSales)) { 
+
 		if ($s["yearMonth"]==$r["yearMonth"]) {
 			$sales = $s;
+
 			break;
 		} 
 	} 
@@ -321,18 +401,26 @@ while ($r = mysql_fetch_assoc($qResult)) {
 	$yDate = date_format(date_create($r["target_date"]),"Y");
 	$fDate = date_format(date_create($r["target_date"]),"Y-m-d");
 
+
 	array_push($sales_target2,$r['target_amount']);
 	if ($sales['sales_amount']>0) {
 		array_push($sales_amount2,$sales['sales_amount']);
 		array_push($sales_amount2_assoc,array("yearMonth"=>$r["yearMonth"],"sales_amount"=>$sales['sales_amount']));
 		array_push($sales_amount_last_yr,$sales['sales_amount']);
+
+
 	} else {
 		array_push($sales_amount2,0.00);
+
 		array_push($sales_amount_last_yr,0);
+
 	}
 		
+
 	array_push($sales_period2,$mDateShort);
+
 }	
+
 
 
 $kpi_table = "";
@@ -341,6 +429,7 @@ $kpi_graph = "";
 $kpi_graph_prev_yr = "";
 $sales_table = "";
 $note_table = "";	  
+
 $consultant_select_field = '';
 ?>
 
@@ -368,7 +457,16 @@ include('sales_summary/main.php');
 
 <!-- CURRENT KPI TABLE -->
 <?php
+
 $cbo_consultant = "";
+
+
+
+
+
+
+
+
 
 if (isset($user->groups['10']) || isset($user->groups['27']) ) {
 	if (isset($user->groups['10'])) { //27 is victoria sales manager
@@ -404,6 +502,7 @@ if (isset($user->groups['10']) || isset($user->groups['27']) ) {
     } 
 
 	//$sql = "SELECT id, RepID, name  FROM ver_users WHERE id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9)";
+
   	$qResult = mysql_query($querysub2);
 	 
 	$cbo_consultant = "<select id='cbo_consultant' onchange='request_sel_consultant()' style='padding:3px 0;'> "; 
@@ -415,21 +514,31 @@ if (isset($user->groups['10']) || isset($user->groups['27']) ) {
 
 	$sales_table .= "<div style='width:100%; margin-bottom:10px;'> 
 			<span><b>Consultant :</b> &nbsp;</span>{$cbo_consultant}
+
 		</div>";
 	$consultant_select_field = "
 		<div style='width:100%; margin-bottom:10px;'> 
 			<span><b>Consultant :</b> &nbsp;</span>{$cbo_consultant}
 		</div>
 	";
+
 } 
 
 $sales_table .= "<table id='tblSalesTarget' class='update-table' style='width:50%; display:inline-block;vertical-align: top; font-size:12px; text-align:center; '>";
 		
+
+
+
+
 $year = date('Y');
 $cMonth = date('m');
 if ($cMonth<7) {
 	$year = $year - 1;
 }
+
+
+
+
 
 $sql = "
 	SELECT 
@@ -447,7 +556,11 @@ $sql = "
 "; //
 $qResult = mysql_query($sql);
 
+
 if (mysql_num_rows($qResult)<1) {
+
+
+
 	$sql = "
 		SELECT *, 
 			DATE_FORMAT(target_date,'%Y-%m') AS yearMonth, 
@@ -464,9 +577,12 @@ $r = mysql_fetch_assoc($qResult);
  
 $dFrom = substr($r['dateFromTo'], 0,10);
 $dTo = substr($r['dateFromTo'], -10,10);
+
 //set the date to the start and end of the month
 $dFrom = date("Y-m-01", strtotime($dFrom));
 $dTo = date("Y-m-t", strtotime($dTo));
+
+
 
 $sales_target = array();
 // $sales_amount = array();
@@ -474,6 +590,7 @@ $sales_period = array();
 	
 //echo $dTo;return;
 if ($is_manager) {
+
 	$sql = "
 		SELECT 
 			rep_id, 
@@ -497,6 +614,12 @@ if ($is_manager) {
 		GROUP BY YEAR(c.contractdate), MONTH(c.contractdate)
 	"; // rep_id='{$user->RepID}' AND 
 } else {
+
+
+
+
+
+
 	// $sql = "
 	// 	SELECT 
 	// 		rep_id, 
@@ -520,13 +643,16 @@ if ($is_manager) {
 $qSales = mysql_query($sql); 
 	 
 //$r = mysql_fetch_assoc($qSales);
+
 $i=0;$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0; 
 mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return; 
 
 while ($r = mysql_fetch_assoc($qResult)) {
+
 	$sales = array();  
 	if (!empty($qSales) && mysql_num_rows($qSales)) {
 		mysql_data_seek($qSales, 0); 
+
 		while ($s = mysql_fetch_assoc($qSales)) {
 			if ($s["yearMonth"]==$r["yearMonth"]) {
 				$sales = $s;
@@ -534,27 +660,42 @@ while ($r = mysql_fetch_assoc($qResult)) {
 				break;
 			} 
 		} 
+
+
+
 	} else {
 		$sales["yearMonth"] = $r["yearMonth"];
 		$sales["sales_amount"] = 0;
 		$sales["project_amount_ready"] = 0;
 		$sales["project_amount_finish"] = 0;
+
 		$sales["project_count_ready"] = 0;
 		$sales["project_count_finish"] = 0;
+
+
 
 		//array_push($sales_amount1_assoc,array("yearMonth"=>$r["yearMonth"],"sales_amount"=>$sales['sales_amount']));
 	}
 
+
+
 	// array_push($sales_amount1_assoc,array("yearMonth"=>$r["yearMonth"],"sales_amount"=>0));
 
 	$prevYearMonthSales = 0;
+
+
 	
+
 	for ($j=0;$j<count($sales_amount2_assoc);$j++) {
+
 		$prevYear = substr($r["yearMonth"],0,4);
 		$prevYear = (int)$prevYear-1;
+
 		$prevYearMonth = $prevYear ."-". substr($r["yearMonth"],-2,2);
+
 		if ($sales_amount2_assoc[$j]["yearMonth"]==$prevYearMonth) {
 			$prevYearMonthSales = $sales_amount2_assoc[$j]["sales_amount"];
+
 			break;
 		} 
 	} 
@@ -572,8 +713,15 @@ while ($r = mysql_fetch_assoc($qResult)) {
 	if ($i==0 && $is_manager) {
 		$sales_table .= "<tr><th >Month</th><th width='100'>Jobs Ready to Build</th><th width='100'>Jobs Built</th><th>Target</th><th>Monthly Excess/Difference</th><th>YTD Excess/Difference</th></tr> ";
 	} else if ($i==0) {
+
 		$sales_table .= "<tr><th >Month</th> <th>Target</th> <th width='100'>Sales This Year</th><th>Monthly Excess/Difference</th><th>YTD Excess/Difference</th></tr> ";
 	}
+
+
+
+
+
+
 
 	if ($is_manager) {
 		$sales_table .= "<tr>";
@@ -583,6 +731,9 @@ while ($r = mysql_fetch_assoc($qResult)) {
 		$sales_table .= "<tr>";
 		$sales_table .= "<td>{$mDate}</td> <td>$".number_format($r['target_amount'],2)."</td> <td>$".number_format($sales['sales_amount'],2)."</td><td>$". ($sales['sales_amount']>0 ? number_format($diffAmount,2):0.00) ."</td><td>$". ($sales['sales_amount']>0 ? number_format($runningDiffAmount,2):0.00) ."</td>";	
 		$sales_table .= "</tr>"; 
+
+
+
 	}
 
 	$i++;
@@ -590,14 +741,19 @@ while ($r = mysql_fetch_assoc($qResult)) {
 	$target_amount_total+=$r['target_amount'];
 
 	array_push($sales_target,$r['target_amount']);
+
+
 	// array_push($sales_amount2_assoc[$i]["sales_amount"],$sales['sales_amount']);
 	if ($sales['sales_amount']>0) {
 		array_push($sales_amount,$sales['sales_amount']);
+
 	} else {
 		array_push($sales_amount,0.00);
+
 	}
 		
 	array_push($sales_period,$mDateShort);
+
 
 }
 
@@ -608,10 +764,16 @@ $sales_table .= "</tr>";
 $sales_table .= "</table>";
 
 
+
+
+
 // if ($is_manager) {
 // } else {
 	$sales_table = $consultant_select_field . $html_table_sales_target;
 // }
+
+
+
 ?> 
 
 	<?php   
@@ -653,6 +815,7 @@ $sales_table .= "</table>";
 		 	<canvas id='suburb_lead_chart' width='700' height='400' style='margin:0 0 0 0px;'></canvas>
 		 	<div id='suburb_lead_chart_placeholder'></div>
 		</div>
+
 	";
 
 	$kpi_graph = "
@@ -685,6 +848,7 @@ $sales_table .= "</table>";
 			<div id='installer_calendar2' style='width:45%; display: inline-block;'></div>
 		</div>	
 	";
+
 	?>
 
 
@@ -711,6 +875,7 @@ $sales_table .= "</table>";
 		AND year={$year}
 	";
 	$qResult = mysql_query($sql); 
+
 
 	if (mysql_num_rows($qResult)<1) {
 		$sql = "
@@ -882,8 +1047,11 @@ $sales_table .= "</table>";
 		$cMonth = date('m');
 		if ($cMonth<7) {
 			$year = $year - 2;
+
+
 		}
 		//$sql = "SELECT rep_id, SUM(total_rrp) as sales_amount, DATE_FORMAT(contractdate,'%Y-%m') as yearMonth FROM ver_chronoforms_data_contract_list_vic AS c WHERE rep_id='{$user->RepID}' AND contractdate BETWEEN '{$dFrom}' AND '{$dTo}' GROUP BY YEAR(c.contractdate), MONTH(c.contractdate)";
+
 		$sql = "
 			SELECT *, 
 				DATE_FORMAT(target_date,'%Y-%m') AS yearMonth 
@@ -892,13 +1060,18 @@ $sales_table .= "</table>";
 			AND year={$year}
 		";
 		$qResult = mysql_query($sql); 
+
 		// if ($qResult==false) {
 		// 	$year = $year-1;
 		// 	$sql = "SELECT *, DATE_FORMAT(target_date,'%Y-%m') as yearMonth FROM ver_rep_sales_target WHERE rep_id='".$user->RepID."' AND year={$year}";
+
 		// 	$qResult = mysql_query($sql); 
 		// }
 
 		if (mysql_num_rows($qResult)<1) {
+
+
+
 			$sql = "
 				SELECT *, 
 					DATE_FORMAT(target_date,'%Y-%m') AS yearMonth 
@@ -919,26 +1092,34 @@ $sales_table .= "</table>";
 
 		if (isset($user->groups['9'])) {
 			$qry_filter2 = " repident='{$user->RepID}' AND   ";
+
 		} else if ($rep_id=="all") { 
+
 			if (isset($user->groups['10'])) {
 				$qry_filter2 = " 1=1 AND  ";
 			} else {
 				$qry_filter2 = " repident IN ('".implode("','", $ar_rep_id)."') AND  ";
 			}	
+
 		} else { 
 			$qry_filter2 = " repident='{$rep_id}' AND   "; 
 		}
+
 
 	 	$i=0; $j=0; 
 	 	mysql_data_seek($qResult, 0); 
 	 	$consultant_filter1 = "";  
 	 	$tot_enquiry=0; $tot_quote=0; $tot_contract_won=0; $av_lead=0; $av_quote=0; $av_enquiry_w=0;
 	 	$sum_lead=0; $sum_quote=0; $sum_enquiry_w=0;
+
+
+
 	 	$enquiry_qty_list = array();
 	 	$quote_qty_list = array();
 	 	$contract_qty_list = array();
 
 		while ($r = mysql_fetch_assoc($qResult)) {
+
 			$mDate = date_format(date_create($r["target_date"]),"F");
 	 
 	 		//Count Enquiry new client added
@@ -946,6 +1127,9 @@ $sales_table .= "</table>";
 		  	// 			SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_clientpersonal_vic where {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}' 
 		  	// 			UNION ALL
 		  	// 			SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_builderpersonal_vic where  {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}' ) AS t1 ";
+
+
+
 		  	$sql = "
 		  		SELECT count(pid) AS num_enquiries 
 		  		FROM ver_chronoforms_data_clientpersonal_vic 
@@ -955,12 +1139,14 @@ $sales_table .= "</table>";
 			//$rEnquiries = mysql_fetch_assoc($qEnquiries);
 			if ($qEnquiries) {
 				$rEnquiries = mysql_fetch_assoc($qEnquiries); 
+
 				array_push($enquiry_qty_list,$rEnquiries['num_enquiries']);
 			}
  
  			//Quotes Created
  			$_qry_filter = $qry_filter." quotedate>= '{$tFrom}' AND ";
 			// $sql = " SELECT count(quoteid) AS num_quotes FROM ( SELECT  quoteid, quotedate  FROM ver_chronoforms_data_followup_vic WHERE {$_qry_filter} 1=1 GROUP BY quoteid ORDER BY cf_id DESC, sales_rep) AS t WHERE DATE_FORMAT(quotedate,'%Y-%m') = '{$r["yearMonth"]}'      ";  
+
 			// $sql = "
 			// 	SELECT count(quoteid) AS num_quotes 
 			// 	FROM (
@@ -981,15 +1167,19 @@ $sales_table .= "</table>";
 				FROM tblsaleskpi 
 				WHERE project_id IS NOT NULL 
 				AND {$consultant_filter} DATE_FORMAT(quote_date,'%Y-%m') = '{$r["yearMonth"]}'
+
 			";
 			$qQuotes = mysql_query($sql); 
 			if ($qQuotes) {
 				$rQuotes = mysql_fetch_assoc($qQuotes);
+
 				array_push($quote_qty_list,$rQuotes['num_quotes']);
 			}
 
 			//Contracts Created
 			// $sql = "SELECT count(cf_id) as num_contracts FROM ver_chronoforms_data_contract_list_vic WHERE {$qry_filter} DATE_FORMAT(contractdate,'%Y-%m') = '{$r["yearMonth"]}'";
+
+
 			// $sql = "
 			// 	SELECT count(quoteid) AS num_contracts 
 			// 	FROM (
@@ -1014,11 +1204,13 @@ $sales_table .= "</table>";
 			$qContracts = mysql_query($sql);
 			if ($qContracts) {
 				$rContracts = mysql_fetch_assoc($qContracts);
+
 				array_push($contract_qty_list,$rContracts['num_contracts']);
 			}
 
 			if ($i==0) {
 				$kpi_table_last_yr .= "<li class='li-header'><span style=>Month</span><span>Enquiry</span><span >Quote </span><span>Contract</span><span>% Enquiry To Quote</span><span>% Quote To Contract</span><span>% Enquiry to Contract</span></li>  ";
+
 			}
 
 			$leadP = 0; $quotesP = 0; $contractP = 0;
@@ -1036,6 +1228,10 @@ $sales_table .= "</table>";
  
 			$kpi_table_last_yr .= "<li class=\"li-row-clickable\">";
 			$kpi_table_last_yr .= "<span>{$mDate}</span><span>".($kpi_prev[$j]['enquiry_allocated']>0 ? $kpi_prev[$j]['enquiry_allocated']:"0")." </span><span>".($kpi_prev[$j]['quotes_created']>0 ? $kpi_prev[$j]['quotes_created']:"0")." </span><span>".($kpi_prev[$j]['contracts_won']>0 ? $kpi_prev[$j]['contracts_won']:"0")." </span><span>". ($kpi_prev[$j]['lead_conversion']>0 ? $kpi_prev[$j]['lead_conversion']."%":"0") ." </span><span>". ($kpi_prev[$j]['quotes_conversion']>0 ? $kpi_prev[$j]['quotes_conversion']."%":"0") ." </span><span>". ($kpi_prev[$j]['enquiry_contracts']>0 ? $kpi_prev[$j]['enquiry_contracts']."%":"0") ." </span>";	
+
+
+
+
 			$kpi_table_last_yr .= "</li>"; 
 			$kpi_table_last_yr .= "<li style='display:none;'>";
 			$kpi_table_last_yr .= "<table class='update-table' style='margin: 0 0 0 0px; display:inline-block;vertical-align: top; font-size:11px; line-height: 1.3em;'>";
@@ -1051,6 +1247,10 @@ $sales_table .= "</table>";
 			} else if ($rep_id!="all") { 
 				$qry_filter3 = " f.rep_id='{$rep_id}' AND f.quotedate>= '{$tFrom}' AND  "; 
 			} 	
+
+
+
+
 
 			$_qry_filter = $qry_filter." DATE_FORMAT(quotedate,'%Y-%m') = '{$r["yearMonth"]}' AND ";
 			if ($is_manager==0)
@@ -1103,6 +1303,7 @@ $sales_table .= "</table>";
 				$sql = "";
 			}
 					 
+
 			$fResult = mysql_query($sql);
 			 
 			$i=0; $kpi_table_last_yr1 = "";
@@ -1206,10 +1407,15 @@ $sales_table .= "</table>";
 		$kpi_table_last_yr .= "</li>"; 
 		$kpi_table_last_yr .= "</ul>";
 
+
+
 		$kpi_table_last_yr = $sales_activity_section_title . $html_table_sales_activity_last_year;
 		//----------- END of Year KPI V2 --------------
 
+
+
 		//------------------  Year KPI Current Year V2 -------------- --------------
+
 		$kpi_table_this_yr ="
 		<ul  class='list-table kpi-table'  style='margin:0 0; width:".(isset($user->groups['9']) ? "100%;":"48%")."; display:inline-block;vertical-align: top; font-size:12px; padding-right: 1%;'>";
   
@@ -1219,6 +1425,7 @@ $sales_table .= "</table>";
 			$year = $year - 1;
 		}
 		//$sql = "SELECT rep_id, SUM(total_rrp) as sales_amount, DATE_FORMAT(contractdate,'%Y-%m') as yearMonth FROM ver_chronoforms_data_contract_list_vic AS c WHERE rep_id='{$user->RepID}' AND contractdate BETWEEN '{$dFrom}' AND '{$dTo}' GROUP BY YEAR(c.contractdate), MONTH(c.contractdate)";
+
 		$sql = "
 			SELECT *, 
 				DATE_FORMAT(target_date,'%Y-%m') AS yearMonth 
@@ -1227,13 +1434,16 @@ $sales_table .= "</table>";
 			AND year={$year}
 		";
 		$qResult = mysql_query($sql); 
+
 		// if ($qResult==false) {
 		// 	 $year = $year-1;
 		// 	 $sql = "SELECT *, DATE_FORMAT(target_date,'%Y-%m') as yearMonth FROM ver_rep_sales_target WHERE rep_id='".$user->RepID."' AND year={$year}";
+
 		// 	 $qResult = mysql_query($sql);
 		//}
 
 		if (mysql_num_rows($qResult)<1) {
+
 			$sql = "
 				SELECT *, 
 					DATE_FORMAT(target_date,'%Y-%m') AS yearMonth 
@@ -1255,18 +1465,28 @@ $sales_table .= "</table>";
 		if (isset($user->groups['9'])) {
 			$qry_filter2 = " repident='{$user->RepID}' AND   ";
 		} else if ($rep_id=="all") { 
+
+
+
 			$qry_filter2 = " repident IN ('".implode("','", $ar_rep_id)."') AND  ";  
+
+
 		} else { 
 			$qry_filter2 = " repident='{$rep_id}' AND   "; 
 		}
  
+
 	 	$i=0; $j=0; 
 	 	mysql_data_seek($qResult, 0); 
 	 	$consultant_filter1 = "";  
 	 	$tot_enquiry=0; $tot_quote=0; $tot_contract_won=0; $av_lead=0; $av_quote=0; $av_enquiry_w=0;
 	 	$sum_lead=0; $sum_quote=0; $sum_enquiry_w=0;
+
+
+
 	 	
 		while ($r = mysql_fetch_assoc($qResult)) {  
+
 			$mDate = date_format(date_create($r["target_date"]),"F");
 	 
 	 		//Count Enquiry new client added
@@ -1279,16 +1499,22 @@ $sales_table .= "</table>";
 		  			count(pid) AS num_enquiries 
 	  			FROM ver_chronoforms_data_clientpersonal_vic 
 	  			WHERE {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}'
+
 	  		"; 
 			$qEnquiries = mysql_query($sql); 
 			//$rEnquiries = mysql_fetch_assoc($qEnquiries);
 			if ($qEnquiries) {
 				$rEnquiries = mysql_fetch_assoc($qEnquiries); 
+
 			}
  
  			//Quotes Created
  			$_qry_filter = $qry_filter." quotedate>= '{$tFrom}' AND ";
 			// $sql = " SELECT count(quoteid) AS num_quotes FROM ( SELECT  quoteid, quotedate  FROM ver_chronoforms_data_followup_vic WHERE {$_qry_filter} 1=1 GROUP BY quoteid ORDER BY cf_id DESC, sales_rep) AS t WHERE DATE_FORMAT(quotedate,'%Y-%m') = '{$r["yearMonth"]}'      ";  
+
+
+
+
 			$sql = "
 				SELECT 
 					count(quoteid) AS num_quotes 
@@ -1309,10 +1535,15 @@ $sales_table .= "</table>";
 			$qQuotes = mysql_query($sql); 
 			if ($qQuotes) {
 				$rQuotes = mysql_fetch_assoc($qQuotes);
+
 			}
 
 			//Contracts Created
 			// $sql = "SELECT count(cf_id) as num_contracts FROM ver_chronoforms_data_contract_list_vic WHERE {$qry_filter} DATE_FORMAT(contractdate,'%Y-%m') = '{$r["yearMonth"]}'";
+
+
+
+
 			$sql = "
 				SELECT 
 					count(quoteid) AS num_contracts 
@@ -1330,6 +1561,7 @@ $sales_table .= "</table>";
 			$qContracts = mysql_query($sql);
 			if ($qContracts) {
 				$rContracts = mysql_fetch_assoc($qContracts);
+
 			}
 
 			if ($i==0) {
@@ -1512,6 +1744,7 @@ $sales_table .= "</table>";
 
 			$i++;
 			$j++;
+
 		}
 
 		$av_lead=number_format(($sum_lead/12)); $av_quote=number_format(($sum_quote/12)); $av_enquiry_w=number_format(($sum_enquiry_w/12)); 
@@ -1520,9 +1753,12 @@ $sales_table .= "</table>";
 		$kpi_table_this_yr .= "<span>Total</span><span>".$tot_enquiry."</span><span>".$tot_quote."</span><span>".$tot_contract_won."</span><span>".$av_lead."%</span><span>".$av_quote."%</span><span>".$av_enquiry_w."%</span>";	
 		$kpi_table_this_yr .= "</li>";
 
+
 		$kpi_table_this_yr .= "<li>";  
 		$kpi_table_this_yr .= "</li>"; 
 		$kpi_table_this_yr .= "</ul>";
+
+
 
 		$kpi_table_this_yr = $html_table_sales_activity_this_year;
 		//----------- END of Current Year KPI V2 --------------
@@ -1532,10 +1768,16 @@ $sales_table .= "</table>";
 
 
 
+
 		//------------ SALES SUMMARY THIS Year Vs. Last Year --------
+
 		$sales_compare_table = "";
 		$sales_compare_table .= "<table id='tblSalesTargetWider' class='update-table' style='width:33%; display:inline-block;vertical-align: top; font-size:12px; text-align:center; margin-left:50px;'>";
 			
+
+
+
+
 		$year = date('Y');
 		$cMonth = date('m');
 		if ($cMonth<7) {
@@ -1544,20 +1786,33 @@ $sales_table .= "</table>";
 			$year = $year - 1;
 		}
 		
+
 		$sql = "SELECT id, rep_id, sales_amount, target_date, dateFromTo, year, DATE_FORMAT(target_date,'%Y-%m') as yearMonth, SUM(target_amount) as target_amount FROM ver_rep_sales_target WHERE  ".((strlen($qry_filter)>0)? $qry_filter:"rep_id='Default Target' AND ")."   year={$year} GROUP BY yearMonth"; //
+
+
 		$qResult = mysql_query($sql);
 		
+
 		if (mysql_num_rows($qResult)<1) {
+
 			$sql = "SELECT *, DATE_FORMAT(target_date,'%Y-%m') as yearMonth, SUM(target_amount) as target_amount FROM ver_rep_sales_target WHERE  rep_id='Default Target' AND year={$year} GROUP BY yearMonth"; //rep_id='{$user->RepID}' AND
+
 			$qResult = mysql_query($sql); 
 		}
+
 		$r = mysql_fetch_assoc($qResult);
 		 
 		$dFrom = substr($r['dateFromTo'], 0,10);
 		$dTo = substr($r['dateFromTo'], -10,10);
+
 		//set the date to the start and end of the month
 		$dFrom = date("Y-m-01", strtotime($dFrom));
 		$dTo = date("Y-m-t", strtotime($dTo));
+
+
+
+
+
 
 		/*
 		$sql = "
@@ -1582,52 +1837,117 @@ $sales_table .= "</table>";
 		$qSales = mysql_query($sql); 
 		 
 		//$r = mysql_fetch_assoc($qSales);
+
 	 	$i=0;$sales_amount_total=0;$sales_amount_last_yr_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0; 
 	 	mysql_data_seek($sales_period2, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return;
+
+
+
+
 
 		for ($i=0;$m=$sales_period2[$i];$i++) {  
 			if ($i==0) {
 				$sales_compare_table .= "<tr><th >Month</th> <th>Last Year</th> <th width='100'>This Year</th> </tr> ";
 			}     
+
 			$sales_compare_table .= "<tr>"; 
 			$sales_compare_table .= "<td>{$m}</td> <td>$".number_format($sales_amount2_assoc[$i]['sales_amount'],2)."</td> <td>$".number_format($sales_amount1_assoc[$i]['sales_amount'],2)."</td> ";	
 			$sales_compare_table .= "</tr>";  
+
 			$sales_amount_total+=$sales_amount1_assoc[$i]['sales_amount'];
 			$sales_amount_last_yr_total+=$sales_amount2_assoc[$i]['sales_amount'];
 		}
+
 
 		$sales_compare_table .= "<tr>"; 
 		$sales_compare_table .= "<td><b>Total</b></td> <td><b>$".number_format($sales_amount_last_yr_total,2)."</b></td> <td><b>$".number_format($sales_amount_total,2)."</b></td><td> </td><td> </td>";	
 		$sales_compare_table .= "</tr>";
 		$sales_compare_table .= "</table>";
 
+
 		$sales_compare_table = $html_table_sales_summary;
+
 		// ------------- END OF SALES SUMMARY This Year Vs. Last Year ---------------------- //
 
 
 
+
  	if ($is_manager || $is_top_admin) {
+
+
  		//----------- KPI Table Previous Year --------------
  		$kpi_table_manager = "";
 		$kpi_table_manager .= "	
+
 			<h3 style='margin:10px 0 0 0; text-decoration:underline; '>KPI Summary</h3>
 			<ul  class='list-table kpi-table'  style='margin:0 0; width:50%; display:inline-block;vertical-align: top; font-size:12px;'> 
 		"; 
 	  	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		$year = date('Y'); 
 		$cMonth = date('m');
 		if ($cMonth<7) {
 			$year = $year - 1;
 		} 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		$sql = "
 			SELECT *, 
+
+
+
+
+
+
+
+
+
+
 				DATE_FORMAT(target_date,'%Y-%m') AS yearMonth 
 			FROM ver_rep_sales_target 
 			WHERE rep_id='".$user->RepID."' 
 			AND year={$year}
 		";
 		$qResult = mysql_query($sql); 
+
+
+
+
+
+
+
 
 		if (mysql_num_rows($qResult)<1) {
 			$sql = "
@@ -1640,16 +1960,36 @@ $sales_table .= "</table>";
 			$qResult = mysql_query($sql); 
 		}
 
+
+
 		$r = mysql_fetch_assoc($qResult);
 		$tFrom = substr($r['dateFromTo'], 0,10);
 		$tTo = substr($r['dateFromTo'], -10,10);
+
+
 
 		//set the date to the start and end of the month
 		$dFrom = date("Y-m-01", strtotime($tFrom));
 		$dTo = date("Y-m-t", strtotime($tTo));
  
+
+
+
+
+
 	 	$i=0;   $kpi_prev = array();
 	 	$tot_contract=0; $tot_drawing=0; $tot_council=0; $tot_production=0; $tot_job=0; $tot_built=0;
+
+
+
+
+
+
+
+
+
+
+
 
 	 	mysql_data_seek($qResult, 0);  
 		while ($r = mysql_fetch_assoc($qResult)) {
@@ -1666,6 +2006,7 @@ $sales_table .= "</table>";
 					IF (job_start_date = NULL,false,COUNT(job_start_date)) AS count_job_start_date,  
 					IF (job_end_date = NULL,false,COUNT(job_end_date)) AS count_job_built 
 				FROM (
+
 					SELECT 
 						c.quoteid, 
 						cv.drawing_approve_date, 
@@ -1674,6 +2015,16 @@ $sales_table .= "</table>";
 						cv.job_start_date, 
 						cv.job_end_date 
 					FROM ver_chronoforms_data_contract_list_vic AS c 
+
+
+
+
+
+
+
+
+
+
 						JOIN ver_chronoforms_data_contract_vergola_vic AS cv 
 							ON cv.projectid=c.projectid 
 						JOIN ver_chronoforms_data_contract_statutory_vic AS cs 
@@ -1683,21 +2034,50 @@ $sales_table .= "</table>";
 				) AS t;
 			";
 			$qContracts = mysql_query($sql); 
+
+
+
+
+
+
+
+
+
 			if ($qContracts) {
 				$rContracts = mysql_fetch_assoc($qContracts);  
+
+
+
 			}
 			 
 			if ($i==0) {
 				$kpi_table_manager .= "<li class='li-header'><span style=>Month</span><span>No. of Contracts</span><span >No. of Drawing Waiting for Approval </span><span> No. of Council Waiting for Approval</span><span>Contracts Waiting for Production Start</span><span>Contracts Waiting for Job Start</span><span>No. Job Built</span></li>  ";
 			}
 			 
+
 			$kpi_table_manager .= "<li class=\"li-row-clickable\">";
+
 			$kpi_table_manager .= "<span>{$mDate}</span><span>".($rContracts["num_contracts"]>0 ? $rContracts["num_contracts"]:"0")."  </span><span>".($rContracts["count_drawing_approve"]>0 ? $rContracts["count_drawing_approve"]:"0")." </span><span>".($rContracts["count_permit_approved_date"]>0 ? $rContracts["count_permit_approved_date"]:"0")."  </span><span>". ($rContracts["count_production_start_date"]>0 ? $rContracts["count_production_start_date"]:"0") ."  </span><span>". ($rContracts["count_job_start_date"]>0 ? $rContracts["count_job_start_date"]:"0") ."  </span><span>". ($rContracts["count_job_built"]>0 ? $rContracts["count_job_built"]:"0") ." </span>";
 			$kpi_table_manager .= "</li>"; 
+
+
+
+
+
+
+
+
+
+
+
+
 
 			$kpi_table_manager .= "<li style='display:none;  '>";
 			$kpi_table_manager .= "<table class='update-table' style='margin: 0 0 25px 30px; vertical-align: top; font-size:11px; line-height: 1.3em;'>";
 			 
+
+
+
 			$sql = "
 				SELECT 
 					c.projectid, 
@@ -1723,16 +2103,41 @@ $sales_table .= "</table>";
             	ORDER BY c.cf_id DESC
             ";
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     		if (HOST_SERVER=="LA") {
     			$sql = "";
     		} 
 			$fResult = mysql_query($sql);
 					
+
+
+
+
+
+
+
 			$j=0;
 			while ($c = mysql_fetch_assoc($fResult)) {
 				if ($j==0) {
 					$kpi_table_manager .= "<tr><th width='10%' style='text-align:left;'>Client Name</th><th width='10%'>Phone</th><th width='10%'>Check Measure</th><th width='10%'>Draw Approval</th><th width='10%'>Building Permit</th><th width='10%'>Job Start</th><th width='10%'>Job Complete</th> <th width='10%'>&nbsp;</th></tr> ";
 				}
+
+
+
+
+
 
 				$kpi_table_manager .= "<tr>";
 				$kpi_table_manager .= "
@@ -1743,19 +2148,40 @@ $sales_table .= "</table>";
 				$j++;
 			}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			$kpi_table_manager .= "</table>";
 			$kpi_table_manager .= "</li>";
 
+
+
 			$tot_contract+=$rContracts["num_contracts"]; $tot_drawing+=$rContracts["count_drawing_approve"]; $tot_council+=$rContracts["count_permit_approved_date"]; $tot_production+=$rContracts["count_production_start_date"]; $tot_job+=$rContracts["count_job_start_date"]; $tot_built+=$rContracts["count_job_built"];
+
+
 
 			$i++;
 		}
+
 
 		$kpi_table_manager .= "<li class=\"li-header\" style=\"border:none;\" >";
 				$kpi_table_manager .= "<span>Total</span><span>".$tot_contract."</span><span>".$tot_drawing."</span><span>".$tot_council."</span><span>".$tot_production."</span><span>".$tot_job."</span><span>".$tot_built."</span>";	
 			$kpi_table_manager .= "</li>";
 		$kpi_table_manager .= "</ul>";
  	}
+
 	?>
 
 	 <!------------- Advertising Table SUMMARY ---------------------- -->
@@ -1764,9 +2190,16 @@ $sales_table .= "</table>";
 	if ($is_top_admin) {
 		$advertising_table .= "<table id='tblAdvertising' class='update-table' style='width:48%; display:inline-block;vertical-align: top; font-size:12px; text-align:center; '>";
    
+
+
+
+
 		$year = date('Y');
 		$prev_year = $year - 1;
 		   
+
+
+
 		$sql = "
 			SELECT 
 				count(pid) AS count, 
@@ -1781,6 +2214,9 @@ $sales_table .= "</table>";
 			ORDER BY count DESC
 		";
 		$qResult = mysql_query($sql);
+
+
+
 
 		$sql = "
 			SELECT 
@@ -1801,19 +2237,24 @@ $sales_table .= "</table>";
 		$advertising_number_list = array();
 		 
 		//$r = mysql_fetch_assoc($qSales);
+
 	 	$i=0; //$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0; 
 	 	//mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return; 
 		while ($r = mysql_fetch_assoc($qResult)) {
+
 			$advertising_prev_yr = array();  
 			if (!empty($qResult) && mysql_num_rows($qResult)) {
+
 				mysql_data_seek($qResult2, 0);  
 				while ($s = mysql_fetch_assoc($qResult2)) { 
 					if ($s["leadname"]==$r["leadname"]) {
 						$advertising_prev_yr = $s;
+
 						break;
 					} 
 				} 
 			} 
+
 
 			if ($i==0) {
 				$advertising_table .= "<tr><th >Advertising</th><th width='100'>{$year}</th><th width='100'>{$prev_year}</th></tr> ";
@@ -1829,16 +2270,27 @@ $sales_table .= "</table>";
 		}
 		 
 		$advertising_table .= "</table>";
+
+
+
 		//------------- END OF Advertising Table -->
 
 		//------------- SUBURB LEAD SUMMARY ---------------------- -->
+
+
 		$suburb_lead_table = "";
   
 		$suburb_lead_table .= "<table id='tblSuburLead' class='update-table' style='width:48%;  display:inline-block;vertical-align: top; font-size:12px; text-align:center; '>";
    
+
+
+
+
 		$year = date('Y');
 		$prev_year = $year - 1;
 		   
+
+
 		$sql = "
 			SELECT 
 				count(pid) AS count, 
@@ -1860,6 +2312,7 @@ $sales_table .= "</table>";
 		$qResult = mysql_query($sql);
 		$tqResult = mysql_num_rows($qResult);
 
+
 		$sql = "
 			SELECT 
 				count(pid) AS count, 
@@ -1874,31 +2327,41 @@ $sales_table .= "</table>";
 			ORDER BY count DESC LIMIT 15
 		";
 		 //s.suburb IS NOT NULL AND  s.suburb != '' AND c.client_suburb IS NOT NULL AND  c.client_suburb != '' AND
+
 		$qResult2 = mysql_query($sql);
 		$tqResult2 = mysql_num_rows($qResult2);
+
+
 
 		$suburb_list = array();
 		$suburb_number_list = array();  
 		//$r = mysql_fetch_assoc($qSales);
+
 	 	$i=0; $j=0; //$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0; 
 	 	//mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return; 
 		while ($r = mysql_fetch_assoc($qResult)) { 
+
 			if (empty($r)) {
 				break; 
 			}
 
 			$advertising_prev_yr = array();  
 			if ($tqResult>0) { 
+
 				if ($tqResult2>0) {
 					mysql_data_seek($qResult2, 0);  
+
 				}
 				while ($s = mysql_fetch_assoc($qResult2)) {
 					if ($s["suburb"]==$r["suburb"]) {
 						$advertising_prev_yr = $s;
+
 						break;
 					} 
 				} 
+
 			} 
+
 
 			if ($i==0) {
 				$suburb_lead_table .= "<tr><th >Suburb Analysis</th><th width='100'>{$year}</th><th width='100'>Suburb</th><th width='100'>{$prev_year}</th></tr> ";
@@ -1932,6 +2395,9 @@ $sales_table .= "</table>";
 			$year = $year - 1;
 		}
 		
+
+
+
 		$sql = "
 			SELECT *, 
 				DATE_FORMAT(target_date,'%Y-%m') AS yearMonth, 
@@ -1947,15 +2413,19 @@ $sales_table .= "</table>";
 		 
 		$dFrom = substr($r['dateFromTo'], 0,10);
 		$dTo = substr($r['dateFromTo'], -10,10);
+
 		//set the date to the start and end of the month
 		$dFrom = date("Y-m-01", strtotime($dFrom));
 		$dTo = date("Y-m-t", strtotime($dTo));
+
 
 		$construction_record_list = array();
 		$construction_built_list = array();
 
 		mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return; 
 		while ($r = mysql_fetch_assoc($qResult)) { 
+
+
 			$sql = "
 				SELECT 
 					count(cl.cf_id) AS count, 
@@ -1970,13 +2440,17 @@ $sales_table .= "</table>";
 				LIMIT 15
 			";
 			$qSales = mysql_query($sql);
+
 			$construction = array(); 
 
 			if (!empty($qSales) && mysql_num_rows($qSales)) {
 				//mysql_data_seek($qSales, 0); 
+
 				while ($s = mysql_fetch_assoc($qSales)) {
+
 					if ($s["yearMonth"]==$r["yearMonth"]) {
 						$construction = $s;
+
 						break;
 					} else {
 						$construction["yearMonth"] = $r["yearMonth"];
@@ -1984,28 +2458,45 @@ $sales_table .= "</table>";
 						$construction["count_job_built"] = 0;
 					} 
 				} 
+
 			} else {
 				$construction["yearMonth"] = $r["yearMonth"];
 				$construction["count"] = 0;
 				$construction["count_job_built"] = 0;
 				 
 			}
+
+
 			array_push($construction_record_list,$construction['count']);
 			array_push($construction_built_list,$construction['count_job_built']);
+
 		}	
+
+
 		//------------- END OF Construction Analysis ---------------------- -->
  	}
+
+
 	?>
 
+
 	<?php  
+
 	if ($is_user) { //To do list for sales consultant users
+
 		$to_do_list = ""; $i = 0;
+
  		$to_do_list .= " 
 			<div style='width:100%; display: inline-block;'>
+
 			<h3 style='margin:10px 0 0 0; text-decoration:underline; '>To Do List</h3>
+
 			<ul id='to_do_list' class='list-table'  style='margin:0 0; width: 100%;  display:inline-block;vertical-align: top; font-size:12px;'> 
 		";   
 	 
+
+
+
 		$sql = "
 			SELECT 
 				c.datelodged, 
@@ -2039,11 +2530,13 @@ $sales_table .= "</table>";
 		$fResult = mysql_query($sql); 
 		$total_records1 = mysql_num_rows($fResult); 
 
+
 		$sql .= " ORDER BY IF (DATE(appointmentdate) = DATE(NOW()), 0, 1), IF (DATE(next_followup) = DATE(NOW()), 0, 1), appointmentdate DESC, c.next_followup DESC LIMIT {$start}, ".NUMBER_PER_PAGE." ";
 	  
 		$fResult = mysql_query($sql); 
 		$i=0; 
 		while ($l = mysql_fetch_assoc($fResult)) {
+
 			if ($i==0) {$to_do_list .= "<li class='li-header'>	
 				<span class='col-date'>Due Date</span><span class='col-client-id'>Client ID</span><span class='col-name'> Name </span><span class='col-date'> Mobile </span><span class='col-note'>Last notes</span><span class='col-status'>Status</span> </li>  ";
 			}
@@ -2056,6 +2549,19 @@ $sales_table .= "</table>";
 				$client_status = "Initial Appointment";
 				$phpdate = strtotime( $l['appointmentdate'] );
 				$due_date = date( PHP_DFORMAT, $phpdate );
+
+
+
+
+
+
+
+
+
+
+
+
+
 			} else if (empty($l['next_followup'])==true) {
 				//break;
 				$client_status = "Follow-up";
@@ -2066,7 +2572,37 @@ $sales_table .= "</table>";
 				$client_status = "Quote Delivered";
 				$phpdate = strtotime( $l['next_followup'] );
 				$due_date = date( PHP_DFORMAT, $phpdate );
+
+
 			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 			$_due_date = date( 'Y-m-d', $phpdate ); 
 			$is_overdue = 0;
@@ -2078,10 +2614,13 @@ $sales_table .= "</table>";
  				 
 			$input_followup = "<input type='text' name='followup_date' value=''  autocomplete='off' class='datepicker' onchange='' />";
 			 
+
 			$chk_done = "<input type='button' name='' value='update'  onclick='save_status(event,this)' />";
   	 
 			// $link_client = "<a  class='template_link' onclick=\"window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;\"  href='".JURI::base()."?pid={$l['pid']}&tmpl=component&chronoform=Dialog_Client_Folder&ref=".JURI::base()."' style='margin-right:5px;'  
 			// >{$l['clientid']}</a>"; 
+
+
 
 			$link_client = "<a  class='' href='".JURI::base()."client-listing-vic/client-folder-vic?pid={$l['pid']}&ref=/' >{$l['clientid']}</a>"; 
 
@@ -2099,20 +2638,32 @@ $sales_table .= "</table>";
 			$i++; 
 	 	}
  	 
+
 		$to_do_list .= "</ul>"; 
+
 
 		$to_do_list .= "<div class='pagination-layer'>";
 		$to_do_list .= pagination($page, $total_records, "");
 		$to_do_list .= "</div>"; 	
+
 	} else if ($is_manager ) { //To do list for office users
+
+
 		$to_do_list_manager = ""; $i = 0;
  
 		$to_do_list_manager .= " 
 			<div style='width:100%; display: inline-block;'>
 			<h3 style='margin:0; text-decoration:underline; '>Reminder List</h3>
+
 			<ul id='to_do_list' class='list-table'  style='margin:0 0; width: 100%;  display:inline-block;vertical-align: top; font-size:12px;'> 
 		";  
 	 
+
+
+
+
+
+
 		$sql = "
 			SELECT 
 				f.cf_id, c.datelodged, 
@@ -2150,16 +2701,26 @@ $sales_table .= "</table>";
 		$sql .= " ORDER BY date_won DESC, f.date_contract_signed DESC LIMIT {$start}, ".NUMBER_PER_PAGE." ";
 	   
 		$fResult = mysql_query($sql); 
+
 		$i=0; $is_contract_generated = 0;
 		while ($l = mysql_fetch_assoc($fResult)) {  
+
+
+
 			if ($i==0) {
 				$to_do_list_manager .= "
 					<li class='li-header'>	
 					<span class='col-date'>Date</span><span class='col-client-id'>Project ID</span><span class='col-name'> Client Name </span> <span class='col-note'>Last notes</span><span class='col-name'>Follow-up</span> </li>  
 				";
 			}
+
 			$c = null;
 			if (!empty($l['date_contract_system_created'])) {
+
+
+
+
+
 				$sql = "
 					SELECT 
 						cv.drawing_prepare_date, 
@@ -2190,34 +2751,52 @@ $sales_table .= "</table>";
 				$fResult1 = mysql_query($sql); 
 				$c = mysql_fetch_assoc($fResult1);
 				$is_contract_generated = 1;
+
+
+
+
+
 			}
   
 			$is_overdue = false;
 			$status = "";
 			$date = ""; 
+
+
+
 			// if (strtolower($l['status'])=="won" && empty($l['date_won'])==false && empty($l['date_contract_signed'])==true) {
 			// 	$status = "Contract for delivery";
 			// 	$phpdate = strtotime( $l['date_won'] );
 			// 	$date = date( PHP_DFORMAT, $phpdate ); 
 			$status="";$status1="";$status2="";$status3="";$status4="";$status5="";$status6="";$status7="";$status8="";
  
+
 			if (empty($l['date_contract_signed'])==false && empty($l['date_contract_system_created']) ) {
+
 				$status1 = "Ready for Contract";
 				$status .= $status1;
+
 				$phpdate = strtotime( $l['date_contract_signed'] );
+
+
+
+
 				$date = date( PHP_DFORMAT, $phpdate ); 
 			}
 
 			if ($is_contract_generated && empty($c['drawing_approve_date']) && !empty($c['drawing_prepare_date_followup'])) {
+
 				$phpdate = strtotime( $c['drawing_prepare_date_followup'] );
 				$date = date( PHP_DFORMAT, $phpdate ); 
 				if (date( 'Y-m-d', $phpdate )<=date('Y-m-d')) { 
 					$status2 = (!empty($status)?"<br/>":"")."Drawing & Prepare";
 					$status .= $status2;
 				}
+
 			}
 
 			if ($is_contract_generated && empty($c['drawing_approve_date']) && !empty($c['drawing_approve_date_followup'])) {
+
 				$phpdate = strtotime( $c['drawing_approve_date_followup'] );
 				$date = date( PHP_DFORMAT, $phpdate ); 
 
@@ -2228,6 +2807,7 @@ $sales_table .= "</table>";
 			}
 
 			if ($is_contract_generated && empty($c['job_start_date']) && !empty($c['job_start_date_followup'])) {
+
 				$phpdate = strtotime( $c['job_start_date_followup'] );
 				$date = date( PHP_DFORMAT, $phpdate ); 
 
@@ -2248,6 +2828,7 @@ $sales_table .= "</table>";
 			}
 
 			if ($is_contract_generated && empty($c['stat_req_easement_council_approval_date']) && !empty($c['stat_req_easement_council_followup'])) { 
+
 				$phpdate = strtotime( $c['stat_req_easement_council_followup'] );
 				$date = date( PHP_DFORMAT, $phpdate );
 
@@ -2257,6 +2838,7 @@ $sales_table .= "</table>";
 				}
 			}
 				 
+
 			if ($is_contract_generated && !empty($c['m_o_d']) && !empty($c['m_o_d_followup'])) { 
 				$phpdate = strtotime( $c['m_o_d_followup'] );
 				$date = date( PHP_DFORMAT, $phpdate ); 
@@ -2268,6 +2850,7 @@ $sales_table .= "</table>";
 			}
 
 			if ($is_contract_generated && empty($c['engineering_approved_date']) && !empty($c['engineering_approved_date_followup'])) { 
+
 				$phpdate = strtotime( $c['engineering_approved_date_followup'] );
 				$date = date( PHP_DFORMAT, $phpdate );
 
@@ -2278,6 +2861,7 @@ $sales_table .= "</table>";
 			}
 
 			if (empty($status)) {
+
 				$i++; 
 				continue;
 			}
@@ -2290,13 +2874,19 @@ $sales_table .= "</table>";
 				$is_overdue = 0;
 			}
   
+
 			$input_followup = "<input type='text' name='followup_date' value=''  autocomplete='off' class='datepicker' onchange='' />";
 			 
+
 			$chk_done = "<input type='button' name='' value='update'  onclick='save_status(event,this)' />";
   	  
 			if (!empty($status1)) {
+
+
 				$link_client = "<a  class='' href='".JURI::base()."client-listing-vic/client-folder-vic?cid={$l['clientid']}&cf_id={$l['cf_id']}&ref=/' >{$l['projectid']}</a>";  
 			} else { 
+
+
 				$link_client = "<a  class='' href='".JURI::base()."contract-listing-vic/contract-folder-vic?projectid={$l['projectid']}&ref=/' >{$l['projectid']}</a>";  
 			}
 
@@ -2311,20 +2901,44 @@ $sales_table .= "</table>";
 							"<span class='col-status'> {$status1}{$status2}{$status3}{$status4}{$status5}{$status6}{$status7}{$status8} </span>"; 
 			$to_do_list_manager .= "</li>"; 
 			$i++; 
+
 	 	}
 
+
 		$to_do_list_manager .= "</ul>"; 
+
+
+
+
+
 
 		$to_do_list_manager .= "<div class='pagination-layer'>";
 		$to_do_list_manager .= pagination($page, $total_records, "");
 		$to_do_list_manager .= "</div>"; 	
 	}	
 
+
 	if ($is_user) {
+
+
 		echo "<div style='width:100%;  '>";  
 			echo $to_do_list;   
+
+
 			echo $kpi_table;
 			echo $kpi_table_prev_yr;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 			echo "<br/><br/><br/>";
@@ -2332,8 +2946,11 @@ $sales_table .= "</table>";
 			echo $quote_chart;
 			echo $contract_chart; 
 
+
+
 			echo "</div>";	
 			//echo $notes;
+
 		echo "</div>";
 	 
 		echo "<div style='width:100%;  margin:15px; 0;'>";
@@ -2351,20 +2968,82 @@ $sales_table .= "</table>";
 		echo "<div style='width:50%; display:inline-block '>";
 			echo "&nbsp;";
 		echo "</div>";
+
+
+
 		//echo $kpi_graph_prev_yr;
 	} else if ($is_manager) {
+
 		echo "<div style='width:65%;  '>";  
 			echo $to_do_list_manager;    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		echo "</div>";	
 		echo $kpi_table_manager;
+		//error_log(" Construction KPI table graph: ".$kpi_table_manager, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+		//echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
+		echo $construction_kpi;
+		echo "<br/><br/><br/><br/>";
+		echo $installer_calendar;
+		echo $installer_calendar2;
+
+
+
+
+
+
+
+
+
+
 		echo "</div>";
+
+
+
 		echo "<h3 style='margin:30px 0 10px 0; text-decoration:underline; '>Sales Target</h3>";
 		echo $sales_table;
 			//echo $notes;
 		echo $kpi_graph;
 		//echo $kpi_graph_prev_yr;
 	} else if ($is_top_admin) {
+
 		echo "<div style='width:100%; margin:0;'>";
+
 			//echo $kpi_table;
 			echo "<h3 style='margin:30px 0 10px 0; text-decoration:underline; '>Sales Target</h3>";
 			echo $sales_table; 
@@ -2379,15 +3058,22 @@ $sales_table .= "</table>";
 			echo $quote_chart;
 			echo $contract_chart;
 
+
 			echo "<div style='width:100%;  margin:15px; 0;'>"; 
 			echo "<h3 style='margin:65px 0 10px 60px; text-decoration:underline; '>Sales Summary</h3>";
 			echo $sales_compare_table;
+
 			echo $sales_compare_graph;  
 
 			echo "<br/><br/><br/>";
 			echo $kpi_table_manager;
+
 			//echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
 			echo $construction_analysis_graph;
+			echo "<br/><br/><br/><br/>";
+			echo $installer_calendar;
+
+
 
 			echo "<br/><br/><br/><br/>";
 			echo $advertising_table;
@@ -2396,7 +3082,15 @@ $sales_table .= "</table>";
 			//echo "<br/><br/><br/>";
 			echo $suburb_lead_table; 
 			echo $suburb_lead_chart;
+
+			echo "<br/><br/><br/><br/>"; 
+
+
+
 		echo "</div>  ";
+
+
+
 	}
 
 	echo "<form id='update_to_do_list_form' method='post' action=''  >
@@ -2406,17 +3100,24 @@ $sales_table .= "</table>";
 		<input type='hidden' id='command'  name='command' value='' />
 		<input type='submit' value='Submit' id='send_update_to_do_list_form' style='display:none'>
 		</form>";
+
 	?>
 	 
 
 <script type="text/javascript">
 	$(document).ready(function() {
+
 		window.addEvent('load', function() {
 			new DatePicker('.datepicker,date_time', {pickerClass: 'datepicker_dashboard', format: PHP_DFORMAT, inputOutputFormat: PHP_DFORMAT, allowEmpty: 1, timePicker: 0, timePickerOnly: 0});
 		});
 
 
+
+
+
+
 		var options = {
+
 		 	//Boolean - Show a backdrop to the scale label
 		    scaleShowLabelBackdrop : true,
 
@@ -2456,6 +3157,8 @@ $sales_table .= "</table>";
 		    //Boolean - Whether to animate scaling the chart from the centre
 		    animateScale : false,
 
+
+
 		    //String - A legend template
 		    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++) {%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if (segments[i].label) {%><%=segments[i].label%><%}%></li><%}%></ul>",
 
@@ -2469,12 +3172,57 @@ $sales_table .= "</table>";
 		};
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		// Get the context of the canvas element we want to select
 		//var ctx = document.getElementById("myChart").getContext("2d");
 		//var myNewChart = new Chart(ctx).PolarArea(data);
 		//--------- sales target graph section ----------
 		//--------- INIT KPI BAR CHART  ----------
 		<?php
+
+
+
+
 		$sales_amount = $graph_data_sales_summary_sales_amount_this_year;
 		$sales_target = $graph_data_sales_summary_target_sales_amount_this_year;
 		?>
@@ -2509,11 +3257,17 @@ $sales_table .= "</table>";
 		       
 		    ]
 		};
+
+
+
+
+
 		// This will get the first returned node in the jQuery collection.
 		//var myNewChart = new Chart(ctx);
 		var ctx = $("#myChart").get(0).getContext("2d");
 		var myLineChart = new Chart(ctx).Bar(data, options);
 		legend(document.getElementById('placeholder'), data);
+
 		//--------- END KPI BAR CHART ----------
 
 
@@ -2557,12 +3311,17 @@ $sales_table .= "</table>";
 	    ]
 	};
 
+
+
+
+
 	// This will get the first returned node in the jQuery collection.
 	//var myNewChart = new Chart(ctx);
 	var ctx = $("#sales_compare_graph").get(0).getContext("2d");
 	var myLineChart = new Chart(ctx).Bar(data, options);
 	legend(document.getElementById('sales_compare_graph_placeholder'), data);
 	//--------- SALES COMPARE SUMMARY BAR CHART ----------
+
 
 
 
@@ -2580,7 +3339,9 @@ $sales_table .= "</table>";
 
 	var enquiry_qty_list = [<?php echo implode(",", $enquiry_qty_list); ?>];
 	var enquiry_qty_list_prevyr = [<?php echo implode(",", $enquiry_qty_list_prevyr); ?>];
+
 	//var sales_amount_prev = [<?php echo implode(",", $sales_amount2); ?>];
+
 	var data = {
 	    labels: [<?php echo "'".implode("','", $sales_period)."'"; ?>],
 	    datasets: [
@@ -2607,6 +3368,9 @@ $sales_table .= "</table>";
 	       
 	    ]
 	};
+
+
+
 	// This will get the first returned node in the jQuery collection.
 	//var myNewChart = new Chart(ctx);
 	var ctx1 = $("#enquiry_chart").get(0).getContext("2d");
@@ -2622,7 +3386,10 @@ $sales_table .= "</table>";
 
 	var quote_qty_list = [<?php echo implode(",", $quote_qty_list); ?>];
 	var quote_qty_list_prevyr = [<?php echo implode(",", $quote_qty_list_prevyr); ?>];
+
+
 	//var sales_amount_prev = [<?php echo implode(",", $sales_amount2); ?>];
+
 	var data = {
 	    labels: [<?php echo "'".implode("','", $sales_period)."'"; ?>],
 	    datasets: [
@@ -2649,6 +3416,9 @@ $sales_table .= "</table>";
 	       
 	    ]
 	};
+
+
+
 	// This will get the first returned node in the jQuery collection.
 	//var myNewChart = new Chart(ctx);
 	var ctx1 = $("#quote_chart").get(0).getContext("2d");
@@ -2664,6 +3434,8 @@ $sales_table .= "</table>";
 
 	var contract_qty_list = [<?php echo implode(",", $contract_qty_list); ?>];
 	var contract_qty_list_prevyr = [<?php echo implode(",", $contract_qty_list_prevyr); ?>];
+
+
 	var data = {
 	    labels: [<?php echo "'".implode("','", $sales_period)."'"; ?>],
 	    datasets: [
@@ -2690,6 +3462,8 @@ $sales_table .= "</table>";
 	       
 	    ]
 	};
+
+
 	// This will get the first returned node in the jQuery collection.
 	//var myNewChart = new Chart(ctx);
 	var ctx1 = $("#contract_chart").get(0).getContext("2d");
@@ -2706,12 +3480,22 @@ $sales_table .= "</table>";
 
 
 
+
+
+
+
+
+
 		<?php 
+
 		if ($is_top_admin) {
 		?>
 			//--------- INIT CONSTRUCTION ANALYSIS BAR CHART ----------
+
 			var construction_record_list = [<?php echo implode(",", $construction_record_list); ?>];
 			var construction_built_list = [<?php echo implode(",", $construction_built_list); ?>]; 
+
+
 			var data_construct = {
 			    labels: [<?php echo "'".implode("','", $sales_period)."'"; ?>],
 			    datasets: [
@@ -2738,14 +3522,28 @@ $sales_table .= "</table>";
 			    ]
 			};
 
+
 			var ctx_construct = $("#construction_analysis_chart").get(0).getContext("2d");
 			var myLineChart_construct = new Chart(ctx_construct).Bar(data_construct, options2);
 			legend(document.getElementById('construction_analysis_chart_placeholder'), data_construct);
+
 			//--------- END CONSTRUCTION ANALYSIS BAR CHART ----------
 
+
+
+
+
+
+
+
+
+
 			//--------- INIT ADVERTISING PIE CHART ----------
+
 			var advertising_list = [<?php echo "'".implode("','", $advertising_list)."'"; ?>];
 			var advertising_number_list = [<?php echo implode(",", $advertising_number_list); ?>]; 
+
+
 			var color_list = ["#F7464A","#1a237e","#FDB45C","#90a4ae","#26a69a","#ec407a","#3f51b5","#a5d6a7","#ff1144","#4e342e","#880e4f","#4caf50","#827717","#212121","#e65100"];
 			var data2 = [
 			    {
@@ -2905,6 +3703,7 @@ $sales_table .= "</table>";
 			// var ctx2 = $("#advertising_chart").get(0).getContext("2d");
 			// var myPieChart = new Chart(ctx2[0]).Pie(data2,options2);
 		
+
 			var ctx2 = document.getElementById("advertising_chart").getContext("2d");
 			var advertising_chart = new Chart(ctx2).Pie(data2,{
 		        tooltipEvents: [],
@@ -2918,11 +3717,18 @@ $sales_table .= "</table>";
 			    //String - Animation easing effect
 			    animationEasing : "easeInOutQuart"
 		    }); 
+
+
+
+
 			//--------- END ADVERTISING PIE CHART ----------
 
+
 			//--------- INIT SUBURB LEAD PIE CHART ----------
+
 			var suburb_list = [<?php echo "'".implode("','", $suburb_list)."'"; ?>];
 			var suburb_number_list = [<?php echo implode(",", $suburb_number_list); ?>];
+
 			var color_list2 = ["#F7464A","#6633BD","#FDB45C","#90a4ae","#26a69a","#fff59d","#3f51b5","#a5d6a7","#ff1144","#ef9a9a","#26a69a","#4caf50","#d1c4e9","#6d4c41"];
 			var data3 = [
 			    {
@@ -3002,8 +3808,10 @@ $sales_table .= "</table>";
 			    }
 			];
 
+
 			// var ctx2 = $("#advertising_chart").get(0).getContext("2d");
 			// var myPieChart = new Chart(ctx2[0]).Pie(data2,options2);
+
 
 			var ctx3 = document.getElementById("suburb_lead_chart").getContext("2d");
 			var suburb_lead_chart = new Chart(ctx3).Pie(data3,{
@@ -3018,14 +3826,352 @@ $sales_table .= "</table>";
 			    //String - Animation easing effect
 			    animationEasing : "easeInOutQuart"
 		    });
+<?php 
+	}
+?>
+
+
+
 			//--------- END SUBURB LEAD PIE CHART ----------
-		<?php 
+
+
+
+
+//--------- Installer Calendar ----------
+<?php 
+		if($is_top_admin || $is_manager || $is_construction){ 
+?>	 
+var _installer_list0 = [{
+	            title  : 'Andy Cobb',
+	            start  : '2017-11-01 01:00:00',
+	            end    : '2017-11-12 01:00:00',
+	            color  : color_list[2] 
+	        },
+	        {
+	            title  : 'Trevor Dunning',
+	            start  : '2017-11-10 01:00:00',
+	            end    : '2017-11-15 01:00:00',
+	            color  : color_list[3] 
+	        }]
+
+var _installer_list_prevmon = [ 
+	        {
+	            title  : 'Trevor Dunning',
+	            start  : '2017-10-01 01:00:00',
+	            end    : '2017-10-07 20:00:00',
+	            color  : color_list[4]
+
+	        },
+	        {
+	            title  : 'Trevor Dunning',
+	            start  : '2017-10-14 01:00:00',
+	            end    : '2017-10-19 01:00:00',
+	            color  : color_list[5] 
+	        }]
+
+<?php
+/* variables for use in setting up different color for different installer */
+$current_erector_text = '';
+$erectors_list = array();
+$current_erector_index = -1;
+?>
+
+var installer_list_prevmon = [
+<?php
+	 
+ 	$sql = "SELECT c.cf_id, cp.clientid, CONCAT(coalesce(cp.client_firstname,''),' ',coalesce(cp.client_lastname,''),' ',coalesce(cp.builder_name,'')) as customer_name, cp.client_suburb, cv.erectors_name, cv.erectors_name2, c.projectid, cv.install_date, cv.schedule_completion, c.contractdate, c.total_cost,  DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate FROM ver_chronoforms_data_contract_vergola_vic as cv JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid WHERE cv.install_date BETWEEN DATE_FORMAT(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH),'%Y-%m-01') AND NOW() AND   cv.erectors_name != '' AND cv.schedule_completion IS NOT NULL  ";
+ 	//error_log(" sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log'); 
+ 	$qResult = mysql_query($sql); 
+	$obj = ""; $j=1; 
+	while ($r = mysql_fetch_assoc($qResult)) { 
+		$current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
+		if (! in_array($current_erector_text, $erectors_list)) {
+			$erectors_list[] = $current_erector_text;
 		}
-		?>
+		$current_erector_index = array_search($current_erector_text, $erectors_list);
+		if ($current_erector_index === false) {
+			$current_erector_index = 0;
+		}
+
+		$obj .= "{";
+			$obj .= "title:'".addslashes($r["erectors_name"])."".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ',";
+			$obj .= "start:'{$r['install_date']}',";
+			$obj .= "end:'{$r['schedule_completion']} 20:00:00',";
+			// $obj .= "color:color_list[{$j}],"; 
+			$obj .= "color:color_list[{$current_erector_index}],"; 
+			$obj .= "allDay:false,"; 
+			$obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
+		$obj .= "},";
+
+		$j++;
+	}
+
+	$obj = substr($obj, 0, -1);
+	echo $obj;
+    //error_log(" installer_list_prevmon: ".$obj, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log'); 
+
+?>
+];
+
+var installer_list_curmon = [
+<?php
+	$sql = "
+        SELECT 
+            c.cf_id, 
+            cp.clientid, 
+            CONCAT(coalesce(cp.client_firstname,''), ' ', coalesce(cp.client_lastname,''), ' ', coalesce(cp.builder_name,'')) as customer_name, 
+            cp.client_suburb, 
+            cv.erectors_name, 
+            cv.erectors_name2, 
+            c.projectid, 
+            cv.install_date, 
+            cv.schedule_completion, 
+            c.contractdate, 
+            c.total_cost, 
+            DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate 
+        FROM ver_chronoforms_data_contract_vergola_vic as cv 
+            JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid 
+            JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid 
+        WHERE 
+			-- cv.install_date BETWEEN 
+            --    CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01') 
+            -- AND 
+            --    CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW()))) 
+			(cv.install_date BETWEEN 
+				CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01') 
+				AND 
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 2 MONTH)))) )
+			OR 
+			(cv.install_date BETWEEN 
+                CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01') 
+				AND 
+                CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW()))) )
+        AND cv.erectors_name != '' 
+        AND cv.schedule_completion IS NOT NULL 
+        ORDER BY cv.install_date 
+	";
+
+ 	$qResult = mysql_query($sql); 
+	$obj = ""; $j--;// subtract 1 value to make tha last month same event color in the next month   
+	while ($r = mysql_fetch_assoc($qResult)) { 
+		$current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
+		if (! in_array($current_erector_text, $erectors_list)) {
+			$erectors_list[] = $current_erector_text;
+		}
+		$current_erector_index = array_search($current_erector_text, $erectors_list);
+		if ($current_erector_index === false) {
+			$current_erector_index = 0;
+		}
+
+		$obj .= "{";
+			$obj .= "title:'".addslashes($r["erectors_name"])." ".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")."',";
+			$obj .= "start:'{$r['install_date']}',";
+			$obj .= "end:'{$r['schedule_completion']} 20:00:00',";
+			// $obj .= "color:color_list[{$j}],";
+			$obj .= "color:color_list[{$current_erector_index}],";
+			$obj .= "allDay:false,"; 
+			$obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
+		$obj .= "},";
+		$j++;
+	}
+
+	$obj = substr($obj, 0, -1);
+	echo $obj;
+	//error_log(" installer_list_curmon: ".$obj, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+	  
+?>
+];
+
+var installer_list_nextmon = [
+<?php
+ 	$sql = "
+        SELECT 
+            c.cf_id, 
+            cp.clientid, 
+            CONCAT(coalesce(cp.client_firstname,''), ' ', coalesce(cp.client_lastname,''), ' ', coalesce(cp.builder_name,'')) as customer_name, 
+            cp.client_suburb, 
+            cv.erectors_name, 
+            cv.erectors_name2, 
+            c.projectid, 
+            cv.install_date, 
+            cv.schedule_completion, 
+            c.contractdate, 
+            c.total_cost, 
+            DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate 
+        FROM ver_chronoforms_data_contract_vergola_vic as cv 
+            JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid 
+            JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid 
+        WHERE 
+			(cv.install_date BETWEEN 
+				CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01') 
+				AND 
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 2 MONTH)))) )
+			OR 
+			(cv.install_date BETWEEN 
+                CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01') 
+				AND 
+                CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW()))) )
+        AND cv.erectors_name != '' 
+        AND cv.schedule_completion IS NOT NULL 
+        ORDER BY cv.install_date 
+	";
+
+ 	$qResult = mysql_query($sql); 
+	$obj = ""; $j=1; 
+	while ($r = mysql_fetch_assoc($qResult)) { 
+		$current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
+		if (! in_array($current_erector_text, $erectors_list)) {
+			$erectors_list[] = $current_erector_text;
+		}
+		$current_erector_index = array_search($current_erector_text, $erectors_list);
+		if ($current_erector_index === false) {
+			$current_erector_index = 0;
+		}
+
+		$obj .= "{";
+			$obj .= "title:'".addslashes($r["erectors_name"])."".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ',";
+			$obj .= "start:'{$r['install_date']}',";
+			$obj .= "end:'{$r['schedule_completion']} 20:00:00',";
+			// $obj .= "color:color_list[{$j}],"; 
+			$obj .= "color:color_list[{$current_erector_index}],"; 
+			$obj .= "allDay:false,"; 
+			$obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
+		$obj .= "},";
+
+		$j++;
+	}
+
+	$obj = substr($obj, 0, -1);
+	echo $obj;
+?>
+];
+
+var installer_list_nextmon_ = [
+<?php
+ 	$sql = "
+        SELECT 
+            c.cf_id, 
+            cp.clientid, 
+            CONCAT(coalesce(cp.client_firstname,''), ' ', coalesce(cp.client_lastname,''), ' ', coalesce(cp.builder_name,'')) as customer_name, 
+            cp.client_suburb, 
+            cv.erectors_name, 
+            cv.erectors_name2, 
+            c.projectid, 
+            cv.install_date, 
+            cv.schedule_completion, 
+            c.contractdate, 
+            c.total_cost, 
+            DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate 
+        FROM ver_chronoforms_data_contract_vergola_vic as cv 
+            JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid 
+            JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid 
+        WHERE cv.install_date 
+            BETWEEN 
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01') 
+            AND 
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 2 MONTH)))) 
+        AND cv.erectors_name != '' 
+        AND cv.schedule_completion IS NOT NULL 
+        ORDER BY cv.install_date 
+	";
+
+ 	$qResult = mysql_query($sql); 
+	$obj = ""; $j=1; 
+	while ($r = mysql_fetch_assoc($qResult)) { 
+		$current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
+		if (! in_array($current_erector_text, $erectors_list)) {
+			$erectors_list[] = $current_erector_text;
+		}
+		$current_erector_index = array_search($current_erector_text, $erectors_list);
+		if ($current_erector_index === false) {
+			$current_erector_index = 0;
+		}
+
+		$obj .= "{";
+			$obj .= "title:'".addslashes($r["erectors_name"])."".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ',";
+			$obj .= "start:'{$r['install_date']}',";
+			$obj .= "end:'{$r['schedule_completion']} 20:00:00',";
+			// $obj .= "color:color_list[{$j}],"; 
+			$obj .= "color:color_list[{$current_erector_index}],"; 
+			$obj .= "allDay:false,"; 
+			$obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
+		$obj .= "},";
+
+		$j++;
+	}
+
+	$obj = substr($obj, 0, -1);
+	echo $obj;
+?>
+];
+
+	
+ 	// $('#installer_calendar').fullCalendar({ 
+  //      events:installer_list_prevmon,
+  //      timeFormat: 'H(:mm)',
+  //      eventClick: function(event) {
+
+  //       if (event.url) {
+  //           window.open(event.url);
+  //           return false;
+  //       }
+
+  //   	}
+  //   });
+
+  //   $('#installer_calendar').fullCalendar('prev');
+
+  //   $('#installer_calendar2').fullCalendar({ 
+		// events:installer_list_curmon,
+		// timeFormat: 'H(:mm)',
+  //       eventClick: function(event) {
+
+	 //        if (event.url) {
+	 //            window.open(event.url);
+	 //            return false;
+	 //        }
+  //   	}        
+  //   });
+
+ 	$('#installer_calendar').fullCalendar({ 
+       events:installer_list_curmon,
+       timeFormat: 'H(:mm)',
+       eventClick: function(event) {
+	        if (event.url) {
+	            window.open(event.url);
+	            return false;
+	        }
+    	}
+    });
+	//$('#installer_calendar').fullCalendar('next');
+    
+	$('#installer_calendar2').fullCalendar({ 
+		events:installer_list_nextmon,
+		// events:installer_list_curmon,
+		timeFormat: 'H(:mm)',
+        eventClick: function(event) {
+	        if (event.url) {
+	            window.open(event.url);
+	            return false;
+	        }
+    	}        
+    });
+    $('#installer_calendar2').fullCalendar('next');
+ 
+
+//--------- END Installer Calendar ---------- 
+
+<?php 
+	}
+?>
+
  
 		$(document).on("click",".li-row-clickable",function(e) {
+
 			$(this).next().toggle(); 
 		});
+
+
 
 		$('.form_datetime').datetimepicker({
 	        //language:  'en',
@@ -3037,21 +4183,34 @@ $sales_table .= "</table>";
 			forceParse: 0,
 	        showMeridian: 0
 	    });
+
+
+
 	});
  
+
  	function request_sel_consultant() {
  		var sel_consultant = $("#cbo_consultant").children("option:selected").val();
+
+
+
  		window.location.assign("<?php echo JURI::base().'?consultant_id='; ?>"+sel_consultant);
+
  	}
 
  	function save_status(event,o) {
+
 		var action = "";
 		var status = "";
 		var followup_date = "";
+
+
 		var cf_id =  $(o).closest('li').children("input.cf_id").val(); //.children("table").children("tbody").children("tr").find("input.cf_id").val();
 			 
 		status =  $(o).closest('li').children("span.col-status").children("select").children("option:selected").val();
 		followup_date =  $(o).closest('li').children("span.followup-date").children("input[name='followup_date']").val();
+
+
 
 		//var data = { command: 'save_status', cf_id : cf_id, status: status, followup_date: followup_date }
 
@@ -3059,20 +4218,25 @@ $sales_table .= "</table>";
 	 	$("#command ").val('save_status');
 	 	$("#followup_date").val(followup_date);
 	 	$("#status").val(status);
+
 	 	$("#send_update_to_do_list_form").click();
 		//location.reload(); 
 	}
 
 	function save_is_done(event,o) {
+
 		var action = "";
+
 		var cf_id =  $(o).closest('li').children("input.cf_id").val(); //.children("table").children("tbody").children("tr").find("input.cf_id").val();
 		var is_done = 0;
 		if ($(o).is(':checked')) {
 			is_done = 1;
 		}
 
+
 		var data = { command: 'save_is_done', cf_id : cf_id, is_done: is_done }
 		 
+
 		$.ajax({
 			type: "POST",
 			url: action,
@@ -3083,6 +4247,8 @@ $sales_table .= "</table>";
 			}		
 		});
 	}
+
+
 </script> 
 
 
