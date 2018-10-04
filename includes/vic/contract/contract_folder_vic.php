@@ -1338,7 +1338,17 @@ $groups = $user->get('groups');
 ?>
 
      <!--- Start of Vergola Standard -->
+    <?php
+    $disabled_div_class = 'disabled-div';
+    //process user_access_profiles
+    if ($current_signed_in_user_access_profiles['tab vergola standard']['edit'] == true) {
+        $disabled_div_class = '';
+    }
+    ?>
+    <div id="standard" class="tab_content <?php echo $disabled_div_class; ?>">
+    <!--
     <div id="standard" class="tab_content <?php echo ($is_operation_manager || $is_system_admin || $is_account_user ? "":"disabled-div"); ?>">
+    -->
       <span class="vs-label"><label>Deposit Paid:</label> 
         <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="depositdate" name="deposit_paid_amount" class="" value="<?php echo $PaymentDepositValue; ?>" /> </td>
         <td><input style="text-align: right;" type="text" id="depositdate" name="deposit_paid" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['deposit_paid']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['deposit_paid'])); } else {echo "";} ?>"/></td></span>
@@ -1482,7 +1492,17 @@ $groups = $user->get('groups');
     <!-- End of Vergola Standard --->
     
     <!--- Start of Statutory Approval -->
+    <?php
+    $disabled_div_class = 'disabled-div';
+    //process user_access_profiles
+    if ($current_signed_in_user_access_profiles['tab statutory approval']['edit'] == true) {
+        $disabled_div_class = '';
+    }
+    ?>
+    <div id="statutory" class="tab_content <?php echo $disabled_div_class; ?>">
+    <!--
     <div id="statutory" class="tab_content  <?php echo ($is_operation_manager || $is_system_admin || $is_account_user ? "":"disabled-div"); ?>">
+    -->
         <!--         
         <div class="label-input-row" >  
             <input type="hidden" name="council" id="council" value="By Vergola" />
