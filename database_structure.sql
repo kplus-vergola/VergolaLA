@@ -275,6 +275,53 @@ CREATE TABLE IF NOT EXISTS `tblcolour` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tblconstructionkpi`
+--
+
+DROP TABLE IF EXISTS `tblconstructionkpi`;
+CREATE TABLE IF NOT EXISTS `tblconstructionkpi` (
+`id` int(11) NOT NULL,
+  `client_id` varchar(45) DEFAULT NULL,
+  `project_id` varchar(45) DEFAULT NULL,
+  `contract_date` date DEFAULT NULL,
+  `check_measure_date` date DEFAULT NULL,
+  `drawing_approve_date` date DEFAULT NULL,
+  `planning_approve` date DEFAULT NULL,
+  `bldg_rules_approval` date DEFAULT NULL,
+  `fw_complete` date DEFAULT NULL,
+  `handover_date` date DEFAULT NULL,
+  `permit_approved_date` date DEFAULT NULL,
+  `job_start_date` date DEFAULT NULL,
+  `job_end_date` date DEFAULT NULL,
+  `da_date` date DEFAULT NULL,
+  `install_date` date DEFAULT NULL,
+  `schedule_completion` date DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblcontractsummary`
+--
+
+DROP TABLE IF EXISTS `tblcontractsummary`;
+CREATE TABLE IF NOT EXISTS `tblcontractsummary` (
+`id` int(11) NOT NULL,
+  `target_month` date DEFAULT NULL,
+  `no_contract` int(11) DEFAULT '0',
+  `no_check_measure` int(11) DEFAULT '0',
+  `no_drawing_prep` int(11) DEFAULT '0',
+  `no_drawing_approve` int(11) DEFAULT '0',
+  `no_dev_approve` int(11) DEFAULT '0',
+  `no_fw_complete_not_done` int(11) DEFAULT NULL,
+  `no_fw_complete_done` int(11) DEFAULT '0',
+  `no_job_sched` int(11) DEFAULT '0',
+  `no_job_complete` int(11) DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tblcouncil`
 --
 

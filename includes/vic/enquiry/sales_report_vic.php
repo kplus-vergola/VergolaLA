@@ -1034,7 +1034,8 @@ include('sales_summary/main.php');
  		//----------------CONTRUCTION SUMMARY TABLE -----------------
  		$kpi_table_manager = "";
         $kpi_table_manager .= "
-        <h3 style='margin:10px 0 0 0; text-decoration:underline; '><span>Contract Summary</span> <span style='float:right; margin-right:47%; text-decoration: underline;'>Construction KPI</span></h3> <br/>
+        <h3 style='margin:10px 0 0 0; text-decoration:underline; '><span>Contract Summary</span> 
+		<span style='float:right; margin-right:47%; text-decoration: underline;'>Construction KPI</span></h3> <br/>
         <ul  class='list-table kpi-table'  style='margin:0 0% 0 0; width:43%; display:inline-block;vertical-align: top; font-size:12px; '>
         ";
 
@@ -1128,7 +1129,8 @@ include('sales_summary/main.php');
         $sql = "SELECT DATE_FORMAT(target_month,'%M %Y') AS target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete  FROM tblcontractsummary ORDER BY id desc LIMIT 10";
 
         $qContracts = mysql_query($sql);
-
+		
+		
         $i=0;
         while ($r = mysql_fetch_assoc($qContracts)){ //-- Start of while for montly
      	//for($k=0;$k<12;$k++){ //Latest on the top
