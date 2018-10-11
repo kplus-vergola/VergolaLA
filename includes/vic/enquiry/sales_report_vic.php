@@ -1060,7 +1060,7 @@ include('sales_summary/main.php');
         $interval = $current_month->diff($last_record_month);
         //error_log(" interval: ".$interval->format('%m months'), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');// exit();
 
-        //if($rContracts['target_month'] != date('F Y')){
+        // if($rContracts['target_month'] != date('F Y')){
         if($interval->format('%m')>1){ //
             //error_log(" target_month1: ".$rContracts['target_month']." date1: ".date('F Y'), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
      		//for($k=11;$k>=1;$k--){ //Run this script only for 1st time to fill up the tblcontractsummary.
@@ -1070,12 +1070,13 @@ include('sales_summary/main.php');
                 date_sub($cdate, date_interval_create_from_date_string($k.' months'));
                 $target_date = date_format($cdate, 'Y-m-d');
                 $mDate = date_format($cdate, 'F Y');
+				//$mDate = date_format($cdate, 'F');
 
          		$sql_insert = "INSERT tblcontractsummary (target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete)
                         SELECT
                         '{$target_date}' as target_month,
-                        COUNT(cf_id) as no_contract,
-                    	COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
+                    	(SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$target_date}') AND LAST_DAY('{$target_date}')) AS no_contract,
+						COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
                     	COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
                         COUNT(IFNULL(drawing_approve_date, 1))-IF(drawing_approve_date = NULL,false,COUNT(drawing_approve_date)) as no_drawing_approve,
                         COUNT(IFNULL(da_date, 1))-IF(da_date = NULL,false,COUNT(da_date)) as no_dev_approve,
@@ -1093,20 +1094,29 @@ include('sales_summary/main.php');
                             ) AS t";
 
                 //error_log(" sql_insert: ".$sql_insert, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                $qContracts = mysql_query($sql_insert);
+                //echo ($sql_insert);
+				$qContracts = mysql_query($sql_insert);
+				echo $qContracts;
 
             }
         }
 
+					 // COUNT(cf_id) as no_contract,
+					 // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$current_month}') AND LAST_DAY('{$current_month}')) AS no_contract,
+					 // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$cdate}') AND LAST_DAY('{$target_date}')) AS no_contract,
+					
         $cdate = new DateTime('first day of this month');
         date_sub($cdate, date_interval_create_from_date_string($k.' months'));
         $target_date = date_format($cdate, 'Y-m-d');
         $mDate = date_format($cdate, 'F Y');
 
+		
+		//alert($target_date);
+
         $sql = "SELECT
-                    '{$target_date}' as target_month,
-                    COUNT(cf_id) as no_contract,
-                	COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
+                    '{$target_date}' as target_month,                    					
+					(SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$target_date}') AND LAST_DAY('{$target_date}')) AS no_contract,
+					COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
                 	COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
                     COUNT(IFNULL(drawing_approve_date, 1))-IF(drawing_approve_date = NULL,false,COUNT(drawing_approve_date)) as no_drawing_approve,
                     COUNT(IFNULL(da_date, 1))-IF(da_date = NULL,false,COUNT(da_date)) as no_dev_approve,
@@ -1122,11 +1132,12 @@ include('sales_summary/main.php');
                         JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=c.projectid
                         WHERE c.contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 30 MONTH) AND LAST_DAY('{$target_date}') AND handover_date is null
                         ) AS t";
-        error_log(" Construction KPI sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+        //error_log(" Construction KPI sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
         $cContracts = mysql_query($sql);
+		
 
-
-        $sql = "SELECT DATE_FORMAT(target_month,'%M %Y') AS target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete  FROM tblcontractsummary ORDER BY id desc LIMIT 10";
+        $sql = "SELECT DATE_FORMAT(target_month,'%M %Y') AS target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete  
+					FROM tblcontractsummary ORDER BY id desc LIMIT 10";
 
         $qContracts = mysql_query($sql);
 		
@@ -1148,9 +1159,9 @@ include('sales_summary/main.php');
             }
 
             //---- START ------> Not need in this case bec. Jit/Les get rid of the monthly and just want the sum of result from last 30 months
-            $kpi_table_manager .= "<li >";
-            $kpi_table_manager .= "<span style='width:13%;'>".$r["target_month"]."  </span><span style='width:9%;'>".$r["no_contract"]."  </span><span style='width:9%;'>".$r["no_check_measure"]." </span><span style='width:9%;'>".$r["no_drawing_prep"]."  </span><span style='width:9%;'>".$r["no_drawing_approve"]."  </span><span style='width:9%;'>". $r["no_dev_approve"] ."  </span><span style='width:9%;'>". $r["no_fw_complete_not_done"] ."  </span><span style='width:9%;'>". $r["no_fw_complete_done"] ."  </span><span style='width:9%;'>". $r["no_job_complete"] ."  </span> ";
-            $kpi_table_manager .= "</li>";
+             $kpi_table_manager .= "<li >";
+             $kpi_table_manager .= "<span style='width:13%;'>".$r["target_month"]."  </span><span style='width:9%;'>".$r["no_contract"]."  </span><span style='width:9%;'>".$r["no_check_measure"]." </span><span style='width:9%;'>".$r["no_drawing_prep"]."  </span><span style='width:9%;'>".$r["no_drawing_approve"]."  </span><span style='width:9%;'>". $r["no_dev_approve"] ."  </span><span style='width:9%;'>". $r["no_fw_complete_not_done"] ."  </span><span style='width:9%;'>". $r["no_fw_complete_done"] ."  </span><span style='width:9%;'>". $r["no_job_complete"] ."  </span> ";
+             $kpi_table_manager .= "</li>";
             //---- END of Table ------
  			$i++;
 
