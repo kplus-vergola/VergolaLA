@@ -1064,41 +1064,47 @@ include('sales_summary/main.php');
         if($interval->format('%m')>1){ //
             //error_log(" target_month1: ".$rContracts['target_month']." date1: ".date('F Y'), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
      		//for($k=11;$k>=1;$k--){ //Run this script only for 1st time to fill up the tblcontractsummary.
-         	for($k=0;$k>=0;$k--){
-         		$cdate = new DateTime('first day of previous month');
-         		//$_target_month = date("Y-m-01", strtotime("-1 months"));
-                date_sub($cdate, date_interval_create_from_date_string($k.' months'));
-                $target_date = date_format($cdate, 'Y-m-d');
-                $mDate = date_format($cdate, 'F Y');
-				//$mDate = date_format($cdate, 'F');
+         	
+//START (Moved Insert function to scheduler)
+			
+			// for($k=0;$k>=0;$k--){
+         		// $cdate = new DateTime('first day of previous month');
+         		// //$_target_month = date("Y-m-01", strtotime("-1 months"));
+                // date_sub($cdate, date_interval_create_from_date_string($k.' months'));
+                // $target_date = date_format($cdate, 'Y-m-d');
+                // $mDate = date_format($cdate, 'F Y');
+				// //$mDate = date_format($cdate, 'F');
 
-         		$sql_insert = "INSERT tblcontractsummary (target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete)
-                        SELECT
-                        '{$target_date}' as target_month,
-                    	(SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$target_date}') AND LAST_DAY('{$target_date}')) AS no_contract,
-						COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
-                    	COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
-                        COUNT(IFNULL(drawing_approve_date, 1))-IF(drawing_approve_date = NULL,false,COUNT(drawing_approve_date)) as no_drawing_approve,
-                        COUNT(IFNULL(da_date, 1))-IF(da_date = NULL,false,COUNT(da_date)) as no_dev_approve,
-                    	COUNT(IFNULL(fw_complete, 1))-IF(fw_complete = NULL,false,COUNT(fw_complete)) as no_fw_complete_not_done,
-                        IF(fw_complete IS NOT NULL,false,COUNT(fw_complete)) AS no_fw_complete_done,
-                        IF(install_date IS NOT NULL,false,COUNT(install_date)) AS no_job_sched,
-                        (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 30 MONTH) AND LAST_DAY('{$target_date}') AND job_end_date IS NOT NULL ) AS no_job_complete
+         		// $sql_insert = "INSERT tblcontractsummary (target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete)
+                        // SELECT
+                        // '{$target_date}' as target_month,
+                    	// (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$target_date}') AND LAST_DAY('{$target_date}')) AS no_contract,
+						// COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
+                    	// COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
+                        // COUNT(IFNULL(drawing_approve_date, 1))-IF(drawing_approve_date = NULL,false,COUNT(drawing_approve_date)) as no_drawing_approve,
+                        // COUNT(IFNULL(da_date, 1))-IF(da_date = NULL,false,COUNT(da_date)) as no_dev_approve,
+                    	// COUNT(IFNULL(fw_complete, 1))-IF(fw_complete = NULL,false,COUNT(fw_complete)) as no_fw_complete_not_done,
+                        // IF(fw_complete IS NOT NULL,false,COUNT(fw_complete)) AS no_fw_complete_done,
+                        // IF(install_date IS NOT NULL,false,COUNT(install_date)) AS no_job_sched,
+                        // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 30 MONTH) AND LAST_DAY('{$target_date}') AND job_end_date IS NOT NULL ) AS no_job_complete
 
-                        FROM (
-                            SELECT  c.cf_id, c.quoteid, c.projectid, c.contractdate, cv.drawing_approve_date, cs.permit_approved_date, cv.production_start_date, cv.job_start_date, cv.job_end_date, cv.handover_date, cs.da_date, cv.fw_complete, cv.install_date, cv.check_measure_date, cv.drawing_prepare_date
-                            FROM ver_chronoforms_data_contract_list_vic AS c
-                            JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid=c.projectid
-                            JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=c.projectid
-                            WHERE c.contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 30 MONTH) AND LAST_DAY('{$target_date}') AND handover_date is null
-                            ) AS t";
+                        // FROM (
+                            // SELECT  c.cf_id, c.quoteid, c.projectid, c.contractdate, cv.drawing_approve_date, cs.permit_approved_date, cv.production_start_date, cv.job_start_date, cv.job_end_date, cv.handover_date, cs.da_date, cv.fw_complete, cv.install_date, cv.check_measure_date, cv.drawing_prepare_date
+                            // FROM ver_chronoforms_data_contract_list_vic AS c
+                            // JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid=c.projectid
+                            // JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=c.projectid
+                            // WHERE c.contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 30 MONTH) AND LAST_DAY('{$target_date}') AND handover_date is null
+                            // ) AS t";
 
-                //error_log(" sql_insert: ".$sql_insert, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                //echo ($sql_insert);
-				$qContracts = mysql_query($sql_insert);
-				echo $qContracts;
+                // //error_log(" sql_insert: ".$sql_insert, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                // //echo ($sql_insert);
+				// $qContracts = mysql_query($sql_insert);
+				// echo $qContracts;
 
-            }
+            // }
+			
+//BEGIN (Moved Insert function to scheduler)
+			
         }
 
 					 // COUNT(cf_id) as no_contract,
