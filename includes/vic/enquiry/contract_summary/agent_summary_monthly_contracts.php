@@ -9,6 +9,10 @@
 C:\xampp_3\php\php C:\xampp_3\htdocs\vergola_contract_system_v4_la\includes\vic\enquiry\sales_summary\agent_summary_monthly_contracts.php data="{\"server_mode\":\"local\", \"vergola_region\":\"la\", \"record_update_type\":\"flush\"}"
 C:\xampp_3\php\php C:\xampp_3\htdocs\vergola_contract_system_v4_la\includes\vic\enquiry\sales_summary\agent_summary_monthly_contracts.php data="{\"server_mode\":\"local\", \"vergola_region\":\"la\", \"record_update_type\":\"append\"}"
 
+// --- at joy-local site --- //
+C:\xampp\php\php C:\xampp\htdocs\VergolaLA\includes\vic\enquiry\sales_summary\agent_summary_monthly_contracts.php data="{\"server_mode\":\"preproduction\", \"vergola_region\":\"la\", \"record_update_type\":\"flush\"}"
+C:\xampp\php\php C:\xampp\htdocs\VergolaLA\includes\vic\enquiry\sales_summary\agent_summary_monthly_contracts.php data="{\"server_mode\":\"preproduction\", \"vergola_region\":\"la\", \"record_update_type\":\"append\"}"
+
 // --- at preproduction site --- //
 C:\xampp\php\php C:\xampp\htdocs\vergola_contract_system_v4_us\includes\vic\enquiry\sales_summary\agent_summary_monthly_contracts.php data="{\"server_mode\":\"preproduction\", \"vergola_region\":\"la\", \"record_update_type\":\"flush\"}"
 C:\xampp\php\php C:\xampp\htdocs\vergola_contract_system_v4_us\includes\vic\enquiry\sales_summary\agent_summary_monthly_contracts.php data="{\"server_mode\":\"preproduction\", \"vergola_region\":\"la\", \"record_update_type\":\"append\"}"

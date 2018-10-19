@@ -1121,11 +1121,14 @@ include('sales_summary/main.php');
 
         $sql = "SELECT
                     '{$target_date}' as target_month,                    					
-					(SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$target_date}') AND LAST_DAY('{$target_date}')) AS no_contract,
+					-- (SELECT COUNT(cf_id)) AS no_contract,
+					(SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 1 MONTH) AND LAST_DAY('{$target_date}')) AS no_contract,
+					
 					COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
                 	COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
                     COUNT(IFNULL(drawing_approve_date, 1))-IF(drawing_approve_date = NULL,false,COUNT(drawing_approve_date)) as no_drawing_approve,
-                    COUNT(IFNULL(da_date, 1))-IF(da_date = NULL,false,COUNT(da_date)) as no_dev_approve,
+                    -- COUNT(IFNULL(da_date, 1))-IF(da_date = NULL,false,COUNT(da_date)) as no_dev_approve,
+					COUNT(IFNULL(permit_approved_date, 1))-IF(permit_approved_date = NULL,false,COUNT(permit_approved_date)) as no_dev_approve,
                 	COUNT(IFNULL(fw_complete, 1))-IF(fw_complete = NULL,false,COUNT(fw_complete)) as no_fw_complete_not_done,
                     IF(fw_complete IS NOT NULL,false,COUNT(fw_complete)) AS no_fw_complete_done,
                     IF(install_date IS NOT NULL,false,COUNT(install_date)) AS no_job_sched,
@@ -1146,7 +1149,7 @@ include('sales_summary/main.php');
 					FROM tblcontractsummary ORDER BY id desc LIMIT 10";
 
         $qContracts = mysql_query($sql);
-		
+
 		
         $i=0;
         while ($r = mysql_fetch_assoc($qContracts)){ //-- Start of while for montly
