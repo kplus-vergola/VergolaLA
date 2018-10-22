@@ -365,7 +365,9 @@ SELECT
 			WHEN m.is_per_length = 1 THEN
 			SUM( ( bm.length_feet * 12 ) + bm.length_inch ) 
 		END AS s_length,
-		( ( bm.length_feet * 12 ) + bm.length_inch ) AS 1_length,
+CASE			
+		WHEN m.uom = 'Inches' THEN
+		( ( bm.length_feet * 12 ) + bm.length_inch ) END AS 1_length,
 
 	bm.projectid,
 	bm.inventoryid,
@@ -374,7 +376,6 @@ SELECT
 	bm.qty AS bm_qty,
 	bm.supplierid,
 	bm.length_fraction AS length_fraction,
-	-- CONCAT('SQL1','   ',m.raw_description) AS raw_description,
 	m.raw_description,
 	m.is_per_length,
 	m.length_per_ea,
@@ -385,17 +386,16 @@ SELECT
 	b.finish 
 FROM
 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
-	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
-	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
-	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = b.inventoryid
-	-- im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid AND im.materialid = bm.materialid
+	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.section = bm.section	
+	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = inv.inventoryid 	
+		AND im.materialid = bm.materialid
 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
 	
 WHERE
 	bm.projectid = '{$projectid}' 
-	AND b.projectid = '{$projectid}' 
+	-- AND b.projectid = '{$projectid}' 
 	AND s.supplierid = '{$supplierid}' 	
 	
 	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
@@ -406,10 +406,10 @@ CASE
 		
 		WHEN inv.section = 'Guttering' 
 		OR inv.section = 'Flashings' THEN
-			bm.id ELSE bm.materialid 
-		END,
-		length_fraction,
-		b.length,
+			bm.id ELSE bm.materialid END,
+CASE			
+		WHEN m.uom = 'Inches' THEN
+		( ( bm.length_feet * 12 ) + bm.length_inch ) END,
 		b.colour 
 	ORDER BY
 		m.cf_id ASC,
@@ -482,7 +482,9 @@ SELECT
 			WHEN m.is_per_length = 1 THEN
 			SUM( ( bm.length_feet * 12 ) + bm.length_inch ) 
 		END AS s_length,
-		( ( bm.length_feet * 12 ) + bm.length_inch ) AS 1_length,
+	CASE			
+			WHEN m.is_per_length = 1 THEN
+		( ( bm.length_feet * 12 ) + bm.length_inch ) END AS 1_length,
 
 	bm.length_fraction AS length_fraction,
 	bm.projectid,
@@ -491,7 +493,6 @@ SELECT
 	bm.raw_cost,
 	bm.qty AS bm_qty,
 	bm.supplierid,
-	-- CONCAT('SQL1','   ',m.raw_description) AS raw_description,
 	m.raw_description,
 	m.is_per_length,
 	m.length_per_ea,
@@ -501,12 +502,23 @@ SELECT
 	b.colour,
 	b.finish 
 FROM
+-- OLD JOIN
+	-- Begin
+		-- ver_chronoforms_data_contract_bom_meterial_vic AS bm
+		-- 	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
+		-- 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
+		-- 	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
+		-- 	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = b.inventoryid
+		-- 	-- im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid AND im.materialid = bm.materialid
+		-- 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
+		-- 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
+	-- End
+	
 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
-	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
-	-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = bm.inventoryid
-	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = b.inventoryid
-	-- im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid AND im.materialid = bm.materialid
+	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.section = bm.section	
+	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = inv.inventoryid 	
+		AND im.materialid = bm.materialid
 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
 	
@@ -523,9 +535,10 @@ CASE
 		
 		WHEN inv.section = 'Guttering' 
 		OR inv.section = 'Flashings' THEN
-			bm.id ELSE bm.materialid 
-		END,
-		b.length,
+			bm.id ELSE bm.materialid END,
+CASE			
+		WHEN m.uom = 'Inches' THEN
+		( ( bm.length_feet * 12 ) + bm.length_inch ) END,
 		b.colour 
 	ORDER BY
 		m.cf_id ASC,
@@ -769,7 +782,8 @@ CASE
 
 <tr> 
 	<td colspan="2"><?php echo $m['raw_description']; ?></td>  
-	<td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td>
+	<!-- <td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td> -->
+	<td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['ts_qty']):number_format($m['ls_qty']))); ?></td>
 	<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?></td>
 	<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?></td> 
 	<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
