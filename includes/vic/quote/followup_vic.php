@@ -29,15 +29,26 @@ if (!$resultff) {die("Error: Data not found..");}
 	$InstallCommCOST = $retrieveff['install_comm_cost'];
 	$is_builder_project = $retrieveff['is_builder_project'];
 	
+	
 	//if ($QuoteIDAlpha == 'CRV') {
 	$resultclient = mysql_query("SELECT * FROM ver_chronoforms_data_clientpersonal_vic WHERE clientid  = '$QuoteID'");
     $retrieveclient = mysql_fetch_array($resultclient);
+	
     if (!$resultclient) {die("Error: Data not found..");}
+	// if (empty($Status)) { $resultclient['status'] ;} 	 
     if($retrieveclient['is_builder']==1){
     	$CustomerName = $retrieveclient['builder_name'];
+		
     }else{
     	$CustomerName = $retrieveclient['client_lastname'].", ".$retrieveclient['client_firstname'];
     }
+	
+	$Status_ = "";
+	if($retrieveff['status'] != ""){
+		$Status_ = $retrieveff['status'];
+	}else{
+		$Status_ = $retrieveclient['status'];
+		}
 	
 	$SiteAddress = $retrieveclient['site_address1']." ".$retrieveclient['site_address2']."<br />".$retrieveclient['site_suburb']." ".$retrieveclient['site_state']." ".$retrieveclient['site_postcode'];
 	$appointmentdate = $retrieveclient['appointmentdate'];
@@ -364,6 +375,32 @@ if(isset($_POST['contract'])){
 	echo "<div id=\"innerbox\"";
 	//if ($cf_id != '') { echo "style=\"display:block\"";} else {echo "style=\"display:none\"";}
 	echo">";
+	
+	// Test Begin
+	// $Status_? echo "Follow-up": echo "Costing"; 
+	// !empty($retrieveff['status'])?$retrieveff['status']:$retrieveclient['status'] ; 	 
+	
+	// !empty($Status)? $Status : !empty($retrieveff['status'])?$retrieveff['status']:$retrieveclient['status'] ; 
+	
+	
+			// if (!empty($retrieveff['status'])){
+							// alert("True");
+							// $Status_= $retrieveff['status'];
+						// }else{
+							// alert('False');
+							// $Status_= $resultclient['status']; 	 
+						// }				
+			// alert(!empty($Status)?$Status:empty($retrieveff['status'])?$retrieveclient['status']:$retrieveclient['status']); 
+	if(!$isfollowup_btn = false && !empty($Status_)){
+		$Status = $Status_;
+	}
+		
+	// echo "<table class=\"table-ff\"><tr><th>Project Name: <span class=\"subhead\">".$ProjectName."</span></th><th>Project Status: <span class=\"subhead\">".
+															// // !empty($Status)?$Status:empty($retrieveff['status'])?$retrieveclient['status']:$retrieveclient['status']
+															// $Status_
+															// ."</span></th></tr>";
+	// Test End
+	
 	echo "<table class=\"table-ff\"><tr><th>Project Name: <span class=\"subhead\">".$ProjectName."</span></th><th>Project Status: <span class=\"subhead\">".$Status."</span></th></tr>";
 	 error_log("Status: 2". $Status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
 	// Get Date Quote 
@@ -418,17 +455,22 @@ if(isset($_POST['contract'])){
 
 	//echo $select_status; 
  	echo " <input type=\"hidden\" value=\"{$Status}\" name=\"status\" id=\"costing_status\" />";
+	
+	
+	// echo " <input type=\"disabled\" value=\"{$Status}\" name=\"status\" id=\"costing_status\" />";
+	// echo "<input type=\"hidden\" value=\'Future' ".(strtolower($Status)=="future"?"selected":"")."\  class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Not Interested')\" />";
 
-
+	$isfollowup_btn = false;
 	//process user_access_profiles
 	if ($current_signed_in_user_access_profiles['tab follow up']['project status'] == true) {
-		echo "<input type=\"button\" value=\"Not Interested\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Not Interested')\" />";
+		echo "<input type=\"button\" value=\"Not Interested \"  class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Not Interested')\" />";
 		echo "<input type=\"button\" value=\"Costed\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Costed')\"/>";
 		echo "<input type=\"button\" value=\"Quoted\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Quoted')\" />";
 		echo "<input type=\"button\" value=\"Under Consideration\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Under Consideration')\" />";
 		echo "<input type=\"button\" value=\"Future Project\"  class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Future Project')\" />";
 		echo "<input type=\"button\" value=\"Won\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Won')\"/>";
 		echo "<input type=\"button\" value=\"Lost\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Lost')\"/>";
+		$isfollowup_btn = true;
 	} //end if
 
 	// if($is_admin==1){
