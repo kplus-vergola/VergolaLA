@@ -419,7 +419,7 @@
                 temp_text2 = temp_text1.replace(',', '');
                 temp_previous_total_payment_tax = parseFloat(temp_text2);
 
-                if (previous_total_payment_tax != temp_previous_total_payment_tax) {
+                if (previous_total_payment_tax.toFixed(0) != temp_previous_total_payment_tax.toFixed(0)) {
                     total_payment_tax = previous_total_payment_tax;
                 } else {
                     total_payment_tax = total_payment_sub_total * vr_form_system_info['payment_tax_percentage'];
