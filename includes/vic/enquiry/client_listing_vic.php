@@ -332,7 +332,8 @@ if($is_quoted=="1"){
 
 // $sql = "SELECT *, c.clientid AS id, CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, c.site_address1, c.builder_name, f.status as followup_status,n.content AS note  FROM (SELECT * FROM ver_chronoforms_data_clientpersonal_vic AS c WHERE  1=1 {$builder_filter} {$rep_filter} {$suburb_filter} {$date_filter} {$search_string_filter} {$is_quoted_filter} ) AS c LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_followup_vic WHERE 1=1 {$rep_filter2}  ORDER BY updated_at DESC, cf_id DESC) as f0  GROUP BY quoteid ) AS f ON f.quoteid=c.clientid LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic GROUP BY clientid) as n ON n.clientid=c.clientid WHERE 1=1  {$rep_filter3} ";
 $sql = "
-	SELECT *, c.clientid AS id, CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, c.site_address1, c.builder_name, f.status as followup_status,n.content AS note  
+	SELECT *, c.clientid AS id, CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, c.site_address1, c.builder_name, f.status as followup_status_,n.content AS note,
+				IFNULL(f.status, c.status) AS `followup_status`
 	FROM (
 		SELECT * FROM ver_chronoforms_data_clientpersonal_vic AS c WHERE  1=1 {$builder_filter} {$rep_filter} {$suburb_filter} {$date_filter} {$search_string_filter} {$is_quoted_filter} 
 	) AS c 
