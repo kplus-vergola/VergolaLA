@@ -142,4 +142,6 @@
         var vr_form_report_info = '';
 
         var total_calculation_process_done = 0;
+
+        var current_process_order_by_vr_section_display_name = '';
 </script>

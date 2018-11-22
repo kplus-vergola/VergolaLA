@@ -181,6 +181,11 @@
                         processVrFormRecordActionMode();
                         break;
                 }
+
+                /* if currently is in process order mode, perform process order actions */
+                if (current_process_order_by_vr_section_display_name != '') {
+                    saveBomFormPoData2();
+                }
             } else {
                 console.log('processRetrieveResult > results:');
                 console.log(results);
@@ -414,17 +419,24 @@
         }
 
 
-        function processSaveResultBomFormPoData(results) {
+        function saveBomFormPoData(process_order_by_vr_section_display_name) {
+            current_process_order_by_vr_section_display_name = process_order_by_vr_section_display_name;
+            saveBomFormContractItemData(2);
+        }
+
+
+        function processSaveResultBomFormPoData2(results) {
             if (results['error'] == 'null') {
-                saveBomFormContractItemData(2);
+                window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
             } else {
                 console.log('processSaveResultBomFormPoData > results:');
                 console.log(results);
             }
+            current_process_order_by_vr_section_display_name = '';
         }
 
 
-        function saveBomFormPoData(process_order_by_vr_section_display_name) {
+        function saveBomFormPoData2() {
             copyVrFormItemsDataEntryFormValue();
             extractVrFormItemDataEntryPropertiesName();
             jsonEncodeVrFormItemsDataEntry();
@@ -441,10 +453,10 @@
                 "vr_form_system_info":vr_form_system_info, 
                 "vr_form_queries_info":vr_form_queries_info, 
                 "vr_form_items_data_entry":vr_form_items_data_entry, 
-                "process_order_by_vr_section_display_name":process_order_by_vr_section_display_name
+                "process_order_by_vr_section_display_name":current_process_order_by_vr_section_display_name
             };
 
-            requestAjaxCall(url, request_data, 'processSaveResultBomFormPoData');
+            requestAjaxCall(url, request_data, 'processSaveResultBomFormPoData2');
             console.log('url:');
             console.log(url);
             console.log('request_data:');
@@ -454,7 +466,8 @@
 
         function processSaveResultBomFormContractItemData1(results) {
             if (results['error'] == 'null') {
-                // window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
+                /* remain still in page, at the moment no need do retrieveVrFormData() function */
+                // retrieveVrFormData();
             } else {
                 console.log('processSaveResultBomFormContractItemData > results:');
                 console.log(results);
@@ -464,7 +477,8 @@
 
         function processSaveResultBomFormContractItemData2(results) {
             if (results['error'] == 'null') {
-                window.location = vr_form_url_info['po'] + '&uc=' + vr_form_url_info['unique_code'];
+                /* process order mode checking is done in retrieveVrFormData() function */
+                retrieveVrFormData();
             } else {
                 console.log('processSaveResultBomFormContractItemData > results:');
                 console.log(results);
