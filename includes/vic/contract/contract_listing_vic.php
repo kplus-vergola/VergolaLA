@@ -85,6 +85,7 @@ if (!isset($drawing_no_date)) $drawing_no_date = 0;
 if (!isset($easement)) $easement= '';
 if (!isset($planning)) $planning= '';
 if (!isset($installer)) $installer= '';
+if (!isset($site_address)) $site_address= '';
 if (!isset($drawing_no_approve_date)) $drawing_no_approve_date= '';
 if (!isset($mod)) $mod= '';
 if (!isset($contract_status)) $contract_status= '';
@@ -115,6 +116,8 @@ if(isset($_REQUEST['submit']) || isset($_REQUEST['search'])){
 	if(isset($_POST['advance_search'])){ $advance_search = $_POST['advance_search']; }
 
 	if(isset($_POST['installer'])){ $installer = $_POST['installer']; }
+	
+	if(isset($_POST['site_address'])){ $site_address = $_POST['site_address']; }
 
 	if(isset($_POST['drawing_no_approve_date'])){ $drawing_no_approve_date = $_POST['drawing_no_approve_date']; }
 
@@ -147,6 +150,8 @@ if(isset($_REQUEST['submit']) || isset($_REQUEST['search'])){
 	if(isset($_REQUEST['advance_search'])){ $advance_search = $_REQUEST['advance_search']; }
 
 	if(isset($_REQUEST['installer'])){ $installer = $_REQUEST['installer']; }
+	
+	if(isset($_REQUEST['site_address'])){ $site_address = $_REQUEST['site_address']; }
 
 	if(isset($_REQUEST['drawing_no_approve_date'])){ $drawing_no_approve_date = $_REQUEST['drawing_no_approve_date']; }
 
@@ -194,6 +199,10 @@ if($suburb_name){
 
 if($installer){
 	$paging_url .= "&installer=".$installer;
+}
+
+if($site_address){
+	$paging_url .= "&site_address=".$site_address;
 }
 
 if($drawing_no_approve_date){
@@ -290,6 +299,11 @@ if ($searchdate)
 $installer_filter = "";
 if($installer){
 	$installer_filter = " AND cv.erectors_name LIKE '%{$installer}%' ";
+}
+
+$site_address_filter = "";
+if($site_address){
+	$site_address_filter = " AND cp.site_address1 LIKE '%{$site_address}%' ";
 }
 
 $drawing_no_approve_date_filter = "";
@@ -466,7 +480,7 @@ SELECT
 	DATE_FORMAT(cv.footing_inspection,'{$sql_dformat}') ffooting_inspection,
 	IF ( c.framework_type = 'Drop-In', 'DI', 'FR' ) AS fframework_type 
 	FROM ver_chronoforms_data_contract_list_vic AS c LEFT JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid = c.projectid LEFT JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=c.projectid LEFT JOIN (SELECT projectid, orderdate FROM ver_chronoforms_data_contract_bom_vic  where inventory_section='Frame' GROUP BY projectid) AS bom ON bom.projectid=c.projectid LEFT JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=c.quoteid 
-	WHERE 1=1 {$default_filter} {$rep_filter2} {$suburb_filter} {$date_filter} {$search_string_filter}   {$installer_filter} {$contract_status_filter} {$framework_type_filter} {$job_status_filter}  ORDER BY c.cf_id DESC) AS c LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic WHERE cf_id IN (SELECT MAX(cf_id) as max_id FROM ver_chronoforms_data_notes_vic GROUP BY clientid))  as n ON n.clientid=c.quoteid  ";
+	WHERE 1=1 {$default_filter} {$rep_filter2} {$suburb_filter} {$date_filter} {$search_string_filter}   {$installer_filter} {$site_address_filter} {$contract_status_filter} {$framework_type_filter} {$job_status_filter}  ORDER BY c.cf_id DESC) AS c LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic WHERE cf_id IN (SELECT MAX(cf_id) as max_id FROM ver_chronoforms_data_notes_vic GROUP BY clientid))  as n ON n.clientid=c.quoteid  ";
 //error_log("f: ".SQL_DFORMAT, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 //error_log($sql, 3,'/home/vergola/public_html/quote-system/my-error.log');	 
 //error_log("drawing_no_date".$drawing_no_date, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
@@ -559,6 +573,7 @@ echo "</select></label>";
 
 		echo " 
 				<label class='input' style=''> <span class='' >Installer </span><input type='text' value='{$installer}' name='installer' class=' ' style='border:1px solid #97989a;' > &nbsp;&nbsp; </label>
+				<label class='input' style=''> <span class='' >Site Address </span><input type='text' value='{$site_address}' name='site_address' class=' ' style='border:1px solid #97989a;' > &nbsp;&nbsp; </label>
 				<label class='input' style=''>  
 				<select name='contract_status' style='width: 160px;'> 
 					<option value='' ". ($contract_status=='' ? 'selected':'').">Select Filter </option> 
