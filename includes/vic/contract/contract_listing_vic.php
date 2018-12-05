@@ -303,7 +303,7 @@ if($installer){
 
 $site_address_filter = "";
 if($site_address){
-	$site_address_filter = " AND cp.site_address1 LIKE '%{$site_address}%' ";
+	$site_address_filter = " AND c.site_address LIKE '%{$site_address}%' ";
 }
 
 $drawing_no_approve_date_filter = "";
