@@ -288,7 +288,8 @@ $suburb_filter1 = "";
 $suburb_filter2 = "";
  	 
 if ($suburb_name){
-	$suburb_filter1 .= " cp.client_suburb LIKE '%" . $suburb_name . "%' ";
+	$suburb_filter .= " AND ((cp.client_suburb LIKE '%" . $suburb_name . "%') OR (cp.site_suburb LIKE '%" . $suburb_name . "%')) ";
+	//$suburb_filter1 .= " cp.client_suburb LIKE '%" . $suburb_name . "%' ";
 	//$suburb_filter2 .= " ON c.quoteid = cb.client_id ";
 }
 
