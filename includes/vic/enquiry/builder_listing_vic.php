@@ -228,7 +228,8 @@ if(isset($user->groups['9'])){
 }	
 
 if ($suburb_name)
-	$suburb_filter .= " AND site_suburb LIKE '%" . mysql_real_escape_string($suburb_name) . "%'";
+	$suburb_filter .= " AND ((client_suburb LIKE '%" . mysql_real_escape_string($suburb_name) . "%') OR (site_suburb LIKE '%" . mysql_real_escape_string($suburb_name) . "%')) ";
+	//$suburb_filter .= " AND site_suburb LIKE '%" . mysql_real_escape_string($suburb_name) . "%'";
 
 //error_log($frdate." ".$todate, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 if (strlen($frdate)>0 && strlen($todate))

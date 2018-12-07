@@ -275,7 +275,8 @@ if($is_builder){
 }
 
 if ($suburb_name)
-	$suburb_filter = " AND client_suburb LIKE '%" . mysql_real_escape_string($suburb_name) . "%'";
+	$suburb_filter = " AND ((client_suburb LIKE '%" . mysql_real_escape_string($suburb_name) . "%') OR (site_suburb LIKE '%" . mysql_real_escape_string($suburb_name) . "%')) ";
+	// $suburb_filter = " AND client_suburb LIKE '%" . mysql_real_escape_string($suburb_name) . "%'";
 
 if (strlen($frdate)>0 && strlen($todate)>0)
 	$date_filter = " AND datelodged BETWEEN '" .  $frdate . "'" . " AND '" . $todate . "'";
