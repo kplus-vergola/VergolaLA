@@ -8,7 +8,7 @@ $config['db']['host_name'] = 'localhost';
 // $config['db']['db_name'] = 'weblaw';
 $config['db']['db_name'] = 'vergola_quotedb_v5_us_as_live';
 $config['db']['user_name'] = 'root';
-$config['db']['password'] = '';
+$config['db']['password'] = 'pass123';
 
 $config['db']['table_name']['entity'] = 'entity';
 $config['db']['entity_table_name'] = 'enquiry';
