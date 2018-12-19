@@ -5,6 +5,28 @@ $current_signed_in_user_access_profiles = $custom_configs_user['user_access_prof
 ?>
 
 
+
+
+
+<?php
+/* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
+/* document system poc > demo api area                         */
+/* begin                                                       */
+/* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
+if (isset($_REQUEST['dspd']) && $_REQUEST['dspd'] == 'y') {
+    include('document_handler/main.php');
+    exit;
+}
+/* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
+/* document system poc > demo api area                         */
+/* end                                                         */
+/* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
+?>
+
+
+
+
+
   <?php 
   date_default_timezone_set('America/Los_Angeles');
 $user = JFactory::getUser();
@@ -1208,6 +1230,52 @@ if (!$resultimg) {
 
         <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn" >
     <?php } ?>
+
+
+
+
+
+    <?php
+    /* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
+    /* document system poc > demo button area                      */
+    /* begin                                                       */
+    /* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
+    $document_system_poc_demo_config = array(
+        'target_local_server_name' => 'as-live.la.vergola.com', 
+        'target_staging_server_name' => 'as-live.vglla.knowledgeplus.net.au', 
+        'date_time_begin' => '2018-12-18 00:00:00', 
+        'date_time_end' => '2018-12-21 23:59:59', 
+        'target_username' => 'jragunath', 
+        'script_url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'], 
+    );
+    $current_demo_date_time = date('Y-m-d H:i:s');
+    $current_demo_user_info = JFactory::getUser();
+
+    if (($_SERVER['SERVER_NAME'] == $document_system_poc_demo_config['target_local_server_name'] || $_SERVER['SERVER_NAME'] == $document_system_poc_demo_config['target_staging_server_name']) && 
+        ($current_demo_date_time >= $document_system_poc_demo_config['date_time_begin'] && $current_demo_date_time <= $document_system_poc_demo_config['date_time_end']) && 
+        $current_demo_user_info->username == $document_system_poc_demo_config['target_username']) {
+    ?>
+        <script type="text/javascript">
+        function OpenDocumentSystemPocDemoWindow() {
+            var current_script_url = '<?php echo $document_system_poc_demo_config['script_url']; ?>';
+            var current_demo_username = '<?php echo $current_demo_user_info->username; ?>';
+            var target_script_url = current_script_url + '&dspd=y&username=' + current_demo_username;
+            window.open(target_script_url);
+        }
+        </script>
+        <input type="button" class="bbtn" id="button_document_system_poc_demo_button" name="button_document_system_poc_demo_button" value="Document System POC Demo" onclick="OpenDocumentSystemPocDemoWindow()">
+    <?php
+    }
+    /* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
+    /* document system poc > demo button area                      */
+    /* end                                                         */
+    /* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
+    ?>
+
+
+
+
+
   </div>
   </form>
   <form method="post" class="" id="form_pdf">  
