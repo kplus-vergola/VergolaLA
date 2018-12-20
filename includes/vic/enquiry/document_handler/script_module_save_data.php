@@ -309,13 +309,15 @@ $results_save_data['file_save_2']['is_success'] = false;
 
 if ($enable_saving['file_save_2'] == true) {
     $submitted_file_external_ref_name = $api_data['file_external_ref_name'];
+
     $temp_array = explode('___', $submitted_file_external_ref_name);
     if (count($temp_array) >= 4) {
         $submitted_file_external_ref_name = $temp_array[3];
     }
+
     $temp_array = explode('.', $submitted_file_external_ref_name);
     if (count($temp_array) == 2) {
-        $submitted_file_external_ref_name = $temp_array[0];
+        $submitted_file_external_ref_name = substr($temp_array[0], 0, 25);
     }
 
     $sql = str_replace(
