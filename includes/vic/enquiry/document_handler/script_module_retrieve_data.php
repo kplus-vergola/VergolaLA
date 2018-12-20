@@ -291,9 +291,20 @@ if ($enable_retrieve['file_download'] == true) {
             $download_file_name .= $api_data['file_name'] . "___";
             $download_file_name .= $source_file_name;
 
+            $source_file_content = file_get_contents($source_file_path);
+            $source_file_size = filesize($source_file_path);
+
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
             header('Content-Type: ' . $file_type);
             header('Content-Disposition: attachement; filename="' . $download_file_name . '"');
-            echo file_get_contents($source_file_path);
+            header('Content-Transfer-Encoding: binary');
+            header('Content-Length: ' . $source_file_size);
+            ob_clean();
+            flush();
+            echo $source_file_content;
             exit;
         }
     }
