@@ -326,17 +326,21 @@ SELECT
 		CASE
 				
 				WHEN m.uom = 'Ea' THEN
-				SUM( m.raw_cost * im.inv_qty * bm.qty ) ELSE SUM(
+				( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
 					(
-					m.raw_cost * im.inv_qty * 
-						(FLOOR(((bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + 
-							(COALESCE (((LEFT (SUBSTRING_INDEX(bm.length_fraction,'/',-2),2)+0) / 
-								(RIGHT (SUBSTRING_INDEX(bm.length_fraction,'/',2),2)+0)),0) 
-							)
-						) * b.qty 
+						m.raw_cost * im.inv_qty * floor(
+							( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
+								(
+									(
+										( RIGHT ( SUBSTRING_INDEX( bm.length_fraction, '/', 1 ), 1 ) + 0 ) / ( LEFT ( SUBSTRING_INDEX( bm.length_fraction, '/',- 1 ), 1 ) + 0 ) 
+									) 
+								),
+								0 
+							) 
+						) * bm.qty 
 					) 
 				) 
-			END ELSE SUM( m.raw_cost * im.inv_qty * b.qty ) 
+			END ELSE ( m.raw_cost * im.inv_qty * bm.qty ) 
 		END AS ls_amount,
 	CASE
 			
@@ -386,10 +390,10 @@ CASE
 	b.finish 
 FROM
 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
+	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
-	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.section = bm.section	
-	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = inv.inventoryid 	
-		AND im.materialid = bm.materialid
+	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid
+	AND im.materialid = bm.materialid
 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
 	
@@ -514,11 +518,19 @@ FROM
 		-- 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
 	-- End
 	
-	ver_chronoforms_data_contract_bom_meterial_vic AS bm
+	-- 	ver_chronoforms_data_contract_bom_meterial_vic AS bm
+-- 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
+-- 	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.section = bm.section	
+-- 	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = inv.inventoryid 	
+-- 		AND im.materialid = bm.materialid
+-- 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
+-- 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
+
+ver_chronoforms_data_contract_bom_meterial_vic AS bm
+	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.inventoryid = bm.inventoryid
 	JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.contract_item_cf_id = bm.contract_item_cf_id
-	JOIN ver_chronoforms_data_inventory_vic AS inv ON inv.section = bm.section	
-	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = inv.inventoryid 	
-		AND im.materialid = bm.materialid
+	JOIN ver_chronoforms_data_inventory_material_vic AS im ON im.inventoryid = bm.inventoryid AND im.inventoryid = b.inventoryid
+	AND im.materialid = bm.materialid
 	JOIN ver_chronoforms_data_materials_vic AS m ON m.cf_id = im.materialid
 	JOIN ver_chronoforms_data_supplier_vic AS s ON s.supplierid = bm.supplierid 
 	
@@ -627,7 +639,8 @@ CASE
 					<tr> 
 						<td colspan="2"><?php echo $m['raw_description']; ?></td>  
 						
-						<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td> 
+						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td>  -->
+						<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?></td> 
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?></td>  -->
 						<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td> -->
