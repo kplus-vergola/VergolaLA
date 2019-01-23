@@ -1,11 +1,27 @@
+        function getNonHiddenVrFormItemsConfig(target_vr_item_config_list) {
+            var c1 = 0;
+            var temp_array = [];
+
+            for (c1 = 0; c1 < target_vr_item_config_list.length; c1++) {
+                if (target_vr_item_config_list[c1]['status'] != 'hidden') {
+                    temp_array[temp_array.length] = target_vr_item_config_list[c1];
+                }
+            }
+
+            return temp_array;
+        }
+
+
         function jsonDecodeVrFormItemsConfig() {
             var vr_type_form_query_value = document.getElementById('vr_type_form_query').value;
             var temp_text = '';
             var json_encoded_output = '';
+            var target_vr_item_config_list = [];
 
             if (vr_type_form_query_value != 'null') {
                 if (vr_item_config_saved_data_list[vr_type_form_query_value].length == 0) {
-                    vr_item_config_saved_data_list[vr_type_form_query_value] = vr_item_config_list[vr_type_form_query_value];
+                    target_vr_item_config_list = getNonHiddenVrFormItemsConfig(vr_item_config_list[vr_type_form_query_value]);
+                    vr_item_config_saved_data_list[vr_type_form_query_value] = target_vr_item_config_list;
                 }
 
                 json_encoded_output = vr_item_config_saved_data_list[vr_type_form_query_value];

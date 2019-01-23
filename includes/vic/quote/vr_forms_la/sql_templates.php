@@ -336,7 +336,7 @@ $sql_template_retrieve_vr_form_items_config_list = "
         ic.vr_subsection_ref_name, 
         ic.vr_subsection_display_name, 
         ic.vr_item_ref_name, 
-        ic.vr_item_display_name, 
+        iv.description AS 'vr_item_display_name', 
         ic.vr_item_display_name_input_type, 
         ic.vr_item_webbing, 
         ic.vr_item_webbing_input_type, 
@@ -362,12 +362,13 @@ $sql_template_retrieve_vr_form_items_config_list = "
         ic.vr_item_image_input_type, 
         ic.vr_item_config_internal_ref_name, 
         ic.vr_item_adhoc, 
-        ic.vr_record_index 
+        ic.vr_record_index, 
+        ic.status 
     FROM tblvrformitemsconfig ic 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
             ON ic.vr_item_ref_name = iv.inventoryid COLLATE utf8_unicode_ci 
     WHERE ic.vr_type_ref_name = '[VR_TYPE_REF_NAME]' 
-    AND ic.status = 'active' 
+    AND ic.status IN ('active', 'hidden') 
     ORDER BY ic.display_order 
     LIMIT 1000;
 ";
