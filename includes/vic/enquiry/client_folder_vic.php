@@ -628,10 +628,13 @@ if(isset($_POST['delete-drawing'])) {
           <tr>
             <td class="tbl-content">
               <textarea name="notestxt[]" id="notestxt"></textarea>
-              <div class="layer-date">Date: <input type="text" id="date_display" name="date_display" class="datetime_display" value="<?php print(Date(PHP_DFORMAT)); ?>" readonly>
+			  <!-- Removed extra line of notes -->
+              <!--
+			  <div class="layer-date">Date: <input type="text" id="date_display" name="date_display" class="datetime_display" value="<?php print(Date(PHP_DFORMAT)); ?>" readonly>
                 <input type="hidden" id="date_notes" name="date_notes[]" class="date_time" value="<?php print(Date(PHP_DFORMAT." H:i:s")); ?>" readonly />
               </div>
-              <div class="layer-whom">By Whom: <input type="text" id="username_notes" name="username_notes[]" class="username" value="<?php echo $userName; ?>" readonly></div>
+               <div class="layer-whom">By Whom: <input type="text" id="username_notes" name="username_notes[]" class="username" value="<?php echo $userName; ?>" readonly></div> 
+			   -->
             </td>
           </tr>
         </table>
@@ -653,7 +656,7 @@ if(isset($_POST['delete-drawing'])) {
             echo "
             <tr><td class=\"tbl-content\"><h1>Notes ". $i++ ."</h1><p>{$row['content']}</p>
             <div class=\"layer-date\">Date: " .date(PHP_DFORMAT, strtotime ($row['date_created'])) . "</div>
-            <div class=\"layer-whom\">By Whom: {$row['username']}</div>
+            <div class=\"layer-whom\">By Whom11: {$row['username']}</div>
             </td>
             </tr>";
           }
