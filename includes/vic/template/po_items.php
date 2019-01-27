@@ -306,9 +306,10 @@ SELECT
 	bm.id,
 	m.qty,
 	(bm.qty) AS 1_qty,
-	( im.inv_qty * bm.qty ) AS m_qty,
+	( im.inv_qty * bm.qty ) AS m_qty_,
+	SUM(bm.qty) AS m_qty,
 	bm.length,
-	( bm.qty * im.inv_qty ) AS ls_qty,
+	( bm.qty * im.inv_qty ) AS ls_qty__,
 	SUM( b.qty * im.inv_qty ) AS ts_qty,	
 
 	CASE
@@ -317,8 +318,8 @@ SELECT
 	CASE
 		
 		WHEN m.uom = 'Ea' THEN
-		SUM( im.inv_qty * bm.qty ) ELSE SUM( floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) ) 
-		END ELSE SUM( im.inv_qty * bm.qty ) 
+		SUM(im.inv_qty * bm.qty) ELSE SUM( floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) ) 
+		END ELSE SUM(im.inv_qty * bm.qty) 
 		END AS ls_qty,
 	CASE
 			
@@ -427,9 +428,10 @@ SELECT
 	bm.id,
 	m.qty,
 	(bm.qty) AS 1_qty,
-	( im.inv_qty * bm.qty ) AS m_qty,
+	( im.inv_qty * bm.qty ) AS m_qty_,
+	SUM(bm.qty) AS m_qty,
 	bm.length,
-	( bm.qty * im.inv_qty ) AS ls_qty,
+	( bm.qty * im.inv_qty ) AS ls_qty__,
 	SUM( b.qty * im.inv_qty ) AS ts_qty,	
 
 	CASE
@@ -438,8 +440,8 @@ SELECT
 	CASE
 		
 		WHEN m.uom = 'Ea' THEN
-		SUM( im.inv_qty * bm.qty ) ELSE SUM( floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) ) 
-		END ELSE SUM( im.inv_qty * bm.qty ) 
+		SUM(im.inv_qty * bm.qty) ELSE SUM( floor( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) ) 
+		END ELSE SUM(im.inv_qty * bm.qty) 
 		END AS ls_qty,
 	CASE
 			
@@ -796,7 +798,8 @@ CASE
 <tr> 
 	<td colspan="2"><?php echo $m['raw_description']; ?></td>  
 	<!-- <td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td> -->
-	<td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['ts_qty']):number_format($m['ls_qty']))); ?></td>
+	<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['ts_qty']):number_format($m['ls_qty']))); ?></td> -->
+	<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td> 
 	<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?></td>
 	<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?></td> 
 	<td style="text-align:right;"><?php echo $m['uom']; ?></td> 

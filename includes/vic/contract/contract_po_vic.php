@@ -552,12 +552,15 @@ while ($bm = mysql_fetch_assoc($qbm)) {
   
 				$amount = 0;
 				$m_qty = 1;  
-				$m_qty = $m['qty'];
+				// if $m_qty = $m['qty'];
+				// if $m_qty = $m['ls_qty'];
 				$m_length = $m['bm_length'];// * floor($bm['length'] / $m['length_per_ea']); 
 				if($m['uom']=="Inches"){
 					$amount = $m['raw_cost'] * $m_qty * $m_length;
+					$m_qty = $m['qty'];
 				}else{
 					$amount = $m['raw_cost'] * $m_qty;
+					$m_qty = $m['ls_qty'];
 				}
  
  				
@@ -567,7 +570,7 @@ while ($bm = mysql_fetch_assoc($qbm)) {
 					<input type="hidden" name="contract_item_cf_id[]"   value="<?php echo $m['contract_item_cf_id']; ?>" /> 
 					<input type="hidden" name="id[]"   value="<?php echo $m['id']; ?>" />
 					</td> 
-					<td ><?php echo number_format($m_qty); ?></td>
+					<td ><?php echo number_format($m_qty); ?></td> 
 					<td ><?php if($m['uom']=="Inches" && METRIC_SYSTEM == "inch") echo get_feet_value($m_length); else if($m['uom']=="Inches") echo get_feet_value($m['bm_length']); ?></td> 
 					<!-- <td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $bm['length_fraction'];} ?></td> -->
 					<td><?php if($m['uom']=="Inches" && $bm['length_fraction']!='null') {echo $config_vr_fractions_output_format[$bm['length_fraction']];} ?></td> 
