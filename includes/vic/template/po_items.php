@@ -327,7 +327,7 @@ SELECT
 		CASE
 				
 				WHEN m.uom = 'Ea' THEN
-				( m.raw_cost * im.inv_qty * bm.qty ) ELSE (
+				SUM(m.raw_cost * im.inv_qty * bm.qty) ELSE SUM(
 					(
 						m.raw_cost * im.inv_qty * floor(
 							( ( ( bm.length_feet * 12 ) + bm.length_inch ) / m.length_per_ea_us ) + COALESCE (
@@ -341,7 +341,7 @@ SELECT
 						) * bm.qty 
 					) 
 				) 
-			END ELSE ( m.raw_cost * im.inv_qty * bm.qty ) 
+			END ELSE SUM(m.raw_cost * im.inv_qty * bm.qty)
 		END AS ls_amount,
 	CASE
 			
