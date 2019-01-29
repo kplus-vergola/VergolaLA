@@ -606,16 +606,13 @@ if(isset($_POST['delete-drawing'])) {
           <?php
           $userName = $user->get( 'name' );
           ?>
-          <tr>
-            <td class="tbl-content">
-              <textarea name="notestxt[]" id="notestxt"></textarea>
-			  <!-- Removed extra line of notes -->
-              <!--
+         <tr>
+            <td class="tbl-content">              
 			  <div class="layer-date">Date: <input type="text" id="date_display" name="date_display" class="datetime_display" value="<?php print(Date(PHP_DFORMAT)); ?>" readonly>
                 <input type="hidden" id="date_notes" name="date_notes[]" class="date_time" value="<?php print(Date(PHP_DFORMAT." H:i:s")); ?>" readonly />
               </div>
-               <div class="layer-whom">By Whom: <input type="text" id="username_notes" name="username_notes[]" class="username" value="<?php echo $userName; ?>" readonly></div> 
-			   -->
+              <div class="layer-whom">By Whom: <input type="text" id="username_notes" name="username_notes[]" class="username" value="<?php echo $userName; ?>" readonly></div>			  
+			  <textarea name="notestxt[]" id="notestxt"></textarea>              
             </td>
           </tr>
         </table>
