@@ -374,15 +374,18 @@
                 total_pivot_strip = Math.ceil(total_endcap / 12);
                 total_link_bar = Math.ceil(total_louvre / 12);
 
-                setVrFormItemDataEntryRowValuesByRowIndex(
-                    vr_form_item_info2[c1]['row_index'], 
-                    [{"form_item_name":"vr_item_data_entry_qty", "variable_name":"vr_item_qty", "col_value":total_pivot_strip}]
-                );
+                if (vr_form_system_info['access_mode'] == 'quote_add' || 
+                    vr_form_system_info['access_mode'] == 'quote_edit') {
+                    setVrFormItemDataEntryRowValuesByRowIndex(
+                        vr_form_item_info2[c1]['row_index'], 
+                        [{"form_item_name":"vr_item_data_entry_qty", "variable_name":"vr_item_qty", "col_value":total_pivot_strip}]
+                    );
 
-                setVrFormItemDataEntryRowValuesByRowIndex(
-                    vr_form_item_info3[c1]['row_index'], 
-                    [{"form_item_name":"vr_item_data_entry_qty", "variable_name":"vr_item_qty", "col_value":total_link_bar}]
-                );
+                    setVrFormItemDataEntryRowValuesByRowIndex(
+                        vr_form_item_info3[c1]['row_index'], 
+                        [{"form_item_name":"vr_item_data_entry_qty", "variable_name":"vr_item_qty", "col_value":total_link_bar}]
+                    );
+                }
             }
 
             setVrFormItemDataEntryRowValuesByRowIndex(

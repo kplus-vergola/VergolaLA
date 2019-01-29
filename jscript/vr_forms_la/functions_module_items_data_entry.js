@@ -672,8 +672,7 @@
             }
 
             if (vr_form_system_info['access_mode'] == 'quote_add' || 
-                vr_form_system_info['access_mode'] == 'quote_edit' || 
-                vr_form_system_info['access_mode'] == 'contract_bom_edit') {
+                vr_form_system_info['access_mode'] == 'quote_edit') {
                 adhoc_criteria2 = {
                     "target_vr_item_sections_info":[
                         {
