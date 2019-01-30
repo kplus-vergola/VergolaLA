@@ -349,9 +349,12 @@ $sql = "
 			GROUP BY quoteid ORDER BY updated_at DESC
 		) AS f ON f.quoteid=c.clientid 
 		LEFT JOIN (
-			SELECT * FROM ver_chronoforms_data_notes_vic GROUP BY clientid
+			SELECT * FROM ver_chronoforms_data_notes_vic 
+				WHERE date_created IN ( SELECT max( date_created ) FROM ver_chronoforms_data_notes_vic GROUP BY clientid) 
+				GROUP BY clientid
 		) as n ON n.clientid=c.clientid 
 	WHERE 1=1  {$rep_filter3} 	
+	
 ";
 
 
