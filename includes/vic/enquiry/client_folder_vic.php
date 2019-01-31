@@ -634,7 +634,7 @@ if(isset($_POST['delete-drawing'])) {
             echo "
             <tr><td class=\"tbl-content\"><h1>Notes ". $i++ ."</h1><p>{$row['content']}</p>
             <div class=\"layer-date\">Date: " .date(PHP_DFORMAT, strtotime ($row['date_created'])) . "</div>
-            <div class=\"layer-whom\">By Whom11: {$row['username']}</div>
+            <div class=\"layer-whom\">By Whom: {$row['username']}</div>
             </td>
             </tr>";
           }
