@@ -6,7 +6,8 @@ $current_signed_in_user_access_profiles = $custom_configs_user['user_access_prof
 
 
 <?php  
-date_default_timezone_set('Australia/Victoria');
+// date_default_timezone_set('Australia/Victoria');
+date_default_timezone_set('America/Los_Angeles');
 $form->data['date_entered'] = date(PHP_DFORMAT);
 $form->data['date_time'] = date('d-M-Y g:i A');
 
@@ -625,17 +626,19 @@ $cnt = count($_POST['date_notes']);
 $cnt2 = count($_POST['username_notes']);
 $cnt3 = count($_POST['notestxt']);
 
+$utc = new DateTimeZone('America/Los_Angeles');
+$dt = new DateTime('now', $utc); 
+$date_created = $dt->format('Y-m-d H:i:s');
 
 if ($cnt > 0 && $cnt == $cnt2 && $cnt2 == $cnt3 && $checknotes != '') {
     $insertArr = array();
     
     for ($i=0; $i<$cnt; $i++) {
 
-        $insertArr[] = "('$getclientid', '" . mysql_real_escape_string($_POST['date_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['username_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['notestxt'][$i]) . "')";
+        // $insertArr[] = "('$getclientid', '" . mysql_real_escape_string($_POST['date_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['username_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['notestxt'][$i]) . "')";
+		$insertArr[] = "('$getclientid', '" . mysql_real_escape_string($_POST['date_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['username_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['notestxt'][$i]) . "', '". mysql_real_escape_string($date_created) . "')";
 }
-
-
- $queryn = "INSERT INTO ver_chronoforms_data_notes_vic (clientid, datenotes, username, content) VALUES " . implode(", ", $insertArr);
+ $queryn = "INSERT INTO ver_chronoforms_data_notes_vic (clientid, datenotes, username, content, date_created) VALUES " . implode(", ", $insertArr);
  
                            
              

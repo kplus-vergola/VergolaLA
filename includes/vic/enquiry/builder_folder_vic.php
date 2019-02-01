@@ -65,21 +65,18 @@ $checknotes = implode(", ", $_POST['notestxt']);
 $cnt = count($_POST['date_notes']);
 $cnt2 = count($_POST['username_notes']);
 $cnt3 = count($_POST['notestxt']);
-
+$utc = new DateTimeZone('America/Los_Angeles');
+$dt = new DateTime('now', $utc); 
+$date_created = $dt->format('Y-m-d H:i:s');
 
 if ($cnt > 0 && $cnt == $cnt2 && $cnt2 == $cnt3 && $checknotes != '') {
-    $insertArr = array();
-    
-	for ($i=0; $i<$cnt; $i++) {
-
-        $insertArr[] = "('$getclientid', '" . mysql_real_escape_string($_POST['date_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['username_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['notestxt'][$i]) . "')";
+$insertArr = array();
+//, '" . mysql_real_escape_string($_POST['date_notes'][$i]) . "'
+for ($i=0; $i<$cnt; $i++) {
+  $insertArr[] = "('$getclientid', '" . mysql_real_escape_string($_POST['date_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['username_notes'][$i]) . "', '" . mysql_real_escape_string($_POST['notestxt'][$i]) . "', '". mysql_real_escape_string($date_created) . "')";
 }
-
-
- $queryn = "INSERT INTO ver_chronoforms_data_notes_vic (clientid, datenotes, username, content) VALUES " . implode(", ", $insertArr);
- 
- mysql_query($queryn) or trigger_error("Insert failed: " . mysql_error());
-
+$queryn = "INSERT INTO ver_chronoforms_data_notes_vic (clientid, datenotes, username, content, date_created) VALUES " . implode(", ", $insertArr);
+mysql_query($queryn) or trigger_error("Insert failed: " . mysql_error()); 
 }
 
 //This is the Time Save 
