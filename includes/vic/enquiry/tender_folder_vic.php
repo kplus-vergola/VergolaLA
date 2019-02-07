@@ -682,9 +682,9 @@ $checknotes = implode(", ", $_POST['notestxt']);
 $cnt = count($_POST['date_notes']);
 $cnt2 = count($_POST['username_notes']);
 $cnt3 = count($_POST['notestxt']);
-$utc = new DateTimeZone('America/Los_Angeles');
-$dt = new DateTime('now', $utc); 
-$date_created = $dt->format('Y-m-d H:i:s');
+
+// get the local timezone 
+$date_created = $default_local_timezone;
 
 if ($cnt > 0 && $cnt == $cnt2 && $cnt2 == $cnt3 && $checknotes != '') {
 $insertArr = array();

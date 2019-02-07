@@ -689,3 +689,24 @@ $custom_functions_user = new CustomFunctionsUser();
 $current_signed_in_user_group_key = $custom_functions_user->getUserGroupKey($current_signed_in_user_info->groups);
 /* ===== end custom processes user ===== */
 ?>
+
+
+<?php 
+/* ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
+/* ===== begin custom config timezone ===== */
+/* ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
+if(HOST_SERVER!=""){
+    if(HOST_SERVER=="LA"){
+        $utc = new DateTimeZone('America/Los_Angeles');
+        $dt = new DateTime('now', $utc);        
+        $default_local_timezone = $dt->format('Y-m-d H:i:s');       
+    }else if(HOST_SERVER=="SA"){
+    
+    }else if(HOST_SERVER=="Victoria"){
+    
+    }else{
+    echo "Host server value mismatched or cannot be retrieved. \n Please check server configuration";
+    exit;
+    };
+}
+/* ===== end custom config timezone ===== */
