@@ -5,9 +5,6 @@ $current_signed_in_user_access_profiles = $custom_configs_user['user_access_prof
 ?>
 
 
-
-
-
   <?php 
   date_default_timezone_set('America/Los_Angeles');
 $user = JFactory::getUser();
@@ -584,6 +581,140 @@ if(isset($_POST['delete-drawing'])) {
   trackerinfo.setselectedClassTarget("link") //"link" or "linkparent"
   trackerinfo.init()
   </script>
+
+
+
+
+
+    <!--
+    begin: template revamp > initialise program
+    -->
+    <?php
+    include('document_handler/sql_templates.php');
+
+    $system_base_url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . '/';
+    $template_base_url = $system_base_url . 'system-management-vic/template-listing-vic/template-manage-vic';
+    $current_script_base_url = urlencode($system_base_url . $_SERVER['REQUEST_URI']);
+
+    $template_module = 'quote';
+    $current_user_info = JFactory::getUser();
+    $template_username = $current_user_info->username;
+    $template_password = $current_user_info->password;
+    $template_status = 'Published';
+
+    function getTemplateListInHtml($sql_template, $template_module, $template_entity_name, $template_folder_name, $template_content_category, $template_status, $template_download_option, $adhoc_entity_name) {
+        $html_text = '';
+        $temp_text = '';
+
+        $sql = str_replace(
+            array(
+                '[MODULE]', 
+                '[ENTITY_NAME]', 
+                '[FOLDER_NAME]', 
+                '[CONTENT_CATEGORY]', 
+                '[STATUS]'
+            ), 
+            array(
+                addslashes($template_module), 
+                addslashes($template_entity_name), 
+                addslashes($template_folder_name), 
+                addslashes($template_content_category),  
+                addslashes($template_status) 
+            ), 
+            $sql_template
+        );
+
+        $results1 = mysql_query($sql) or die(mysql_error()); 
+        $current_index = 0;
+        while($rs1 = mysql_fetch_array($results1)) {
+            $current_index++;
+
+            $current_template_entity_name = $adhoc_entity_name;
+            if ($template_download_option == 'dl') {
+                $current_template_entity_name = $rs1['entity_name'];
+            }
+
+            $current_template_folder_name = $rs1['folder_name'];
+            $current_template_file_id = $rs1['file_id'];
+            $current_template_file_name = $rs1['file_name'];
+            $current_template_file_external_ref_name = $rs1['file_external_ref_name'];
+            if (!is_null($rs1['file_version_external_ref_name'])) {
+                $current_template_file_external_ref_name = $rs1['file_version_external_ref_name'];
+            }
+
+            $hidden_field_prefix = '';
+            if ($template_download_option == 'dl') {
+                $hidden_field_prefix = 'edited_';
+            }
+
+            $html_text .= '
+                <input type="hidden" id="' . $hidden_field_prefix . strtolower($template_folder_name) . '_template_entity_name_' . $current_index . '" value="' . $current_template_entity_name . '" />
+                <input type="hidden" id="' . $hidden_field_prefix . strtolower($template_folder_name) . '_template_folder_name_' . $current_index . '" value="' . $current_template_folder_name . '" />
+                <input type="hidden" id="' . $hidden_field_prefix . strtolower($template_folder_name) . '_template_file_id_' . $current_index . '" value="' . $current_template_file_id . '" />
+                <input type="hidden" id="' . $hidden_field_prefix . strtolower($template_folder_name) . '_template_file_name_' . $current_index . '" value="' . $current_template_file_name . '" />
+                <input type="hidden" id="' . $hidden_field_prefix . strtolower($template_folder_name) . '_template_file_external_ref_name_' . $current_index . '" value="' . $current_template_file_external_ref_name . '" />
+            ';
+
+            $temp_text = '
+                <a id="template_link" rel="nofollow" title="" onclick="downloadTemplateFile(\'' . strtolower($template_folder_name) . '\', ' . $current_index . ', \'' . $template_download_option. '\'); return false;" href="" style="margin-right:5px;">' . $current_template_file_name . '</a>
+            ';
+            if ($template_download_option == 'dl') {
+                $temp_text = '
+                    <tr style="background-color: #cccccc;">
+                        <td><a id="" rel="nofollow" title="" onclick="downloadTemplateFile(\'edited_' . strtolower($template_folder_name) . '\', ' . $current_index . ', \'' . $template_download_option . '\'); return false;" href="" style="margin-right:5px;">' . $rs1['file_name'] . '</a></td>
+                        <td>' . date('d-M-Y H:i:s', strtotime($rs1['file_date_created'])) . '</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td><a id="" rel="nofollow" title="" onclick="deleteTemplateFile(\'edited_' . strtolower($template_folder_name) . '\', ' . $current_index . '); return false;" href="" style="margin-right:5px;">Delete</a></td>
+                    </tr>
+                ';
+            }
+
+            $html_text .= $temp_text;
+        } //end while
+
+        return $html_text;
+    }
+    ?>
+    <script>
+        var document_handler_template_config = {
+            "module":"<?php echo $template_module; ?>", 
+            "username":"<?php echo $template_username; ?>", 
+            "password":"<?php echo $template_password; ?>", 
+        };
+
+        function downloadTemplateFile(template_section, template_info_index, download_option) {
+            var entity_name = document.getElementById(template_section + '_template_entity_name_' + template_info_index).value;
+            var folder_name = document.getElementById(template_section + '_template_folder_name_' + template_info_index).value;
+            var file_name = document.getElementById(template_section + '_template_file_name_' + template_info_index).value;
+            var file_external_ref_name = document.getElementById(template_section + '_template_file_external_ref_name_' + template_info_index).value;
+
+            var url = '<?php echo $template_base_url; ?>?api_mode=1';
+            url += '&api_data={"document_handler_form_operation":"retrieve", "access_mode":"file_download", "module":"' + document_handler_template_config['module'] + '", "download_option":"' + download_option + '", "username":"' + document_handler_template_config['username'] + '", "password":"' + document_handler_template_config['password'] + '", "file_external_ref_name":"' + file_external_ref_name + '", "entity_name":"' + entity_name + '", "folder_name":"' + folder_name + '", "file_name":"' + file_name + '"}';
+            window.location = url;
+        }
+
+        function deleteTemplateFile(template_section, template_info_index) {
+            var entity_name = document.getElementById(template_section + '_template_entity_name_' + template_info_index).value;
+            var folder_name = document.getElementById(template_section + '_template_folder_name_' + template_info_index).value;
+            var file_id = document.getElementById(template_section + '_template_file_id_' + template_info_index).value;
+            var file_name = document.getElementById(template_section + '_template_file_name_' + template_info_index).value;
+            var file_external_ref_name = document.getElementById(template_section + '_template_file_external_ref_name_' + template_info_index).value;
+
+            var url = '<?php echo $template_base_url; ?>?api_mode=1';
+            url += '&api_data={"document_handler_form_operation":"delete", "access_mode":"file_delete", "module":"' + document_handler_template_config['module'] + '", "username":"' + document_handler_template_config['username'] + '", "password":"' + document_handler_template_config['password'] + '", "document_handler_form_file_data_entry":{"document_handler_form_file_id":"' + file_id + '"}}';
+            url += '&return_url=<?php echo $current_script_base_url; ?>';
+            window.location = url;
+        }
+    </script>
+    <!--
+    end: template revamp > initialise program
+    -->
+
+
+
+
+
   <!------------------------------------------------- Notes Content Tab -->
       <!-- --------------------------------------- Begin of Tab Content ------------------------------------------------ -->
   <div id="tabs_wrapper" class="notes-tab">
@@ -612,11 +743,11 @@ if(isset($_POST['delete-drawing'])) {
           ?>
          <tr>
             <td class="tbl-content">              
-			  <div class="layer-date">Date: <input type="text" id="date_display" name="date_display" class="datetime_display" value="<?php print(Date(PHP_DFORMAT)); ?>" readonly>
+              <div class="layer-date">Date: <input type="text" id="date_display" name="date_display" class="datetime_display" value="<?php print(Date(PHP_DFORMAT)); ?>" readonly>
                 <input type="hidden" id="date_notes" name="date_notes[]" class="date_time" value="<?php print(Date(PHP_DFORMAT." H:i:s")); ?>" readonly />
               </div>
-              <div class="layer-whom">By Whom: <input type="text" id="username_notes" name="username_notes[]" class="username" value="<?php echo $userName; ?>" readonly></div>			  
-			  <textarea name="notestxt[]" id="notestxt"></textarea>              
+              <div class="layer-whom">By Whom: <input type="text" id="username_notes" name="username_notes[]" class="username" value="<?php echo $userName; ?>" readonly></div>           
+              <textarea name="notestxt[]" id="notestxt"></textarea>              
             </td>
           </tr>
         </table>
@@ -661,6 +792,44 @@ if(isset($_POST['delete-drawing'])) {
       
       <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Contract_Variation_Letter" style="margin-right:5px;">Contract Variation Letter</a>
     </div>
+
+
+
+
+
+    <!--
+    begin: template revamp > template download list > client folder > sales
+    -->
+    <div class="modification-button-holder" style="background-color: #cccccc;">
+        <?php
+        $template_entity_name = 'Client Folder';
+        $template_folder_name = 'Sales';
+        $template_content_category = 'Template';
+        $template_download_option = 'dl_dm';
+        $adhoc_entity_name = 'CRC' . $_REQUEST['pid'];
+
+        $html_text = getTemplateListInHtml(
+            $sql_template_retrieve_template_download_list, 
+            $template_module, 
+            $template_entity_name, 
+            $template_folder_name, 
+            $template_content_category, 
+            $template_status, 
+            $template_download_option, 
+            $adhoc_entity_name
+        );
+        echo $html_text;
+        ?>
+    </div>
+    <!--
+    end: template revamp > template download list > client folder > sales
+    -->
+
+
+
+
+
+    <br />
     <div class="drawing-tbl">
     <table class="tbl-pdf" >
       <tr>
@@ -756,6 +925,41 @@ if(isset($_POST['delete-drawing'])) {
         }
     
   ?>
+
+
+
+
+
+        <!--
+        begin: template revamp > edited template download list > client folder > sales
+        -->
+        <?php
+        $template_entity_name = 'CRC' . $_REQUEST['pid'];
+        $template_folder_name = 'Sales';
+        $template_content_category = 'Download Data Merge';
+        $template_download_option = 'dl';
+        $adhoc_entity_name = '';
+
+        $html_text = getTemplateListInHtml(
+            $sql_template_retrieve_template_download_list, 
+            $template_module, 
+            $template_entity_name, 
+            $template_folder_name, 
+            $template_content_category, 
+            $template_status, 
+            $template_download_option, 
+            $adhoc_entity_name
+        );
+        echo $html_text;
+        ?>
+        <!--
+        end: template revamp > edited template download list > client folder > sales
+        -->
+
+
+
+
+
     </table>
     
     </div> 
@@ -791,6 +995,43 @@ if(isset($_POST['delete-drawing'])) {
     <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Protection_Work_Notice_Neighbour" style="margin-right:5px;">Protection Work Notice Neighbour</a>
     <a id="template_link" href="<?php echo JURI::base().'images/template/protection_work_notice_forms.pdf'; ?> " download  style="margin-right:5px;">Protection Work Notice forms</a>
     </div>
+
+
+
+
+
+    <!--
+    begin: template revamp > template download list > client folder > correspondence
+    -->
+    <div class="modification-button-holder" style="background-color: #cccccc;">
+        <?php
+        $template_entity_name = 'Client Folder';
+        $template_folder_name = 'Correspondence';
+        $template_content_category = 'Template';
+        $template_download_option = 'dl_dm';
+        $adhoc_entity_name = 'CRC' . $_REQUEST['pid'];
+
+        $html_text = getTemplateListInHtml(
+            $sql_template_retrieve_template_download_list, 
+            $template_module, 
+            $template_entity_name, 
+            $template_folder_name, 
+            $template_content_category, 
+            $template_status, 
+            $template_download_option, 
+            $adhoc_entity_name
+        );
+        echo $html_text;
+        ?>
+    </div>
+    <!--
+    end: template revamp > template download list > client folder > correspondence
+    -->
+
+
+
+
+
     <br/>
     <div class="drawing-tbl">
       <table class="tbl-pdf" >
@@ -883,6 +1124,40 @@ if(isset($_POST['delete-drawing'])) {
         echo "</tr>";
         } 
        ?>
+
+
+
+
+        <!--
+        begin: template revamp > edited template download list > client folder > correspondence
+        -->
+        <?php
+        $template_entity_name = 'CRC' . $_REQUEST['pid'];
+        $template_folder_name = 'Correspondence';
+        $template_content_category = 'Download Data Merge';
+        $template_download_option = 'dl';
+        $adhoc_entity_name = '';
+
+        $html_text = getTemplateListInHtml(
+            $sql_template_retrieve_template_download_list, 
+            $template_module, 
+            $template_entity_name, 
+            $template_folder_name, 
+            $template_content_category, 
+            $template_status, 
+            $template_download_option, 
+            $adhoc_entity_name
+        );
+        echo $html_text;
+        ?>
+        <!--
+        end: template revamp > edited template download list > client folder > correspondence
+        -->
+
+
+
+
+
       </table>
     </div>
      <br/><br/>
@@ -912,6 +1187,43 @@ if(isset($_POST['delete-drawing'])) {
         <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Build_Over_Easement" style="margin-right:5px;">Build Over Easement</a>
         <a id="template_link" rel="nofollow" title="PDF" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=auto,height=auto,directories=no,location=no'); return false;" href="index.php?cf_id=<?php echo $cf_id; ?>&pid=<?php echo $ClientID; ?>&option=com_chronoforms&tmpl=component&chronoform=Report_And_Consent" style="margin-right:5px;">Report and Consent</a>
       </div>
+
+
+
+
+
+    <!--
+    begin: template revamp > template download list > client folder > statutory
+    -->
+    <div class="modification-button-holder" style="background-color: #cccccc;">
+        <?php
+        $template_entity_name = 'Client Folder';
+        $template_folder_name = 'Statutory';
+        $template_content_category = 'Template';
+        $template_download_option = 'dl_dm';
+        $adhoc_entity_name = 'CRC' . $_REQUEST['pid'];
+
+        $html_text = getTemplateListInHtml(
+            $sql_template_retrieve_template_download_list, 
+            $template_module, 
+            $template_entity_name, 
+            $template_folder_name, 
+            $template_content_category, 
+            $template_status, 
+            $template_download_option, 
+            $adhoc_entity_name
+        );
+        echo $html_text;
+        ?>
+    </div>
+    <!--
+    end: template revamp > template download list > client folder > statutory
+    -->
+
+
+
+
+
       <br/>
         <div class="drawing-tbl">
           <table class="tbl-pdf" >
@@ -994,6 +1306,40 @@ if(isset($_POST['delete-drawing'])) {
               } 
            
            ?>
+
+
+
+
+        <!--
+        begin: template revamp > edited template download list > client folder > statutory
+        -->
+        <?php
+        $template_entity_name = 'CRC' . $_REQUEST['pid'];
+        $template_folder_name = 'Statutory';
+        $template_content_category = 'Download Data Merge';
+        $template_download_option = 'dl';
+        $adhoc_entity_name = '';
+
+        $html_text = getTemplateListInHtml(
+            $sql_template_retrieve_template_download_list, 
+            $template_module, 
+            $template_entity_name, 
+            $template_folder_name, 
+            $template_content_category, 
+            $template_status, 
+            $template_download_option, 
+            $adhoc_entity_name
+        );
+        echo $html_text;
+        ?>
+        <!--
+        end: template revamp > edited template download list > client folder > statutory
+        -->
+
+
+
+
+
           </table>
         </div>
          <br/><br/>
@@ -1215,9 +1561,6 @@ if (!$resultimg) {
 
         <input type="submit" value="Close" id="bcbtn" name="close" class="bbtn" >
     <?php } ?>
-
-
-
 
 
   </div>
