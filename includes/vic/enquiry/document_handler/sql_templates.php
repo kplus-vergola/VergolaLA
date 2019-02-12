@@ -461,20 +461,23 @@ $sql_template_retrieve_document_handler_folder_file_records_2 = "
 
 $sql_template_retrieve_template_data_tag_list_1 = "
     SELECT 
-        IFNULL(cp.repname, '') AS '[|SALES_REP|]', 
+        IFNULL(vu.name, '') AS '[|SALES_REP_NAME|]', 
+        IFNULL(vu.email, '') AS '[|SALES_REP_EMAIL|]', 
+        IFNULL(vu.mobile, '') AS '[|SALES_REP_MOBILE|]', 
+        IFNULL(REPLACE(vug.title, 'Victoria', ''), '') AS '[|SALES_REP_POSITION|]', 
         IFNULL(cp.clientid, '') AS '[|CLIENT_ID|]', 
         IFNULL(cp.client_title, '') AS '[|CLIENT_TITLE|]', 
         IFNULL(cp.client_firstname, '') AS '[|CLIENT_FIRSTNAME|]', 
         IFNULL(cp.client_lastname, '') AS '[|CLIENT_LASTNAME|]', 
         IFNULL(cp.builder_name, '') AS '[|BUILDER_NAME|]', 
         IFNULL(cp.builder_contact, '') AS '[|BUILDER_CONTACT|]', 
-        CONCAT(IFNULL(cp.client_address1, ''), ', ', IFNULL(cp.client_address2, '')) AS '[|CLIENT_ADDRESS|]', 
+        CONCAT(IFNULL(cp.client_address1, ''), ', ', IFNULL(cp.client_address2, '')) AS '[|CLIENT_STREET|]', 
         IFNULL(cp.client_suburb, '') AS '[|CLIENT_SUBURB|]', 
         IFNULL(cp.client_state, '') AS '[|CLIENT_STATE|]', 
         IFNULL(cp.client_postcode, '') AS '[|CLIENT_POSTCODE|]', 
         IFNULL(cp.client_mobile, '') AS '[|CLIENT_MOBILE|]', 
         IFNULL(cp.client_email, '') AS '[|CLIENT_EMAIL|]', 
-        CONCAT(IFNULL(cp.site_address1, ''), ', ', IFNULL(cp.site_address1, '')) AS '[|SITE_ADDRESS|]', 
+        CONCAT(IFNULL(cp.site_address1, ''), ', ', IFNULL(cp.site_address1, '')) AS '[|SITE_STREET|]', 
         IFNULL(cp.site_suburb, '') AS '[|SITE_SUBURB|]', 
         IFNULL(cp.site_state, '') AS '[|SITE_STATE|]', 
         IFNULL(cp.site_postcode, '') AS '[|SITE_POSTCODE|]', 
@@ -508,6 +511,12 @@ $sql_template_retrieve_template_data_tag_list_1 = "
         IFNULL(fu.status, 0) AS '[|QUOTE_STATUS|]', 
         IFNULL(CONCAT(DAY(cl.contractdate), '-', SUBSTRING(MONTHNAME(cl.contractdate), 1, 3), '-', YEAR(cl.contractdate)), '') AS '[|CONTRACT_DATE|]' 
     FROM ver_chronoforms_data_clientpersonal_vic AS cp
+        LEFT JOIN ver_users vu 
+            ON cp.repid = vu.id 
+        LEFT JOIN ver_user_usergroup_map vugm 
+            ON vu.id = vugm.user_id 
+        LEFT JOIN ver_usergroups vug 
+            ON vugm.group_id = vug.id 
         LEFT JOIN ver_chronoforms_data_followup_vic AS fu
             ON cp.clientid = fu.quoteid 
         LEFT JOIN ver_chronoforms_data_contract_list_vic AS cl 
@@ -520,20 +529,23 @@ $sql_template_retrieve_template_data_tag_list_1 = "
 
 $sql_template_retrieve_template_data_tag_list_2 = "
     SELECT 
-        IFNULL(cp.repname, '') AS '[|SALES_REP|]', 
+        IFNULL(vu.name, '') AS '[|SALES_REP_NAME|]', 
+        IFNULL(vu.email, '') AS '[|SALES_REP_EMAIL|]', 
+        IFNULL(vu.mobile, '') AS '[|SALES_REP_MOBILE|]', 
+        IFNULL(REPLACE(vug.title, 'Victoria', ''), '') AS '[|SALES_REP_POSITION|]', 
         IFNULL(cp.clientid, '') AS '[|CLIENT_ID|]', 
         IFNULL(cp.client_title, '') AS '[|CLIENT_TITLE|]', 
         IFNULL(cp.client_firstname, '') AS '[|CLIENT_FIRSTNAME|]', 
         IFNULL(cp.client_lastname, '') AS '[|CLIENT_LASTNAME|]', 
         IFNULL(cp.builder_name, '') AS '[|BUILDER_NAME|]', 
         IFNULL(cp.builder_contact, '') AS '[|BUILDER_CONTACT|]', 
-        CONCAT(IFNULL(cp.client_address1, ''), ', ', IFNULL(cp.client_address2, '')) AS '[|CLIENT_ADDRESS|]', 
+        CONCAT(IFNULL(cp.client_address1, ''), ', ', IFNULL(cp.client_address2, '')) AS '[|CLIENT_STREET|]', 
         IFNULL(cp.client_suburb, '') AS '[|CLIENT_SUBURB|]', 
         IFNULL(cp.client_state, '') AS '[|CLIENT_STATE|]', 
         IFNULL(cp.client_postcode, '') AS '[|CLIENT_POSTCODE|]', 
         IFNULL(cp.client_mobile, '') AS '[|CLIENT_MOBILE|]', 
         IFNULL(cp.client_email, '') AS '[|CLIENT_EMAIL|]', 
-        CONCAT(IFNULL(cp.site_address1, ''), ', ', IFNULL(cp.site_address1, '')) AS '[|SITE_ADDRESS|]', 
+        CONCAT(IFNULL(cp.site_address1, ''), ', ', IFNULL(cp.site_address1, '')) AS '[|SITE_STREET|]', 
         IFNULL(cp.site_suburb, '') AS '[|SITE_SUBURB|]', 
         IFNULL(cp.site_state, '') AS '[|SITE_STATE|]', 
         IFNULL(cp.site_postcode, '') AS '[|SITE_POSTCODE|]', 
@@ -567,6 +579,12 @@ $sql_template_retrieve_template_data_tag_list_2 = "
         IFNULL(fu.status, 0) AS '[|QUOTE_STATUS|]', 
         IFNULL(CONCAT(DAY(cl.contractdate), '-', SUBSTRING(MONTHNAME(cl.contractdate), 1, 3), '-', YEAR(cl.contractdate)), '') AS '[|CONTRACT_DATE|]' 
     FROM ver_chronoforms_data_clientpersonal_vic AS cp
+        LEFT JOIN ver_users vu 
+            ON cp.repid = vu.id 
+        LEFT JOIN ver_user_usergroup_map vugm 
+            ON vu.id = vugm.user_id 
+        LEFT JOIN ver_usergroups vug 
+            ON vugm.group_id = vug.id 
         LEFT JOIN ver_chronoforms_data_followup_vic AS fu
             ON cp.clientid = fu.quoteid 
         LEFT JOIN ver_chronoforms_data_contract_list_vic AS cl 
