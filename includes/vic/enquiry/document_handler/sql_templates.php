@@ -484,6 +484,7 @@ $sql_template_retrieve_template_data_tag_list_1 = "
         IFNULL(cp.site_mobile, '') AS '[|SITE_MOBILE|]', 
         IFNULL(cp.site_email, '') AS '[|SITE_EMAIL|]', 
         IFNULL(CONCAT(DAY(fu.quotedate), '-', SUBSTRING(MONTHNAME(fu.quotedate), 1, 3), '-', YEAR(fu.quotedate)), '') AS '[|QUOTE_DATE|]', 
+        IFNULL(CONCAT(DAY(cl.contractdate), '-', SUBSTRING(MONTHNAME(cl.contractdate), 1, 3), '-', YEAR(cl.contractdate)), '') AS '[|CONTRACT_DATE|]', 
         IFNULL(fu.project_name, '') AS '[|PROJECT_NAME|]', 
         IFNULL(fu.framework_type, '') AS '[|FRAMEWORK_TYPE|]', 
         FORMAT(IFNULL(fu.subtotal_vergola, 0), 2) AS '[|SUBTOTAL_VERGOLA|]', 
@@ -508,8 +509,12 @@ $sql_template_retrieve_template_data_tag_list_1 = "
         CONCAT(IFNULL(dm.length_feet, 0), 'ft ', IFNULL(dm.length_inch, 0), 'in ', IFNULL(dm.length_fraction, 0)) AS '[|BAY_LENGTH_IMPERIAL|]', 
         CONCAT(IFNULL(dm.width_feet, 0), 'ft ', IFNULL(dm.width_inch, 0), 'in ', IFNULL(dm.width_fraction, 0)) AS '[|BAY_WIDTH_IMPERIAL|]', 
         IFNULL(fu.bay, 0) AS '[|TOTAL_BAY|]', 
-        IFNULL(fu.status, 0) AS '[|QUOTE_STATUS|]', 
-        IFNULL(CONCAT(DAY(cl.contractdate), '-', SUBSTRING(MONTHNAME(cl.contractdate), 1, 3), '-', YEAR(cl.contractdate)), '') AS '[|CONTRACT_DATE|]' 
+        IFNULL(dq1.framework, '') AS '[|TYPE_OF_VERGOLA|]', 
+        IFNULL(dq2.description, '') AS '[|BEAM_TYPE|]', 
+        IFNULL(dq3.description, '') AS '[|COLUMN_TYPE|]', 
+        IFNULL(dq4.finish, '') AS '[|GUTTER_TYPE|]', 
+        IFNULL(dq5.finish, '') AS '[|FLASHING_TYPE|]', 
+        IFNULL(dm3.total_record, '') AS '[|NUMBER_OF_BAY|]' 
     FROM ver_chronoforms_data_clientpersonal_vic AS cp
         LEFT JOIN ver_users vu 
             ON cp.repid = vu.id 
@@ -523,6 +528,25 @@ $sql_template_retrieve_template_data_tag_list_1 = "
             ON fu.projectid = cl.projectid 
         LEFT JOIN ver_chronoforms_data_measurement_vic AS dm 
             ON cl.projectid = dm.projectid 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq1 
+            ON cl.projectid = dq1.projectid 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq2
+            ON cl.projectid = dq2.projectid AND dq2.inventoryid = 'IRV3' 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq3
+            ON cl.projectid = dq3.projectid AND dq3.inventoryid = 'IRV15' 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq4
+            ON cl.projectid = dq4.projectid AND LOWER(dq4.description) LIKE '%gutter%' 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq5
+            ON cl.projectid = dq5.projectid AND LOWER(dq5.description) LIKE '%flashing%' 
+        LEFT JOIN ( 
+            SELECT 
+                dm2.projectid, 
+                COUNT(*) AS 'total_record' 
+            FROM ver_chronoforms_data_measurement_vic dm2 
+            WHERE dm2.projectid = 'PRV1015' 
+            LIMIT 1 
+        ) AS dm3 
+            ON cl.projectid = dm3.projectid 
     ORDER BY cp.pid DESC 
     LIMIT 1;
 ";
@@ -552,6 +576,7 @@ $sql_template_retrieve_template_data_tag_list_2 = "
         IFNULL(cp.site_mobile, '') AS '[|SITE_MOBILE|]', 
         IFNULL(cp.site_email, '') AS '[|SITE_EMAIL|]', 
         IFNULL(CONCAT(DAY(fu.quotedate), '-', SUBSTRING(MONTHNAME(fu.quotedate), 1, 3), '-', YEAR(fu.quotedate)), '') AS '[|QUOTE_DATE|]', 
+        IFNULL(CONCAT(DAY(cl.contractdate), '-', SUBSTRING(MONTHNAME(cl.contractdate), 1, 3), '-', YEAR(cl.contractdate)), '') AS '[|CONTRACT_DATE|]', 
         IFNULL(fu.project_name, '') AS '[|PROJECT_NAME|]', 
         IFNULL(fu.framework_type, '') AS '[|FRAMEWORK_TYPE|]', 
         FORMAT(IFNULL(fu.subtotal_vergola, 0), 2) AS '[|SUBTOTAL_VERGOLA|]', 
@@ -576,8 +601,12 @@ $sql_template_retrieve_template_data_tag_list_2 = "
         CONCAT(IFNULL(dm.length_feet, 0), 'ft ', IFNULL(dm.length_inch, 0), 'in ', IFNULL(dm.length_fraction, 0)) AS '[|BAY_LENGTH_IMPERIAL|]', 
         CONCAT(IFNULL(dm.width_feet, 0), 'ft ', IFNULL(dm.width_inch, 0), 'in ', IFNULL(dm.width_fraction, 0)) AS '[|BAY_WIDTH_IMPERIAL|]', 
         IFNULL(fu.bay, 0) AS '[|TOTAL_BAY|]', 
-        IFNULL(fu.status, 0) AS '[|QUOTE_STATUS|]', 
-        IFNULL(CONCAT(DAY(cl.contractdate), '-', SUBSTRING(MONTHNAME(cl.contractdate), 1, 3), '-', YEAR(cl.contractdate)), '') AS '[|CONTRACT_DATE|]' 
+        IFNULL(dq1.framework, '') AS '[|TYPE_OF_VERGOLA|]', 
+        IFNULL(dq2.description, '') AS '[|BEAM_TYPE|]', 
+        IFNULL(dq3.description, '') AS '[|COLUMN_TYPE|]', 
+        IFNULL(dq4.finish, '') AS '[|GUTTER_TYPE|]', 
+        IFNULL(dq5.finish, '') AS '[|FLASHING_TYPE|]', 
+        IFNULL(dm3.total_record, '') AS '[|NUMBER_OF_BAY|]' 
     FROM ver_chronoforms_data_clientpersonal_vic AS cp
         LEFT JOIN ver_users vu 
             ON cp.repid = vu.id 
@@ -591,6 +620,25 @@ $sql_template_retrieve_template_data_tag_list_2 = "
             ON fu.projectid = cl.projectid 
         LEFT JOIN ver_chronoforms_data_measurement_vic AS dm 
             ON cl.projectid = dm.projectid 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq1 
+            ON cl.projectid = dq1.projectid 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq2
+            ON cl.projectid = dq2.projectid AND dq2.inventoryid = 'IRV3' 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq3
+            ON cl.projectid = dq3.projectid AND dq3.inventoryid = 'IRV15' 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq4
+            ON cl.projectid = dq4.projectid AND LOWER(dq4.description) LIKE '%gutter%' 
+        LEFT JOIN ver_chronoforms_data_quote_vic dq5
+            ON cl.projectid = dq5.projectid AND LOWER(dq5.description) LIKE '%flashing%' 
+        LEFT JOIN ( 
+            SELECT 
+                dm2.projectid, 
+                COUNT(*) AS 'total_record' 
+            FROM ver_chronoforms_data_measurement_vic dm2 
+            WHERE dm2.projectid = 'PRV1015' 
+            LIMIT 1 
+        ) AS dm3 
+            ON cl.projectid = dm3.projectid 
     WHERE (
         cp.clientid = '[ENTITY_NAME]'         
         OR 
