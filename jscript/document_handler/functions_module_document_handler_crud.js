@@ -576,7 +576,11 @@
         ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         */
         function downloadDocumentHandlerFormMsWordPlugin() {
+            var usage_message = '';
             var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
+
+            alert(document_handler_form_system_info['plugin_usage_message']);
+
             url += '&api_data={"document_handler_form_operation":"retrieve", "access_mode":"msword_plugin_download", "username":"' + login_user_info['username'] + '", "password":"' + login_user_info['password'] + '"}';
             window.location = url;
         }

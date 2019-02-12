@@ -15,6 +15,14 @@ $config['db']['folder_temp_id'] = '-1';
 $config['plugin']['msword']['file_extension'] = 'zip';
 $config['plugin']['msword']['file_name'] = 'VGL4W_03.zip';
 $config['plugin']['msword']['folder'] = 'C:\\xampp\\htdocs\\VergolaLA_as_live\\images\\document_handler\\plugin\\';
+$config['plugin']['usage_message'] = "
+NOTE:\n\n
+1. This MS-Word add-in is for working with Vergola web services only;\n
+2. This add-in will only works if you have either MS-Word 2013 or MS-Word 2016 on your machine;\n
+3. If you have previous version of this add-in on your machine, please uninstall it before you start;\n
+4. After downloading, extract its contents and then run setup.exe to start the installation process;\n
+5. Please contact the administrator if you encounter any issue while using this.\n
+";
 
 $config['document_handler']['form']['file_name'] = 'form_document_handler.php';
 

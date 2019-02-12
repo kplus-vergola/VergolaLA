@@ -205,6 +205,7 @@ if (isset($_REQUEST['api_mode'])) {
         $document_handler_form_entity_list = getResultsetInJson($sql, $db_connection);
     }
 
+    $document_handler_form_system_info['plugin_usage_message'] = $config['plugin']['usage_message'];
 
     $login_user_info_in_json = json_encode($login_user_info);
     $document_handler_form_system_info_in_json = json_encode($document_handler_form_system_info);
