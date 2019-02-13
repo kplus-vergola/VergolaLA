@@ -543,7 +543,7 @@ $sql_template_retrieve_template_data_tag_list_1 = "
                 dm2.projectid, 
                 COUNT(*) AS 'total_record' 
             FROM ver_chronoforms_data_measurement_vic dm2 
-            WHERE dm2.projectid = 'PRV1015' 
+            WHERE dm2.projectid = '[ENTITY_NAME]' 
             LIMIT 1 
         ) AS dm3 
             ON cl.projectid = dm3.projectid 
@@ -635,7 +635,7 @@ $sql_template_retrieve_template_data_tag_list_2 = "
                 dm2.projectid, 
                 COUNT(*) AS 'total_record' 
             FROM ver_chronoforms_data_measurement_vic dm2 
-            WHERE dm2.projectid = 'PRV1015' 
+            WHERE dm2.projectid = '[ENTITY_NAME]' 
             LIMIT 1 
         ) AS dm3 
             ON cl.projectid = dm3.projectid 
