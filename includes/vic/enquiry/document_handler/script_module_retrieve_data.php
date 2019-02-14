@@ -719,13 +719,12 @@ if ($enable_retrieve['template_data_tag_list'] == true) {
     if ($file_record != null) {
         switch ($file_record['file_content_category']) {
             case 'Template':
-                // $target_sql = $sql_template_retrieve_template_data_tag_list_1;
-                $target_sql = $sql_template_retrieve_template_data_tag_list_2;
+                $target_sql = $sql_template_retrieve_template_data_tag_list;
                 $target_entity_name = 'CRC11';
                 $delete_data_field_value = true;
                 break;
             case 'Download Data Merge':
-                $target_sql = $sql_template_retrieve_template_data_tag_list_2;
+                $target_sql = $sql_template_retrieve_template_data_tag_list;
                 $target_entity_name = $entity_name;
                 $delete_data_field_value = false;
                 break;

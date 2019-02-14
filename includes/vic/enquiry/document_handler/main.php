@@ -38,8 +38,12 @@ if (isset($_GET['data_migration']) && $_GET['data_migration'] == 'y') {
 }
 
 
-$log_contents = '';
-$program_begin_date_time = date('Y-m-d H:i:s');
+logInputData(
+    $config['switch']['log_input_data'], 
+    $config['input_data'], 
+    $config['document_handler']['path']['log_folder'], 
+    $config['document_handler']['path']['log_file_name'] 
+);
 
 
 if (isset($_REQUEST['api_mode'])) {
@@ -53,8 +57,16 @@ if (isset($_REQUEST['api_mode'])) {
     $api_response['message'] = array();
     $api_response['data'] = array();
 
-    if (isset($_REQUEST['api_data'])) {
-        $api_data_string = $_REQUEST['api_data'];
+    $api_data_string = '';
+    if (isset($_REQUEST['api_data']) && strlen(trim($_REQUEST['api_data'])) > 0) {
+        $api_data_string = trim($_REQUEST['api_data']);
+    } else {
+        if (strlen($config['input_data']['php_input']) > 0) {
+            $api_data_string = $config['input_data']['php_input'];
+        }
+    }
+
+    if ($api_data_string !== '') {
         $results = getApiData($api_data_string);
         $api_data_string = $results['api_data_string'];
         $api_data = $results['api_data'];

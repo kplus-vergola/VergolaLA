@@ -114,4 +114,113 @@ function requestCurlCall($url, $data, $call_method = 'post') {
 
     return json_decode($results, true);
 }
+
+
+function addDateTime($source_date_time, $output_format, $add_field_name, $add_field_value) {
+    $result = '';
+
+    $hour_value = date('H', strtotime($source_date_time));
+    $minute_value = date('i', strtotime($source_date_time));
+    $second_value = date('s', strtotime($source_date_time));
+    $month_value = date('m', strtotime($source_date_time));
+    $day_value = date('d', strtotime($source_date_time));
+    $year_value = date('Y', strtotime($source_date_time));
+
+    switch ($add_field_name) {
+        case 'hour':
+            $hour_value = date('H', strtotime($source_date_time)) + $add_field_value;
+            break;
+        case 'minute':
+            $minute_value = date('i', strtotime($source_date_time)) + $add_field_value;
+            break;
+        case 'second':
+            $second_value = date('s', strtotime($source_date_time)) + $add_field_value;
+            break;
+        case 'month':
+            $month_value = date('m', strtotime($source_date_time)) + $add_field_value;
+            break;
+        case 'day':
+            $day_value = date('d', strtotime($source_date_time)) + $add_field_value;
+            break;
+        case 'year':
+            $year_value = date('Y', strtotime($source_date_time)) + $add_field_value;
+            break;
+    }
+
+    $result = date(
+        $output_format, 
+        mktime(
+            $hour_value, 
+            $minute_value, 
+            $second_value, 
+            $month_value, 
+            $day_value, 
+            $year_value
+        )
+    );
+
+    return $result;
+}
+
+
+function logContents($file_folder, $file_name, $contents) {
+    $result = null;
+
+    list($file_name_part, $file_ext) = explode('.', $file_name);
+    $file_name = $file_name_part . '_' . date('Ymd') . '.' . $file_ext;
+
+    $yesterday_date = addDateTime(date('Y-m-d'), 'Ymd', 'day', -1);
+    $yesterday_file_name = $file_name_part . '_' . $yesterday_date . '.' . $file_ext;
+
+    $log_info = '';
+    $log_info .=  '##### ##### ##### ##### ##### ##### ##### ##### ##### #####';
+    $log_info .=  "\n";
+    $log_info .=  "log time: " . date('Y-m-d H:i:s');
+    $log_info .=  "\n";
+    $log_info .=  '##### ##### ##### ##### ##### ##### ##### ##### ##### #####';
+    $log_info .=  "\n";
+    $log_info .=  "\n";
+    $log_info .=  $contents;
+    $log_info .=  "\n";
+    $log_info .=  "\n";
+    $log_info .=  "\n";
+    $log_info .=  "\n";
+
+    if (file_exists($file_folder . $yesterday_file_name)) {
+        unlink($file_folder . $yesterday_file_name);
+    }
+
+    if (file_exists($file_folder . $file_name)) {
+        $result = file_put_contents($file_folder . $file_name, $log_info, FILE_APPEND);
+    } else {
+        $result = file_put_contents($file_folder . $file_name, $log_info);
+    }
+
+    return $result;
+}
+
+
+function logInputData($switch_log_input_data, $input_data, $file_folder, $file_name) {
+    $log_content = '';
+
+    if ($switch_log_input_data['php_input'] == 'on') {
+        if (strlen($input_data['php_input']) > 0) {
+            $log_content .= '// ----- $input_data[\'php_input\'] ----- //';
+            $log_content .= "\n";
+            $log_content .= $input_data['php_input'];
+            $log_content .= "\n\n";
+        }
+    }
+
+    if ($switch_log_input_data['request'] == 'on') {
+        if (strlen($input_data['request']) > 0) {
+            $log_content .= '// ----- $input_data[\'request\'] ----- //';
+            $log_content .= "\n";
+            $log_content .= $input_data['request'];
+            $log_content .= "\n\n";
+        }
+    }
+
+    logContents($file_folder, $file_name, $log_content);
+}
 ?>

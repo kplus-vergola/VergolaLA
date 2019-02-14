@@ -4,6 +4,12 @@ $config['path']['log_folder'] = 'C:\\xampp\htdocs\\VergolaLA_as_live\\logs\\';
 $config['path']['script_url'] = substr($config['path']['base_url'], 0, strlen($config['path']['base_url']) - 1) . $_SERVER['REQUEST_URI'];
 $config['path']['upload_folder'] = 'C:\\xampp\\htdocs\\VergolaLA_as_live\\images\\document_handler\\upload\\';
 
+$config['input_data']['php_input'] = stripslashes(trim(file_get_contents('php://input')));
+$config['input_data']['php_input'] = str_replace('{"api_data":"', '', $config['input_data']['php_input']);
+$config['input_data']['php_input'] = str_replace('"}"}', '"}', $config['input_data']['php_input']);
+$config['input_data']['php_input'] = str_replace('api_data={"', '{"', $config['input_data']['php_input']);
+$config['input_data']['request'] = json_encode($_REQUEST);
+
 $config['db']['host_name'] = 'localhost';
 $config['db']['db_name'] = 'vergola_quotedb_v5_us_as_live';
 $config['db']['user_name'] = 'root';
@@ -11,6 +17,9 @@ $config['db']['password'] = 'pass123';
 
 $config['db']['entity_temp_id'] = '-1';
 $config['db']['folder_temp_id'] = '-1';
+
+$config['switch']['log_input_data']['php_input'] = 'off';
+$config['switch']['log_input_data']['request'] = 'on';
 
 $config['plugin']['msword']['file_extension'] = 'zip';
 $config['plugin']['msword']['file_name'] = 'VGL4W_03.zip';
@@ -24,6 +33,8 @@ NOTE:\n\n
 5. Please contact the administrator if you encounter any issue while using this.\n
 ";
 
+$config['document_handler']['path']['log_folder'] = $config['path']['log_folder'] . 'document_handler\\';
+$config['document_handler']['path']['log_file_name'] = 'document_handler.log';
 $config['document_handler']['form']['file_name'] = 'form_document_handler.php';
 
 include('config_mime_types.php');
