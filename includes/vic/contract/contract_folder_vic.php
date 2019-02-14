@@ -1855,7 +1855,7 @@ $groups = $user->get('groups');
     begin: template revamp > initialise program
     -->
     <?php
-    include('/includes/vic/enquiry/document_handler/sql_templates.php');
+    include($_SERVER['DOCUMENT_ROOT'] . '/includes/vic/enquiry/document_handler/sql_templates.php');
 
     $system_base_url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . '/';
     $template_base_url = $system_base_url . 'system-management-vic/template-listing-vic/template-manage-vic';
