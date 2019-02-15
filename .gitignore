@@ -1,6 +1,7 @@
 # ignore folder(s)
 /administrator/cache/
 /cache/
+/images/document_handler/upload/
 /images/drawings/
 /images/file_upload/
 /images/pic/

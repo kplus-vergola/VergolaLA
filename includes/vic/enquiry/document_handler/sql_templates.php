@@ -467,10 +467,24 @@ $sql_template_retrieve_template_data_tag_list = "
         IFNULL(REPLACE(vug.title, 'Victoria', ''), '') AS '[|SALES_REP_POSITION|]', 
         IFNULL(cp.clientid, '') AS '[|CLIENT_ID|]', 
         IFNULL(cp.client_title, '') AS '[|CLIENT_TITLE|]', 
+        /*
         IFNULL(cp.client_firstname, '') AS '[|CLIENT_FIRSTNAME|]', 
         IFNULL(cp.client_lastname, '') AS '[|CLIENT_LASTNAME|]', 
         IFNULL(cp.builder_name, '') AS '[|BUILDER_NAME|]', 
         IFNULL(cp.builder_contact, '') AS '[|BUILDER_CONTACT|]', 
+        */
+        ( 
+            CASE WHEN (cp.client_firstname IS NULL) OR (cp.client_firstname = '') 
+            THEN IFNULL(cp.builder_name, '') 
+            ELSE IFNULL(cp.client_firstname, '') 
+            END 
+        ) AS '[|CLIENT_FIRSTNAME|]', 
+        ( 
+            CASE WHEN (cp.client_lastname IS NULL) OR (cp.client_lastname = '') 
+            THEN IFNULL(cp.builder_contact, '') 
+            ELSE IFNULL(cp.client_lastname, '') 
+            END 
+        ) AS '[|CLIENT_LASTNAME|]', 
         IFNULL(cp.client_address1, '') AS '[|CLIENT_STREET_1|]', 
         IFNULL(cp.client_address2, '') AS '[|CLIENT_STREET_2|]', 
         IFNULL(cp.client_suburb, '') AS '[|CLIENT_SUBURB|]', 
@@ -494,9 +508,9 @@ $sql_template_retrieve_template_data_tag_list = "
         IFNULL(IFNULL(dm.width, 0), 0) AS '[|VERGOLA_WIDTH|]', 
         */
         CONCAT(
-            IFNULL(dm.length_feet, 0), '(ft) ', IFNULL(dm.length_inch, 0), '(in) ', IFNULL(dm.length_fraction, 0), 
+            IFNULL(dm.length_feet, 0), '(ft) ', IFNULL(dm.length_inch, 0), '(in) ', IFNULL(dm.length_fraction, 0), '(frac)', 
             ' X ', 
-            IFNULL(dm.width_feet, 0), '(ft) ', IFNULL(dm.width_inch, 0), '(in) ', IFNULL(dm.width_fraction, 0)
+            IFNULL(dm.width_feet, 0), '(ft) ', IFNULL(dm.width_inch, 0), '(in) ', IFNULL(dm.width_fraction, 0), '(frac)'
         ) AS '[|VERGOLA_SIZE|]', 
         IFNULL(dq1.framework, '') AS '[|TYPE_OF_VERGOLA|]', 
         IFNULL(dq2.description, '') AS '[|BEAM_TYPE|]', 
@@ -506,21 +520,17 @@ $sql_template_retrieve_template_data_tag_list = "
         IFNULL(dm3.total_record, '') AS '[|NUMBER_OF_BAY|]', 
         FORMAT(IFNULL(fu.subtotal_vergola, 0), 2) AS '[|SUBTOTAL_VERGOLA|]', 
         FORMAT(IFNULL(fu.subtotal_disbursement, 0), 2) AS '[|SUBTOTAL_DISBURSEMENT|]', 
-        FORMAT(IFNULL(fu.total_rrp, 0), 2) AS '[|TOTAL_RRP|]', 
-        FORMAT(IFNULL(fu.total_gst, 0), 2) AS '[|TOTAL_GST|]', 
-        FORMAT(IFNULL(fu.total_rrp_gst, 0), 2) AS '[|TOTAL_RRP_GST|]', 
         FORMAT(IFNULL(fu.total_cost, 0), 2) AS '[|TOTAL_COST|]', 
-        FORMAT(IFNULL(fu.total_cost_gst, 0), 2) AS '[|TOTAL_COST_GST|]', 
-        FORMAT(IFNULL(fu.gst_percent, 0), 2) AS '[|GST_PERCENTAGE|]', 
-        FORMAT(IFNULL(fu.comm_percent, 0), 2) AS '[|COMMISSION_PERCENTAGE|]', 
+        FORMAT(IFNULL(fu.total_cost_gst, 0), 2) AS '[|TOTAL_GST|]', 
+        FORMAT(IFNULL(fu.total_rrp_gst, 0), 2) AS '[|TOTAL_PRICE|]', 
         FORMAT(IFNULL(fu.sales_comm, 0), 2) AS '[|SALES_COMMISSION|]', 
+        FORMAT(IFNULL(fu.com_pay1, 0), 2) AS '[|COMMISSION_PAY_1|]', 
+        FORMAT(IFNULL(fu.com_pay2, 0), 2) AS '[|COMMISSION_PAY_2|]', 
+        FORMAT(IFNULL(fu.com_final, 0), 2) AS '[|COMMISSION_FINAL|]', 
         FORMAT(IFNULL(fu.install_comm, 0), 2) AS '[|INSTALL_COMMISSION|]', 
         FORMAT(IFNULL(fu.payment_deposit, 0), 2) AS '[|PAYMENT_DEPOSIT|]', 
         FORMAT(IFNULL(fu.payment_progress, 0), 2) AS '[|PAYMENT_PROGRESS|]', 
-        FORMAT(IFNULL(fu.payment_final, 0), 2) AS '[|PAYMENT_FINAL|]', 
-        FORMAT(IFNULL(fu.com_pay1, 0), 2) AS '[|COMMISSION_PAY_1|]', 
-        FORMAT(IFNULL(fu.com_pay2, 0), 2) AS '[|COMMISSION_PAY_2|]', 
-        FORMAT(IFNULL(fu.com_final, 0), 2) AS '[|COMMISSION_FINAL|]' 
+        FORMAT(IFNULL(fu.payment_final, 0), 2) AS '[|PAYMENT_FINAL|]' 
     FROM ver_chronoforms_data_clientpersonal_vic AS cp
         LEFT JOIN ver_users vu 
             ON cp.repid = vu.id 
