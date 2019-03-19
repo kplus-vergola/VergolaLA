@@ -18,8 +18,31 @@
             var c1 = 0;
             var c2 = 0;
             var file_folder_link_count = 0;
+            var current_attach_list = [];
 
             if (data_rows.length > 0) {
+                for (c1 = 0; c1 < data_rows[0]['file_folder_entity_list'].length; c1++) {
+                    current_attach_list[current_attach_list.length] = {"entity_id":data_rows[0]['file_folder_entity_list'][c1]['entity_name'], "entity_info":data_rows[0]['file_folder_entity_list'][c1]['entity_description']};
+                }
+                document_handler_form_current_entity_search_attach_list = current_attach_list;
+
+                initHtmlDivSelectBox2(
+                    document_handler_form_current_entity_search_attach_list, 
+                    'document_handler_form_divselect_1',
+                    'document_handler_form_checkbox_1',
+                    'document_handler_form_entity_attach_divselectbox', 
+                    'document_handler_form_entity_attach_link', 
+                    [], 
+                    [], 
+                    'entity_id', 
+                    'entity_info', 
+                    '', 
+                    'document_handler_form_entity_attach_link_count', 
+                    false
+                );
+
+                document.getElementById('document_handler_form_document_category').value = document.getElementById('document_handler_form_entity_folder_list').options[document.getElementById('document_handler_form_entity_folder_list').selectedIndex].text;
+
                 document.getElementById('document_handler_form_file_id').value = data_rows[0]['file_id'];
                 document.getElementById('document_handler_form_file_name').value = data_rows[0]['file_name']; /* data_rows[0]['folder_name']; */
                 document.getElementById('document_handler_form_file_description').value = data_rows[0]['file_description'];
@@ -70,7 +93,27 @@
             var c1 = 0;
             var file_folder_link_count = 0;
 
+            document_handler_form_current_search_target = '';
+            document_handler_form_current_entity_search_attach_list = [];
+            document_handler_form_current_contact_from_search_attach_list = [];
+            document_handler_form_current_contact_to_search_attach_list = [];
+
+            document_handler_form_entity_search_list = [];
+            document_handler_form_entity_search_keyword = '';
+
+            document_handler_form_contact_from_search_list = [];
+            document_handler_form_contact_from_search_keyword = '';
+
+            document_handler_form_contact_to_search_list = [];
+            document_handler_form_contact_to_search_keyword = '';
+
             document.getElementById('document_handler_form_folder_file_list').value = 'null';
+
+            document.getElementById('document_handler_form_entity_attach_divselectbox').innerHTML = '';
+            document.getElementById('document_handler_form_entity_attach_link_count').value = '0';
+
+            document.getElementById('document_handler_form_document_category').value = 'null';
+
             document.getElementById('document_handler_form_file_id').value = '';
             document.getElementById('document_handler_form_file_info').value = '';
             document.getElementById('document_handler_form_file_name').value = '';
@@ -86,9 +129,9 @@
             document.getElementById('document_handler_form_file_size').value = '';
             document.getElementById('document_handler_form_file_external_ref_name').value = '';
             document.getElementById('document_handler_form_file_content_date').value = '';
-            document.getElementById('document_handler_form_file_content_category').value = '';
+            document.getElementById('document_handler_form_file_content_category').value = 'null';
             document.getElementById('document_handler_form_file_date_created').value = '';
-            document.getElementById('document_handler_form_file_status').value = '';
+            document.getElementById('document_handler_form_file_status').value = 'null';
 
             if (! isNaN(document.getElementById('document_handler_form_file_folder_link_count').value)) {
                 file_folder_link_count = parseInt(document.getElementById('document_handler_form_file_folder_link_count').value);
@@ -105,6 +148,9 @@
 
         function closeDocumentHandlerForm() {
             var url = document_handler_form_system_info['base_url'] + 'system-management-vic/template-listing-vic';
+            if (document_handler_form_system_info['module'] == '') {
+                url = document_handler_form_system_info['base_url'] + 'system-management-vic/folio-listing-vic';
+            }
             window.location = url;
         }
 
@@ -120,6 +166,9 @@
             var current_file_folder_link_index = 0;
             var temp_text = '';
             var total_file_folder_link_selected = 0;
+
+            document_handler_form_file_data_entry['document_handler_form_current_entity_search_attach_list'] = document_handler_form_current_entity_search_attach_list;
+            document_handler_form_file_data_entry['document_handler_form_document_category'] = document.getElementById('document_handler_form_document_category').value;
 
             document_handler_form_file_data_entry['document_handler_form_file_id'] = document.getElementById('document_handler_form_file_id').value;
 
@@ -138,7 +187,7 @@
             document_handler_form_file_data_entry['document_handler_form_file_content_date'] = document.getElementById('document_handler_form_file_content_date').value;
 
             document_handler_form_file_data_entry['document_handler_form_file_content_category'] = document.getElementById('document_handler_form_file_content_category').value;
-            if (default_content_category != 'null') {
+            if (default_content_category != 'null' && default_content_category != '') {
                 document_handler_form_file_data_entry['document_handler_form_file_content_category'] = default_content_category;
             }
 
@@ -178,12 +227,24 @@
             initHtmlSelectBox(
                 document_categories_list, 
                 'document_handler_form_selectbox_1', 
-                'document_handler_form_file_content_category', 
+                'document_handler_form_document_category', 
                 [], 
                 [], 
                 'ref_name', 
                 'display_name', 
                 '', 
+                false
+            );
+
+            initHtmlSelectBox(
+                content_categories_list, 
+                'document_handler_form_selectbox_1', 
+                'document_handler_form_file_content_category', 
+                [], 
+                [], 
+                'ref_name', 
+                'display_name', 
+                'Document', 
                 false
             );
 
@@ -195,7 +256,7 @@
                 [], 
                 'ref_name', 
                 'display_name', 
-                '', 
+                'Unpublished', 
                 false
             );
         }

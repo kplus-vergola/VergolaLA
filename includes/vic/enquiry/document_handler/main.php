@@ -7,6 +7,7 @@ set_time_limit(3600);
 ----- include files -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
+include('functions_crud.php');
 include('functions_general.php');
 include('functions_module.php');
 include('sql_templates.php');
@@ -70,6 +71,8 @@ if (isset($_REQUEST['api_mode'])) {
         $results = getApiData($api_data_string);
         $api_data_string = $results['api_data_string'];
         $api_data = $results['api_data'];
+
+// print_r($api_data); exit;
 
         if (json_decode($api_data_string, true) == true) {
             if (isset($api_data['username'])) {
@@ -204,20 +207,30 @@ if (isset($_REQUEST['api_mode'])) {
     }
 
     if ($document_handler_form_system_info['access_mode'] == 'entity_view') {
-        $sql = str_replace(
-            array(
-                '[MODULE]', 
-            ), 
-            array(
-                    addslashes($document_handler_form_system_info['module']), 
-            ), 
-            $sql_template_retrieve_entity_list
-        );
-
+        if ($document_handler_form_system_info['module'] != '') {
+            $sql = str_replace(
+                array(
+                    '[MODULE]', 
+                ), 
+                array(
+                        addslashes($document_handler_form_system_info['module']), 
+                ), 
+                $sql_template_retrieve_entity_list_1
+            );
+        } else {
+            $sql = str_replace(
+                array(
+                ), 
+                array(
+                ), 
+                $sql_template_retrieve_entity_list_2
+            );
+        }
         $document_handler_form_entity_list = getResultsetInJson($sql, $db_connection);
     }
 
-    $document_handler_form_system_info['plugin_usage_message'] = $config['plugin']['usage_message'];
+    $document_handler_form_system_info['plugin_msword_usage_message'] = $config['plugin']['msword']['usage_message'];
+    $document_handler_form_system_info['plugin_msoutlook_usage_message'] = $config['plugin']['msoutlook']['usage_message'];
 
     $login_user_info_in_json = json_encode($login_user_info);
     $document_handler_form_system_info_in_json = json_encode($document_handler_form_system_info);

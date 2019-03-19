@@ -3,38 +3,30 @@
         ----- helper -----
         ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         */
-        function filterVrFormJsonArray(json_array_ref_name) {
+        function filterVrFormJsonContent(json_ref_name) {
             var c1;
             var c2;
             var special_chars_encoding_list = [
                 {"search_text":"&", "replace_text":"[AMPERSAND]"}
             ];
             var json_text = '';
+            var filtered_json_text = '';
 
-            switch (json_array_ref_name) {
+            switch (json_ref_name) {
+                case 'document_handler_form_entity_data_entry':
+                    json_text = JSON.stringify(document_handler_form_entity_data_entry);
+                    filtered_json_text = encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list);
+                    document_handler_form_entity_data_entry = JSON.parse(filtered_json_text);
+                    break;
                 case 'document_handler_form_folder_data_entry':
-                    for (c1 in document_handler_form_folder_data_entry) {
-                        if ((typeof document_handler_form_folder_data_entry[c1] === 'object') && (document_handler_form_folder_data_entry[c1] !== null)) {
-                            /* no processing for object or array */
-                        } else {
-                            json_text = document_handler_form_folder_data_entry[c1];
-                            if (isNaN(json_text)) {
-                                document_handler_form_folder_data_entry[c1] = encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list);
-                            }
-                        }
-                    }
+                    json_text = JSON.stringify(document_handler_form_folder_data_entry);
+                    filtered_json_text = encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list);
+                    document_handler_form_folder_data_entry = JSON.parse(filtered_json_text);
                     break;
                 case 'document_handler_form_file_data_entry':
-                    for (c1 in document_handler_form_file_data_entry) {
-                        if ((typeof document_handler_form_file_data_entry[c1] === 'object') && (document_handler_form_file_data_entry[c1] !== null)) {
-                            /* no processing for object or array */
-                        } else {
-                            json_text = document_handler_form_file_data_entry[c1];
-                            if (isNaN(json_text)) {
-                                document_handler_form_file_data_entry[c1] = encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list);
-                            }
-                        }
-                    }
+                    json_text = JSON.stringify(document_handler_form_file_data_entry);
+                    filtered_json_text = encodeSpecialCharsInJsonText(json_text, special_chars_encoding_list);
+                    document_handler_form_file_data_entry = JSON.parse(filtered_json_text);
                     break;
             }
         }
@@ -142,7 +134,7 @@
             var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
             var request_data = {
                 "document_handler_form_operation":"retrieve", 
-                "access_mode":'entity_list', 
+                "access_mode":"entity_list", 
                 "module":document_handler_form_system_info['module'], 
                 "username":login_user_info['username'], 
                 "password":login_user_info['password']
@@ -199,6 +191,7 @@
                 );
 
                 document.getElementById('document_handler_form_entity_folder_list').value = default_folder_id;
+
                 processEntityFolderSelectionChange();
             } else {
                 console.log('processRetrieveResultDocumentHandlerFormFoldersData > results:');
@@ -211,7 +204,7 @@
             var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
             var request_data = {
                 "document_handler_form_operation":"retrieve", 
-                "access_mode":'entity_folder_list', 
+                "access_mode":"entity_folder_list", 
                 "module":document_handler_form_system_info['module'], 
                 "username":login_user_info['username'], 
                 "password":login_user_info['password'], 
@@ -283,7 +276,7 @@
             var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
             var request_data = {
                 "document_handler_form_operation":"retrieve", 
-                "access_mode":'folder_file_list', 
+                "access_mode":"folder_file_list", 
                 "default_content_category":default_content_category, 
                 "username":login_user_info['username'], 
                 "password":login_user_info['password'], 
@@ -292,6 +285,94 @@
 
             requestAjaxCall(url, request_data, 'processRetrieveResultDocumentHandlerFormFilesData');
             if (debug_mode_enabled == 'y') {
+                console.log('request_data:');
+                console.log(request_data);
+            }
+        }
+
+
+
+        /*
+        ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+        ----- retrieve entity search data -----
+        ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+        */
+        function processRetrieveResultEntitySearchData(results) {
+            var current_search_list = [];
+
+            if (results['error'] == 'null') {
+                if (debug_mode_enabled == 'y') {
+                    console.log('processRetrieveResultEntitySearchData > results:');
+                    console.log(results);
+                }
+
+                current_search_list = results['data']['document_handler_form_entity_search_list'];
+
+                document.getElementById('document_handler_form_entity_search_total_result').innerHTML = current_search_list.length + ' found';
+
+                initHtmlDivSelectBox2(
+                    current_search_list, 
+                    'document_handler_form_divselect_1',
+                    'document_handler_form_checkbox_1',
+                    'document_handler_form_entity_search_divselectbox', 
+                    'document_handler_form_entity_search_link', 
+                    [], 
+                    [], 
+                    'entity_id', 
+                    'entity_info', 
+                    '', 
+                    'document_handler_form_entity_search_link_count', 
+                    false
+                );
+
+                switch (document_handler_form_current_search_target) {
+                    case 'entity_search':
+                        document_handler_form_entity_search_list = current_search_list;
+                        break;
+                    case 'contact_from_search':
+                        document_handler_form_contact_from_search_list = current_search_list;
+                        break;
+                    case 'contact_to_search':
+                        document_handler_form_contact_to_search_list = current_search_list;
+                        break;
+                }
+            } else {
+                console.log('processRetrieveResultEntitySearchData > results:');
+                console.log(results);
+            }
+        }
+
+
+        function retrieveEntitySearchData() {
+            var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
+            var target_access_mode = '';
+            var request_data = {};
+
+            switch (document_handler_form_current_search_target) {
+                case 'entity_search':
+                    target_access_mode = 'entity_search_list';
+                    break;
+                case 'contact_from_search':
+                    target_access_mode = 'contact_from_search_list';
+                    break;
+                case 'contact_to_search':
+                    target_access_mode = 'contact_to_search_list';
+                    break;
+            }
+
+            request_data = {
+                "document_handler_form_operation":"retrieve", 
+                "access_mode":target_access_mode, 
+                "module":document_handler_form_system_info['module'], 
+                "username":login_user_info['username'], 
+                "password":login_user_info['password'], 
+                "entity_search_keyword":document.getElementById('document_handler_form_entity_search_keyword').value 
+            };
+
+            requestAjaxCall(url, request_data, 'processRetrieveResultEntitySearchData');
+            if (debug_mode_enabled == 'y') {
+                console.log('url:');
+                console.log(url);
                 console.log('request_data:');
                 console.log(request_data);
             }
@@ -330,7 +411,7 @@
 
         function saveDocumentHandlerFormEntityDataEntry() {
             copyDocumentHandlerFormEntityDataEntryFormValue();
-            filterVrFormJsonArray('document_handler_form_entity_data_entry');
+            filterVrFormJsonContent('document_handler_form_entity_data_entry');
 
             var document_handler_form_operation = 'save';
             if (document.getElementById('document_handler_form_entity_id').value.length > 0) {
@@ -389,7 +470,7 @@
 
         function saveDocumentHandlerFormFolderDataEntry() {
             copyDocumentHandlerFormFolderDataEntryFormValue();
-            filterVrFormJsonArray('document_handler_form_folder_data_entry');
+            filterVrFormJsonContent('document_handler_form_folder_data_entry');
 
             var document_handler_form_operation = 'save';
             if (document.getElementById('document_handler_form_folder_id').value.length > 0) {
@@ -433,6 +514,8 @@
                 document.getElementById('document_handler_form_file_id').value = results['message']['new_file_id'];
 
                 refreshEntityFilePropertiesToFields();
+
+                closeDocumentHandlerForm();
             } else {
                 console.log('processSaveResultDocumentHandlerFormFileDataEntry > results:');
                 console.log(results);
@@ -442,17 +525,23 @@
 
         function saveDocumentHandlerFormFileDataEntry() {
             copyDocumentHandlerFormFileDataEntryFormValue();
-            filterVrFormJsonArray('document_handler_form_file_data_entry');
+            filterVrFormJsonContent('document_handler_form_file_data_entry');
 
             var document_handler_form_operation = 'save';
             if (document.getElementById('document_handler_form_file_id').value.length > 0) {
                 document_handler_form_operation = 'update';
             }
 
+            var access_mode = 'file_save';
+            if (document_handler_form_system_info['module'] == '') {
+                access_mode = 'folio_save';
+            }
+
             var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
             var request_data = {
                 "document_handler_form_operation":document_handler_form_operation, 
-                "access_mode":"file_save", 
+                "access_mode":access_mode, 
+                "module":document_handler_form_system_info['module'], 
                 "username":login_user_info['username'], 
                 "password":login_user_info['password'], 
                 "document_handler_form_file_data_entry":document_handler_form_file_data_entry
@@ -579,9 +668,25 @@
             var usage_message = '';
             var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
 
-            alert(document_handler_form_system_info['plugin_usage_message']);
+            alert(document_handler_form_system_info['plugin_msword_usage_message']);
 
             url += '&api_data={"document_handler_form_operation":"retrieve", "access_mode":"msword_plugin_download", "username":"' + login_user_info['username'] + '", "password":"' + login_user_info['password'] + '"}';
+            window.location = url;
+        }
+
+
+        /*
+        ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+        ----- download msoutlook plugin -----
+        ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+        */
+        function downloadDocumentHandlerFormMsOutlookPlugin() {
+            var usage_message = '';
+            var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
+
+            alert(document_handler_form_system_info['plugin_msoutlook_usage_message']);
+
+            url += '&api_data={"document_handler_form_operation":"retrieve", "access_mode":"msoutlook_plugin_download", "username":"' + login_user_info['username'] + '", "password":"' + login_user_info['password'] + '"}';
             window.location = url;
         }
 
@@ -624,7 +729,7 @@
 
         function deleteDocumentHandlerFormEntityDataEntry() {
             copyDocumentHandlerFormEntityDataEntryFormValue();
-            filterVrFormJsonArray('document_handler_form_entity_data_entry');
+            filterVrFormJsonContent('document_handler_form_entity_data_entry');
 
             var document_handler_form_operation = 'delete';
             var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
@@ -670,7 +775,7 @@
 
         function deleteDocumentHandlerFormFolderDataEntry() {
             copyDocumentHandlerFormFolderDataEntryFormValue();
-            filterVrFormJsonArray('document_handler_form_folder_data_entry');
+            filterVrFormJsonContent('document_handler_form_folder_data_entry');
 
             var document_handler_form_operation = 'delete';
             var url = document_handler_form_system_info['script_url'] + '&api_mode=1';
@@ -716,7 +821,7 @@
 
         function deleteDocumentHandlerFormFileDataEntry() {
             copyDocumentHandlerFormFileDataEntryFormValue();
-            filterVrFormJsonArray('document_handler_form_file_data_entry');
+            filterVrFormJsonContent('document_handler_form_file_data_entry');
 
             var document_handler_form_operation = 'delete';
             var url = document_handler_form_system_info['script_url'] + '&api_mode=1';

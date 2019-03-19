@@ -51,6 +51,20 @@ $sql_template_insert_document_handler_entity_folder = "
         '[USER_ID]',        '[GROUP_ID]',       NOW() 
     );
 ";
+$sql_template_insert_document_handler_entity_folder_2 = "
+    INSERT INTO document_handler_entity_folder 
+    (
+        id, 
+        module,             entity_id,          folder_id, 
+        user_id,            group_id,           date_created 
+    )
+    VALUES 
+    (
+        [ENTITY_FOLDER_ID], 
+        '[MODULE]',         '[ENTITY_ID]',     '[FOLDER_ID]', 
+        '[USER_ID]',        '[GROUP_ID]',       NOW() 
+    );
+";
 
 
 
@@ -96,6 +110,20 @@ $sql_template_insert_document_handler_folder_file = "
         '[USER_ID]',       '[GROUP_ID]',        NOW() 
     );
 ";
+$sql_template_insert_document_handler_folder_file_2 = "
+    INSERT INTO document_handler_folder_file 
+    (
+        id, 
+        folder_id,          file_id, 
+        user_id,            group_id,           date_created 
+    )
+    VALUES 
+    (
+        '[FOLDER_FILE_ID]', 
+        '[FOLDER_ID]',     '[FILE_ID]', 
+        '[USER_ID]',       '[GROUP_ID]',        NOW() 
+    );
+";
 
 
 
@@ -111,6 +139,27 @@ $sql_template_insert_document_handler_file_version = "
     (
         '[FILE_ID]',        '[FILE_EXTERNAL_REF_NAME]', 
         '[USER_ID]',        '[GROUP_ID]',                   NOW() 
+    );
+";
+
+
+
+$sql_template_insert_document_handler_entity_folder_file_2 = "
+    INSERT INTO document_handler_entity_folder_file 
+    (
+        id, 
+        entity_id,          entity_name,  
+        folder_id,          folder_name, 
+        file_id,            file_name, 
+        user_id,            group_id,           date_created 
+    )
+    VALUES 
+    (
+        '[ENTITY_FOLDER_FILE_ID]', 
+        '[ENTITY_ID]',     '[ENTITY_NAME]', 
+        '[FOLDER_ID]',     '[FOLDER_NAME]', 
+        '[FILE_ID]',       '[FILE_NAME]', 
+        '[USER_ID]',       '[GROUP_ID]',        NOW() 
     );
 ";
 
@@ -144,32 +193,6 @@ $sql_template_insert_document_handler_activity_log = "
 ----- retrieve ??? -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
-$sql_template_retrieve_table_status = "
-    SHOW TABLE STATUS LIKE '[TABLE_NAME]';
-";
-
-
-$sql_template_retrieve_entity_list = "
-    SELECT 
-        -1 AS 'entity_id', 
-        'TEMPORARY' AS 'entity_name', 
-        '' AS 'entity_description', 
-        '' AS 'entity_summary', 
-        '' AS 'entity_date_created' 
-    UNION 
-    SELECT 
-        id AS 'entity_id', 
-        name AS 'entity_name', 
-        description AS 'entity_description', 
-        summary AS 'entity_summary', 
-        date_created AS 'entity_date_created' 
-    FROM document_handler_entity 
-    WHERE module = '[MODULE]' 
-    ORDER BY entity_id DESC 
-    LIMIT 1000;
-";
-
-
 $sql_template_retrieve_current_login_user_info = "
     SELECT 
         ver_users.username AS 'username', 
@@ -194,7 +217,59 @@ $sql_template_retrieve_current_login_user_info = "
 
 
 
-$sql_template_retrieve_entity_folder_list = "
+$sql_template_retrieve_table_status = "
+    SHOW TABLE STATUS LIKE '[TABLE_NAME]';
+";
+
+
+
+
+
+$sql_template_retrieve_entity_list_1 = "
+    SELECT 
+        -1 AS 'entity_id', 
+        'TEMPORARY' AS 'entity_name', 
+        '' AS 'entity_description', 
+        '' AS 'entity_summary', 
+        '' AS 'entity_date_created' 
+    UNION 
+    SELECT 
+        id AS 'entity_id', 
+        name AS 'entity_name', 
+        description AS 'entity_description', 
+        summary AS 'entity_summary', 
+        date_created AS 'entity_date_created' 
+    FROM document_handler_entity 
+    WHERE date_deleted IS NULL 
+    AND module = '[MODULE]' 
+    ORDER BY entity_id DESC 
+    LIMIT 1000;
+";
+$sql_template_retrieve_entity_list_2 = "
+    SELECT 
+        -1 AS 'entity_id', 
+        'TEMPORARY' AS 'entity_name', 
+        '' AS 'entity_description', 
+        '' AS 'entity_summary', 
+        '' AS 'entity_date_created' 
+    UNION 
+    SELECT 
+        id AS 'entity_id', 
+        name AS 'entity_name', 
+        description AS 'entity_description', 
+        summary AS 'entity_summary', 
+        date_created AS 'entity_date_created' 
+    FROM document_handler_entity 
+    WHERE date_deleted IS NULL 
+    ORDER BY entity_id DESC 
+    LIMIT 1000;
+";
+
+
+
+
+
+$sql_template_retrieve_entity_folder_list_1 = "
     SELECT 
         -1 AS 'folder_id', 
         'TEMPORARY' AS 'folder_name', 
@@ -218,14 +293,37 @@ $sql_template_retrieve_entity_folder_list = "
     ORDER BY folder_id DESC 
     LIMIT 1000;
 ";
+$sql_template_retrieve_entity_folder_list_2 = "
+    SELECT 
+        -1 AS 'folder_id', 
+        'TEMPORARY' AS 'folder_name', 
+        '' AS 'folder_description', 
+        '' AS 'folder_summary', 
+        '' AS 'folder_date_created' 
+    UNION 
+    SELECT 
+        document_handler_folder.id AS 'folder_id', 
+        document_handler_folder.name AS 'folder_name', 
+        document_handler_folder.description AS 'folder_description', 
+        document_handler_folder.summary AS 'folder_summary', 
+        document_handler_folder.date_created AS 'folder_date_created' 
+    FROM document_handler_entity_folder 
+        LEFT JOIN document_handler_folder 
+            ON document_handler_entity_folder.folder_id = document_handler_folder.id 
+    WHERE document_handler_entity_folder.date_deleted IS NULL 
+    AND document_handler_folder.date_deleted IS NULL 
+    AND document_handler_entity_folder.entity_id = '[ENTITY_ID]' 
+    ORDER BY folder_id DESC 
+    LIMIT 1000;
+";
 
 
 $sql_template_retrieve_folder_entity_list = "
     SELECT 
         document_handler_entity.id AS 'entity_id', 
-        document_handler_entity.name AS 'entity_entity_code', 
-        '' AS 'entity_details', 
-        '' AS 'entity_date_lodged'
+        document_handler_entity.name AS 'entity_name', 
+        document_handler_entity.description AS 'entity_description', 
+        document_handler_entity.date_created AS 'entity_date_created' 
     FROM document_handler_entity_folder 
         LEFT JOIN document_handler_entity 
             ON document_handler_entity_folder.entity_id = document_handler_entity.id 
@@ -240,38 +338,108 @@ $sql_template_retrieve_folder_entity_list = "
 
 
 
-
-$sql_template_retrieve_folder_file_list = "
+$sql_template_retrieve_entity_by_name = "
     SELECT 
-        document_handler_file.id AS 'file_id', 
-        document_handler_file.name AS 'file_name', 
-        document_handler_file.description AS 'file_description', 
-        document_handler_file.summary AS 'file_summary', 
-        document_handler_file.from AS 'file_from', 
-        document_handler_file.date_received AS 'file_date_received', 
-        document_handler_file.to AS 'file_to', 
-        document_handler_file.date_sent AS 'file_date_sent', 
-        document_handler_file.content_date AS 'file_content_date', 
-        document_handler_file.content_category AS 'file_content_category', 
-        document_handler_file.original_name AS 'file_original_name', 
-        document_handler_file.extension AS 'file_extension', 
-        document_handler_file.type AS 'file_type', 
-        document_handler_file.size AS 'file_size', 
-        document_handler_file.external_ref_name AS 'file_external_ref_name', 
-        document_handler_file.status AS 'file_status', 
-        document_handler_file.date_created AS 'file_date_created' 
-    FROM document_handler_folder_file 
-        LEFT JOIN document_handler_file 
-            ON document_handler_folder_file.file_id = document_handler_file.id 
-    WHERE document_handler_folder_file.date_deleted IS NULL 
-    AND document_handler_file.date_deleted IS NULL 
-    AND document_handler_folder_file.folder_id = '[FOLDER_ID]' 
-    ORDER BY document_handler_file.name 
-    LIMIT 1000;
+        id AS 'entity_id', 
+        name AS 'entity_name', 
+        description AS 'entity_description', 
+        summary AS 'entity_summary', 
+        date_created AS 'entity_date_created' 
+    FROM document_handler_entity 
+    WHERE date_deleted IS NULL 
+    AND name = '[ENTITY_NAME]' 
+    ORDER BY entity_id 
+    LIMIT 1;
+";
+$sql_template_retrieve_entity_folder_by_ids = "
+    SELECT 
+        id, 
+        entity_id, 
+        folder_id 
+    FROM document_handler_entity_folder 
+    WHERE date_deleted IS NULL 
+    AND entity_id = '[ENTITY_ID]' 
+    AND folder_id = '[FOLDER_ID]' 
+    ORDER BY entity_id, folder_id 
+    LIMIT 1;
+";
+$sql_template_retrieve_entity_folder_by_names = "
+    SELECT 
+        document_handler_entity_folder.id, 
+        document_handler_entity_folder.entity_id, 
+        document_handler_entity_folder.folder_id, 
+        document_handler_entity.name AS 'entity_name', 
+        document_handler_folder.name AS 'folder_name' 
+    FROM document_handler_entity 
+        LEFT JOIN document_handler_entity_folder 
+            ON document_handler_entity.id = document_handler_entity_folder.entity_id 
+        LEFT JOIN document_handler_folder 
+            ON document_handler_entity_folder.folder_id = document_handler_folder.id 
+    WHERE document_handler_entity.date_deleted IS NULL 
+    AND document_handler_entity_folder.date_deleted IS NULL 
+    AND document_handler_folder.date_deleted IS NULL 
+    AND document_handler_entity.id IS NOT NULL 
+    AND document_handler_folder.id IS NOT NULL 
+    AND document_handler_entity.name = '[ENTITY_NAME]' 
+    AND document_handler_folder.name = '[FOLDER_NAME]' 
+    ORDER BY document_handler_entity_folder.entity_id, document_handler_entity_folder.folder_id 
+    LIMIT 1;
 ";
 
 
-$sql_template_retrieve_folder_file_list_2 = "
+$sql_template_retrieve_folder_by_name = "
+    SELECT 
+        id AS 'folder_id', 
+        name AS 'folder_name', 
+        description AS 'folder_description', 
+        summary AS 'folder_summary', 
+        date_created AS 'folder_date_created' 
+    FROM document_handler_folder 
+    WHERE date_deleted IS NULL 
+    AND name = '[FOLDER_NAME]' 
+    ORDER BY folder_id 
+    LIMIT 1;
+";
+$sql_template_retrieve_folder_file_by_ids = "
+    SELECT 
+        id, 
+        folder_id, 
+        file_id 
+    FROM document_handler_folder_file 
+    WHERE date_deleted IS NULL 
+    AND folder_id = '[FOLDER_ID]' 
+    AND file_id = '[FILE_ID]' 
+    ORDER BY folder_id, file_id 
+    LIMIT 1;
+";
+$sql_template_retrieve_folder_file_by_names = "
+    SELECT 
+        document_handler_folder_file.id, 
+        document_handler_folder_file.folder_id, 
+        document_handler_folder_file.file_id, 
+        document_handler_folder.name AS 'folder_name', 
+        document_handler_file.name AS 'file_name' 
+    FROM document_handler_folder 
+        LEFT JOIN document_handler_folder_file 
+            ON document_handler_folder.id = document_handler_folder_file.folder_id 
+        LEFT JOIN document_handler_file 
+            ON document_handler_folder_file.file_id = document_handler_file.id 
+    WHERE document_handler_folder.date_deleted IS NULL 
+    AND document_handler_folder_file.date_deleted IS NULL 
+    AND document_handler_file.date_deleted IS NULL 
+    AND document_handler_folder.id IS NOT NULL 
+    AND document_handler_file.id IS NOT NULL 
+    AND document_handler_folder.name = '[FOLDER_NAME]' 
+    AND document_handler_file.name = '[FILE_NAME]' 
+    ORDER BY document_handler_folder_file.folder_id, document_handler_folder_file.file_id 
+    LIMIT 1;
+";
+
+
+
+
+
+$sql_template_retrieve_folder_file_list_1 = "
     SELECT 
         document_handler_file.id AS 'file_id', 
         document_handler_file.name AS 'file_name', 
@@ -302,6 +470,36 @@ $sql_template_retrieve_folder_file_list_2 = "
 ";
 
 
+$sql_template_retrieve_folder_file_list_2 = "
+    SELECT 
+        document_handler_file.id AS 'file_id', 
+        document_handler_file.name AS 'file_name', 
+        document_handler_file.description AS 'file_description', 
+        document_handler_file.summary AS 'file_summary', 
+        document_handler_file.from AS 'file_from', 
+        document_handler_file.date_received AS 'file_date_received', 
+        document_handler_file.to AS 'file_to', 
+        document_handler_file.date_sent AS 'file_date_sent', 
+        document_handler_file.content_date AS 'file_content_date', 
+        document_handler_file.content_category AS 'file_content_category', 
+        document_handler_file.original_name AS 'file_original_name', 
+        document_handler_file.extension AS 'file_extension', 
+        document_handler_file.type AS 'file_type', 
+        document_handler_file.size AS 'file_size', 
+        document_handler_file.external_ref_name AS 'file_external_ref_name', 
+        document_handler_file.status AS 'file_status', 
+        document_handler_file.date_created AS 'file_date_created' 
+    FROM document_handler_folder_file 
+        LEFT JOIN document_handler_file 
+            ON document_handler_folder_file.file_id = document_handler_file.id 
+    WHERE document_handler_folder_file.date_deleted IS NULL 
+    AND document_handler_file.date_deleted IS NULL 
+    AND document_handler_folder_file.folder_id = '[FOLDER_ID]' 
+    ORDER BY document_handler_file.name 
+    LIMIT 1000;
+";
+
+
 $sql_template_retrieve_file_folder_list = "
     SELECT 
         document_handler_folder.id AS 'folder_id', 
@@ -319,6 +517,36 @@ $sql_template_retrieve_file_folder_list = "
 ";
 
 
+$sql_template_retrieve_file_folder_entity_list = "
+    SELECT 
+        document_handler_entity.id AS 'entity_id', 
+        document_handler_entity.name AS 'entity_name', 
+        document_handler_entity.description AS 'entity_description', 
+        document_handler_entity.date_created AS 'entity_date_created', 
+        document_handler_folder.id AS 'folder_id', 
+        document_handler_folder.name AS 'folder_name', 
+        document_handler_folder.description AS 'folder_description', 
+        document_handler_folder.date_created AS 'folder_date_created'
+    FROM document_handler_entity_folder_file 
+        LEFT JOIN document_handler_entity 
+            ON document_handler_entity_folder_file.entity_id = document_handler_entity.id 
+        LEFT JOIN document_handler_folder 
+            ON document_handler_entity_folder_file.folder_id = document_handler_folder.id 
+        LEFT JOIN document_handler_file 
+            ON document_handler_entity_folder_file.file_id = document_handler_file.id 
+    WHERE document_handler_entity_folder_file.date_deleted IS NULL 
+    AND document_handler_entity.date_deleted IS NULL 
+    AND document_handler_folder.date_deleted IS NULL 
+    AND document_handler_file.date_deleted IS NULL 
+    AND document_handler_entity.id IS NOT NULL 
+    AND document_handler_folder.id IS NOT NULL 
+    AND document_handler_file.id IS NOT NULL 
+    AND document_handler_entity_folder_file.file_id = '[FILE_ID]' 
+    ORDER BY document_handler_entity_folder_file.id 
+    LIMIT 1000;
+";
+
+
 $sql_template_retrieve_file_version_list = "
     SELECT 
         document_handler_file_version.external_ref_name AS 'file_version_external_ref_name', 
@@ -331,6 +559,37 @@ $sql_template_retrieve_file_version_list = "
     AND document_handler_file_version.file_id = '[FILE_ID]' 
     ORDER BY document_handler_file_version.date_created DESC 
     LIMIT 1000;
+";
+
+
+$sql_template_retrieve_entity_folder_file_by_names = "
+    SELECT 
+        document_handler_entity_folder_file.id, 
+        document_handler_entity.id AS 'entity_id', 
+        document_handler_folder.id AS 'folder_id', 
+        document_handler_file.id AS 'file_id', 
+        document_handler_entity.name AS 'entity_name', 
+        document_handler_folder.name AS 'folder_name', 
+        document_handler_file.name AS 'file_name' 
+    FROM document_handler_entity 
+        LEFT JOIN document_handler_entity_folder_file 
+            ON document_handler_entity.id = document_handler_entity_folder_file.entity_id 
+        LEFT JOIN document_handler_folder 
+            ON document_handler_entity_folder_file.folder_id = document_handler_folder.id 
+        LEFT JOIN document_handler_file 
+            ON document_handler_entity_folder_file.file_id = document_handler_file.id 
+    WHERE document_handler_entity.date_deleted IS NULL 
+    AND document_handler_folder.date_deleted IS NULL 
+    AND document_handler_file.date_deleted IS NULL 
+    AND document_handler_entity_folder_file.date_deleted IS NULL 
+    AND document_handler_entity.id IS NOT NULL 
+    AND document_handler_folder.id IS NOT NULL 
+    AND document_handler_file.id IS NOT NULL 
+    AND document_handler_entity.name = '[ENTITY_NAME]' 
+    AND document_handler_folder.name = '[FOLDER_NAME]' 
+    AND document_handler_file.name = '[FILE_NAME]' 
+    ORDER BY document_handler_entity_folder_file.entity_name, document_handler_entity_folder_file.folder_name, document_handler_entity_folder_file.file_name 
+    LIMIT 1;
 ";
 
 
@@ -629,6 +888,150 @@ $sql_template_retrieve_template_download_list = "
 
 
 
+$sql_template_retrieve_entity_search_list = array();
+$sql_template_retrieve_entity_search_list[] = "
+    SELECT 
+        'Contact' AS 'entity_source_display_name', 
+        cp.clientid AS 'entity_id', 
+        CONCAT(
+            'Contact > ', cp.clientid, ' > ', 
+            'Name: ', cp.client_firstname, ' ', cp.client_lastname, '; ', 
+            'Address: ', cp.client_address1, ', ', cp.client_address2, ', ', cp.client_suburb, ', ', cp.client_state, ', ', cp.client_postcode, '; ', 
+            'Phone: ', cp.client_mobile, '(mobile)', cp.client_hmphone, '(home), ', cp.client_wkphone, '(office); ', 
+            'Email: ', cp.client_email, '; '
+        ) AS 'entity_info', 
+        cp.datelodged AS 'entity_date_created' 
+    FROM ver_chronoforms_data_clientpersonal_vic AS cp 
+    WHERE LOWER(cp.clientid) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_firstname) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_lastname) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_address1) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_address2) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_suburb) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_state) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_postcode) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_mobile) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_hmphone) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_wkphone) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_email) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.datelodged) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    GROUP BY cp.clientid 
+    ORDER BY entity_source_display_name, entity_id 
+    LIMIT 1000;
+";
+$sql_template_retrieve_entity_search_list[] = "
+    SELECT 
+        'Quote' AS 'entity_source_display_name', 
+        dfu.quoteid AS 'entity_id', 
+        CONCAT(
+            'Quote > ', dfu.quoteid, ' > ', 
+            'Prospect Name: ', cp2.client_firstname, ' ', cp2.client_lastname, '; ', 
+            'Project Name: ', dfu.project_name, '; ', 
+            'Framework: ', dfu.framework_type, '; ', 
+            'Cost: ', dfu.total_rrp_gst, ' (', dfu.total_cost, '+', dfu.total_cost_gst, '); ', 
+            'Sales Rep: ', dfu.sales_rep, '; '
+        ) AS 'entity_info', 
+        dfu.quotedate AS 'entity_date_created' 
+    FROM ver_chronoforms_data_followup_vic AS dfu 
+        LEFT JOIN ver_chronoforms_data_clientpersonal_vic cp2 
+            ON dfu.quoteid = cp2.clientid 
+    WHERE LOWER(dfu.quoteid) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(dfu.project_name) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(dfu.framework_type) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(dfu.sales_rep) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(dfu.quotedate) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    GROUP BY dfu.quoteid 
+    ORDER BY entity_source_display_name, entity_id 
+    LIMIT 1000;
+";
+$sql_template_retrieve_entity_search_list[] = "
+    SELECT 
+        'Contract' AS 'entity_source_display_name', 
+        dcl.projectid AS 'entity_id', 
+        CONCAT(
+            'Contract > ', dcl.projectid, ' > ', 
+            'Client Name: ', cp3.client_firstname, ' ', cp3.client_lastname, '; ', 
+            'Project Name: ', dcl.project_name, '; ', 
+            'Framework: ', dcl.framework_type, ', ', dcl.framework, '; ', 
+            'Cost: ', dcl.total_rrp_gst, ' (', dcl.total_cost, '+', dcl.total_cost_gst, '); ', 
+            'Sales Rep: ', dcl.sales_rep, '; '
+        ) AS 'entity_info', 
+        dcl.contractdate AS 'entity_date_created' 
+    FROM ver_chronoforms_data_contract_list_vic AS dcl 
+        LEFT JOIN ver_chronoforms_data_clientpersonal_vic cp3 
+            ON dcl.quoteid = cp3.clientid 
+    WHERE LOWER(dcl.projectid) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(dcl.project_name) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(dcl.framework_type) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(dcl.framework) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(dcl.sales_rep) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(dcl.contractdate) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    GROUP BY dcl.projectid 
+    ORDER BY entity_source_display_name, entity_id 
+    LIMIT 1000;
+";
+
+
+
+
+$sql_template_retrieve_contact_search_list = array();
+$sql_template_retrieve_contact_search_list[] = "
+    SELECT 
+        'Contact' AS 'entity_source_display_name', 
+        CONCAT(cp.client_firstname, ' ', cp.client_lastname, '(', cp.client_email, ')') AS 'entity_id', 
+        CONCAT(
+            'Contact > ', cp.clientid, ' > ', 
+            'Name: ', cp.client_firstname, ' ', cp.client_lastname, '; ', 
+            'Address: ', cp.client_address1, ', ', cp.client_address2, ', ', cp.client_suburb, ', ', cp.client_state, ', ', cp.client_postcode, '; ', 
+            'Phone: ', cp.client_mobile, '(mobile)', cp.client_hmphone, '(home), ', cp.client_wkphone, '(office); ', 
+            'Email: ', cp.client_email, '; '
+        ) AS 'entity_info', 
+        cp.datelodged AS 'entity_date_created' 
+    FROM ver_chronoforms_data_clientpersonal_vic AS cp 
+    WHERE LOWER(cp.clientid) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_firstname) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_lastname) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_address1) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_address2) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_suburb) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_state) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_postcode) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_mobile) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_hmphone) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_wkphone) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.client_email) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(cp.datelodged) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    ORDER BY entity_source_display_name, entity_id 
+    LIMIT 1000;
+";
+$sql_template_retrieve_contact_search_list[] = "
+    SELECT 
+        'Team' AS 'entity_source_display_name', 
+        CONCAT(IFNULL(ver_users.first_name, ''), ' ', IFNULL(ver_users.last_name, ''), '(', ver_users.email, ')') AS 'entity_id', 
+        CONCAT(
+            'Team > ', IFNULL(ver_users.username, ''), ' > ', 
+            'Name: ', IFNULL(ver_users.first_name, ''), ' ', IFNULL(ver_users.last_name, ''), '; ', 
+            'Position: ', REPLACE(IFNULL(ver_usergroups.title, ''), 'Victoria', ''), '; ', 
+            'Phone: ', IFNULL(ver_users.mobile, ''), '(mobile)', IFNULL(ver_users.phone, ''), '(home); ', 
+            'Email: ', IFNULL(ver_users.email, ''), '; '
+        ) AS 'entity_info', 
+        ver_users.created_at AS 'entity_date_created' 
+    FROM ver_users 
+        LEFT JOIN ver_user_usergroup_map 
+            ON ver_users.id = ver_user_usergroup_map.user_id 
+        LEFT JOIN ver_usergroups 
+            ON ver_user_usergroup_map.group_id = ver_usergroups.id 
+    WHERE LOWER(ver_users.username) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(ver_users.first_name) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(ver_users.last_name) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(ver_usergroups.title) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(ver_users.mobile) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(ver_users.phone) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(ver_users.email) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    OR LOWER(ver_users.created_at) LIKE '%[ENTITY_SEARCH_KEYWORD]%' 
+    ORDER BY entity_source_display_name, entity_id 
+    LIMIT 1000;
+";
 
 
 
@@ -708,7 +1111,12 @@ $sql_template_delete_document_handler_entity_folder = "
 ";
 
 $sql_template_delete_document_handler_folder_file = "
-    DELETE FROM document_handler_folder_file
+    DELETE FROM document_handler_folder_file 
+    WHERE file_id = '[FILE_ID]';
+";
+
+$sql_template_delete_document_handler_entity_folder_file = "
+    DELETE FROM document_handler_entity_folder_file 
     WHERE file_id = '[FILE_ID]';
 ";
 

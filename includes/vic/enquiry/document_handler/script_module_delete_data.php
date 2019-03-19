@@ -665,6 +665,27 @@ if ($enable_deleting['file_delete'] == true) {
     }
 
 
+    // --- delete - document_handler_entity_folder_file --- //
+    $results_update_data['folio_save']['total_input'] += 1;
+
+    $sql = str_replace(
+        array(
+            '[FILE_ID]' 
+        ), 
+        array(
+            addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_id'])
+        ), 
+        $sql_template_delete_document_handler_entity_folder_file
+    );
+
+    $results = executeDbQuery($sql, $db_connection);
+    if ($results['error'] == 'null') {
+        $results_update_data['folio_save']['total_success']++;
+    } else {
+        $results_update_data['folio_save']['total_failure']++;
+    }
+
+
     if ($results_delete_data['file_delete']['total_input'] == $results_delete_data['file_delete']['total_success']) {
         $results_delete_data['file_delete']['is_success'] = true;
     }

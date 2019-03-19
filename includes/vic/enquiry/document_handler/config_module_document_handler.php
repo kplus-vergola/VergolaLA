@@ -43,10 +43,26 @@
 
     var document_handler_form_folder_file_list = [];
 
+    var document_handler_form_entity_search_list = [];
+    var document_handler_form_entity_search_keyword = '';
+
+    var document_handler_form_contact_from_search_list = [];
+    var document_handler_form_contact_from_search_keyword = '';
+
+    var document_handler_form_contact_to_search_list = [];
+    var document_handler_form_contact_to_search_keyword = '';
+
     var default_entity_id = '<?php echo $default_entity_id; ?>';
     var default_folder_id = '<?php echo $default_folder_id; ?>';
     var default_file_id = '<?php echo $default_file_id; ?>';
     var default_content_category = '<?php echo $default_content_category; ?>';
 
     var debug_mode_enabled = '<?php echo $debug_mode_enabled; ?>';
+
+    var document_handler_form_current_search_target = '';
+    var document_handler_form_current_entity_search_attach_list = [];
+    var document_handler_form_current_contact_from_search_attach_list = [];
+    var document_handler_form_current_contact_to_search_attach_list = [];
+
+    var document_handler_form_current_date_time_selection_target = '';
 </script>

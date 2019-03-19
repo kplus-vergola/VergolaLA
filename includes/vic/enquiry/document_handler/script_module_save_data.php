@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL);
 // mysql_query("START TRANSACTION");
 
 
@@ -12,7 +13,8 @@ $enable_saving = array(
     'folder_save' => false, 
     'file_save' => false, 
     'file_upload' => false, 
-    'file_save_2' => false
+    'file_save_2' => false, 
+    'folio_save' => false
 );
 if (isset($api_data['access_mode'])) {
     switch ($api_data['access_mode']) {
@@ -31,13 +33,17 @@ if (isset($api_data['access_mode'])) {
         case 'file_save_2':
             $enable_saving['file_save_2'] = true;
             break;
+        case 'folio_save':
+            $enable_saving['folio_save'] = true;
+            break;
     }
 }
 
+$new_entity_id = null;
 $new_folder_id = null;
 $new_file_id = null;
-
 $temp_text = '';
+
 
 /*
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -52,57 +58,85 @@ $results_save_data['entity_save']['failure_indexes'] = array();
 $results_save_data['entity_save']['is_success'] = false;
 
 if ($enable_saving['entity_save'] == true) {
-    $results_save_data['entity_save']['total_input'] = 1;
+    $submitted_entity_id = null;
+    $submitted_entity_name = $api_data['document_handler_form_entity_data_entry']['document_handler_form_entity_name'];
 
-    $new_entity_id = null;
     $sql = str_replace(
-        array('[TABLE_NAME]'), 
-        array('document_handler_entity'), 
-        $sql_template_retrieve_table_status
+        array(
+            '[ENTITY_NAME]'
+        ), 
+        array(
+            addslashes($submitted_entity_name)
+        ), 
+        $sql_template_retrieve_entity_by_name
     );
 
     $results = executeDbQuery($sql, $db_connection);
     if ($results['error'] == 'null') {
-        $r1 = mysql_fetch_array($results['data']);
-        $new_entity_id = $r1['Auto_increment'];
-    } else {
-        $app_response['error'][] = $results['error'];
-        $app_response['message'][] = $results['message'];
+        if ($results['num_rows'] > 0) {
+            while ($r1 = mysql_fetch_array($results['data'])) {
+                $submitted_entity_id = $r1['entity_id'];
+            }
+        }
     }
 
-    if ($new_entity_id != null) {
+    $new_entity_id = null;
+    if ($submitted_entity_id == null) {
+        $results_save_data['entity_save']['total_input'] = 1;
+
         $sql = str_replace(
-            array(
-                '[ENTITY_ID]', 
-                '[MODULE]', 
-                '[ENTITY_NAME]', 
-                '[ENTITY_DESCRIPTION]', 
-                '[ENTITY_SUMMARY]', 
-                '[USER_ID]', 
-                '[GROUP_ID]'
-            ), 
-            array(
-                $new_entity_id, 
-                addslashes($api_data['module']), 
-                addslashes($api_data['document_handler_form_entity_data_entry']['document_handler_form_entity_name']), 
-                addslashes($api_data['document_handler_form_entity_data_entry']['document_handler_form_entity_description']), 
-                addslashes($api_data['document_handler_form_entity_data_entry']['document_handler_form_entity_summary']), 
-                addslashes($login_user_info['user_id']), 
-                addslashes($login_user_info['user_group_id']), 
-            ), 
-            $sql_template_insert_document_handler_entity
+            array('[TABLE_NAME]'), 
+            array('document_handler_entity'), 
+            $sql_template_retrieve_table_status
         );
 
         $results = executeDbQuery($sql, $db_connection);
         if ($results['error'] == 'null') {
-            $results_save_data['entity_save']['total_success']++;
+            $r1 = mysql_fetch_array($results['data']);
+            $new_entity_id = $r1['Auto_increment'];
         } else {
-            $results_save_data['entity_save']['total_failure']++;
+            $app_response['error'][] = $results['error'];
+            $app_response['message'][] = $results['message'];
+        }
+
+        if ($new_entity_id != null) {
+            $sql = str_replace(
+                array(
+                    '[ENTITY_ID]', 
+                    '[MODULE]', 
+                    '[ENTITY_NAME]', 
+                    '[ENTITY_DESCRIPTION]', 
+                    '[ENTITY_SUMMARY]', 
+                    '[USER_ID]', 
+                    '[GROUP_ID]'
+                ), 
+                array(
+                    $new_entity_id, 
+                    addslashes($api_data['module']), 
+                    addslashes($api_data['document_handler_form_entity_data_entry']['document_handler_form_entity_name']), 
+                    addslashes($api_data['document_handler_form_entity_data_entry']['document_handler_form_entity_description']), 
+                    addslashes($api_data['document_handler_form_entity_data_entry']['document_handler_form_entity_summary']), 
+                    addslashes($login_user_info['user_id']), 
+                    addslashes($login_user_info['user_group_id']), 
+                ), 
+                $sql_template_insert_document_handler_entity
+            );
+
+            $results = executeDbQuery($sql, $db_connection);
+            if ($results['error'] == 'null') {
+                $results_save_data['entity_save']['total_success']++;
+            } else {
+                $results_save_data['entity_save']['total_failure']++;
+            }
+        }
+
+        if ($results_save_data['entity_save']['total_input'] == $results_save_data['entity_save']['total_success']) {
+            $results_save_data['entity_save']['is_success'] = true;
         }
     }
 
-    if ($results_save_data['entity_save']['total_input'] == $results_save_data['entity_save']['total_success']) {
-        $results_save_data['entity_save']['is_success'] = true;
+    if ($new_entity_id == null) {
+        $new_entity_id = $submitted_entity_id;
     }
 }
 
@@ -120,69 +154,67 @@ $results_save_data['folder_save']['failure_indexes'] = array();
 $results_save_data['folder_save']['is_success'] = false;
 
 if ($enable_saving['folder_save'] == true) {
-    $results_save_data['folder_save']['total_input'] = 1 + count($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_links']);
+    $submitted_folder_id = null;
+    $submitted_folder_name = $api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_name'];
 
-    $new_folder_id = null;
     $sql = str_replace(
-        array('[TABLE_NAME]'), 
-        array('document_handler_folder'), 
-        $sql_template_retrieve_table_status
+        array(
+            '[FOLDER_NAME]'
+        ), 
+        array(
+            addslashes($submitted_folder_name)
+        ), 
+        $sql_template_retrieve_folder_by_name
     );
 
     $results = executeDbQuery($sql, $db_connection);
     if ($results['error'] == 'null') {
-        $r1 = mysql_fetch_array($results['data']);
-        $new_folder_id = $r1['Auto_increment'];
-    } else {
-        $app_response['error'][] = $results['error'];
-        $app_response['message'][] = $results['message'];
+        if ($results['num_rows'] > 0) {
+            while ($r1 = mysql_fetch_array($results['data'])) {
+                $submitted_folder_id = $r1['folder_id'];
+            }
+        }
     }
 
-    if ($new_folder_id != null) {
+    $new_folder_id = null;
+    if ($submitted_folder_id == null) {
+        $results_save_data['folder_save']['total_input'] = 1;
+
+        $new_folder_id = null;
         $sql = str_replace(
-            array(
-                '[FOLDER_ID]', 
-                '[FOLDER_NAME]', 
-                '[FOLDER_DESCRIPTION]', 
-                '[FOLDER_SUMMARY]', 
-                '[USER_ID]', 
-                '[GROUP_ID]'
-            ), 
-            array(
-                $new_folder_id, 
-                addslashes($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_name']), 
-                addslashes($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_description']), 
-                addslashes($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_summary']), 
-                addslashes($login_user_info['user_id']), 
-                addslashes($login_user_info['user_group_id']), 
-            ), 
-            $sql_template_insert_document_handler_folder
+            array('[TABLE_NAME]'), 
+            array('document_handler_folder'), 
+            $sql_template_retrieve_table_status
         );
 
         $results = executeDbQuery($sql, $db_connection);
         if ($results['error'] == 'null') {
-            $results_save_data['folder_save']['total_success']++;
+            $r1 = mysql_fetch_array($results['data']);
+            $new_folder_id = $r1['Auto_increment'];
         } else {
-            $results_save_data['folder_save']['total_failure']++;
+            $app_response['error'][] = $results['error'];
+            $app_response['message'][] = $results['message'];
         }
 
-        for ($c1 = 0; $c1 < count($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_links']); $c1++) {
+        if ($new_folder_id != null) {
             $sql = str_replace(
                 array(
-                    '[MODULE]', 
-                    '[ENTITY_ID]', 
                     '[FOLDER_ID]', 
+                    '[FOLDER_NAME]', 
+                    '[FOLDER_DESCRIPTION]', 
+                    '[FOLDER_SUMMARY]', 
                     '[USER_ID]', 
                     '[GROUP_ID]'
                 ), 
                 array(
-                    addslashes($api_data['module']), 
-                    addslashes($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_links'][$c1]), 
                     $new_folder_id, 
+                    addslashes($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_name']), 
+                    addslashes($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_description']), 
+                    addslashes($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_summary']), 
                     addslashes($login_user_info['user_id']), 
-                    addslashes($login_user_info['user_group_id'])
+                    addslashes($login_user_info['user_group_id']), 
                 ), 
-                $sql_template_insert_document_handler_entity_folder
+                $sql_template_insert_document_handler_folder
             );
 
             $results = executeDbQuery($sql, $db_connection);
@@ -190,43 +222,193 @@ if ($enable_saving['folder_save'] == true) {
                 $results_save_data['folder_save']['total_success']++;
             } else {
                 $results_save_data['folder_save']['total_failure']++;
-                $results_save_data['folder_save']['failure_indexes'][] = $c1;
             }
         }
 
-        if (count($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_links']) == 0) {
-            $results_save_data['folder_save']['total_input'] += 1;
-
-            $sql = str_replace(
-                array(
-                    '[MODULE]', 
-                    '[ENTITY_ID]', 
-                    '[FOLDER_ID]', 
-                    '[USER_ID]', 
-                    '[GROUP_ID]'
-                ), 
-                array(
-                    addslashes($api_data['module']), 
-                    $config['db']['entity_temp_id'], 
-                    $new_folder_id, 
-                    addslashes($login_user_info['user_id']), 
-                    addslashes($login_user_info['user_group_id'])
-                ), 
-                $sql_template_insert_document_handler_entity_folder
-            );
-
-            $results = executeDbQuery($sql, $db_connection);
-            if ($results['error'] == 'null') {
-                $results_save_data['folder_save']['total_success']++;
-            } else {
-                $results_save_data['folder_save']['total_failure']++;
-                $results_save_data['folder_save']['failure_indexes'][] = $c1;
-            }
+        if ($results_save_data['folder_save']['total_input'] == $results_save_data['folder_save']['total_success']) {
+            $results_save_data['folder_save']['is_success'] = true;
         }
     }
 
-    if ($results_save_data['folder_save']['total_input'] == $results_save_data['folder_save']['total_success']) {
-        $results_save_data['folder_save']['is_success'] = true;
+    if ($new_folder_id == null) {
+        $new_folder_id = $submitted_folder_id;
+    }
+
+    if ($new_folder_id != null) {
+        if (isset($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_links'])) {
+            if (count($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_links']) > 0) {
+                for ($c1 = 0; $c1 < count($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_links']); $c1++) {
+                    $submitted_entity_folder_id = null;
+                    $submitted_entity_id = $api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_links'][$c1];
+
+                    $sql = str_replace(
+                        array(
+                            '[ENTITY_ID]', 
+                            '[FOLDER_ID]'
+                        ), 
+                        array(
+                            addslashes($submitted_entity_id), 
+                            addslashes($new_folder_id)
+                        ), 
+                        $sql_template_retrieve_entity_folder_by_ids
+                    );
+
+                    $results = executeDbQuery($sql, $db_connection);
+                    if ($results['error'] == 'null') {
+                        if ($results['num_rows'] > 0) {
+                            while ($r1 = mysql_fetch_array($results['data'])) {
+                                $submitted_entity_folder_id = $r1['id'];
+                            }
+                        }
+                    }
+
+                    if ($submitted_entity_folder_id == null) {
+                        $results_save_data['folder_save']['total_input'] += 1;
+
+                        $sql = str_replace(
+                            array(
+                                '[MODULE]', 
+                                '[ENTITY_ID]', 
+                                '[FOLDER_ID]', 
+                                '[USER_ID]', 
+                                '[GROUP_ID]'
+                            ), 
+                            array(
+                                addslashes($api_data['module']), 
+                                addslashes($submitted_entity_id), 
+                                $new_folder_id, 
+                                addslashes($login_user_info['user_id']), 
+                                addslashes($login_user_info['user_group_id'])
+                            ), 
+                            $sql_template_insert_document_handler_entity_folder
+                        );
+
+                        $results = executeDbQuery($sql, $db_connection);
+                        if ($results['error'] == 'null') {
+                            $results_save_data['folder_save']['total_success']++;
+                        } else {
+                            $results_save_data['folder_save']['total_failure']++;
+                            $results_save_data['folder_save']['failure_indexes'][] = $c1;
+                        }
+                    }
+                }
+            } else {
+                $submitted_entity_folder_id = null;
+                $submitted_entity_id = $config['db']['entity_temp_id'];
+
+                $sql = str_replace(
+                    array(
+                        '[ENTITY_ID]', 
+                        '[FOLDER_ID]'
+                    ), 
+                    array(
+                        addslashes($submitted_entity_id), 
+                        addslashes($new_folder_id)
+                    ), 
+                    $sql_template_retrieve_entity_folder_by_ids
+                );
+
+                $results = executeDbQuery($sql, $db_connection);
+                if ($results['error'] == 'null') {
+                    if ($results['num_rows'] > 0) {
+                        while ($r1 = mysql_fetch_array($results['data'])) {
+                            $submitted_entity_folder_id = $r1['id'];
+                        }
+                    }
+                }
+
+                if ($submitted_entity_folder_id == null) {
+                    $results_save_data['folder_save']['total_input'] += 1;
+
+                    $sql = str_replace(
+                        array(
+                            '[MODULE]', 
+                            '[ENTITY_ID]', 
+                            '[FOLDER_ID]', 
+                            '[USER_ID]', 
+                            '[GROUP_ID]'
+                        ), 
+                        array(
+                            addslashes($api_data['module']), 
+                            $config['db']['entity_temp_id'], 
+                            $new_folder_id, 
+                            addslashes($login_user_info['user_id']), 
+                            addslashes($login_user_info['user_group_id'])
+                        ), 
+                        $sql_template_insert_document_handler_entity_folder
+                    );
+
+                    $results = executeDbQuery($sql, $db_connection);
+                    if ($results['error'] == 'null') {
+                        $results_save_data['folder_save']['total_success']++;
+                    } else {
+                        $results_save_data['folder_save']['total_failure']++;
+                        $results_save_data['folder_save']['failure_indexes'][] = $c1;
+                    }
+                }
+            }
+        }
+
+        if (isset($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_info_links'])) {
+            if (count($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_info_links']) > 0) {
+                for ($c1 = 0; $c1 < count($api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_info_links']); $c1++) {
+                    $submitted_entity_folder_id = null;
+                    $submitted_entity_name = $api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_info_links'][$c1]['entity_name'];
+                    $submitted_entity_id = $api_data['document_handler_form_folder_data_entry']['document_handler_form_folder_entity_info_links'][$c1]['entity_id'];
+
+                    $sql = str_replace(
+                        array(
+                            '[ENTITY_NAME]', 
+                            '[FOLDER_NAME]'
+                        ), 
+                        array(
+                            addslashes($submitted_entity_name), 
+                            addslashes($submitted_folder_name)
+                        ), 
+                        $sql_template_retrieve_entity_folder_by_names
+                    );
+
+                    $results = executeDbQuery($sql, $db_connection);
+                    if ($results['error'] == 'null') {
+                        if ($results['num_rows'] > 0) {
+                            while ($r1 = mysql_fetch_array($results['data'])) {
+                                $submitted_entity_folder_id = $r1['id'];
+                            }
+                        }
+                    }
+
+                    if ($submitted_entity_folder_id == null) {
+                        $results_save_data['folder_save']['total_input'] += 1;
+
+                        $sql = str_replace(
+                            array(
+                                '[MODULE]', 
+                                '[ENTITY_ID]', 
+                                '[FOLDER_ID]', 
+                                '[USER_ID]', 
+                                '[GROUP_ID]'
+                            ), 
+                            array(
+                                addslashes($api_data['module']), 
+                                addslashes($submitted_entity_id), 
+                                $new_folder_id, 
+                                addslashes($login_user_info['user_id']), 
+                                addslashes($login_user_info['user_group_id'])
+                            ), 
+                            $sql_template_insert_document_handler_entity_folder
+                        );
+
+                        $results = executeDbQuery($sql, $db_connection);
+                        if ($results['error'] == 'null') {
+                            $results_save_data['folder_save']['total_success']++;
+                        } else {
+                            $results_save_data['folder_save']['total_failure']++;
+                            $results_save_data['folder_save']['failure_indexes'][] = $c1;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -483,21 +665,21 @@ if ($enable_saving['file_save_2'] == true) {
                 $results_save_data['file_save_2']['total_failure']++;
             }
         } else {
-            $results_save_data['file_save_2']['total_input'] = 3;
+            $results_save_data['file_save_2']['total_input'] = 4;
 
-            $temp_folder_name = 'Temp Folder ' . date('Y-m-d H:i:s') . ' (' . generateRandomString(5) . ')';
-            $url = $config['path']['script_url'] . '?api_mode=1';
+            $temp_entity_name = $api_data['username'];
+            $url = $config['path']['base_script_url'] . '?api_mode=1';
+
             $request_data = array(
                 'document_handler_form_operation' => 'save', 
-                'access_mode' => 'folder_save', 
+                'access_mode' => 'entity_save', 
+                'module' => $api_data['module'], 
                 'username' => $api_data['username'], 
-                'document_handler_form_folder_data_entry' => array(
-                    'document_handler_form_folder_name' => $temp_folder_name, 
-                    'document_handler_form_folder_description' => '', 
-                    'document_handler_form_folder_summary' => '', 
-                    'document_handler_form_folder_entity_links' => array(
-                        $config['db']['entity_temp_id']
-                    )
+                'password' => $api_data['password'], 
+                'document_handler_form_entity_data_entry' => array(
+                    'document_handler_form_entity_name' => $temp_entity_name, 
+                    'document_handler_form_entity_description' => '', 
+                    'document_handler_form_entity_summary' => ''
                 )
             );
 
@@ -505,59 +687,95 @@ if ($enable_saving['file_save_2'] == true) {
             if ($results2['error'] == 'null') {
                 $results_save_data['file_save_2']['total_success']++;
 
-                $file_error = null;
-                if (isset($api_data['document_handler_form_file_in_base64'])) {
-                    $file_content = base64_decode($api_data['document_handler_form_file_in_base64']);
+                $temp_text = ucfirst(str_replace('_', '', $api_data['module']));
+                $temp_folder_name = $temp_text . ' (' . date('Y-m-d H:i:s') . ')';
+                $url = $config['path']['base_script_url'] . '?api_mode=1';
 
-                    $temp_array = explode('.', $submitted_file_external_ref_name);
-                    $file_extension = '';
-                    if (isset($temp_array[1])) {
-                        $file_extension = $temp_array[1];
-                    }
+                $request_data = array(
+                    'document_handler_form_operation' => 'save', 
+                    'access_mode' => 'folder_save', 
+                    'module' => $api_data['module'], 
+                    'username' => $api_data['username'], 
+                    'password' => $api_data['password'], 
+                    'document_handler_form_folder_data_entry' => array(
+                        'document_handler_form_folder_name' => $temp_folder_name, 
+                        'document_handler_form_folder_description' => '', 
+                        'document_handler_form_folder_summary' => '', 
+                        'document_handler_form_folder_entity_links' => array(
+                            $results2['message']['new_entity_id']
+                            // $config['db']['entity_temp_id']
+                        )
+                    )
+                );
 
-                    $file_external_ref_name = generateRandomString(25);
-                    $new_file_path = $config['path']['upload_folder'] . $file_external_ref_name . '.' . $file_extension;
-
-                    $file_error = file_put_contents($new_file_path, $file_content);
-
-                    sleep(2);
-                    $file_extension = pathinfo($new_file_path, PATHINFO_EXTENSION);
-                    $file_size = filesize($new_file_path);
-                    $file_type = $config['mime_types'][$file_extension];
-                }
-                if ($file_error != null && $file_error !== false) {
+                $results3 = requestCurlCall($url, $request_data);
+                if ($results3['error'] == 'null') {
                     $results_save_data['file_save_2']['total_success']++;
 
-                    $temp_file_name = $submitted_file_external_ref_name;
-                    $url = $config['path']['script_url'] . '?api_mode=1';
-                    $request_data = array(
-                        'document_handler_form_operation' => 'save', 
-                        'access_mode' => 'file_save', 
-                        'username' => $api_data['username'], 
-                        'document_handler_form_file_data_entry' => array(
-                            'document_handler_form_file_name' => $temp_file_name, 
-                            'document_handler_form_file_description' => '', 
-                            'document_handler_form_file_summary' => '', 
-                            'document_handler_form_file_from' => '', 
-                            'document_handler_form_file_date_received' => date('Y-m-d H:i:s'), 
-                            'document_handler_form_file_to' => '', 
-                            'document_handler_form_file_date_sent' => '', 
-                            'document_handler_form_file_content_date' => date('Y-m-d H:i:s'), 
-                            'document_handler_form_file_content_category' => '', 
-                            'document_handler_form_file_original_name' => $temp_file_name, 
-                            'document_handler_form_file_extension' => $file_extension, 
-                            'document_handler_form_file_type' => $file_type, 
-                            'document_handler_form_file_size' => $file_size, 
-                            'document_handler_form_file_external_ref_name' => $file_external_ref_name, 
-                            'document_handler_form_file_folder_links' => array(
-                                $results2['message']['new_folder_id']
-                            )
-                        )
-                    );
+                    $file_error = null;
+                    if (isset($api_data['document_handler_form_file_in_base64'])) {
+                        $file_content = base64_decode($api_data['document_handler_form_file_in_base64']);
 
-                    $results3 = requestCurlCall($url, $request_data);
-                    if ($results3['error'] == 'null' || $results3['error'] != 'null') {
+                        $temp_array = explode('.', $api_data['file_external_ref_name']);
+                        $file_extension = '';
+                        if (isset($temp_array[1])) {
+                            $file_extension = $temp_array[1];
+                        }
+
+                        $file_external_ref_name = generateRandomString(25);
+                        $new_file_path = $config['path']['upload_folder'] . $file_external_ref_name . '.' . $file_extension;
+
+                        $file_error = file_put_contents($new_file_path, $file_content);
+
+                        sleep(2);
+                        $file_extension = pathinfo($new_file_path, PATHINFO_EXTENSION);
+                        $file_size = filesize($new_file_path);
+                        $file_type = $config['mime_types'][$file_extension];
+                    }
+                    if ($file_error != null && $file_error !== false) {
                         $results_save_data['file_save_2']['total_success']++;
+
+                        $temp_file_name = $api_data['file_external_ref_name'];
+                        $url = $config['path']['base_script_url'] . '?api_mode=1';
+                        $request_data = array(
+                            'document_handler_form_operation' => 'save', 
+                            'access_mode' => 'file_save', 
+                            'username' => $api_data['username'], 
+                            'password' => $api_data['password'], 
+                            'document_handler_form_file_data_entry' => array(
+                                'document_handler_form_file_name' => $temp_file_name, 
+                                'document_handler_form_file_description' => '', 
+                                'document_handler_form_file_summary' => '', 
+                                'document_handler_form_file_from' => '', 
+                                'document_handler_form_file_date_received' => date('Y-m-d H:i:s'), 
+                                'document_handler_form_file_to' => '', 
+                                'document_handler_form_file_date_sent' => '', 
+                                'document_handler_form_file_content_date' => date('Y-m-d H:i:s'), 
+                                'document_handler_form_file_content_category' => '', 
+                                'document_handler_form_file_original_name' => $temp_file_name, 
+                                'document_handler_form_file_extension' => $file_extension, 
+                                'document_handler_form_file_type' => $file_type, 
+                                'document_handler_form_file_size' => $file_size, 
+                                'document_handler_form_file_external_ref_name' => $file_external_ref_name, 
+                                'document_handler_form_file_folder_links' => array(
+                                    $results3['message']['new_folder_id']
+                                    // $config['db']['folder_temp_id']
+                                )
+                            )
+                        );
+
+                        if ($api_data['module'] == 'adhoc_email') {
+                            $request_data['document_handler_form_file_data_entry']['document_handler_form_file_from'] = base64_decode($api_data['email_sender']);
+                            $request_data['document_handler_form_file_data_entry']['document_handler_form_file_to'] = base64_decode($api_data['email_recipient']);
+                            $request_data['document_handler_form_file_data_entry']['document_handler_form_file_date_received'] = base64_decode($api_data['email_date_time']);
+                            $request_data['document_handler_form_file_data_entry']['document_handler_form_file_description'] = base64_decode($api_data['email_subject']);
+                            $request_data['document_handler_form_file_data_entry']['document_handler_form_file_summary'] = base64_decode($api_data['email_message']);
+                        }
+
+                        $results4 = requestCurlCall($url, $request_data);
+                        if ($results4['error'] == 'null' || $results4['error'] != 'null') {
+                            $results_save_data['file_save_2']['total_success']++;
+                        }
                     }
                 }
             }
@@ -610,6 +828,254 @@ if ($enable_saving['file_upload'] == true) {
 
 /*
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- save folio -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql = '';
+$results_save_data['folio_save']['total_input'] = 0;
+$results_save_data['folio_save']['total_success'] = 0;
+$results_save_data['folio_save']['total_failure'] = 0;
+$results_save_data['folio_save']['failure_indexes'] = array();
+$results_save_data['folio_save']['is_success'] = false;
+
+
+$target_entity_info_list = array();
+$target_folder_info_list = array();
+
+
+if ($enable_saving['folio_save'] == true) {
+    $results_save_data['folio_save']['total_input'] = 1;
+
+    $submitted_file_name = $api_data['document_handler_form_file_data_entry']['document_handler_form_file_name'];
+
+    $new_file_id = null;
+    $sql = str_replace(
+        array('[TABLE_NAME]'), 
+        array('document_handler_file'), 
+        $sql_template_retrieve_table_status
+    );
+    $results = executeDbQuery($sql, $db_connection);
+    if ($results['error'] == 'null') {
+        $r1 = mysql_fetch_array($results['data']);
+        $new_file_id = $r1['Auto_increment'];
+    } else {
+        $app_response['error'][] = $results['error'];
+        $app_response['message'][] = $results['message'];
+    }
+
+    if ($new_file_id != null) {
+        $sql = str_replace(
+            array(
+                '[FILE_ID]', 
+                '[FILE_NAME]', 
+                '[FILE_DESCRIPTION]', 
+                '[FILE_SUMMARY]', 
+                '[FILE_FROM]', 
+                '[FILE_DATE_RECEIVED]', 
+                '[FILE_TO]', 
+                '[FILE_DATE_SENT]', 
+                '[FILE_CONTENT_DATE]', 
+                '[FILE_CONTENT_CATEGORY]', 
+                '[FILE_ORIGINAL_NAME]', 
+                '[FILE_EXTENSION]', 
+                '[FILE_TYPE]', 
+                '[FILE_SIZE]', 
+                '[EXTERNAL_REF_NAME]', 
+                '[FILE_STATUS]', 
+                '[USER_ID]', 
+                '[GROUP_ID]'
+            ), 
+            array(
+                $new_file_id, 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_name']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_description']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_summary']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_from']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_date_received']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_to']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_date_sent']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_content_date']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_content_category']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_original_name']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_extension']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_type']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_size']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_external_ref_name']), 
+                addslashes($api_data['document_handler_form_file_data_entry']['document_handler_form_file_status']), 
+                addslashes($login_user_info['user_id']), 
+                addslashes($login_user_info['user_group_id'])
+            ), 
+            $sql_template_insert_document_handler_file
+        );
+
+        $results = executeDbQuery($sql, $db_connection);
+        if ($results['error'] == 'null') {
+            $results_save_data['folio_save']['total_success']++;
+        } else {
+            $results_save_data['folio_save']['total_failure']++;
+        }
+
+
+        $target_entity_info_list = array();
+        for ($c1 = 0; $c1 < count($api_data['document_handler_form_file_data_entry']['document_handler_form_current_entity_search_attach_list']); $c1++) {
+            $current_entity_name = $api_data['document_handler_form_file_data_entry']['document_handler_form_current_entity_search_attach_list'][$c1]['entity_id'];
+            $current_entity_info = $api_data['document_handler_form_file_data_entry']['document_handler_form_current_entity_search_attach_list'][$c1]['entity_info'];
+
+            $input_data = array(
+                'module' => $api_data['module'], 
+                'entity_name' => $current_entity_name, 
+                'entity_description' => $current_entity_info, 
+                'entity_summary' => '', 
+                'user_id' => $login_user_info['user_id'], 
+                'user_group_id' => $login_user_info['user_group_id'], 
+            );
+
+            $sql_templates = array(
+                'retrieve_entity_by_name' => $sql_template_retrieve_entity_by_name, 
+                'retrieve_table_status' => $sql_template_retrieve_table_status, 
+                'insert_document_handler_entity' => $sql_template_insert_document_handler_entity
+            );
+
+            $results2 = saveEntityInfo($db_connection, $input_data, $sql_templates);
+            if ($results2['new_entity_id'] != null) {
+                $target_entity_info_list[count($target_entity_info_list)] = array(
+                    'entity_id' => $results2['new_entity_id'], 
+                    'entity_name' => $current_entity_name
+                );
+            } else {
+                $target_entity_info_list[count($target_entity_info_list)] = array(
+                    'entity_id' => $config['db']['entity_temp_id'], 
+                    'entity_name' => $current_entity_name
+                );
+            }
+        }
+
+
+        $target_folder_info_list = array();
+        $current_folder_name = $api_data['document_handler_form_file_data_entry']['document_handler_form_document_category'];
+        $input_data = array(
+            'folder_name' => $current_folder_name, 
+            'folder_description' => '', 
+            'folder_summary' => '', 
+            'user_id' => $login_user_info['user_id'], 
+            'user_group_id' => $login_user_info['user_group_id']
+        );
+
+        $sql_templates = array(
+            'retrieve_folder_by_name' => $sql_template_retrieve_folder_by_name, 
+            'retrieve_table_status' => $sql_template_retrieve_table_status, 
+            'insert_document_handler_folder' => $sql_template_insert_document_handler_folder
+        );
+
+        $results3 = saveFolderInfo($db_connection, $input_data, $sql_templates);
+        if ($results3['new_folder_id'] != null) {
+            $target_folder_info_list[count($target_folder_info_list)] = array(
+                'folder_id' => $results3['new_folder_id'], 
+                'folder_name' => $current_folder_name
+            );
+        } else {
+            $target_folder_info_list[count($target_folder_info_list)] = array(
+                'folder_id' => $config['db']['folder_temp_id'], 
+                'folder_name' => $current_folder_name
+            );
+        }
+
+
+        $target_entity_folder_info_list = array();
+        for ($c1 = 0; $c1 < count($target_entity_info_list); $c1++) {
+            for ($c2 = 0; $c2 < count($target_folder_info_list); $c2++) {
+                $input_data = array(
+                    'entity_id' => $target_entity_info_list[$c1]['entity_id'], 
+                    'entity_name' => $target_entity_info_list[$c1]['entity_name'], 
+                    'folder_id' => $target_folder_info_list[$c2]['folder_id'], 
+                    'folder_name' => $target_folder_info_list[$c2]['folder_name'], 
+                    'module' => $api_data['module'], 
+                    'user_id' => $login_user_info['user_id'], 
+                    'user_group_id' => $login_user_info['user_group_id']
+                );
+
+                $sql_templates = array(
+                    'retrieve_entity_folder_by_names' => $sql_template_retrieve_entity_folder_by_names, 
+                    'retrieve_table_status' => $sql_template_retrieve_table_status, 
+                    'insert_document_handler_entity_folder' => $sql_template_insert_document_handler_entity_folder_2
+                );
+
+                $results4 = saveEntityFolderInfo($db_connection, $input_data, $sql_templates);
+                if ($results4['new_entity_folder_id'] != null) {
+                    $target_entity_folder_info_list[count($target_entity_folder_info_list)] = array(
+                        'new_entity_folder_id' => $results4['new_entity_folder_id']
+                    );
+                }
+            }
+        }
+
+
+        $target_folder_file_info_list = array();
+        for ($c1 = 0; $c1 < count($target_folder_info_list); $c1++) {
+            $input_data = array(
+                'folder_id' => $target_folder_info_list[$c1]['folder_id'], 
+                'folder_name' => $target_folder_info_list[$c1]['folder_name'], 
+                'file_id' => $new_file_id, 
+                'file_name' => $api_data['document_handler_form_file_data_entry']['document_handler_form_file_name'], 
+                'module' => $api_data['module'], 
+                'user_id' => $login_user_info['user_id'], 
+                'user_group_id' => $login_user_info['user_group_id']
+            );
+
+            $sql_templates = array(
+                'retrieve_folder_file_by_names' => $sql_template_retrieve_folder_file_by_names, 
+                'retrieve_table_status' => $sql_template_retrieve_table_status, 
+                'insert_document_handler_folder_file' => $sql_template_insert_document_handler_folder_file_2
+            );
+
+            $results4 = saveFolderFileInfo($db_connection, $input_data, $sql_templates);
+            if ($results4['new_folder_file_id'] != null) {
+                $target_folder_file_info_list[count($target_folder_file_info_list)] = array(
+                    'new_folder_file_id' => $results4['new_folder_file_id']
+                );
+            }
+        }
+
+
+        $target_entity_folder_file_info_list = array();
+        for ($c1 = 0; $c1 < count($target_entity_info_list); $c1++) {
+            for ($c2 = 0; $c2 < count($target_folder_info_list); $c2++) {
+                $input_data = array(
+                    'entity_id' => $target_entity_info_list[$c1]['entity_id'], 
+                    'entity_name' => $target_entity_info_list[$c1]['entity_name'], 
+                    'folder_id' => $target_folder_info_list[$c2]['folder_id'], 
+                    'folder_name' => $target_folder_info_list[$c2]['folder_name'], 
+                    'file_id' => $new_file_id, 
+                    'file_name' => $api_data['document_handler_form_file_data_entry']['document_handler_form_file_name'], 
+                    'module' => $api_data['module'], 
+                    'user_id' => $login_user_info['user_id'], 
+                    'user_group_id' => $login_user_info['user_group_id']
+                );
+
+                $sql_templates = array(
+                    'retrieve_entity_folder_file_by_names' => $sql_template_retrieve_entity_folder_file_by_names, 
+                    'retrieve_table_status' => $sql_template_retrieve_table_status, 
+                    'insert_document_handler_entity_folder_file' => $sql_template_insert_document_handler_entity_folder_file_2
+                );
+
+                $results4 = saveEntityFolderFileInfo($db_connection, $input_data, $sql_templates);
+                if ($results4['new_entity_folder_file_id'] != null) {
+                    $target_entity_folder_file_info_list[count($target_entity_folder_file_info_list)] = array(
+                        'new_entity_folder_file_id' => $results4['new_entity_folder_file_id']
+                    );
+                }
+            }
+        }
+    }
+
+    if ($results_save_data['folio_save']['total_input'] == $results_save_data['folio_save']['total_success']) {
+        $results_save_data['folio_save']['is_success'] = true;
+    }
+}
+
+
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ----- process save data results -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
@@ -655,6 +1121,13 @@ if (isset($api_data['access_mode'])) {
             $api_response['message']['file_error'] = $file_error;
             break;
         case 'file_save_2':
+            break;
+        case 'folio_save':
+            $api_response['message']['new_file_id'] = $new_file_id;
+            $api_response['message']['target_entity_info_list'] = $target_entity_info_list;
+            $api_response['message']['target_folder_info_list'] = $target_folder_info_list;
+            $api_response['message']['target_entity_folder_info_list'] = $target_entity_folder_info_list;
+            $api_response['message']['target_folder_file_info_list'] = $target_folder_file_info_list;
             break;
     }
 }

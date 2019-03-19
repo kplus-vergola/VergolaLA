@@ -11,6 +11,8 @@ $enable_retrieve = array(
     'file_download' => false, 
     'template_data_tag_list' => false, 
     'msword_plugin_download' => false, 
+    'msoutlook_plugin_download' => false, 
+    'entity_search_list' => false, 
 );
 if (isset($api_data['access_mode'])) {
     switch ($api_data['access_mode']) {
@@ -32,6 +34,14 @@ if (isset($api_data['access_mode'])) {
         case 'msword_plugin_download':
             $enable_retrieve['msword_plugin_download'] = true;
             break;
+        case 'msoutlook_plugin_download':
+            $enable_retrieve['msoutlook_plugin_download'] = true;
+            break;
+        case 'entity_search_list':
+        case 'contact_from_search_list':
+        case 'contact_to_search_list':
+            $enable_retrieve['entity_search_list'] = true;
+            break;
     }
 }
 
@@ -41,6 +51,7 @@ $document_handler_form_entity_folder_list = array();
 $document_handler_form_folder_file_list = array();
 $template_data_tag_list = array();
 $template_data_tag_list_in_text = '';
+$document_handler_form_entity_search_list = array();
 
 
 /*
@@ -53,6 +64,11 @@ $results_retrieve_data['entity_list']['is_success'] = true;
 $results_retrieve_data['entity_list']['total_record'] = 0;
 
 if ($enable_retrieve['entity_list'] == true) {
+
+    $target_sql = $sql_template_retrieve_entity_list_1;
+    if (isset($api_data['module']) && $api_data['module'] == '') {
+        $target_sql = $sql_template_retrieve_entity_list_2;
+    }
     $sql = str_replace(
         array(
             '[MODULE]'
@@ -60,7 +76,7 @@ if ($enable_retrieve['entity_list'] == true) {
         array(
             addslashes($api_data['module'])
         ), 
-        $sql_template_retrieve_entity_list
+        $target_sql
     );
 
     $results = executeDbQuery($sql, $db_connection);
@@ -90,6 +106,10 @@ $results_retrieve_data['entity_folder_list']['is_success'] = true;
 $results_retrieve_data['entity_folder_list']['total_record'] = 0;
 
 if ($enable_retrieve['entity_folder_list'] == true) {
+    $target_sql = $sql_template_retrieve_entity_folder_list_1;
+    if (isset($api_data['module']) && $api_data['module'] == '') {
+        $target_sql = $sql_template_retrieve_entity_folder_list_2;
+    }
     $sql = str_replace(
         array(
             '[MODULE]', 
@@ -99,7 +119,7 @@ if ($enable_retrieve['entity_folder_list'] == true) {
             addslashes($api_data['module']), 
             $api_data['entity_id']
         ), 
-        $sql_template_retrieve_entity_folder_list
+        $target_sql
     );
 
     $results = executeDbQuery($sql, $db_connection);
@@ -132,9 +152,9 @@ if ($enable_retrieve['entity_folder_list'] == true) {
                 while ($r2 = mysql_fetch_array($results2['data'])) {
                     $current_item_index2 = count($current_folder_entity_list);
                     $current_folder_entity_list[$current_item_index2]['entity_id'] = $r2['entity_id'];
-                    $current_folder_entity_list[$current_item_index2]['entity_entity_code'] = $r2['entity_entity_code'];
-                    $current_folder_entity_list[$current_item_index2]['entity_details'] = $r2['entity_details'];
-                    $current_folder_entity_list[$current_item_index2]['entity_date_lodged'] = $r2['entity_date_lodged'];
+                    $current_folder_entity_list[$current_item_index2]['entity_name'] = $r2['entity_name'];
+                    $current_folder_entity_list[$current_item_index2]['entity_description'] = $r2['entity_description'];
+                    $current_folder_entity_list[$current_item_index2]['entity_date_created'] = $r2['entity_date_created'];
                 }
             }
 
@@ -154,28 +174,21 @@ $results_retrieve_data['folder_file_list']['is_success'] = true;
 $results_retrieve_data['folder_file_list']['total_record'] = 0;
 
 if ($enable_retrieve['folder_file_list'] == true) {
+    $target_sql = $sql_template_retrieve_folder_file_list_1;
+    if (isset($api_data['default_content_category']) && $api_data['default_content_category'] == '') {
+        $target_sql = $sql_template_retrieve_folder_file_list_2;
+    }
     $sql = str_replace(
         array(
-            '[FOLDER_ID]'
+            '[FOLDER_ID]', 
+            '[CONTENT_CATEGORY]'
         ), 
         array(
-            $api_data['folder_id']
+            $api_data['folder_id'], 
+            $api_data['default_content_category']
         ), 
-        $sql_template_retrieve_folder_file_list
+        $target_sql 
     );
-    if (isset($api_data['default_content_category'])) {
-        $sql = str_replace(
-            array(
-                '[FOLDER_ID]', 
-                '[CONTENT_CATEGORY]'
-            ), 
-            array(
-                $api_data['folder_id'], 
-                $api_data['default_content_category']
-            ), 
-            $sql_template_retrieve_folder_file_list_2 
-        );
-    }
 
     $results = executeDbQuery($sql, $db_connection);
     if ($results['error'] == 'null') {
@@ -222,10 +235,64 @@ if ($enable_retrieve['folder_file_list'] == true) {
                     $current_file_folder_list[$current_item_index2]['folder_name'] = $r2['folder_name'];
                     $current_file_folder_list[$current_item_index2]['folder_description'] = $r2['folder_description'];
                     $current_file_folder_list[$current_item_index2]['folder_date_created'] = $r2['folder_date_created'];
+
+                    $sql = str_replace(
+                        array(
+                            '[FOLDER_ID]' 
+                        ), 
+                        array(
+                            $r2['folder_id']
+                        ), 
+                        $sql_template_retrieve_folder_entity_list
+                    );
+
+                    $current_folder_entity_list = array();
+
+                    $results3 = executeDbQuery($sql, $db_connection);
+                    if ($results3['error'] == 'null') {
+                        while ($r3 = mysql_fetch_array($results3['data'])) {
+                            $current_item_index3 = count($current_folder_entity_list);
+                            $current_folder_entity_list[$current_item_index3]['entity_id'] = $r3['entity_id'];
+                            $current_folder_entity_list[$current_item_index3]['entity_name'] = $r3['entity_name'];
+                            $current_folder_entity_list[$current_item_index3]['entity_description'] = $r3['entity_description'];
+                            $current_folder_entity_list[$current_item_index3]['entity_date_created'] = $r3['entity_date_created'];
+                        }
+                    }
+
+                    $current_file_folder_list[$current_item_index2]['folder_entity_list'] = $current_folder_entity_list;
                 }
             }
-
             $document_handler_form_folder_file_list[$current_item_index]['file_folder_list'] = $current_file_folder_list;
+
+
+            $sql = str_replace(
+                array(
+                    '[FILE_ID]' 
+                ), 
+                array(
+                    $r1['file_id']
+                ), 
+                $sql_template_retrieve_file_folder_entity_list
+            );
+
+            $current_file_folder_entity_list = array();
+
+            $results2 = executeDbQuery($sql, $db_connection);
+            if ($results2['error'] == 'null') {
+                while ($r2 = mysql_fetch_array($results2['data'])) {
+                    $current_item_index2 = count($current_file_folder_entity_list);
+                    $current_file_folder_entity_list[$current_item_index2]['entity_id'] = $r2['entity_id'];
+                    $current_file_folder_entity_list[$current_item_index2]['entity_name'] = $r2['entity_name'];
+                    $current_file_folder_entity_list[$current_item_index2]['entity_description'] = $r2['entity_description'];
+                    $current_file_folder_entity_list[$current_item_index2]['entity_date_created'] = $r2['entity_date_created'];
+                    $current_file_folder_entity_list[$current_item_index2]['folder_id'] = $r2['folder_id'];
+                    $current_file_folder_entity_list[$current_item_index2]['folder_name'] = $r2['folder_name'];
+                    $current_file_folder_entity_list[$current_item_index2]['folder_description'] = $r2['folder_description'];
+                    $current_file_folder_entity_list[$current_item_index2]['folder_date_created'] = $r2['folder_date_created'];
+                }
+            }
+            $document_handler_form_folder_file_list[$current_item_index]['file_folder_entity_list'] = $current_file_folder_entity_list;
+
 
             $sql = str_replace(
                 array(
@@ -327,6 +394,10 @@ if ($enable_retrieve['file_download'] == true) {
                 $new_entity_id = null;
                 $success_insert_entity_record = false;
 
+                $target_sql = $sql_template_retrieve_entity_list_1;
+                if (isset($api_data['module']) && $api_data['module'] == '') {
+                    $target_sql = $sql_template_retrieve_entity_list_2;
+                }
                 $sql = str_replace(
                     array(
                         '[MODULE]'
@@ -334,7 +405,7 @@ if ($enable_retrieve['file_download'] == true) {
                     array(
                         addslashes($api_data['module'])
                     ), 
-                    $sql_template_retrieve_entity_list
+                    $target_sql
                 );
 
                 $results3 = executeDbQuery($sql, $db_connection);
@@ -381,7 +452,7 @@ if ($enable_retrieve['file_download'] == true) {
                             ), 
                             array(
                                 $new_entity_id, 
-                                addslashes($api_data['module']), 
+                                addslashes($api_data['module'] . '_applied'), 
                                 addslashes($api_data['entity_name']), 
                                 addslashes(''), 
                                 addslashes(''), 
@@ -408,6 +479,10 @@ if ($enable_retrieve['file_download'] == true) {
                 $new_folder_id = null;
                 $success_insert_folder_record = false;
 
+                $target_sql = $sql_template_retrieve_entity_folder_list_1;
+                if (isset($api_data['module']) && $api_data['module'] == '') {
+                    $target_sql = $sql_template_retrieve_entity_folder_list_2;
+                }
                 $sql = str_replace(
                     array(
                         '[MODULE]', 
@@ -417,7 +492,7 @@ if ($enable_retrieve['file_download'] == true) {
                         addslashes($api_data['module']), 
                         $entity_record['entity_id']
                     ), 
-                    $sql_template_retrieve_entity_folder_list
+                    $target_sql
                 );
 
                 $results6 = executeDbQuery($sql, $db_connection);
@@ -490,7 +565,7 @@ if ($enable_retrieve['file_download'] == true) {
                                     '[GROUP_ID]'
                                 ), 
                                 array(
-                                    addslashes($api_data['module']), 
+                                    addslashes($api_data['module'] . '_applied'), 
                                     addslashes($entity_record['entity_id']), 
                                     $new_folder_id, 
                                     addslashes($login_user_info['user_id']), 
@@ -750,10 +825,12 @@ if ($enable_retrieve['template_data_tag_list'] == true) {
                 foreach ($r1 as $key1 => $value1) {
                     if (!is_int($key1)) {
                         if ($delete_data_field_value == false) {
-                            $template_data_tag_list[$key1] = $value1;
+                            $template_data_tag_list[count($template_data_tag_list)] = array('ref_name' => $key1, 'display_name' => $value1);
+                            // $template_data_tag_list[$key1] = $value1;
                             $template_data_tag_list_in_text .= $key1 . ':' . $value1 . ';';
                         } else {
-                            $template_data_tag_list[$key1] = '';
+                            $template_data_tag_list[count($template_data_tag_list)] = array('ref_name' => $key1, 'display_name' => '');
+                            // $template_data_tag_list[$key1] = '';
                             $template_data_tag_list_in_text .= $key1 . ':' . '' . ';';
                         }
                     }
@@ -779,6 +856,72 @@ if ($enable_retrieve['msword_plugin_download'] == true) {
     header('Content-Disposition: attachement; filename="' . $download_file_name . '"');
     echo file_get_contents($source_file_path);
     exit;
+}
+
+
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- download msoutlook plugin -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+if ($enable_retrieve['msoutlook_plugin_download'] == true) {
+    $file_type = $config['mime_types'][$config['plugin']['msoutlook']['file_extension']];
+    $download_file_name = $config['plugin']['msoutlook']['file_name'];
+    $source_file_path = $config['plugin']['msoutlook']['folder'] . $config['plugin']['msoutlook']['file_name'];
+
+    header('Content-Type: ' . $file_type);
+    header('Content-Disposition: attachement; filename="' . $download_file_name . '"');
+    echo file_get_contents($source_file_path);
+    exit;
+}
+
+
+/*
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+----- retrieve entity_search_list (entity, contact) -----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql = '';
+$results_retrieve_data['entity_search_list']['is_success'] = true;
+$results_retrieve_data['entity_search_list']['total_record'] = 0;
+
+if ($enable_retrieve['entity_search_list'] == true) {
+    $all_results = array();
+
+    switch ($api_data['access_mode']) {
+        case 'entity_search_list':
+            $target_sql_template = $sql_template_retrieve_entity_search_list;
+            break;
+        case 'contact_from_search_list':
+        case 'contact_to_search_list':
+            $target_sql_template = $sql_template_retrieve_contact_search_list;
+            break;
+    }
+
+    foreach ($target_sql_template as $key1 => $current_sql_template) {
+        $sql = str_replace(
+            array(
+                '[ENTITY_SEARCH_KEYWORD]'
+            ), 
+            array(
+                addslashes(strtolower($api_data['entity_search_keyword']))
+            ), 
+            $current_sql_template
+        );
+
+        $results = executeDbQuery($sql, $db_connection);
+        if ($results['error'] == 'null') {
+            $results_retrieve_data['entity_search_list']['is_success'] = true;
+
+            while ($r1 = mysql_fetch_array($results['data'])) {
+                $current_item_index = count($document_handler_form_entity_search_list);
+                $document_handler_form_entity_search_list[$current_item_index]['entity_source_display_name'] = $r1['entity_source_display_name'];
+                $document_handler_form_entity_search_list[$current_item_index]['entity_id'] = $r1['entity_id'];
+                $document_handler_form_entity_search_list[$current_item_index]['entity_info'] = $r1['entity_info'];
+                $document_handler_form_entity_search_list[$current_item_index]['entity_date_created'] = $r1['entity_date_created'];
+            }
+        }
+    }
 }
 
 
@@ -823,7 +966,15 @@ if (isset($api_data['access_mode'])) {
             );
             break;
         case 'template_data_tag_list':
-            $api_response['data'] = $template_data_tag_list_in_text;
+            // $api_response['data'] = $template_data_tag_list_in_text;
+            $api_response['data'] = $template_data_tag_list;
+            break;
+        case 'entity_search_list':
+        case 'contact_from_search_list':
+        case 'contact_to_search_list':
+            $api_response['data'] = array(
+                'document_handler_form_entity_search_list' => $document_handler_form_entity_search_list
+            );
             break;
     }
 }

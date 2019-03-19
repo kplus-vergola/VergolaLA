@@ -1,4 +1,25 @@
 <?php
+// $responseBodyString = "{" .
+//                 "\"fn1\":\"abc\", " .
+//                 "\"fn2\":\"def\", " .
+//                 "\"fn3\":[{\"name\":\"n1\", \"age\":\"11\"}, {\"name\":\"n2\", \"age\":\"12\"}]" .
+//             "}";
+// print_r($responseBodyString);
+// echo '<br /><br />';
+
+// $responseBodyArray = json_decode($responseBodyString, true);
+// print_r($responseBodyArray);
+// echo '<br /><br />';
+// exit;
+
+
+
+
+
+
+
+
+
 function pagination($current_page_number, $total_records_found, $query_string = null)
 {
 	$page = 1;
@@ -31,7 +52,7 @@ echo "<div class='search-listing'>
 <form action='" . JRoute::_($url) . "' method='post'>
 	Search: <input type='text' name='search_string' /> <input type='submit' name='submit' value='Search' class='search-btn' />
 </form>
-<input type='button' class='add-btn' onclick=location.href='" . JURI::base() . "system-management-vic/template-listing-vic/template-manage-vic?module=quote&default_content_category=Template' value='Add New'>
+<input type='button' class='add-btn' onclick=location.href='" . JURI::base() . "system-management-vic/template-listing-vic/template-manage-vic?module=template&default_content_category=Template' value='Add New'>
 </div>";
 
 //load the current paginated page number
@@ -66,8 +87,8 @@ $sql = "
 	AND document_handler_folder.date_deleted IS NULL 
 	AND document_handler_folder_file.date_deleted IS NULL 
 	AND document_handler_file.date_deleted IS NULL 
-	AND document_handler_entity.module = 'quote' 
-	AND document_handler_entity_folder.module = 'quote' 
+	AND document_handler_entity.module = 'template' 
+	AND document_handler_entity_folder.module = 'template' 
 	AND document_handler_file.content_category = 'Template' 
 	ORDER BY document_handler_entity.id, document_handler_folder.id, document_handler_file.id 
 ";
@@ -103,7 +124,7 @@ $loop = mysql_query($sql)
 	or die ('cannot run the query because: ' . mysql_error());
 	echo "<table class='listing-table table-bordered'><thead><tr><th>Sections</th><th>Categories</th><th>Templates</th><th>Status</th></tr></thead><tbody>";
 while ($record = mysql_fetch_assoc($loop))
-    echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "template-listing-vic/template-manage-vic?module=quote&default_entity_id={$record['document_handler_entity_id']}&default_folder_id={$record['document_handler_folder_id']}&default_file_id={$record['document_handler_file_id']}&default_content_category=Template'><td>{$record['document_handler_entity_name']}</td><td>{$record['document_handler_folder_name']}</td><td>{$record['document_handler_file_name']}</td><td>{$record['document_handler_file_status']}</td></tr>";
+    echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "template-listing-vic/template-manage-vic?module=template&default_entity_id={$record['document_handler_entity_id']}&default_folder_id={$record['document_handler_folder_id']}&default_file_id={$record['document_handler_file_id']}&default_content_category=Template'><td>{$record['document_handler_entity_name']}</td><td>{$record['document_handler_folder_name']}</td><td>{$record['document_handler_file_name']}</td><td>{$record['document_handler_file_status']}</td></tr>";
     echo "</tbody></table>"; 
     
 echo "<div class='pagination-layer'>";

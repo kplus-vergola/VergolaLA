@@ -2,6 +2,13 @@
 $config['path']['base_url'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . '/';
 $config['path']['log_folder'] = 'C:\\xampp\htdocs\\VergolaLA_as_live\\logs\\';
 $config['path']['script_url'] = substr($config['path']['base_url'], 0, strlen($config['path']['base_url']) - 1) . $_SERVER['REQUEST_URI'];
+
+$config['path']['base_script_url'] = $config['path']['script_url'];
+$temp_array = explode('?', $config['path']['base_script_url']);
+if (count($temp_array) == 2) {
+    $config['path']['base_script_url'] = $temp_array[0];
+}
+
 $config['path']['upload_folder'] = 'C:\\xampp\\htdocs\\VergolaLA_as_live\\images\\document_handler\\upload\\';
 
 $config['input_data']['php_input'] = stripslashes(trim(file_get_contents('php://input')));
@@ -22,12 +29,23 @@ $config['switch']['log_input_data']['php_input'] = 'off';
 $config['switch']['log_input_data']['request'] = 'on';
 
 $config['plugin']['msword']['file_extension'] = 'zip';
-$config['plugin']['msword']['file_name'] = 'VGL4W_03.zip';
+$config['plugin']['msword']['file_name'] = 'VGL4W_05.zip';
 $config['plugin']['msword']['folder'] = 'C:\\xampp\\htdocs\\VergolaLA_as_live\\images\\document_handler\\plugin\\';
-$config['plugin']['usage_message'] = "
+$config['plugin']['msword']['usage_message'] = "
 NOTE:\n\n
 1. This MS-Word add-in is for working with Vergola web services only;\n
 2. This add-in will only works if you have either MS-Word 2013 or MS-Word 2016 on your machine;\n
+3. If you have previous version of this add-in on your machine, please uninstall it before you start;\n
+4. After downloading, extract its contents and then run setup.exe to start the installation process;\n
+5. Please contact the administrator if you encounter any issue while using this.\n
+";
+$config['plugin']['msoutlook']['file_extension'] = 'zip';
+$config['plugin']['msoutlook']['file_name'] = 'VGL4O_05.zip';
+$config['plugin']['msoutlook']['folder'] = 'C:\\xampp\\htdocs\\VergolaLA_as_live\\images\\document_handler\\plugin\\';
+$config['plugin']['msoutlook']['usage_message'] = "
+NOTE:\n\n
+1. This MS-Outlook add-in is for working with Vergola web services only;\n
+2. This add-in will only works if you have either MS-Outlook 2013 or MS-Word 2016 on your machine;\n
 3. If you have previous version of this add-in on your machine, please uninstall it before you start;\n
 4. After downloading, extract its contents and then run setup.exe to start the installation process;\n
 5. Please contact the administrator if you encounter any issue while using this.\n
