@@ -594,7 +594,7 @@ if(isset($_POST['delete-drawing'])) {
 
     $system_base_url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . '/';
     $template_base_url = $system_base_url . 'system-management-vic/template-listing-vic/template-manage-vic';
-    $current_script_base_url = urlencode($system_base_url . $_SERVER['REQUEST_URI']);
+    $current_script_base_url = urlencode($system_base_url . substr($_SERVER['REQUEST_URI'], 1));
 
     $template_module = 'template';
     $current_user_info = JFactory::getUser();
