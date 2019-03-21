@@ -138,8 +138,9 @@ $sql2 = "
     AND document_handler_entity.id IS NOT NULL 
     AND document_handler_folder.id IS NOT NULL 
     AND document_handler_file.id IS NOT NULL 
-	AND document_handler_entity.module = '' 
+    /*
 	AND document_handler_entity.module = '" . addslashes($module) . "' 
+	*/
 	/* 
 	AND document_handler_file.content_category = 'Template' 
 	*/
