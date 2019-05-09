@@ -1,25 +1,4 @@
 <?php
-// $responseBodyString = "{" .
-//                 "\"fn1\":\"abc\", " .
-//                 "\"fn2\":\"def\", " .
-//                 "\"fn3\":[{\"name\":\"n1\", \"age\":\"11\"}, {\"name\":\"n2\", \"age\":\"12\"}]" .
-//             "}";
-// print_r($responseBodyString);
-// echo '<br /><br />';
-
-// $responseBodyArray = json_decode($responseBodyString, true);
-// print_r($responseBodyArray);
-// echo '<br /><br />';
-// exit;
-
-
-
-
-
-
-
-
-
 function pagination($current_page_number, $total_records_found, $query_string = null)
 {
 	$page = 1;
