@@ -33,7 +33,7 @@
                         'document_handler_form_file_content_category_row', 
                         'document_handler_form_file_folder_divselectbox_row', 
                         'document_handler_form_file_date_created_row', 
-                        'document_handler_form_file_version_list_row' 
+                        'document_handler_form_record_activity_list_row' 
                     ];
 
                     document.getElementById('document_handler_form_file_area_main_title').innerHTML = 'TEMPLATE';

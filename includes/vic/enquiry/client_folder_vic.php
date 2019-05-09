@@ -662,7 +662,7 @@ if(isset($_POST['delete-drawing'])) {
                 $temp_text = '
                     <tr style="background-color: #cccccc;">
                         <td><a id="" rel="nofollow" title="" onclick="downloadTemplateFile(\'edited_' . strtolower($template_folder_name) . '\', ' . $current_index . ', \'' . $template_download_option . '\'); return false;" href="" style="margin-right:5px;">' . $rs1['file_name'] . '</a></td>
-                        <td>' . date('d-M-Y H:i:s', strtotime($rs1['file_date_created'])) . '</td>
+                        <td>' . date('d-M-Y H:i:s', strtotime($rs1['file_version_date_created'])) . ' (' . $rs1['file_version_user_name'] . ')' . '</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td><a id="" rel="nofollow" title="" onclick="deleteTemplateFile(\'edited_' . strtolower($template_folder_name) . '\', ' . $current_index . '); return false;" href="" style="margin-right:5px;">Delete</a></td>
@@ -706,6 +706,10 @@ if(isset($_POST['delete-drawing'])) {
             url += '&return_url=<?php echo $current_script_base_url; ?>';
             window.location = url;
         }
+
+        window.onfocus = function() {
+            window.location.reload();
+        };
     </script>
     <!--
     end: template revamp > initialise program

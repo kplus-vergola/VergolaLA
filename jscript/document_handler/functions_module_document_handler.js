@@ -22,4 +22,7 @@
             initInputElementsFormEntities();
             initialiseDocumentHandlerFormLayout();
             closeEntitySearchForm();
+            window.onfocus = function() {
+                refreshEntityFilePropertiesToFields();
+            };
         }

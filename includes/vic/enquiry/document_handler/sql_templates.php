@@ -550,10 +550,12 @@ $sql_template_retrieve_file_folder_entity_list = "
 $sql_template_retrieve_file_version_list = "
     SELECT 
         document_handler_file_version.external_ref_name AS 'file_version_external_ref_name', 
-        document_handler_file_version.date_created AS 'file_version_date_created' 
+        CONCAT(document_handler_file_version.date_created, ' (', ver_users.name, ')') AS 'file_version_date_created' 
     FROM document_handler_file_version 
         LEFT JOIN document_handler_file 
             ON document_handler_file_version.file_id = document_handler_file.id 
+        LEFT JOIN ver_users 
+            ON document_handler_file_version.user_id = ver_users.id 
     WHERE document_handler_file_version.date_deleted IS NULL 
     AND document_handler_file.date_deleted IS NULL 
     AND document_handler_file_version.file_id = '[FILE_ID]' 
@@ -846,7 +848,8 @@ $sql_template_retrieve_template_download_list = "
         document_handler_file.date_created AS 'file_date_created', 
         document_handler_file_versionX.id AS 'file_version_id', 
         document_handler_file_versionX.external_ref_name AS 'file_version_external_ref_name', 
-        document_handler_file_versionX.date_created AS 'file_version_date_created' 
+        document_handler_file_versionX.date_created AS 'file_version_date_created', 
+        document_handler_file_versionX.file_user_name AS 'file_version_user_name' 
     FROM document_handler_entity 
         LEFT JOIN document_handler_entity_folder 
             ON document_handler_entity.id = document_handler_entity_folder.entity_id 
@@ -857,7 +860,7 @@ $sql_template_retrieve_template_download_list = "
         LEFT JOIN document_handler_file 
             ON document_handler_folder_file.file_id = document_handler_file.id 
         LEFT JOIN ( 
-            SELECT document_handler_file_version1.* 
+            SELECT document_handler_file_version1.*, ver_users1.name AS file_user_name 
             FROM document_handler_file_version AS document_handler_file_version1 
                 LEFT JOIN ( 
                     SELECT MAX(document_handler_file_version2.id) AS 'latest_id' 
@@ -865,6 +868,8 @@ $sql_template_retrieve_template_download_list = "
                     GROUP BY document_handler_file_version2.file_id 
                 ) AS document_handler_file_version3 
                     ON document_handler_file_version1.id = document_handler_file_version3.latest_id 
+                LEFT JOIN ver_users ver_users1 
+                    ON document_handler_file_version1.user_id = ver_users1.id 
             WHERE document_handler_file_version1.date_deleted IS NULL 
             AND document_handler_file_version3.latest_id IS NOT NULL 
         ) document_handler_file_versionX
@@ -874,6 +879,7 @@ $sql_template_retrieve_template_download_list = "
     AND document_handler_folder.date_deleted IS NULL 
     AND document_handler_folder_file.date_deleted IS NULL 
     AND document_handler_file.date_deleted IS NULL 
+    AND document_handler_file_versionX.date_created IS NOT NULL 
     AND document_handler_entity.module = '[MODULE]' 
     AND document_handler_entity_folder.module = '[MODULE]' 
     AND document_handler_entity.name = '[ENTITY_NAME]' 

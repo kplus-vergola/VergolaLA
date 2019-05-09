@@ -36,7 +36,7 @@ NOTE:\n\n
 1. This MS-Word add-in is for working with Vergola web services only;\n
 2. This add-in will only works if you have either MS-Word 2013 or MS-Word 2016 on your machine;\n
 3. If you have previous version of this add-in on your machine, please uninstall it before you start;\n
-4. After downloading, extract its contents and then run setup.exe to start the installation process;\n
+4. After downloading, go to your download folder and extract its contents and then run setup.exe to start the installation process;\n
 5. Please contact the administrator if you encounter any issue while using this.\n
 ";
 $config['plugin']['msoutlook']['file_extension'] = 'zip';
@@ -47,13 +47,13 @@ NOTE:\n\n
 1. This MS-Outlook add-in is for working with Vergola web services only;\n
 2. This add-in will only works if you have either MS-Outlook 2013 or MS-Word 2016 on your machine;\n
 3. If you have previous version of this add-in on your machine, please uninstall it before you start;\n
-4. After downloading, extract its contents and then run setup.exe to start the installation process;\n
+4. After downloading, go to your download folder and extract its contents and then run setup.exe to start the installation process;\n
 5. Please contact the administrator if you encounter any issue while using this.\n
 ";
 
 $config['document_handler']['path']['log_folder'] = $config['path']['log_folder'] . 'document_handler\\';
 $config['document_handler']['path']['log_file_name'] = 'document_handler.log';
-$config['document_handler']['form']['file_name'] = 'form_document_handler.php';
+$config['document_handler']['form']['file_name'] = 'client_form_document_handler.php';
 
 include('config_mime_types.php');
 ?>

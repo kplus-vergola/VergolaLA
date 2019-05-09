@@ -20,7 +20,6 @@
 
     var content_categories_list = [
         {"ref_name":"Document", "display_name":"Document", "display_order":"1"}, 
-        {"ref_name":"Template", "display_name":"Template", "display_order":"2"}/*, 
-        {"ref_name":"Download Data Merge", "display_name":"Download Data Merge", "display_order":"3"}*/
+        {"ref_name":"Template", "display_name":"Template", "display_order":"2"}
     ];
 </script>

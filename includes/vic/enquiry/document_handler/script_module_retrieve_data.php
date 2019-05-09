@@ -50,7 +50,6 @@ $document_handler_form_entity_list = array();
 $document_handler_form_entity_folder_list = array();
 $document_handler_form_folder_file_list = array();
 $template_data_tag_list = array();
-$template_data_tag_list_in_text = '';
 $document_handler_form_entity_search_list = array();
 
 
@@ -826,17 +825,12 @@ if ($enable_retrieve['template_data_tag_list'] == true) {
                     if (!is_int($key1)) {
                         if ($delete_data_field_value == false) {
                             $template_data_tag_list[count($template_data_tag_list)] = array('ref_name' => $key1, 'display_name' => $value1);
-                            // $template_data_tag_list[$key1] = $value1;
-                            $template_data_tag_list_in_text .= $key1 . ':' . $value1 . ';';
                         } else {
                             $template_data_tag_list[count($template_data_tag_list)] = array('ref_name' => $key1, 'display_name' => '');
-                            // $template_data_tag_list[$key1] = '';
-                            $template_data_tag_list_in_text .= $key1 . ':' . '' . ';';
                         }
                     }
                 }
             }
-            $template_data_tag_list_in_text = substr($template_data_tag_list_in_text, 0, strlen($template_data_tag_list_in_text) - 1);
         }
     }
 }
@@ -966,8 +960,9 @@ if (isset($api_data['access_mode'])) {
             );
             break;
         case 'template_data_tag_list':
-            // $api_response['data'] = $template_data_tag_list_in_text;
-            $api_response['data'] = $template_data_tag_list;
+            $api_response['data'] = array(
+                'template_data_tag_list' => $template_data_tag_list
+            );
             break;
         case 'entity_search_list':
         case 'contact_from_search_list':
