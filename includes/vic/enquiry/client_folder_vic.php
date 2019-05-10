@@ -601,6 +601,7 @@ if(isset($_POST['delete-drawing'])) {
     $template_username = $current_user_info->username;
     $template_password = $current_user_info->password;
     $template_status = 'Published';
+    $client_id_prefix = 'CRC';
 
     function getTemplateListInHtml($sql_template, $template_module, $template_entity_name, $template_folder_name, $template_content_category, $template_status, $template_download_option, $adhoc_entity_name) {
         $html_text = '';
@@ -811,7 +812,7 @@ if(isset($_POST['delete-drawing'])) {
         $template_folder_name = 'Sales';
         $template_content_category = 'Template';
         $template_download_option = 'dl_dm';
-        $adhoc_entity_name = 'CRC' . $_REQUEST['pid'];
+        $adhoc_entity_name = $client_id_prefix . $_REQUEST['pid'];
 
         $html_text = getTemplateListInHtml(
             $sql_template_retrieve_template_download_list, 
@@ -940,7 +941,7 @@ if(isset($_POST['delete-drawing'])) {
         -->
         <?php
         $template_module = 'template_applied';
-        $template_entity_name = 'CRC' . $_REQUEST['pid'];
+        $template_entity_name = $client_id_prefix . $_REQUEST['pid'];
         $template_folder_name = 'Sales';
         $template_content_category = 'Download Data Merge';
         $template_download_option = 'dl';
@@ -1016,7 +1017,7 @@ if(isset($_POST['delete-drawing'])) {
         $template_folder_name = 'Correspondence';
         $template_content_category = 'Template';
         $template_download_option = 'dl_dm';
-        $adhoc_entity_name = 'CRC' . $_REQUEST['pid'];
+        $adhoc_entity_name = $client_id_prefix . $_REQUEST['pid'];
 
         $html_text = getTemplateListInHtml(
             $sql_template_retrieve_template_download_list, 
@@ -1140,7 +1141,7 @@ if(isset($_POST['delete-drawing'])) {
         -->
         <?php
         $template_module = 'template_applied';
-        $template_entity_name = 'CRC' . $_REQUEST['pid'];
+        $template_entity_name = $client_id_prefix . $_REQUEST['pid'];
         $template_folder_name = 'Correspondence';
         $template_content_category = 'Download Data Merge';
         $template_download_option = 'dl';
@@ -1210,7 +1211,7 @@ if(isset($_POST['delete-drawing'])) {
         $template_folder_name = 'Statutory';
         $template_content_category = 'Template';
         $template_download_option = 'dl_dm';
-        $adhoc_entity_name = 'CRC' . $_REQUEST['pid'];
+        $adhoc_entity_name = $client_id_prefix . $_REQUEST['pid'];
 
         $html_text = getTemplateListInHtml(
             $sql_template_retrieve_template_download_list, 
@@ -1324,7 +1325,7 @@ if(isset($_POST['delete-drawing'])) {
         -->
         <?php
         $template_module = 'template_applied';
-        $template_entity_name = 'CRC' . $_REQUEST['pid'];
+        $template_entity_name = $client_id_prefix . $_REQUEST['pid'];
         $template_folder_name = 'Statutory';
         $template_content_category = 'Download Data Merge';
         $template_download_option = 'dl';

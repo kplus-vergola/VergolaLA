@@ -6,7 +6,7 @@
 /images/file_upload/
 /images/pic/
 /images/pics/
-/logs/
+# /logs/
 /tmp/
 
 

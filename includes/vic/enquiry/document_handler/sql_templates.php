@@ -720,6 +720,17 @@ $sql_template_retrieve_document_handler_folder_file_records_2 = "
 
 
 
+$sql_template_retrieve_ver_chronoforms_data_clientpersonal_vic_last_record = "
+    SELECT * 
+    FROM ver_chronoforms_data_clientpersonal_vic 
+    ORDER BY datelodged DESC 
+    LIMIT 1;
+";
+
+
+
+
+
 $sql_template_retrieve_template_data_tag_list = "
     SELECT 
         IFNULL(vu.name, '') AS '[|SALES_REP_NAME|]', 
@@ -728,12 +739,6 @@ $sql_template_retrieve_template_data_tag_list = "
         IFNULL(REPLACE(vug.title, 'Victoria', ''), '') AS '[|SALES_REP_POSITION|]', 
         IFNULL(cp.clientid, '') AS '[|CLIENT_ID|]', 
         IFNULL(cp.client_title, '') AS '[|CLIENT_TITLE|]', 
-        /*
-        IFNULL(cp.client_firstname, '') AS '[|CLIENT_FIRSTNAME|]', 
-        IFNULL(cp.client_lastname, '') AS '[|CLIENT_LASTNAME|]', 
-        IFNULL(cp.builder_name, '') AS '[|BUILDER_NAME|]', 
-        IFNULL(cp.builder_contact, '') AS '[|BUILDER_CONTACT|]', 
-        */
         ( 
             CASE WHEN (cp.client_firstname IS NULL) OR (cp.client_firstname = '') 
             THEN IFNULL(cp.builder_name, '') 

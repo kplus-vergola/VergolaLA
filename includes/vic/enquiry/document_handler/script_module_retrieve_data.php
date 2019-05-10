@@ -793,8 +793,27 @@ if ($enable_retrieve['template_data_tag_list'] == true) {
     if ($file_record != null) {
         switch ($file_record['file_content_category']) {
             case 'Template':
+                $latest_client_id = '';
+
+                $sql = str_replace(
+                    array(
+                    ), 
+                    array(
+                    ), 
+                    $sql_template_retrieve_ver_chronoforms_data_clientpersonal_vic_last_record
+                );
+
+                $results = executeDbQuery($sql, $db_connection);
+                if ($results['error'] == 'null') {
+                    $results_retrieve_data['template_data_tag_list']['is_success'] = true;
+
+                    while ($r1 = mysql_fetch_array($results['data'])) {
+                        $latest_client_id = $r1['clientid'];
+                    }
+                }
+
                 $target_sql = $sql_template_retrieve_template_data_tag_list;
-                $target_entity_name = 'CRC11';
+                $target_entity_name = $latest_client_id;
                 $delete_data_field_value = true;
                 break;
             case 'Download Data Merge':
