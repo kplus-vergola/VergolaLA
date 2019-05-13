@@ -724,7 +724,7 @@ if ($enable_retrieve['file_download'] == true) {
 */
 $sql = '';
 $submitted_file_external_ref_name = '';
-$results_retrieve_data['template_data_tag_list']['is_success'] = false;
+$results_retrieve_data['template_data_tag_list']['is_success'] = true;
 $results_retrieve_data['template_data_tag_list']['total_record'] = 0;
 
 if ($enable_retrieve['template_data_tag_list'] == true) {
@@ -966,7 +966,7 @@ if (isset($api_data['access_mode'])) {
     switch ($api_data['access_mode']) {
         case 'entity_list':
             $api_response['data'] = array(
-                'document_handler_form_entity_list' => $document_handler_form_entity_list
+                'document_handler_form_entity_list' => $document_handler_form_entity_list 
             );
             break;
         case 'entity_folder_list':
