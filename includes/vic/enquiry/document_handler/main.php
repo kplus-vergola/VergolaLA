@@ -72,8 +72,6 @@ if (isset($_REQUEST['api_mode'])) {
         $api_data_string = $results['api_data_string'];
         $api_data = $results['api_data'];
 
-// print_r($api_data); exit;
-
         if (json_decode($api_data_string, true) == true) {
             if (isset($api_data['username'])) {
                 $login_user_info = getLoginUserInfo($db_connection, $sql_template_retrieve_current_login_user_info, $api_data['username'], $api_data['password']);

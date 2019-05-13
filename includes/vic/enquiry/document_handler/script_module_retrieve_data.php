@@ -723,7 +723,8 @@ if ($enable_retrieve['file_download'] == true) {
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
 $sql = '';
-$results_retrieve_data['template_data_tag_list']['is_success'] = true;
+$submitted_file_external_ref_name = '';
+$results_retrieve_data['template_data_tag_list']['is_success'] = false;
 $results_retrieve_data['template_data_tag_list']['total_record'] = 0;
 
 if ($enable_retrieve['template_data_tag_list'] == true) {
@@ -757,7 +758,7 @@ if ($enable_retrieve['template_data_tag_list'] == true) {
     $results = executeDbQuery($sql, $db_connection);
     if ($results['error'] == 'null') {
         if ($results['num_rows'] > 0) {
-            $results_retrieve_data['file_download']['is_success'] = true;
+            $results_retrieve_data['template_data_tag_list']['is_success'] = true;
             $r1 = mysql_fetch_array($results['data']);
             foreach ($r1 as $key1 => $value1) {
                 if (!is_int($key1)) {
@@ -778,7 +779,7 @@ if ($enable_retrieve['template_data_tag_list'] == true) {
             $results2 = executeDbQuery($sql, $db_connection);
             if ($results2['error'] == 'null') {
                 if ($results2['num_rows'] > 0) {
-                    $results_retrieve_data['file_download']['is_success'] = true;
+                    $results_retrieve_data['template_data_tag_list']['is_success'] = true;
                     $r2 = mysql_fetch_array($results2['data']);
                     foreach ($r2 as $key2 => $value2) {
                         if (!is_int($key2)) {
