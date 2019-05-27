@@ -173,7 +173,8 @@
             );
 
             setVrFormItemDataEntryRowValuesByInternalRefName(
-                'flashing_fascia', 
+                // 'flashing_fascia', 
+                'flashing_wall', 
                 [
                     {"form_item_name":"vr_item_data_entry_length_feet", "variable_name":"vr_item_length_feet", "col_value":total_vr_length_feet_in_value_for_display}, 
                     {"form_item_name":"vr_item_data_entry_length_inch", "variable_name":"vr_item_length_inch", "col_value":total_vr_length_inch_in_value_for_display}
