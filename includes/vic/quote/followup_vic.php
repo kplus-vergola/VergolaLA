@@ -122,7 +122,8 @@ if(isset($_POST['save'])){ //$cf_id is the id of the selected costing. if no cf_
  
 
  	$sql = "UPDATE ver_chronoforms_data_clientpersonal_vic SET 
-		appointmentdate = ".(!empty($_POST['appointmentdate']) ? "'$appointmentdate'" : "NULL").", 
+		// appointmentdate = ".(!empty($_POST['appointmentdate']) ? "'$appointmentdate'" : "NULL").", 
+		appointmentdate = ".(!empty($_POST['appointmentdate']) ? "0000-00-00 00:00:00" : "NULL").", 
 		next_followup = ".(!empty($_POST['ffdate1']) ? "'$SETDateFF1'" : "NULL").",
 		qdelivered = ".(!empty($_POST['qdelivered']) ? "'$SETDateDelivered'" : "NULL").", 
 		date_contract_signed = ".(!empty($_POST['date_contract_signed']) ? "'$set_date_contract_signed'" : "NULL").",

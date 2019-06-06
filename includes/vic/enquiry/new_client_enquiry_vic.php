@@ -12,7 +12,8 @@
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/datetime/css/bootstrap.min.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/datetime/css/bootstrap-datetimepicker.min.css'; ?>" />
 <?php
-date_default_timezone_set('America/Los_Angeles');
+// date_default_timezone_set('America/Los_Angeles');
+date_default_timezone_set('Australia/Victoria');
 $notification = "";
 $is_builder = 0;
 $page_name = "";
@@ -116,7 +117,7 @@ $sql = "UPDATE ver_chronoforms_data_clientpersonal_vic SET
                 repname = '" . mysql_real_escape_string($RepName) . "',
                 leadid = '" . mysql_real_escape_string($LeadID) . "',
                 leadname = '" . mysql_real_escape_string($LeadName) . "',
-                appointmentdate = '" . mysql_real_escape_string($AppointmentLodged) . "',
+                appointmentdate = $AppointmentLodged,
                 employeeid = '" . mysql_real_escape_string($EmployeeID) . "',
                 lastRepId = '" . mysql_real_escape_string($lastRepId) . "' 
         WHERE pid={$pid};         
@@ -287,9 +288,9 @@ $sql = "INSERT INTO ver_chronoforms_data_clientpersonal_vic
                  '" . mysql_real_escape_string($RepIdent) . "',
                  '" . mysql_real_escape_string($RepName) . "',
                  '" . mysql_real_escape_string($LeadID) . "',
-                 '" . mysql_real_escape_string($LeadName) . "',
-                 '" . mysql_real_escape_string($AppointmentLodged) . "',
-                 '" . mysql_real_escape_string($EmployeeID) . "',
+                 '" . mysql_real_escape_string($LeadName) . "',                 
+                  $AppointmentLodged,
+				 '" . mysql_real_escape_string($EmployeeID) . "',
                  '" . mysql_real_escape_string($lastRepId) . "',
                  '" . mysql_real_escape_string($builder_name) . "',
                  '" . mysql_real_escape_string($builder_contact) . "',
@@ -598,9 +599,7 @@ $('#ibtn').click(function(){
     });
 });//]]>
 </script>
-
 <script src="<?php echo JURI::base().'jscript/jquery-ui.min.js'; ?>" type="text/javascript"></script>
-
 <style>
     .ui-autocomplete {
         max-height: 200px;
@@ -632,7 +631,6 @@ $('#ibtn').click(function(){
             minLength:2
         };
         $("#csuburb").autocomplete(client_config);
-
         var site_config = {
             source: function(request, response) {
                 $.ajax({
@@ -654,7 +652,6 @@ $('#ibtn').click(function(){
             minLength:2
         };
         $("#ssuburb").autocomplete(site_config);
-
         $("#csuburbstate").keypress(function() {
             $("#notification").html("Please choose a suburb in the autocomplete box.");   
             //$("#notification").appendTo("."+dataClass+" .notification-area");
@@ -673,7 +670,6 @@ $('#ibtn').click(function(){
             $("#csuburb").text(""); 
             $("#csuburb").focus(); 
         });
-
         $("#ssuburbstate").keypress(function() {
             $("#notification").html("Please choose a suburb in the autocomplete box.");   
             //$("#notification").appendTo("."+dataClass+" .notification-area");
@@ -694,8 +690,6 @@ $('#ibtn').click(function(){
         });
     });
 </script>
-
-
 <script>
 function csuburbchange(){
     document.getElementById('cstateid').style.visibility = 'hidden';
@@ -717,8 +711,6 @@ function set_notification($msg){
   return "<div class='notification_result'>{$msg}</div>";
 } 
 ?>   
-
-
 <input type="hidden" value="" id="blank" name="blank" />
   <input type="hidden" value="<?php if($is_edit){echo $client['pid'];} ?>" id="" name="pid" />
   <input type='hidden' name='is_builder'  value="<?php echo $is_builder; ?>" / >
@@ -876,11 +868,16 @@ function set_notification($msg){
       </ul>
     </div>
     <div id="tabs_content_container">
-      <div id="tracker" class="tab_content_default" style="display: block;">
+      <!-- <div id="tracker" class="tab_content_default" style="display: block;">
         <label class="input"><span id="date-entered">Date Entered:</span>
           <input type="text" id="idate" name="idate" class="date_entered" value="<?php  if($is_edit==1){echo $client['fdatelodged']; error_log("fdatelodged: ".$client['fdatelodged'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); } else{echo date(PHP_DFORMAT); } ?>">
         </label> 
-        <input type="submit" value="Send Mail" id="ibtn" name="<?php echo ($is_edit==1?"send_and_update":"save"); ?>" class="btn">
+        <input type="submit" value="Send Mail" id="ibtn" name="<?php echo ($is_edit==1?"send_and_update":"save"); ?>" class="btn"> -->
+		<div id="tracker" class="tab_content_default" style="display: block;">
+			<label class="input"><span id="date-entered">Date Entered:</span>
+			  <input type="text" id="idate" name="idate" class="date_entered" value="<?php  if($is_edit==1){echo $client['fdatelodged'];  } else{echo date(PHP_DFORMAT); } ?>">
+			</label> 
+			<input type="submit" value="Send Mail" id="ibtn" name="<?php echo ($is_edit==1?"send_and_update":"save"); ?>" class="btn btn-add">
         <!--- Sales Rep -->
         <?php
       $queryrep="SELECT id, name, RepID, email, block FROM ver_users ORDER BY name ASC ";
@@ -921,8 +918,6 @@ function set_notification($msg){
     <input type="hidden" id="rep_ident" name="rep_ident" value="<?php echo $RepIdent; ?>" />
     <input type="hidden" id="rep_name" name="rep_name" value="<?php echo $RepName; ?>" />
     <label class='' style="color:#222; display: inline-table;"><span><!-- <?php if($is_edit==0){echo 'Last Rep Allocated: ';} ?> --></span>
-
-
         <label class='input'><span><?php if($is_edit==0 || empty($RepID)) echo "Consultant"; ?></span>
             <select class='rep-list' id='replist' name='replist' onchange='javascript:SelectChangedRep();'><option></option>
             <?php
@@ -974,7 +969,6 @@ function set_notification($msg){
         document.getElementById('repemail').value = RepEmailArray[Rep];
     }
 </script>
-
         <input type="hidden" id="repname" name='repname' value="<?php echo $user->name; ?>" readonly />
         <input type="hidden" id="repident" name='repident' value="<?php echo $user->RepID; ?>" readonly />
         <input type="hidden" id="repid" name='repid' value="<?php echo $user->id ?>" readonly />
