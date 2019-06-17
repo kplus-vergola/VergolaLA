@@ -707,10 +707,6 @@ if(isset($_POST['delete-drawing'])) {
             url += '&return_url=<?php echo $current_script_base_url; ?>';
             window.location = url;
         }
-
-        window.onfocus = function() {
-            window.location.reload();
-        };
     </script>
     <!--
     end: template revamp > initialise program
