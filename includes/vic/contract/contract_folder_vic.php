@@ -410,6 +410,39 @@ if ($enable_update_contract_vergola == true) {
 }
 
 
+$cancellation_fee_amount = mysql_real_escape_string($_POST['cancellation_fee_amount']);
+$balanceowning_amount = mysql_real_escape_string($_POST['balanceowning_amount']);
+
+(floatval($cancellation_fee_amount)<=0?$cancellation_fee_amount=0:'');
+(floatval($balanceowning_amount)<=0?$balanceowning_amount=0:'');
+
+$cancellation_date = "NULL";
+if (strlen($_POST['cancellation_date']) && $_POST['cancellation_date'] != "0000-00-00 00:00:00"){
+  $cancellation_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['cancellation_date'])))."'";
+}
+
+$cancellationpaid_date = "NULL";
+if (strlen($_POST['cancellationpaid_date']) && $_POST['cancellationpaid_date'] != "0000-00-00 00:00:00"){
+  $cancellationpaid_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['cancellationpaid_date'])))."'";
+}
+
+$enable_update_contract_cancellation = false;
+if (isset($_POST['cancellation_fee_amount'])) {
+    $enable_update_contract_cancellation = true;
+
+}
+
+
+if ($enable_update_contract_cancellation == true) {
+    $sql = "UPDATE ver_chronoforms_data_contract_vergola_vic SET
+    cancellation_date = {$cancellation_date},
+    cancellation_fee_amount = {$cancellation_fee_amount},
+    balanceowning_amount = {$balanceowning_amount},
+    cancellationpaid_date = {$cancellationpaid_date}
+    WHERE projectid = '$projectid'";
+    mysql_query($sql)or die(mysql_error());
+}
+
 $city_permit_application_date = "NULL"; 
 if (strlen($_POST['citypermitdate']) && $_POST['citypermitdate'] != "0000-00-00 00:00:00"){
   $city_permit_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['citypermitdate'])))."'";
@@ -1223,6 +1256,7 @@ $groups = $user->get('groups');
       <li><a href="#" rel="tracker" class="selected">Enquiry Tracker</a></li>
       <li><a href="#" rel="standard">Vergola Standard</a></li>
       <li><a href="#" rel="statutory">Statutory Approval</a></li>
+    <li><a href="#" rel="contract-cancellation">Contract Cancellation</a></li>
     </ul>
   </div>
   <div id="tabs_content_container">
@@ -1293,7 +1327,11 @@ $groups = $user->get('groups');
             DATE_FORMAT(louvers_ordered,'" . SQL_DATE_FORMAT_01 . "') flouvers_ordered, 
             DATE_FORMAT(install_date,'" . SQL_DATE_FORMAT_01 . "') finstall_date,
             DATE_FORMAT(schedule_completion,'" . SQL_DATE_FORMAT_01 . "') fschedule_completion,
-            DATE_FORMAT(time_frame_letter,'" . SQL_DATE_FORMAT_01 . "') ftime_frame_letter
+            DATE_FORMAT(time_frame_letter,'" . SQL_DATE_FORMAT_01 . "') ,
+            DATE_FORMAT( cancellation_date, '".SQL_DATE_FORMAT_01."' ) fcancellation_date,
+            DATE_FORMAT( cancellation_fee_amount, '".SQL_DATE_FORMAT_01."' ) fcancellation_fee_amount,
+            DATE_FORMAT( balanceowning_amount, '".SQL_DATE_FORMAT_01."' ) fbalanceowning_amount,
+            DATE_FORMAT( cancellationpaid_date, '".SQL_DATE_FORMAT_01."' ) fcancellationpaid_date
             FROM ver_chronoforms_data_contract_vergola_vic 
             WHERE quoteid = '$cust_id' 
             AND projectid = '$ListProjectID'
@@ -1842,7 +1880,76 @@ $groups = $user->get('groups');
         </div>
     </div>
     <!-- End of Statutory Approval -->
+
+    <!--- Start of Contract Cancellation -->
     
+    
+    <?php
+      $disabled_div_class = 'disabled-div';
+      //process user_access_profiles
+      if ($current_signed_in_user_access_profiles['tab contract cancellation']['edit'] == true) {
+          $disabled_div_class = '';
+      }
+      ?>
+      <div id="contract-cancellation" class="tab_content <?php echo $disabled_div_class; ?>">
+    
+  
+       
+   
+<span class="vs-label"><label style="width: 120px;">Cancellation Date</label>
+        <td >&nbsp;&nbsp; <input style="text-align: right; width: 120px;" type="text" id="cancellation_date" name="cancellation_date" class="date_entered" value="<?php echo $contract_vergola['fcancellation_date']; ?>" /> </td>        
+    </span>
+    
+  <span class="vs-label"><label style="width: 120px;">Cancellation Fee</label> 
+        <td>&#36; <input style="text-align: right; width: 120px;" type="text"  name="cancellation_fee_amount" class="cancellation_fee_amount" value="<?php echo $contract_vergola['cancellation_fee_amount']; ?>" /> </td>
+        </span>
+    
+    <span class="vs-label"><label style="width: 120px;">Deposit Paid</label> 
+        <td>&#36; <input style="text-align: right; width: 120px;" type="text" disabled="disabled"  id="deposit_paid_amount" name="deposit_paid_amount" class="deposit_paid_amount" value="<?php echo $PaymentDepositValue; ?>" /> </td>
+        </span>
+      
+      <span class="vs-label"><label style="width: 120px;">Balance Owning</label>
+        <td>&#36; <input style="text-align: right; width: 120px;" type="text" disabled="disabled"  id="balanceowning_amount" name="balanceowning_amount" class="balanceowning_amount" value="<?php echo $contract_vergola['balanceowning_amount']; ?>" /> </td>
+        </span>
+
+      <span class="vs-label" ><label style="width: 120px;">Cancellation Paid</label>
+        <td >&nbsp;&nbsp; <input style="text-align: right; width: 120px;" type="text" id="cancellationpaid_date" name="cancellationpaid_date" class="date_entered" value="<?php echo $contract_vergola['fcancellationpaid_date']; ?>" /> </td>        
+    </span>
+  
+   
+   
+          <script type='text/javascript'>      
+            //On page load change search value & simulate enter key press
+             $(document).ready(function(){
+              /*var deposit = parseInt($('#deposit_paid_amount').val());
+              var deposit1 = parseInt($('.deposit_paid_amount').val());
+              var cancel11 = parseInt($('.cancellation_fee_amount').val());*/
+
+             $('#balanceowning_amount').val($('.deposit_paid_amount').val() - $('.cancellation_fee_amount').val());
+      
+                })
+             $('.cancellation_fee_amount').on('input', function(){
+                var form = $(this).closest('form');
+               
+                var deposit = parseInt(form.find('.deposit_paid_amount').val());           
+                        
+                var cancellation = parseInt($(this).val());
+                $('#balanceowning_amount').val($('.deposit_paid_amount').val() - $('.cancellation_fee_amount').val());           
+                // form.find('.balanceowning_amount').val(deposit - cancellation); 
+              }) 
+           
+               
+          </script> 
+
+  </div>
+    
+  
+    
+    
+    
+    
+      <!--- End of Contract Cancellation -->
+      
   </div>
 </div>
 
