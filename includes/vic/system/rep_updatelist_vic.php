@@ -38,7 +38,7 @@ if (!$result)
     $Password=$retrieve['password'] ;
     $Block=$retrieve['block'] ;
     $Phone=$retrieve['phone'] ;
-    $Mobile=$retrieve['Mobile'] ;
+    $Mobile=$retrieve['mobile'] ;
     $ABN=$retrieve['abn'] ;
     $RepID=$retrieve['RepID'] ;
 
@@ -132,9 +132,9 @@ if(isset($_POST['save']))
 
 }
 
-if(isset($_POST['save_sales_target']))
+// if(isset($_POST['save_sales_target']))
+if(isset($_POST['save_sales_target']) || isset($_POST['save']))
 {
-    //print_r($_POST);return;
     $id =mysql_real_escape_string($_POST['rep_id']);
 
     $qResult = mysql_query("SELECT * FROM ver_users WHERE RepID  = '$id'");
@@ -172,7 +172,6 @@ if(isset($_POST['save_sales_target']))
 
 if(isset($_POST['update_sales_target']))
 {
-    //print_r($_POST);return;
     $id =mysql_real_escape_string($_POST['rep_id']);
 
     $qResult = mysql_query("SELECT * FROM ver_users WHERE RepID  = '$id'");
@@ -246,193 +245,200 @@ if(isset($_POST['cancel']))
 }
 
 ?>
-<form method="post" style="width:40%; display:inline-block;">
-<?php
-    if(strlen($notification)>0)
-    {
-        echo set_notification($notification);
-    }
 
-function set_notification($msg){
-    return "<div class='notification_result'>{$msg}</div>";
-}
-?>
-<table class="update-table">
-    <tr>
-        <td class="row1">Name</td>
-        <td class="row2"><input type="text" name="name" value="<?php echo $Name ?>"/></td>
-    </tr>
-    <tr>
-        <td class="row1">Username</td>
-        <td class="row2"><input type="text" name="username" value="<?php echo $Username ?>"/></td>
-    </tr>
-    <tr>
-        <td class="row1">Email</td>
-        <td class="row2"><input type="text" name="email" value="<?php echo $Email ?>"/></td>
-    </tr>
-    <tr>
-        <td class="row1">Password</td>
-        <td class="row2"><input type="password" name="password" value="<?php echo $Password ?>"/></td>
-    </tr>
-    <tr>
-        <td class="row1">Suspend</td>
-        <!--
-        <td class="row2"><input type="text" name="block" value="<?php echo $Block ?>"/></td>
-        -->
-        <td class="row1" >
-            <select name='block' style="width: 60px;">
-                <option value='0'  <?php echo ($Block=="0" ? "selected":""); ?> >No</option>
-                <option value='1'  <?php echo ($Block=="1" ? "selected":""); ?>  >Yes</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td class="row1">Phone</td>
-        <td class="row2"><input type="text" name="phone" value="<?php echo $Phone ?>"/></td>
-    </tr>
-    <tr>
-        <td class="row1">Mobile</td>
-        <td class="row2"><input type="text" name="mobile" value="<?php echo $Mobile ?>"/></td>
-    </tr>
-    <tr>
-        <td class="row1">ABN</td>
-        <td class="row2"><input type="text" name="abn" value="<?php echo $ABN ?>"/></td>
-    </tr>
-    <tr>
-        <td class="row1">RepID</td>
-        <td class="row2"><input type="text" name="repid" value="<?php echo $RepID ?>" readonly  disabled/></td>
-    </tr>
-
+<form method="post">
+    <div style="width:500px; font-size:12px; float: left;">
     <?php
-        //error_log($id, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
-        $user =& JFactory::getUser();
-        $sel_user =& JFactory::getUser($id);
-       	$cbo_rep_type = "";
+        if(strlen($notification)>0)
+        {
+            echo set_notification($notification);
+        }
 
- 		//$group &= $user['groups'];
-
-        if($user->groups['10']==10 || $user->groups['29']==29){
-            /*
-            $cbo_rep_type = "
-                    <select name='usergroup_id'>
-                        <option value='9' ".(isset($sel_user->groups['9']) ? "selected":"").">User</option>
-                        <option value='10' ".(isset($sel_user->groups['10']) ? "selected":"")."  >Admin</option>
-                        <option value='26' ".(isset($sel_user->groups['26']) ? "selected":"")." >Office</option>
-                        <option value='27' ".(isset($sel_user->groups['27']) ? "selected":"")." >Manager</option>
-
-                    </select>
-            ";
-            */
-            $cbo_rep_type = '<select name="usergroup_id">';
-            foreach ($custom_configs_user['user_groups'] as $key1 => $value1) {
-                $append_option = true;
-                if ($key1 == '10' && $key1 != $current_signed_in_user_group_key) {
-                    $append_option = false;
-                }
-                if ($append_option == true) {
-                    $selected = '';
-                    if (isset($sel_user->groups[$key1])) {
-                        $selected = 'selected';
-                    }
-                    $cbo_rep_type .= '<option value="' . $key1 . '" ' . $selected . '>' . $value1 . '</option>';
-                }
-            }
-            $cbo_rep_type .= '</select>';
+    function set_notification($msg){
+        return "<div class='notification_result'>{$msg}</div>";
+    }
     ?>
+    <table class="update-table">
         <tr>
-            <td class="row1">Usergroup </td>
-            <td class="row2"><?php echo $cbo_rep_type ?></td>
+            <td class="row1">Name</td>
+            <td class="row2"><input type="text" name="name" value="<?php echo $Name ?>"/></td>
+        </tr>
+        <tr>
+            <td class="row1">Username</td>
+            <td class="row2"><input type="text" name="username" value="<?php echo $Username ?>"/></td>
+        </tr>
+        <tr>
+            <td class="row1">Email</td>
+            <td class="row2"><input type="text" name="email" value="<?php echo $Email ?>"/></td>
+        </tr>
+        <tr>
+            <td class="row1">Password</td>
+            <td class="row2"><input type="password" name="password" value="<?php echo $Password ?>"/></td>
+        </tr>
+        <tr>
+            <td class="row1">Suspend</td>
+            <!--
+            <td class="row2"><input type="text" name="block" value="<?php echo $Block ?>"/></td>
+            -->
+            <td class="row1" >
+                <select name='block' style="width: 60px;">
+                    <option value='0'  <?php echo ($Block=="0" ? "selected":""); ?> >No</option>
+                    <option value='1'  <?php echo ($Block=="1" ? "selected":""); ?>  >Yes</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="row1">Phone</td>
+            <td class="row2"><input type="text" name="phone" value="<?php echo $Phone ?>"/></td>
+        </tr>
+        <tr>
+            <td class="row1">Mobile</td>
+            <td class="row2"><input type="text" name="mobile" value="<?php echo $Mobile ?>"/></td>
+        </tr>
+        <tr>
+            <td class="row1">ABN</td>
+            <td class="row2"><input type="text" name="abn" value="<?php echo $ABN ?>"/></td>
+        </tr>
+        <tr>
+            <td class="row1">RepID</td>
+            <td class="row2"><input type="text" name="repid" value="<?php echo $RepID ?>" readonly  disabled/></td>
         </tr>
 
-    <?php
-
-        }
-
-    ?>
-
-
-    <tr>
-        <td class="row1">&nbsp;</td>
-        <td class="row2"><input type="submit" name="save" value="Save" class="update-btn" /> <input type="submit" name="delete" value="Delete" class="update-btn" /> <input type="button"   value="Cancel" class="update-btn" onclick="location.href='<?php echo JURI::base(); ?>system-management-vic/rep-listing-vic'" /></td>
-    </tr>
-</table>
-</form>
-
-<form method="post" style="width:40%; display:inline-block;vertical-align: top; font-size:12px;">
-<input type="hidden" name="rep_id" value="<?php echo $RepID ?>" />
-<input type="hidden" name="id" value="<?php echo $id ?>" />
-<table id="tblSalesTarget" class="update-table">
-    <tr>
-        <td class="row1" width="200">Target sales from</td>
-        <td class="row2" width="200" colspan="2">
         <?php
-            $year = date('Y');
-            $cMonth = date('m');
-            if($cMonth<7){
-                $year = $year - 1;
+            //error_log($id, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+            $user =& JFactory::getUser();
+            $sel_user =& JFactory::getUser($id);
+           	$cbo_rep_type = "";
+
+     		//$group &= $user['groups'];
+
+            if($user->groups['10']==10 || $user->groups['29']==29){
+                /*
+                $cbo_rep_type = "
+                        <select name='usergroup_id'>
+                            <option value='9' ".(isset($sel_user->groups['9']) ? "selected":"").">User</option>
+                            <option value='10' ".(isset($sel_user->groups['10']) ? "selected":"")."  >Admin</option>
+                            <option value='26' ".(isset($sel_user->groups['26']) ? "selected":"")." >Office</option>
+                            <option value='27' ".(isset($sel_user->groups['27']) ? "selected":"")." >Manager</option>
+
+                        </select>
+                ";
+                */
+                $cbo_rep_type = '<select name="usergroup_id">';
+                foreach ($custom_configs_user['user_groups'] as $key1 => $value1) {
+                    $append_option = true;
+                    if ($key1 == '10' && $key1 != $current_signed_in_user_group_key) {
+                        $append_option = false;
+                    }
+                    if ($append_option == true) {
+                        $selected = '';
+                        if (isset($sel_user->groups[$key1])) {
+                            $selected = 'selected';
+                        }
+                        $cbo_rep_type .= '<option value="' . $key1 . '" ' . $selected . '>' . $value1 . '</option>';
+                    }
+                }
+                $cbo_rep_type .= '</select>';
+        ?>
+            <tr>
+                <td class="row1">Usergroup </td>
+                <td class="row2"><?php echo $cbo_rep_type ?></td>
+            </tr>
+
+        <?php
+
             }
-
-            $qResult = mysql_query("SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID' AND year={$year}");
-            //error_log("...=".$qResult, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
-            $r = mysql_fetch_assoc($qResult);
-
-            if(mysql_num_rows($r)<1){
-                //error_log("HERE=".$qResult, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
-                $qResult = mysql_query("SELECT * FROM ver_rep_sales_target WHERE rep_id='Default Target' AND year={$year}");
-                $r = mysql_fetch_assoc($qResult);
-            }
-
-
-
-            //error_log("r: ".print_r($r,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
-            $dFrom = substr($r['dateFromTo'], 0,10);
-            $dTo = substr($r['dateFromTo'], -10,10);
-
-            $formatFrom = date_format(date_create($dFrom),PHP_DFORMAT);
-            $formatTo = date_format(date_create($dTo),PHP_DFORMAT);
-
 
         ?>
-                    <input type="hidden" value="<?php echo $dFrom; ?>" name="dFrom" id="dFrom"  />
-                    <input type="hidden" value="<?php echo $dTo; ?>" name="dTo" id="dTo"/>
-                    <input type="text" value="<?php echo $formatFrom; ?>" class="datepicker" style="display: inline;width:150px; " id="dpFrom" >
-
-                    <b>to :</b> &nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="text" value="<?php echo $formatTo; ?>" class="datepicker" style="display: inline;width:150px; "  id="dpTo" >
-                    <input type="button" name="" value="Create" class="" onclick="createMonthFields();" style="width:100px;" />
-        </td>
-    </tr>
-    <tr>
-        <td class="row1" width="200">&nbsp;</td>
-        <td class="row2" width="200">&nbsp;</td>
-    </tr>
-    <?php
-        $qResult = mysql_query("SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID'  AND year={$year}");
-        //error_log("SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID'", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
-     	//error_log("SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID'  AND year={$year}", 3,'/home/vergola/public_html/quote-system/my-error.log');
-     	$i=0;
-        while ($r = mysql_fetch_assoc($qResult)) {
-            //print_r($r);
-            $mDate = date_format(date_create($r["target_date"]),"F");
-            $fDate = date_format(date_create($r["target_date"]),"Y-m-d");
-            if($i==0){echo "<tr><th width='200'>Month</th><th width='200' style='text-align:left;'>Sales Target</th><th width='200' style='text-align:left;'>Target Contract</th></tr> ";}
-
-            echo "<tr>";
-            echo "<td >{$mDate}</td><td><input type='hidden' name='target_date[]' value='{$fDate}' /><input type='text' name='target_amount[]' value='".$r["target_amount"]."'></td><td><input type='text' name='target_contract[]' value='".$r["target_contract"]."'></td>";
-            echo "</tr>";
-            $i++;
-        }
-
-        if($i>0){
-            echo "<tr>";
-            echo "<td> &nbsp; </td><td><input type='submit' value='Update' style='width:100px; padding:3px;' name='update_sales_target' /></td>";
-            echo "</tr>";
-        }
-    ?>
 
 
+        <tr>
+            <td class="row1">&nbsp;</td>
+            <td class="row2"><input type="submit" name="save" value="Save" class="update-btn" /> <input type="submit" name="delete" value="Delete" class="update-btn" /> <input type="button"   value="Cancel" class="update-btn" onclick="location.href='<?php echo JURI::base(); ?>system-management-vic/rep-listing-vic'" /></td>
+        </tr>
+    </table>
+</div>
 
-</table>
+<div style="width:500px; font-size:12px; float: left; position: relative; left: 50px;">
+    <input type="hidden" name="rep_id" value="<?php echo $RepID ?>" />
+    <input type="hidden" name="id" value="<?php echo $id ?>" />
+    <table id="tblSalesTarget" class="update-table">
+        <tr>
+            <td class="row1" width="200">Target sales from</td>
+            <td class="row2" width="200" colspan="2">
+            <?php
+                $year = date('Y');
+                $cMonth = date('m');
+                if($cMonth<7){
+                    $year = $year - 1;
+                }
+
+                $sql_string = "SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID' AND year={$year}";
+                $qResult = mysql_query("SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID' AND year={$year}");
+                //error_log("...=".$qResult, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+                $r = mysql_fetch_assoc($qResult);
+
+                // if(mysql_num_rows($r)<1){
+                if(mysql_num_rows($qResult)<1){
+                    //error_log("HERE=".$qResult, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+                    $sql_string = "SELECT * FROM ver_rep_sales_target WHERE rep_id='Default Target' AND year={$year}";
+                    $qResult = mysql_query("SELECT * FROM ver_rep_sales_target WHERE rep_id='Default Target' AND year={$year}");
+                    $r = mysql_fetch_assoc($qResult);
+                }
+
+                //error_log("r: ".print_r($r,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+                $dFrom = substr($r['dateFromTo'], 0,10);
+                $dTo = substr($r['dateFromTo'], -10,10);
+
+                if (strlen($dFrom) == 0 || strlen($dTo) == 0) {
+                    $dFrom = date('Y-01-01');
+                    $dTo = date('Y-12-31');
+                }
+
+                $formatFrom = date_format(date_create($dFrom),PHP_DFORMAT);
+                $formatTo = date_format(date_create($dTo),PHP_DFORMAT);
+            ?>
+                        <input type="hidden" value="<?php echo $dFrom; ?>" name="dFrom" id="dFrom"  />
+                        <input type="hidden" value="<?php echo $dTo; ?>" name="dTo" id="dTo"/>
+                        <input type="text" value="<?php echo $formatFrom; ?>" class="datepicker" style="display: inline;width:150px; " id="dpFrom" >
+
+                        <b>to :</b> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="text" value="<?php echo $formatTo; ?>" class="datepicker" style="display: inline;width:150px; "  id="dpTo" >
+                        <input type="button" name="" value="Create" class="" onclick="createMonthFields();" style="width:100px;" />
+            </td>
+        </tr>
+        <tr>
+            <td class="row1" width="200">&nbsp;</td>
+            <td class="row2" width="200">&nbsp;</td>
+        </tr>
+        <?php
+            $qResult = mysql_query("SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID'  AND year={$year}");
+            //error_log("SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID'", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+         	//error_log("SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID'  AND year={$year}", 3,'/home/vergola/public_html/quote-system/my-error.log');
+         	$i=0;
+            while ($r = mysql_fetch_assoc($qResult)) {
+                //print_r($r);
+                $mDate = date_format(date_create($r["target_date"]),"F");
+                $fDate = date_format(date_create($r["target_date"]),"Y-m-d");
+                if($i==0){echo "<tr><th width='200'>Month</th><th width='200' style='text-align:left;'>Sales Target</th><th width='200' style='text-align:left;'>Target Contract</th></tr> ";}
+
+                echo "<tr>";
+                echo "<td >{$mDate}</td><td><input type='hidden' name='target_date[]' value='{$fDate}' /><input type='text' name='target_amount[]' value='".$r["target_amount"]."'></td><td><input type='text' name='target_contract[]' value='".$r["target_contract"]."'></td>";
+                echo "</tr>";
+                $i++;
+            }
+
+            if($i>0){
+                echo "<tr>";
+                echo "<td> &nbsp; </td><td><input type='submit' value='Update' style='width:100px; padding:3px;' name='update_sales_target' /></td>";
+                echo "</tr>";
+            }
+        ?>
+
+
+
+    </table>
+</div>
 </form>
 
 <script type="text/javascript">
