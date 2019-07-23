@@ -132,7 +132,6 @@ if(isset($_POST['save']))
 
 }
 
-// if(isset($_POST['save_sales_target']))
 if(isset($_POST['save_sales_target']) || isset($_POST['save']))
 {
     $id =mysql_real_escape_string($_POST['rep_id']);
@@ -247,7 +246,7 @@ if(isset($_POST['cancel']))
 ?>
 
 <form method="post">
-    <div style="width:500px; font-size:12px; float: left;">
+<div style="width:500px; font-size:12px; float: left;">
     <?php
         if(strlen($notification)>0)
         {
