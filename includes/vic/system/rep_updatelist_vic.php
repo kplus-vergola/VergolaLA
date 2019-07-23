@@ -373,7 +373,6 @@ if(isset($_POST['cancel']))
                     $year = $year - 1;
                 }
 
-                $sql_string = "SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID' AND year={$year}";
                 $qResult = mysql_query("SELECT * FROM ver_rep_sales_target WHERE rep_id='$RepID' AND year={$year}");
                 //error_log("...=".$qResult, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
                 $r = mysql_fetch_assoc($qResult);
@@ -381,7 +380,6 @@ if(isset($_POST['cancel']))
                 // if(mysql_num_rows($r)<1){
                 if(mysql_num_rows($qResult)<1){
                     //error_log("HERE=".$qResult, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
-                    $sql_string = "SELECT * FROM ver_rep_sales_target WHERE rep_id='Default Target' AND year={$year}";
                     $qResult = mysql_query("SELECT * FROM ver_rep_sales_target WHERE rep_id='Default Target' AND year={$year}");
                     $r = mysql_fetch_assoc($qResult);
                 }
