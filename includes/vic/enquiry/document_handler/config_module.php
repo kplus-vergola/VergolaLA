@@ -29,7 +29,7 @@ $config['switch']['log_input_data']['php_input'] = 'off';
 $config['switch']['log_input_data']['request'] = 'on';
 
 $config['plugin']['msword']['file_extension'] = 'zip';
-$config['plugin']['msword']['file_name'] = 'VGL4W_05.zip';
+$config['plugin']['msword']['file_name'] = 'VGL4W.zip';
 $config['plugin']['msword']['folder'] = 'C:\\xampp\\htdocs\\VergolaLA_as_live\\images\\document_handler\\plugin\\';
 $config['plugin']['msword']['usage_message'] = "
 NOTE:\n\n

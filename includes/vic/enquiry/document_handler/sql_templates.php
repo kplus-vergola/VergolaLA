@@ -720,10 +720,16 @@ $sql_template_retrieve_document_handler_folder_file_records_2 = "
 
 
 
+// $sql_template_retrieve_ver_chronoforms_data_clientpersonal_vic_last_record = "
+//     SELECT * 
+//     FROM ver_chronoforms_data_clientpersonal_vic 
+//     ORDER BY datelodged DESC 
+//     LIMIT 1;
+// ";
 $sql_template_retrieve_ver_chronoforms_data_clientpersonal_vic_last_record = "
-    SELECT * 
-    FROM ver_chronoforms_data_clientpersonal_vic 
-    ORDER BY datelodged DESC 
+    SELECT *, quoteid AS 'clientid' 
+    FROM ver_chronoforms_data_contract_list_vic 
+    ORDER BY quotedate DESC 
     LIMIT 1;
 ";
 
