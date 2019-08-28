@@ -839,7 +839,7 @@ if(isset($_POST['delete-drawing'])) {
       <th>Date Created</th>
       <th>Download</th>
       <th>Uploaded Doc</th> 
-      <th> </th> 
+      <th><input type="button" class="bbtn" name="button_sales_document_list_refresh" id="button_sales_document_list_refresh" value="Refresh" onclick="location.reload()" /></th> 
       </tr> 
       <?php 
   // $data = mysql_query("SELECT * FROM ver_chronoforms_data_letters_vic WHERE template_name LIKE '%Residential with%' ORDER BY datecreated DESC") 
@@ -1044,7 +1044,7 @@ if(isset($_POST['delete-drawing'])) {
         <th>Date Created</th>
         <th>Download PDF</th> 
         <th>Uploaded Doc</th>  
-        <th>&nbsp; </th> 
+        <th><input type="button" class="bbtn" name="button_sales_document_list_refresh" id="button_sales_document_list_refresh" value="Refresh" onclick="location.reload()" /></th> 
       </tr>
       <?php 
        $data = mysql_query("SELECT * FROM ver_chronoforms_data_letters_vic  WHERE clientid='{$ClientID}' AND template_name LIKE 'Time Frame Letter%' OR template_name LIKE 'Proposed Drawing%' OR template_name LIKE 'Amended Proposed Drawing%' OR template_name LIKE 'Proposed Drawing Rescode%' OR template_name LIKE 'Res Code Letter%'  OR template_name LIKE 'Protection Work Notice Client%' OR template_name  LIKE 'Protection Work Notice Neighbour%'  ORDER BY datecreated DESC") 
@@ -1238,7 +1238,7 @@ if(isset($_POST['delete-drawing'])) {
               <th>Date Created</th>
               <th>Download PDF</th>
               <th>Uploaded Doc</th>
-              <th> &nbsp; </th>
+              <th><input type="button" class="bbtn" name="button_sales_document_list_refresh" id="button_sales_document_list_refresh" value="Refresh" onclick="location.reload()" /></th>
             </tr>
             <?php 
            $data = mysql_query("SELECT * FROM ver_chronoforms_data_letters_vic  WHERE  clientid='{$ClientID}' AND template_name LIKE 'Replacement Drawing Letter%' OR   template_name LIKE 'Planning Application Letter%' OR template_name LIKE 'Amendment Planning Permit%' OR template_name LIKE 'Building Appeals Board%' OR template_name  LIKE 'Build Over Easement%' OR template_name LIKE 'Report And Consent%' ORDER BY datecreated DESC") 
