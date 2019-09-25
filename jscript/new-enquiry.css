@@ -20,6 +20,12 @@ select {
 	width: 386px;
 }
 
+#client #cstreetno, #builder #bstreetno, #site-address #sstreetno, .builder-tab .tab_content .bsub-class
+{width:105px;}
+
+#client #cstreetname, #builder #bstreetname, #site-address #sstreetname, .builder-tab .tab_content .bsub-class
+{width:270px;}
+
 #client #csuburb, #builder #bsuburb, #site-address #ssuburb, .builder-tab .tab_content .bsub-class
 {width:187px;}
 
