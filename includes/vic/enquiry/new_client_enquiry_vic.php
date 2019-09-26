@@ -1279,21 +1279,12 @@ function set_notification($msg){
         </label>
         <label class="input"><span id="slastnamespan">Last Name</span>
           <input type="text" value="<?php echo $client['site_lastname'] ?>" id="slastname" name="slastname">
-        </label>
-        
-        <?php }else{ ?>
-          
-          <!-- <label class="input"><span id="sbuilder_name_span">Builder Name</span>
-            <input type="text" value="<?php echo $client['builder_name'] ?>" id="sbuilder_name" name="sbuilder_name" >
-          </label>
-          <label class="input"><span id="sbuilder_contact_span">Builder Contact</span>
-            <input type="text" value="<?php echo $client['builder_contact'] ?>" id="sbuilder_contact" name="sbuilder_contact">
-          </label> -->
-
-        <?php } ?>     
-        <label class="input"><span id="ssitenamespan">Site Name</span>
-          <input type="text" value="<?php echo $client['site_sitename'] ?>" id="ssitename" name="ssitename">
         </label>        
+        <?php }else{ ?>
+          <label class="input"><span id="ssitenamespan">Site Name</span>
+            <input type="text" value="<?php echo $client['site_sitename'] ?>" id="ssitename" name="ssitename">
+          </label>      
+        <?php } ?>      
         <label class="input"><span id="sstreetnospan">Unit or Street No</span>
           <input type="text" value="<?php echo $client['site_streetno'] ?>" id="sstreetno" name="sstreetno">
         </label>
