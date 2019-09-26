@@ -144,6 +144,7 @@ if(isset($_POST['update']) || isset($_POST['send_and_update']) )
   $SiteTitle = $_POST['stitle'];
   $SiteFirstName = mysql_escape_string($_POST['sfirstname']);
   $SiteLastName = mysql_escape_string($_POST['slastname']);
+  $SiteSiteName = mysql_escape_string($_POST['ssitename']);
   $SiteStreetNo = mysql_escape_string($_POST['sstreetno']);
   $SiteStreetName = mysql_escape_string($_POST['sstreetname']);
   $SiteAddress1 = mysql_escape_string($_POST['saddress1']);
@@ -200,6 +201,7 @@ $sql = "UPDATE ver_chronoforms_data_clientpersonal_vic SET
                 site_title = '$SiteTitle',
                 site_firstname = '$SiteFirstName',
                 site_lastname = '$SiteLastName',
+                site_sitename = '$SiteSiteName',
                 site_streetno = '$SiteStreetNo', 
                 site_streetname = '$SiteStreetName',
                 site_address1 = '$SiteAddress1',
@@ -290,6 +292,7 @@ if(HOST_SERVER=="Victoria"){
   $SiteTitle = $_POST['stitle'];
   $SiteFirstName = mysql_escape_string($_POST['sfirstname']);
   $SiteLastName = mysql_escape_string($_POST['slastname']);
+  $SiteSiteName = mysql_escape_string($_POST['ssitename']);
   $SiteStreetNo = mysql_escape_string($_POST['sstreetno']);
   $SiteStreetName = mysql_escape_string($_POST['sstreetname']);
   $SiteAddress1 = mysql_escape_string($_POST['saddress1']);
@@ -349,6 +352,7 @@ $sql = "INSERT INTO ver_chronoforms_data_clientpersonal_vic
                 site_title,
                 site_firstname,
                 site_lastname,
+				site_sitename,
                 site_streetno,
                 site_streetname,
                 site_address1,
@@ -395,7 +399,7 @@ $sql = "INSERT INTO ver_chronoforms_data_clientpersonal_vic
          '$SiteTitle',
          '$SiteFirstName',
          '$SiteLastName',
-         
+		'$SiteSiteName',		 
          '$SiteStreetNo',
          '$SiteStreetName',          
          '$SiteAddress1',
@@ -581,7 +585,7 @@ function send_email(){
   </tr>
   <tr>
     <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Address</td>
-    <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['sstreetno'] . " " . $_POST['sstreetname'] . " " . $_POST['saddress1'] . " " . $_POST['saddress2'] . ", " . $_POST['site_suburb'] . " " . $_POST['site_state'] . " " . $_POST['site_postcode'] . "</td>
+    <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['ssitename'] . " " . $_POST['sstreetno'] . " " . $_POST['sstreetname'] . " " . $_POST['saddress1'] . " " . $_POST['saddress2'] . ", " . $_POST['site_suburb'] . " " . $_POST['site_state'] . " " . $_POST['site_postcode'] . "</td>
   </tr>
   <tr>
     <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Phone</td>
@@ -626,7 +630,7 @@ function send_email(){
   </tr>
   <tr>
     <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Address: </td>
-    <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['sstreetno'] . " " . $_POST['sstreetname'] . " " . $_POST['saddress1'] . " " . $_POST['saddress2'] . ", " . $_POST['site_suburb'] . " " . $_POST['site_state'] . " " . $_POST['site_postcode'] . "</td>
+    <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['ssitename'] . " " . $_POST['sstreetno'] . " " . $_POST['sstreetname'] . " " . $_POST['saddress1'] . " " . $_POST['saddress2'] . ", " . $_POST['site_suburb'] . " " . $_POST['site_state'] . " " . $_POST['site_postcode'] . "</td>
   </tr>
   <tr>
     <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Phone: </td>
@@ -806,6 +810,8 @@ $('#sfirstname').val($('#firstname').val());
 $('#sfirstnamespan').css("visibility", "hidden");
 $('#slastname').val($('#lastname').val());
 $('#slastnamespan').css("visibility", "hidden");
+$('#ssitename').val($('#sitename').val());
+$('#ssitenamespan').css("visibility", "hidden");
 $('#sstreetno').val($('#cstreetno').val());
 $('#sstreetnospan').css("visibility", "hidden");
 $('#sstreetname').val($('#cstreetname').val());
@@ -1285,6 +1291,9 @@ function set_notification($msg){
           </label> -->
 
         <?php } ?>     
+        <label class="input"><span id="ssitenamespan">Site Name</span>
+          <input type="text" value="<?php echo $client['site_sitename'] ?>" id="ssitename" name="ssitename">
+        </label>        
         <label class="input"><span id="sstreetnospan">Unit or Street No</span>
           <input type="text" value="<?php echo $client['site_streetno'] ?>" id="sstreetno" name="sstreetno">
         </label>
