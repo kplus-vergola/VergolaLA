@@ -83,8 +83,18 @@ if (!isset($rep_id)) $rep_id = '';
 if (!isset($advance_search)) $advance_search = 0;
 if (!isset($is_quoted)) $is_quoted = 0;
 
+if (!isset($c_status)) $c_status = '';
+if (!isset($c_status)) $c_status = '';
+if (!isset($search_ID)) $search_ID = '';
+if (!isset($default_18mon)) $default_18mon = 1;
+$paging_url = "";  
+$search_string = "";
+$suburb_filter = "";
+$date_filter = "";
+
 //error_log(print_r($_REQUEST,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 if(isset($_REQUEST['submit']) || isset($_REQUEST['search'])){ 
+	$default_18mon = 0;  // should be default to 0 when searching!
 	//error_log("Inside search", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 	if(isset($_POST['search_string'])){ $search_string = $_POST['search_string']; } 
 
@@ -92,14 +102,18 @@ if(isset($_REQUEST['submit']) || isset($_REQUEST['search'])){
 
 	if(isset($_POST['is_quoted'])){ $is_quoted = $_POST['is_quoted']; } 
 
+	if(isset($_POST['c_status'])){ $c_status = $_POST['c_status']; } 
+
 	if(isset($_POST['frdate'])){ $frdate = $_POST['frdate']; }
 
+	if(isset($_POST['default_18mon'])){ $default_18mon = $_POST['default_18mon']; }
 	if(isset($_POST['todate'])){ $todate = $_POST['todate']; }
 
 	if(isset($_POST['replist'])){ $rep_id = $_POST['replist']; }
 
 	if(isset($_POST['advance_search'])){ $advance_search = $_POST['advance_search']; }
 
+	if(isset($_POST['search_ID'])){ $search_ID = $_POST['search_ID']; }
 }else{
 	//error_log("paging", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 	if(isset($_REQUEST['search_string'])){ $search_string = $_REQUEST['search_string']; } 
@@ -108,14 +122,17 @@ if(isset($_REQUEST['submit']) || isset($_REQUEST['search'])){
 
 	if(isset($_REQUEST['is_quoted'])){ $is_quoted = $_REQUEST['is_quoted']; } 
 
+	if(isset($_REQUEST['c_status'])){ $c_status = $_REQUEST['c_status']; } 
 	if(isset($_REQUEST['frdate'])){ $frdate = $_REQUEST['frdate']; }
 
+	if(isset($_REQUEST['default_18mon'])){ $default_18mon = $_REQUEST['default_18mon']; }
 	if(isset($_REQUEST['todate'])){ $todate = $_REQUEST['todate']; }
 
 	if(isset($_REQUEST['rep_id'])){ $rep_id = $_REQUEST['rep_id']; }
 
 	if(isset($_REQUEST['advance_search'])){ $advance_search = $_REQUEST['advance_search']; }
 
+	if(isset($_REQUEST['search_ID'])){ $search_ID = $_REQUEST['search_ID']; }
 	$page = isset($_GET['page']) ? $_GET['page'] : 1;
 	$start = ($page-1) * NUMBER_PER_PAGE;
 	//error_log(print_r($_GET,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
@@ -149,6 +166,11 @@ if ($frdate && $todate){
 	$paging_url .= "&frdate=".$frdate."&todate=".$todate;
 }
 
+if ($default_18mon){ //error_log("default_18mon:".$default_18mon, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+	$paging_url .= "&default_18mon=1";
+}else{
+	$paging_url .= "&default_18mon=0";
+}
 if($suburb_name){
 	$paging_url .= "&suburb_name=".$suburb_name;
 }
@@ -168,6 +190,10 @@ if($is_builder){
 if($rep_id){
 	$paging_url .= "&rep_id=".$rep_id;
 } 
+
+if($search_ID){
+	$paging_url .= "&search_ID=".$search_ID;
+} 
   
 //-------------------------------- END Paging Parameter --------------------------------
  
@@ -181,7 +207,7 @@ if($rep_id){
 
 echo "<div class='search-listing'>
 <form   method=\"post\" id=\"chronoform_Listing_Module\" class='Chronoform hasValidation' style='float:none; width:90%'>
-	<label>Search:</label> <input type='text' name='search_string' value='{$search_string}' /> <input type='submit' name='search' value='Search' class='search-btn' />";
+	 <label>Search:</label> <input type='text' name='search_string' value='{$search_string}' /> <input type='submit' name='search' value='Search' class='search-btn' id='btn_search' />";
 if($advance_search==1){
 	echo "<input type='button' id='advlist1' class='advance-search' value='Advance Search'>";
 	echo "<input type='button' id='advlist2' class='advance-search' value='Advance Search'>";
@@ -191,6 +217,7 @@ if($advance_search==1){
 	echo "<input type='button' id='advlist2' class='advance-search' value='Advance Search'>";
 }	
 echo "<input type='submit' id='download_pdf' class='advance-search' value='Download PDF' name='download_pdf'>";
+echo "<label for='chk_default_18mon' id='lbl_default_18mon'><input type='checkbox' name='default_18mon' id='chk_default_18mon' ".($default_18mon==1?'checked':'')." value='1' style='height:14px; margin:0 5px 0 15px; padding:0; width:14px; vertical-align:middle;'   />Last 18 months </label>";
 echo "<input type='hidden' name='advance_search' id='advance_search' value='{$advance_search}' />";
 
 echo "<div id='advance-search' style='display:".($advance_search==1?'block':'none')."'>  
@@ -239,9 +266,20 @@ echo "</select></label>
 	        }
 echo "</select></label>";
 
-echo "<label class='input'><select class=\"\"  name=\"is_quoted\"><option value='0' ".($is_quoted==0?"selected":"").">Enquiry</option><option value='1' ".($is_quoted==1?"selected":"").">Quoted</option>"; 
+echo "<label class='input'><select class=\"\"  name=\"c_status\">
+	<option value='Enquiry' ".($c_status=='Enquiry'?"selected":"").">Enquiry</option> 
+	<option value='Quoted' ".($c_status=='Quoted'?"selected":"").">Quoted</option> 
+	<option value='Costed' ".($c_status=='Costed'?"selected":"").">Costed</option>  
+	<option value='Not Interested' ".($c_status=='Not Interested'?"selected":"").">Not Interested</option>  
+	<option value='Under Consideration' ".($c_status=='Under Consideration'?"selected":"").">Under Consideration</option> 
+	<option value='Future Project' ".($c_status=='Future Project'?"selected":"").">Future Project</option> 
+	<option value='Won' ".($c_status=='Won'?"selected":"").">Won</option> 
+	<option value='Lost' ".($c_status=='Lost'?"selected":"").">Lost</option> 
+	"; 
 echo "</select></label>";
 
+echo " 
+	 <label class='input'><span>CR</span><input type='input' name='search_ID' value='".($search_ID!=''?$search_ID:"")."' style='border:1px solid #7C7D7F;' ></label>"; 
 //error_log("todate: ".$todate, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
   
 echo "  
@@ -254,7 +292,7 @@ echo "
 <span>To Date</span><br />
 <input type='text' id='todate' name='todate' class='date_entered' value='".$todate."'></div>
 <div>
-<input type='submit' name='submit' value='Search' class='search-btn' />
+<input type='submit' name='submit' value='Search' class='search-btn' id='btn_advance_search' />
 </div>
 </div>
 
@@ -280,6 +318,9 @@ if ($suburb_name)
 
 if (strlen($frdate)>0 && strlen($todate)>0)
 	$date_filter = " AND datelodged BETWEEN '" .  $frdate . "'" . " AND '" . $todate . "'";
+
+if ($default_18mon==1)
+	$default_18month_filter = " AND datelodged BETWEEN DATE_ADD(NOW(),INTERVAL -18 MONTH) AND DATE_ADD(NOW(),INTERVAL 1 DAY) ";
   
 
 $search_string_filter = "";
@@ -321,10 +362,29 @@ else{
 	$rep_filter2 = " AND rep_id='{$user->RepID}' ";
 	 
 }
+// $is_quoted_filter = "";
+// if($is_quoted=="1"){
+// 	$is_quoted_filter = " AND c.qdelivered IS NOT NULL ";
+// }
 
-$is_quoted_filter = "";
-if($is_quoted=="1"){
-	$is_quoted_filter = " AND c.qdelivered IS NOT NULL ";
+$c_status_filter = "";
+$c_status_filter_a = ""; //same filter but in different table query.
+//error_log("c_status: ".$c_status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+if(strlen($c_status)>0 && $advance_search==1){
+	
+	if($c_status=="Enquiry"){
+		$c_status_filter_a = " AND c.qdelivered IS NULL ";
+	}else{
+		$c_status_filter = " AND status='".$c_status."' ";
+	}
+
+	if($search_ID!=""){ 
+		$c_status_filter_a .= " AND c.clientid LIKE '%"  . $search_ID .  "%'";
+	}
+
+
+
+
 }
 
  
@@ -332,7 +392,7 @@ if($is_quoted=="1"){
 // $sql = "SELECT *, c.clientid AS id, CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, c.site_address1, c.builder_name,n.content AS note  FROM (SELECT * FROM ver_chronoforms_data_clientpersonal_vic AS c WHERE  1=1 {$builder_filter} {$rep_filter} {$suburb_filter} {$date_filter} {$search_string_filter} {$is_quoted_filter} ) AS c LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_followup_vic WHERE 1=1 {$rep_filter2}  ORDER BY updated_at DESC, cf_id DESC) as f0  GROUP BY quoteid ) AS f ON f.quoteid=c.clientid LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic WHERE cf_id IN (SELECT MAX(cf_id) as max_id FROM ver_chronoforms_data_notes_vic GROUP BY clientid)) as n ON n.clientid=c.clientid WHERE 1=1  {$rep_filter3} ";
 
 // $sql = "SELECT *, c.clientid AS id, CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, c.site_address1, c.builder_name, f.status as followup_status,n.content AS note  FROM (SELECT * FROM ver_chronoforms_data_clientpersonal_vic AS c WHERE  1=1 {$builder_filter} {$rep_filter} {$suburb_filter} {$date_filter} {$search_string_filter} {$is_quoted_filter} ) AS c LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_followup_vic WHERE 1=1 {$rep_filter2}  ORDER BY updated_at DESC, cf_id DESC) as f0  GROUP BY quoteid ) AS f ON f.quoteid=c.clientid LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic GROUP BY clientid) as n ON n.clientid=c.clientid WHERE 1=1  {$rep_filter3} ";
-$sql = "
+$sql1 = "
 	SELECT *, c.clientid AS id, CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, c.site_address1, c.builder_name, f.status as followup_status_,n.content AS note,
 				IFNULL(f.status, c.status) AS `followup_status`
 	FROM (
@@ -355,6 +415,66 @@ $sql = "
 		) as n ON n.clientid=c.clientid 
 	WHERE 1=1  {$rep_filter3} 	
 	
+";
+
+$sql = "
+	SELECT 
+		*, 
+		c.clientid AS id, 
+		CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, 
+		c.site_address1, 
+		c.site_address2, 
+		c.site_suburb, 
+		c.client_state, 
+		c.client_postcode, 
+		c.builder_name, 
+		f.status as followup_status_, 
+		IFNULL(f.status, c.status) AS `followup_status`,
+		n.content AS note 
+	FROM (
+		SELECT * 
+		FROM ver_chronoforms_data_clientpersonal_vic AS c 
+		WHERE c.deleted_at is null 
+		AND 1=1 
+		{$builder_filter} 
+		{$rep_filter} 
+		{$suburb_filter} 
+		{$date_filter} 
+		{$default_18month_filter} 
+		{$search_string_filter} 
+		{$c_status_filter_a} 
+	) AS c 
+		".((strlen($search_string_filter)>0 || $c_status=="Enquiry" || $advance_search==0)?" LEFT ":"")." JOIN (
+			SELECT * 
+			FROM (
+				SELECT * 
+				FROM ver_chronoforms_data_followup_vic WHERE 
+
+
+
+
+				updated_at IN (SELECT max(updated_at) FROM ver_chronoforms_data_followup_vic GROUP BY quoteid)
+				AND 1=1 
+
+				{$rep_filter2} 
+				{$c_status_filter} 
+				ORDER BY updated_at DESC, cf_id DESC 
+			) as f0 
+			GROUP BY quoteid 
+		) AS f ON f.quoteid=c.clientid 
+		LEFT JOIN (
+			SELECT * 
+			FROM ver_chronoforms_data_notes_vic 
+
+			WHERE cf_id IN (
+				SELECT MAX(cf_id) as max_id 
+				FROM ver_chronoforms_data_notes_vic 
+				GROUP BY clientid
+		)
+	) as n ON n.clientid=c.clientid 
+	WHERE 1=1 
+	{$rep_filter3} 
+
 ";
 
 

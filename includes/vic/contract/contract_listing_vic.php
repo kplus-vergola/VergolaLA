@@ -568,12 +568,35 @@ echo "</select></label>
  
 echo "</select></label>";
 
- 
+$class_hide="";
+if(HOST_SERVER=="Victoria"){
+	$class_hide = " hide ";
+}
+//error_log("Here A: ", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+
+
+$cbo_installer = "<select    name=\"installer\"><option value=''>Select Installer</option>"; 
+$querysub="SELECT * FROM ver_chronoforms_data_installer_vic ORDER BY name ASC";
+
+            $resultsub = mysql_query($querysub);
+            	if(!$resultsub){die ("Could not query the database: <br />" . mysql_error());
+			}
+			
+			while ($data=mysql_fetch_assoc($resultsub)){  
+
+			  	if($data['name']==$installer){ 
+	              	$cbo_installer .= "<option value = \"{$data['name']}\" selected>{$data['name']}</option>";
+	            }else{
+	            	$cbo_installer .= "<option value = \"{$data['name']}\">{$data['name']}</option>";
+	            } 
+		    }
+$cbo_installer .= "</select>";  
 
 //error_log('mod: '.$mod, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 
 		echo " 
-				<label class='input' style=''> <span class='' >Installer </span><input type='text' value='{$installer}' name='installer' class=' ' style='border:1px solid #97989a;' > &nbsp;&nbsp; </label>
+				<label class='input' style=''> {$cbo_installer} </label> 
+				<!-- <label class='input' style=''> <span class='' >Installer </span><input type='text' value='{$installer}' name='installer' class=' ' style='border:1px solid #97989a;' > &nbsp;&nbsp; </label> -->
 				<label class='input' style=''> <span class='' >Site Address </span><input type='text' value='{$site_address}' name='site_address' class=' ' style='border:1px solid #97989a;' > &nbsp;&nbsp; </label>
 				<label class='input' style=''>  
 				<select name='contract_status' style='width: 160px;'> 
