@@ -46,7 +46,7 @@ $sql_template_insert_data_followup = "
         total_gst,                              total_cost_gst,                         total_rrp_gst, 
         total_rrp,                              gst_percent,                            comm_percent, 
         is_builder_project,                     status,                                 customisation_options, 
-        created_at 
+        created_at,                             updated_at 
     )
     VALUES 
     (
@@ -60,7 +60,7 @@ $sql_template_insert_data_followup = "
         '[VR_PAYMENT_TAX]',                     '[VR_PAYMENT_TAX]',                     '[VR_PAYMENT_TOTAL]', 
         '[TOTAL_RRP]',                          '[GST_PERCENT]',                        '[COMM_PERCENT]', 
         '[IS_BUILDER_PROJECT]',                 'Quoted',                               '[CUSTOMISATION_OPTIONS]', 
-        NOW() 
+        NOW(),                                  NOW() 
     );
 ";
 
