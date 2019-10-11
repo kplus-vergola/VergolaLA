@@ -551,7 +551,7 @@ echo "</select></label>
 <!-- Start of Suburb -->
 <label class='input'>".($suburb_name==''?"<span id='suburbspan'>Suburb</span>":"")."<select class=\"suburb-list\" id=\"suburblist\" name=\"suburblist\"><option></option>";
       
-            $querysub="SELECT suburb FROM ver_chronoforms_data_suburbs_vic ORDER BY suburb ASC";
+            $querysub="SELECT suburb FROM ver_chronoforms_data_suburbs_vic GROUP BY suburb ORDER BY suburb ASC";
 
             $resultsub = mysql_query($querysub);
             	if(!$resultsub){die ("Could not query the database: <br />" . mysql_error());
