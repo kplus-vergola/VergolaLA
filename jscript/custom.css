@@ -22,8 +22,17 @@
 .input select {padding: 2px 2px 2px 5px; height:23px;}
 .input input, .input textarea {padding: 2px 2px 6px 4px;}
 /* Hack to remove Safari's extra padding. Remove if you don't care about pixel-perfection. */
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    .input input, .input textarea, .input select { padding: 2px 2px 4px 4px; }
+/* @media screen and (-webkit-min-device-pixel-ratio:0) { */
+    /* .input input, .input textarea, .input select { padding: 2px 2px 4px 4px; } */
+/* } */
+
+
+@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0) { 
+    @media {
+        .safari6 { 
+            .input input, .input textarea, .input select { padding: 2px 2px 4px 4px; }
+        }
+    }
 }
 
 /* Hack for Firefox */

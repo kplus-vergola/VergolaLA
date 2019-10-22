@@ -66,6 +66,8 @@ if(isset($user->groups['10'])){
   $ClientTitle = $retrieve['client_title'];
   $ClientFirstName = $retrieve['client_firstname'];
   $ClientLastName = $retrieve['client_lastname'];
+  $ClientStreetNo = $retrieve['client_streetno'];
+  $ClientStreetName = $retrieve['client_streetname']; 
   $ClientAddress1 = $retrieve['client_address1'];
   $ClientAddress2 = $retrieve['client_address2'];
   $ClientSuburb = $retrieve['client_suburb'];
@@ -81,6 +83,8 @@ if(isset($user->groups['10'])){
   $SiteTitle = $retrieve['site_title'];
   $SiteFirstName = $retrieve['site_firstname'];
   $SiteLastName = $retrieve['site_lastname'];
+  $SiteStreetNo = $retrieve['site_streetno'];
+  $SiteStreetName = $retrieve['site_streetname']; 
   $SiteAddress1 = $retrieve['site_address1'];
   $SiteAddress2 = $retrieve['site_address2'];
   $SiteSuburbID = $retrieve['site_suburbid'];
@@ -458,6 +462,10 @@ if(isset($_POST['delete-drawing'])) {
         <?php } ?>
     <?php } //end if?>
 
+	<p>
+      <?php if ($ClientStreetNo!='') {echo $ClientStreetNo; } else {echo "";} ?>
+      <?php if ($ClientStreetName!='') {echo "&nbsp;" .$ClientStreetName. "&nbsp;"; } else {echo "";} ?>        
+    </p>
     <p><?php echo $ClientAddress1; ?></p>
     <?php if ($ClientAddress2!='') {echo "<p>" . $ClientAddress2 . "</p>";} else {echo "";} ?>
     <!--- Client Suburb -->
@@ -474,6 +482,10 @@ if(isset($_POST['delete-drawing'])) {
     
     <div class='site-address' > <h1 >Site Address:</h1> 
     <p> <?php echo $SiteTitle ; ?> <?php echo $SiteFirstName; ?> <?php echo $SiteLastName; ?>  </p>
+	<p>
+          <?php if ($SiteStreetNo!='') {echo $SiteStreetNo; } else {echo "";} ?>
+          <?php if ($SiteStreetName!='') {echo "&nbsp;" .$SiteStreetName. "&nbsp;"; } else {echo "";} ?>        
+	</p>
     <p><?php echo $SiteAddress1; ?></p>
     <?php if ( $SiteAddress2!='') {echo "<p>" .  $SiteAddress2 . "</p>";} else {echo "";} ?>
     <!--- Site Suburb -->
