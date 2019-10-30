@@ -297,6 +297,8 @@ if ($search)
 	$search_string_filter .= " AND (builder_name LIKE '%"  . $search .  "%'" . 
 	" OR tenderid LIKE '%"  . $search .  "%' " . 
 	" OR site_project LIKE '%"  . $search .  "%'" . 
+	" OR site_streetno LIKE '%"  . $search .  "%' " . 
+	" OR site_streetname LIKE '%"  . $search .  "%' " . 
 	" OR site_address1 LIKE '%"  . $search .  "%'" . 
 	" OR site_address2 LIKE '%"  . $search .  "%'" .
 	" OR site_suburb LIKE '%"  . $search .  "%'" .
@@ -361,7 +363,8 @@ if(strlen($c_status)>0 && $advance_search==1){
 }
 	
 // $sql = "SELECT *,(SELECT content FROM ver_chronoforms_data_notes_vic WHERE clientid = b.builderid  ORDER BY cf_id DESC LIMIT 1) AS note FROM (SELECT * FROM ver_chronoforms_data_clientpersonal_vic AS b  where tenderid IS NOT NULL  {$rep_filter}  {$suburb_filter} {$date_filter} {$search_string_filter}  GROUP BY tenderid  ) AS b LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_followup_vic WHERE 1=1 {$rep_filter2}  ORDER BY cf_id DESC) as f0  GROUP BY quoteid ) AS f ON f.quoteid=b.builderid ";
-$sql = "SELECT *,(SELECT content FROM ver_chronoforms_data_notes_vic WHERE clientid = b.builderid  ORDER BY cf_id DESC LIMIT 1) AS note FROM (SELECT * FROM ver_chronoforms_data_builderpersonal_vic AS b WHERE 1=1 {$rep_filter} {$c_status_filter_a} AND tenderstatus='Yes' {$suburb_filter} {$date_filter} {$search_string_filter} ) AS b LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_followup_vic WHERE 1=1 {$rep_filter2} {$c_status_filter}   ORDER BY cf_id DESC) as f0  GROUP BY quoteid ) AS f ON f.quoteid=b.builderid ";
+$sql = "SELECT *,(SELECT content FROM ver_chronoforms_data_notes_vic WHERE clientid = b.builderid  ORDER BY cf_id DESC LIMIT 1) AS note FROM (SELECT * FROM ver_chronoforms_data_builderpersonal_vic AS b WHERE 1=1 {$rep_filter} {$c_status_filter_a} AND tenderstatus='Yes' {$suburb_filter} {$date_filter} {$search_string_filter} ) AS b LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_followup_vic WHERE 1=1 {$rep_filter2} {$c_status_filter}   ORDER BY cf_id DESC) as f0  GROUP BY quoteid ) AS f ON f.quoteid=b.builderid
+LEFT JOIN (SELECT clientid, site_streetno, site_streetname FROM ver_chronoforms_data_clientpersonal_vic AS c  where tenderid IS NOT NULL  GROUP BY tenderid  ) AS cp ON cp.clientid = b.builderid ";
 
 //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v3\\my-error.log'); 
 
@@ -403,7 +406,7 @@ while ($record = mysql_fetch_assoc($loop)) {
 
  $html .= "<tr class='pointer' onclick=location.href='" . $this->baseurl . "tender-listing-vic/tender-folder-vic?tenderid={$record['tenderid']}' >
 <td>{$record['tenderid']}</td>" . 
-"<td>{$record['site_address1']} {$record['site_address2']} <br />{$record['site_suburb']} </td>" . 
+"<td>{$record['site_streetno']} {$record['site_streetname']} {$record['site_address1']} {$record['site_address2']} <br />{$record['site_suburb']} </td>" . 
 "<td>{$record['site_project']}</td>  ";
 	
 $html .= "<td>". date('d-M-Y',strtotime($record['datelodged'])). "</td>";	 

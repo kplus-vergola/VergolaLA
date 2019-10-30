@@ -422,6 +422,8 @@ $sql = "
 		*, 
 		c.clientid AS id, 
 		CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, 
+		c.site_streetno,
+		c.site_streetname,
 		c.site_address1, 
 		c.site_address2, 
 		c.site_suburb, 
@@ -541,7 +543,7 @@ while ($record = mysql_fetch_assoc($loop)) {
 	$td_style = $style;
 	$client_id = $record['id'];
 	$customr_name = ($record['is_builder'] == 1) ? (isset($_POST['download_pdf']) ? addslashes($record['builder_name']) : $record['builder_name']) : (isset($_POST['download_pdf']) ? addslashes($record['client_name']) : $record['client_name']);
-	$site_address1 = (isset($_POST['download_pdf']) ? addslashes($record['site_address1']) : $record['site_address1']);
+	$site_address1 = (isset($_POST['download_pdf']) ? addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']) : $record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']);
 	$site_suburb = (isset($_POST['download_pdf']) ? addslashes($record['site_suburb']) : $record['site_suburb']);
 	$customer_home_phone = $record['client_hmphone'];
 	$customer_mobile_phone = $record['client_mobile'];

@@ -451,6 +451,8 @@ FROM
 SELECT
 	c.*,
 	CONCAT( cp.client_firstname, ' ', cp.client_lastname ) AS client_name,
+	cp.site_streetno,
+	cp.site_streetname,
 	cp.builder_name,
 	cp.is_builder,
 	check_measurer,
@@ -730,8 +732,8 @@ while ($record = mysql_fetch_assoc($loop)) {
     ($is_admin==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['sales_rep']):$record['sales_rep'])."</td>":"").
     "<td>{$record['projectid']}</td>".
 	($record['is_builder']==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."</td>":"<td>".(isset($_POST['download_pdf'])?addslashes($record['client_name']):$record['client_name'])."</td>").
-	"<td>".(isset($_POST['download_pdf'])?addslashes($record['site_address']):$record['site_address'])."</td>" . 
-
+	// "<td>".(isset($_POST['download_pdf'])?addslashes($record['site_address']):$record['site_address'])."</td>" . 
+	"<td>".(isset($_POST['download_pdf'])?addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address']):$record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address'])."</td>" . 	
 	"<td>{$record['fclient_mobile']}</td>" .
 	"<td>{$record['fframework_type']}</td>" .	
 
