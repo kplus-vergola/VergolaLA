@@ -56,7 +56,9 @@ if ($con) {
                 AND !ISNULL(builder_name) 
                 AND builder_name != ''
             GROUP BY 
-                builder_name ",$con) or die (mysql_error()); 
+                builder_name
+            ORDER BY 
+                builder_name ASC ",$con) or die (mysql_error()); 
                   
   /*$result = mysql_query("SELECT * FROM $state_table where  builder_name LIKE '%{$term}%' ",$con) or die (mysql_error());*/
   while( $row = mysql_fetch_assoc( $result ) ) {
