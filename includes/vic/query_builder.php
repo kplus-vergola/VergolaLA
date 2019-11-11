@@ -12,7 +12,7 @@
      $config['db']['password'] = $system_config->password;
      $config['path']['log_folder'] = $system_config->log_path . '\\';
 
-     $config['db']['table_name']['builders'] = "ver_chronoforms_data_builderpersonal_lookup";
+     $config['db']['table_name']['builders'] = "ver_chronoforms_data_clientpersonal_vic";
  }
 
  $matches = array(
@@ -39,7 +39,26 @@ if ($con) {
   $data = array();
   $initialSuburbsArray = array( );
   $term = trim(strip_tags($_GET['term']));
-  $result = mysql_query("SELECT * FROM $state_table where  builder_name LIKE '%{$term}%' ",$con) or die (mysql_error());
+  $result = mysql_query("
+            SELECT 
+                `builder_name`,
+                `client_address1` AS address1,
+                `client_address2` AS address2,
+                `client_suburb` AS suburb,
+                `client_state` AS state,
+                `client_postcode` AS postcode,
+                `client_wkphone` AS workphone,
+                `clientid`
+            FROM 
+                $state_table
+            WHERE 
+                builder_name LIKE '%{$term}%' 
+                AND !ISNULL(builder_name) 
+                AND builder_name != ''
+            GROUP BY 
+                builder_name ",$con) or die (mysql_error()); 
+                  
+  /*$result = mysql_query("SELECT * FROM $state_table where  builder_name LIKE '%{$term}%' ",$con) or die (mysql_error());*/
   while( $row = mysql_fetch_assoc( $result ) ) {
 
     $row['value'] = $row['builder_name'];
