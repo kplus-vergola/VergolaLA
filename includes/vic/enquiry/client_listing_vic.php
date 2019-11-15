@@ -10,6 +10,7 @@
 //error_log("start php: ".microtime(true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 $user =& JFactory::getUser(); 
 $is_builder = 0; 
+$showcontact =  "hide"; 
 
 $page_name = "";
 $request = parse_url($_SERVER['REQUEST_URI']);
@@ -18,8 +19,10 @@ $page_name = substr($request["path"],1);
 
 if($page_name == "new-builder-enquiry-vic" || $page_name == "builder-listing-vic"){
   $is_builder = 1;
+  $showcontact =  ""; 
 }else if(isset($_REQUEST['client_type']) && $_REQUEST['client_type']=="b"){
     $is_builder = 1;
+    $showcontact =  ""; 
 }
 
 
@@ -513,6 +516,11 @@ $html = "";
 $html_pdf = "";
 $html_head = "";
 
+
+
+
+// $contact_name_css = "";
+
 if(isset($_POST['download_pdf'])==true){
 
 	$style = ""; //$style=\"border:1px solid black; \"";  
@@ -520,6 +528,19 @@ if(isset($_POST['download_pdf'])==true){
 } 
 	
 $html_head = "<table class=\"listing-table table-bordered\"   style=\"font-size: 10pt;\"> <tr><th width=\"3%\">ID</th><th width=\"10%\">Customer Name</th><th width=\"12%\">Site Address</th><th width=\"6%\">Home Phone</th><th width=\"6%\">Mobile</th><th class=\"".(isset($user->groups['9'])?"hide":"")."\" width=\"10%\">Consultant</th><th width=\"6%\">Date of Enquiry</th><th width=\"8%\">Appointment Date</th><th width=\"6%\">Quote Value</th><th width=\"6%\">Quote Delivered</th><th width=\"6%\">Follow Up</th><th width=\"3%\">Status</th><th>Note</th> </tr>";
+/*$html_head = "<table class=\"listing-table table-bordered\"   style=\"font-size: 10pt;\"> 
+				<tr>
+					<th width=\"3%\">ID</th><th width=\"10%\">Customer Name</th>            
+                    "."<th class=\"".$showcontact."\" width=\"10%\">Contact Name </th>"."
+                    <th width=\"12%\">Site Address</th>
+					<th width=\"6%\">Home Phone</th><th width=\"6%\">Mobile</th>
+					<th class=\"".(isset($user->groups['9'])?"hide":"")."\" width=\"10%\">Consultant</th>
+					<th width=\"6%\">Date of Enquiry</th><th width=\"8%\">Appointment Date</th>
+					<th width=\"6%\">Quote Value</th><th width=\"6%\">Quote Delivered</th>
+					<th width=\"6%\">Follow Up</th><th width=\"3%\">Status</th>
+					<th>Note</th> 
+				</tr>";
+*/
   
 
 //error_log("start loop: ".microtime(true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
@@ -528,21 +549,46 @@ $html_head = "<table class=\"listing-table table-bordered\"   style=\"font-size:
 include('sales_summary/functions_general.php');
 include('sales_summary/functions_module.php');
 include('sales_summary/html_templates.php');
+
+
+$showcontact = (($record['is_builder'] == 1) ? "" : "hide");
+// "."<th class=\"".$showcontact."\" width=\"10%\">Contact Name </th>"."
 $html_template_data_row_client_listing = extractInnerStringFromText(
 	'<!-- html_template_data_row_begin -->', 
 	'<!-- html_template_data_row_end -->', 
 	$html_template_table_client_listing 
 );
-if (isset($_POST['download_pdf']) == true) {
+
+if (isset($_POST['download_pdf']) == true) {	
 }
 $html_data_rows_client_listing = '';
 
-
+$showcontact = (($record['is_builder'] == 1) ? "" : "hide");
 while ($record = mysql_fetch_assoc($loop)) {
 	$target_click_url_attr = isset($_POST['download_pdf']) ? "" : "onclick=location.href=\"" . JURI::base() . ($record['is_builder'] == "1" ? "builder-listing-vic/builder-folder-vic" : "client-listing-vic/client-folder-vic") . "?pid={$record['pid']}\"";
 	$td_style = $style;
 	$client_id = $record['id'];
-	$customr_name = ($record['is_builder'] == 1) ? (isset($_POST['download_pdf']) ? addslashes($record['builder_name']) : $record['builder_name']) : (isset($_POST['download_pdf']) ? addslashes($record['client_name']) : $record['client_name']);
+	
+	/*$customr_name_ = ($record['is_builder']==1?"
+			<div  style=\"font-weight: light-bold;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."<div>
+    		<div  style=\"font-size: 85%;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."<div>":"
+    		<div  style=\"font-weight: semi-bold;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."<div>
+			<div  style=\"font-weight: italic; font-size: 95%;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."<div>"
+		);*/
+	$customr_name = ($record['is_builder']==1?"
+			<div  style=\"\">".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."</div>
+    		<div  style=\"font-weight: bold; color: #a056ad;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."</div>":"
+    		<div  style=\"\">".(isset($_POST['download_pdf'])?addslashes($record['client_name']):$record['client_name'])."</div>"
+		);
+
+	/*$customr_name1 = ($record['is_builder'] == 1) ? 
+			"<div  style=\"font-weight: light-bold;\">".(isset($_POST['download_pdf']) ? addslashes($record['builder_name']) : $record['builder_name']) : (isset($_POST['download_pdf']) ? addslashes($record['client_name']) : $record['client_name'])."<div> ";
+			"<td {$style} class=\"".(($record['is_builder']!=1)?"hide":"")."\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."</td>" .  */
+
+	// $builder_contact1 = "<td {$style} class=\"".(($record['is_builder']!=1)?"hide":"")."\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."</td>" .  
+	// $contact_name_ = ($record['is_builder'] == 1) ? $record['builder_contact'] : "hide";
+	// $client_header_css = ($record['is_builder'] == 1) ? "Builder Name" : "Client Name";
+	
 	$site_address1 = (isset($_POST['download_pdf']) ? addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']) : $record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']);
 	$site_suburb = (isset($_POST['download_pdf']) ? addslashes($record['site_suburb']) : $record['site_suburb']);
 	$customer_home_phone = $record['client_hmphone'];
@@ -563,11 +609,14 @@ while ($record = mysql_fetch_assoc($loop)) {
 	}
 	$follow_up_status = $record['followup_status'];
 	$record_note = addslashes(substr($record['note'], 0, 350));
-
+	// $contact_name_css = "hide";
+	// ($record['is_builder'] == 1) ? "" : "hide";
+	$contact_header = $showcontact;
 	$search_tag_html_template_data_row_client_listing = array(
 		'[TARGET_CLICK_URL_ATTR]', 
 		'[TD_STYLE]', 
 		'[CLIENT_ID]', 
+		'[CLIENT_HEADER_CSS]', 
 		'[CUSTOMER_NAME]', 
 		'[SITE_ADDRESS1]', 
 		'[SITE_SUBURB]', 
@@ -588,6 +637,7 @@ while ($record = mysql_fetch_assoc($loop)) {
 		$target_click_url_attr, 
 		$td_style, 
 		$client_id, 
+		$client_header_css,
 		$customr_name, 
 		$site_address1, 
 		$site_suburb, 

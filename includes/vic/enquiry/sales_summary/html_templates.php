@@ -94,7 +94,7 @@ $html_template_table_client_listing = '
 <table class="listing-table table-bordered" style="font-size: 10pt;">
 	<tr>
 		<th width="3%">ID</th>
-		<th width="10%">Customer Name</th>
+		<th class="[CUSTOMER_NAME_CSS]" width="10%">Customer Name</th>
 		<th width="12%">Site Address</th>
 		<th width="6%">Site Suburb</th>
 		<th width="6%">Home Phone</th>
@@ -113,7 +113,7 @@ $html_template_table_client_listing = '
 	<!-- html_template_data_row_begin -->
 	<tr class="pointer" [TARGET_CLICK_URL_ATTR]>
 		<td [TD_STYLE]>[CLIENT_ID]</td>
-		<td [TD_STYLE]>[CUSTOMER_NAME]</td>
+		<td [TD_STYLE] class="[CUSTOMER_NAME_CSS]">[CUSTOMER_NAME]</td>
 		<td [TD_STYLE]>[SITE_ADDRESS1]</td>
 		<td [TD_STYLE]>[SITE_SUBURB]</td>
 		<td [TD_STYLE]>[CUSTOMER_HOME_PHONE]</td>
@@ -137,7 +137,7 @@ $html_template_pdf_client_listing = '
 <table border="1" cellpadding="2" BORDERCOLOR="GREY">
     <tr>
         <th width="60" [TD_STYLE]>&nbsp;<b>ID</b></th>
-        <th width="120" [TD_STYLE]>&nbsp;<b>Customer Name</b></th>
+        <th class="[CUSTOMER_NAME_CSS]" width="120" [TD_STYLE]>&nbsp;<b>Customer Name</b></th>
         <th width="150" [TD_STYLE]>&nbsp;<b>Site Address</b></th>
         <th width="80" [TD_STYLE]>&nbsp;<b>Site Suburb</b></th>
         <th width="80" [TD_STYLE]>&nbsp;<b>Home Phone</b></th>
@@ -156,7 +156,7 @@ $html_template_pdf_client_listing = '
 	<!-- html_template_data_row_begin -->
 	<tr class="pointer" [TARGET_CLICK_URL_ATTR]>
 		<td [TD_STYLE]>[CLIENT_ID]</td>
-		<td [TD_STYLE]>[CUSTOMER_NAME]</td>
+		<td [TD_STYLE] class="[CUSTOMER_NAME_CSS]">[CUSTOMER_NAME]</td>
 		<td [TD_STYLE]>[SITE_ADDRESS1]</td>
 		<td [TD_STYLE]>[SITE_SUBURB]</td>
 		<td [TD_STYLE]>[CUSTOMER_HOME_PHONE]</td>
