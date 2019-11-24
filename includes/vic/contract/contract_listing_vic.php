@@ -480,7 +480,7 @@ SELECT
 	DATE_FORMAT( c.contractdate, '{$sql_dformat}' ) fcontractdate,
 	cp.client_mobile AS fclient_mobile, 
 	DATE_FORMAT(cv.handover_date,'{$sql_dformat}') fhandover_date,
-	DATE_FORMAT(cv.footing_inspection,'{$sql_dformat}') ffooting_inspection,
+	DATE_FORMAT(cv.footing_inspection_date,'{$sql_dformat}') ffooting_inspection,
 	IF ( c.framework_type = 'Drop-In', 'DI', 'FR' ) AS fframework_type 
 	FROM ver_chronoforms_data_contract_list_vic AS c LEFT JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid = c.projectid LEFT JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=c.projectid LEFT JOIN (SELECT projectid, orderdate FROM ver_chronoforms_data_contract_bom_vic  where inventory_section='Frame' GROUP BY projectid) AS bom ON bom.projectid=c.projectid LEFT JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=c.quoteid 
 	WHERE 1=1 {$default_filter} {$rep_filter2} {$suburb_filter} {$date_filter} {$search_string_filter}   {$installer_filter} {$site_address_filter} {$contract_status_filter} {$framework_type_filter} {$job_status_filter}  ORDER BY c.cf_id DESC) AS c LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic WHERE cf_id IN (SELECT MAX(cf_id) as max_id FROM ver_chronoforms_data_notes_vic GROUP BY clientid))  as n ON n.clientid=c.quoteid  ";
