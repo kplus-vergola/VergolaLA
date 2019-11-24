@@ -402,7 +402,7 @@ if(isset($_POST['contract'])){
 															// ."</span></th></tr>";
 	// Test End
 	
-	echo "<table class=\"table-ff\"><tr><th>Project Name: <span class=\"subhead\">".$ProjectName."</span></th><th>Project Status: <span class=\"subhead\">".$Status."</span></th></tr>";
+	echo "<table class=\"table-ff\"><tr><th>Project Name: <span class=\"subhead\">".$ProjectName."</span></th><th hidden=\"true\">Project Status: <span class=\"subhead\">".$Status."</span></th></tr>";
 	 error_log("Status: 2". $Status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
 	// Get Date Quote 
 	//error_log("appointmentdate: ".$appointmentdate, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
@@ -426,7 +426,7 @@ if(isset($_POST['contract'])){
 	echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($date_contract_signed))."\" name=\"date_contract_signed\" class=\"date_entered\" autocomplete=\"off\" /></span>";} 
 	else { echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"\" name=\"date_contract_signed\" class=\"date_entered\" autocomplete=\"off\" /></span>";} 
 	
-	echo "</td><td>";
+	echo "</td><td hidden=\"true\">";
 	 
 	
 

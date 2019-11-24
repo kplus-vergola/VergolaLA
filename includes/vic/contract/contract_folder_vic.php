@@ -311,6 +311,11 @@ if (strlen($_POST['jobstartfollowup']) && $_POST['jobstartfollowup'] != "0000-00
   $job_start_date_followup = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['jobstartfollowup'])))."'";
 }
 
+$footing_inspection_date = "NULL";
+if (strlen($_POST['footing_inspection_date']) && $_POST['footing_inspection_date'] != "0000-00-00 00:00:00"){
+  $footing_inspection_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['footing_inspection_date'])))."'";
+} 
+
 $job_end_date = "NULL";
 if (strlen($_POST['jobend']) && $_POST['jobend'] != "0000-00-00 00:00:00"){
   $job_end_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['jobend'])))."'";
@@ -400,6 +405,7 @@ if ($enable_update_contract_vergola == true) {
     warranty_end_date = {$warranty_end_date},
     job_start_date = {$job_start_date},
     job_start_date_followup = {$job_start_date_followup},
+    footing_inspection_date = {$footing_inspection_date},
     job_end_date = {$job_end_date},
     final_inspection_date = {$final_inspection_date},
     fw_orderdate = {$fw_orderdate},
@@ -1331,6 +1337,7 @@ $groups = $user->get('groups');
             DATE_FORMAT(warranty_end_date,'" . SQL_DATE_FORMAT_01 . "') fwarranty_end_date, 
             DATE_FORMAT(job_start_date,'" . SQL_DATE_FORMAT_01 . "') fjob_start_date, 
             DATE_FORMAT(job_start_date_followup,'" . SQL_DATE_FORMAT_01 . "') fjob_start_date_followup, 
+            DATE_FORMAT(footing_inspection_date,'" . SQL_DATE_FORMAT_01 . "') ffooting_inspection_date, 
             DATE_FORMAT(job_end_date,'" . SQL_DATE_FORMAT_01 . "') fjob_end_date, 
             DATE_FORMAT(final_inspection_date,'" . SQL_DATE_FORMAT_01 . "') ffinal_inspection_date, 
             DATE_FORMAT(fw_orderdate,'" . SQL_DATE_FORMAT_01 . "') ffw_orderdate, 
@@ -1523,7 +1530,7 @@ $groups = $user->get('groups');
           
           <div class="label-input-row"> 
             <label class="input jobstart"><span class="visible">Job Start: </span><input type="text" value="<?php echo $contract_vergola['fjob_start_date']; ?>" name="jobstart" class="date_entered" autocomplete="off"></label> 
-            <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered" autocomplete="off"></label> 
+            <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffooting_inspection_date']; ?>" name="footing_inspection_date" class="date_entered" autocomplete="off"></label> 
             <label class="input jobend"><span class="visible">Job Complete: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered" autocomplete="off"></label>
             <!--<label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>-->
           </div>

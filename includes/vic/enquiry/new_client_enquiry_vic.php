@@ -1216,10 +1216,10 @@ function set_notification($msg){
         <label class="input"><span>Street Name</span>
           <input type="text" value="<?php echo $client['client_streetname'] ?>" id="cstreetname" name="cstreetname">
         </label>       
-        <label class="input"><span>Address 1</span>
+        <label class="input" hidden="true"><span>Address 1</span>
           <input type="text" value="<?php echo $client['client_address1'] ?>" id="caddress1" name="caddress1">
         </label>
-        <label class="input"><span>Address 2</span>
+        <label class="input" hidden="true"><span>Address 2</span>
           <input type="text" value="<?php echo $client['client_address2'] ?>" id="caddress2" name="caddress2">
         </label>
         
@@ -1279,7 +1279,10 @@ function set_notification($msg){
         </label>
         <label class="input"><span id="slastnamespan">Last Name</span>
           <input type="text" value="<?php echo $client['site_lastname'] ?>" id="slastname" name="slastname">
-        </label>        
+        </label>
+        <label class="input"><span id="ssitenamespan">Site Name</span>
+          <input type="text" value="<?php echo $client['site_sitename'] ?>" id="ssitename" name="ssitename">
+        </label>
         <?php }else{ ?>
           <label class="input"><span id="ssitenamespan">Site Name</span>
             <input type="text" value="<?php echo $client['site_sitename'] ?>" id="ssitename" name="ssitename">
@@ -1291,10 +1294,10 @@ function set_notification($msg){
         <label class="input"><span id="sstreetnamespan">Street Name</span>
           <input type="text" value="<?php echo $client['site_streetname'] ?>" id="sstreetname" name="sstreetname">
         </label>
-        <label class="input"><span id="saddress1span">Address 1</span>
+        <label class="input" hidden="true"><span id="saddress1span">Address 1</span>
           <input type="text" value="<?php echo $client['site_address1'] ?>" id="saddress1" name="saddress1">
         </label>
-        <label class="input"><span id="saddress2span">Address 2</span>
+        <label class="input" hidden="true"><span id="saddress2span">Address 2</span>
           <input type="text" value="<?php echo $client['site_address2'] ?>" id="saddress2" name="saddress2">
         </label>
         
@@ -1712,10 +1715,10 @@ echo "</select></label>";
         <label class="input"><span id="sstreetnamespan">Street Name</span>
           <input type="text" value="" id="nstreet_name" name="nstreet_name">
         </label>        
-        <label class="input"><span id="saddress1span">Address 1</span>
+        <label class="input" hidden="true"><span id="saddress1span">Address 1</span>
           <input type="text" value="" id="naddress1" name="naddress1">
         </label>
-        <label class="input"><span id="saddress2span">Address 2</span>
+        <label class="input" hidden="true"><span id="saddress2span">Address 2</span>
           <input type="text" value="" id="naddress2" name="naddress2">
         </label>
         
