@@ -242,10 +242,40 @@
                     [c1 + 1], 
                     template_vr_length_form_query_header
                 );
+                /* --- */
+                if (document.getElementById('vr_type_form_query').value == 'VR3' || 
+                    document.getElementById('vr_type_form_query').value == 'VR3G' || 
+                    document.getElementById('vr_type_form_query').value == 'VR5' || 
+                    document.getElementById('vr_type_form_query').value == 'VR7') {
+                    temp_text = replaceSubstringInText(
+                        [
+                            '[INDEX_NUMBER]', 
+                            'Length'
+                        ], 
+                        [
+                            c1 + 1, 
+                            'Width'
+                        ], 
+                        template_vr_length_form_query_header
+                    );
+                }
+                /* --- */
                 vr_length_form_query_header_area += temp_text;
             }
 
             vr_width_form_query_header_area = template_vr_width_form_query_header;
+            /* --- */
+            if (document.getElementById('vr_type_form_query').value == 'VR3' || 
+                document.getElementById('vr_type_form_query').value == 'VR3G' || 
+                document.getElementById('vr_type_form_query').value == 'VR5' || 
+                document.getElementById('vr_type_form_query').value == 'VR7') {
+                vr_width_form_query_header_area = replaceSubstringInText(
+                    ['Width'], 
+                    ['Length'], 
+                    template_vr_width_form_query_header
+                );
+            }
+            /* --- */
             if (document.getElementById('vr_type_form_query').value == 'null' || 
                 document.getElementById('vr_type_form_query').value == 'VR0') {
                 vr_width_form_query_header_area = '';
