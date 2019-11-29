@@ -702,8 +702,10 @@ CASE
 
 						$sql_1 = "SELECT id.length AS l, id.dimension_a, id.dimension_b, id.dimension_c, id.dimension_d, id.dimension_e, id.dimension_f, id.dimension_p,girth_side_a AS girth_a, girth_side_b AS girth_b FROM ver_chronoforms_data_contract_items_deminsions  AS id   WHERE projectid = '{$projectid}' AND inventoryid='{$m['inventoryid']}' LIMIT 1  OFFSET {$num_same_inv_id} ";
 
+						/*
 						//Modified query string to dicrectly get the dimension values from the defaults table
-						$sql = "SELECT ((id.length_feet * 12 ) + id.length_inch) AS l, CONCAT( id.dimension_a_inch, '<br />', id.dimension_a_fraction ) AS dimension_a,
+						$sql = "SELECT ((id.length_feet * 12 ) + id.length_inch) AS l, 
+						        CONCAT( id.dimension_a_inch, '<br />', id.dimension_a_fraction ) AS dimension_a,
 								CONCAT( id.dimension_b_inch, '<br />', id.dimension_b_fraction ) AS dimension_b,
 								CONCAT( id.dimension_c_inch, '<br />', id.dimension_c_fraction ) AS dimension_c,
 								CONCAT( id.dimension_d_inch, '<br />', id.dimension_d_fraction ) AS dimension_d,
@@ -716,7 +718,31 @@ CASE
 								ver_chronoforms_data_contract_bom_meterial_vic AS bm
 								JOIN ver_chronoforms_data_contract_items_default_deminsions AS id ON id.inventoryid = bm.inventoryid
 								WHERE bm.projectid = '{$projectid}' AND id.inventoryid='{$m['inventoryid']}' LIMIT 1 ";
-
+						*/
+						//re-modified query string to get all info for later output processing, instead of process output through sql query
+						$sql = "SELECT ((id.length_feet * 12 ) + id.length_inch) AS l, 
+						        CONCAT( id.dimension_a_inch, '<br />', id.dimension_a_fraction ) AS dimension_a,
+								CONCAT( id.dimension_b_inch, '<br />', id.dimension_b_fraction ) AS dimension_b,
+								CONCAT( id.dimension_c_inch, '<br />', id.dimension_c_fraction ) AS dimension_c,
+								CONCAT( id.dimension_d_inch, '<br />', id.dimension_d_fraction ) AS dimension_d,
+								CONCAT( id.dimension_e_inch, '<br />', id.dimension_e_fraction ) AS dimension_e,
+								CONCAT( id.dimension_f_inch, '<br />', id.dimension_f_fraction ) AS dimension_f,
+								CONCAT( id.dimension_p_inch, '<br />', id.dimension_p_fraction ) AS dimension_p, 
+								id.girth_side_a_inch, id.girth_side_a_fraction,
+								id.girth_side_b_inch, id.girth_side_b_fraction,
+								id.dimension_a_inch, id.dimension_a_fraction,
+								id.dimension_b_inch, id.dimension_b_fraction,
+								id.dimension_c_inch, id.dimension_c_fraction,
+								id.dimension_d_inch, id.dimension_d_fraction,
+								id.dimension_e_inch, id.dimension_e_fraction,
+								id.dimension_f_inch, id.dimension_f_fraction,
+								id.dimension_p_inch, id.dimension_p_fraction 
+								FROM 
+								-- ver_chronoforms_data_contract_items_default_deminsions  AS id  
+								-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = id.inventoryid
+								ver_chronoforms_data_contract_bom_meterial_vic AS bm
+								JOIN ver_chronoforms_data_contract_items_default_deminsions AS id ON id.inventoryid = bm.inventoryid
+								WHERE bm.projectid = '{$projectid}' AND id.inventoryid='{$m['inventoryid']}' LIMIT 1 ";
 						//error_log("sql G: ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 						
 						$r_item_dimension = mysql_query ($sql);
@@ -724,6 +750,16 @@ CASE
 
 
 						if(!empty($item_dimension)){
+
+							$girth_side_a_output = $item_dimension["girth_side_a_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["girth_side_a_fraction"]];
+							$girth_side_b_output = $item_dimension["girth_side_b_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["girth_side_b_fraction"]];
+							$dimension_a_output = $item_dimension["dimension_a_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_a_fraction"]];
+							$dimension_b_output = $item_dimension["dimension_b_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_b_fraction"]];
+							$dimension_c_output = $item_dimension["dimension_c_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_c_fraction"]];
+							$dimension_d_output = $item_dimension["dimension_d_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_d_fraction"]];
+							$dimension_e_output = $item_dimension["dimension_e_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_e_fraction"]];
+							$dimension_f_output = $item_dimension["dimension_f_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_f_fraction"]];
+							$dimension_p_output = $item_dimension["dimension_p_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_p_fraction"]];
 					?>   
 					  	   
 				  		<tr>
@@ -741,6 +777,7 @@ CASE
 				  		</tr> 
 				  		<tr> 
 							<!-- <td colspan="1" valign="top" align="right" style="border:none;"><?php echo $item_dimension["l"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td> -->
+							<!--
 							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $item_dimension["girth_a"]; ?></td>
 							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $item_dimension["girth_b"]; ?>&nbsp;&nbsp;</td>
 							<td valign="top" align="center" style="border:none;"><?php echo $item_dimension["dimension_a"]; ?></td>
@@ -750,7 +787,16 @@ CASE
 				  			<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_e"]; ?></td>
 				  			<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_f"]; ?></td>
 				  			<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_p"]; ?></td> 	
-				  			 
+							-->
+							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $girth_side_a_output; ?></td>
+							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $girth_side_b_output; ?>&nbsp;&nbsp;</td>
+							<td valign="top" align="center" style="border:none;"><?php echo $dimension_a_output; ?></td>
+							<td valign="top" align="left" style="border:none;"><?php echo $dimension_b_output; ?></td>
+							<td valign="top" align="left" style="border:none;"><?php echo $dimension_c_output; ?></td>
+				  			<td valign="top" align="left" style="border:none;"><?php echo $dimension_d_output; ?></td>
+				  			<td valign="top" align="left" style="border:none;"><?php echo $dimension_e_output; ?></td>
+				  			<td valign="top" align="left" style="border:none;"><?php echo $dimension_f_output; ?></td>
+				  			<td valign="top" align="left" style="border:none;"><?php echo $dimension_p_output; ?></td> 	
 				  		</tr>
 					  		 
 					   
