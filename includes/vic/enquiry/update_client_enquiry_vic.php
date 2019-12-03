@@ -587,10 +587,10 @@ function ssuburbchange(){
         <label class="input"><span>Last Name</span>
           <input type="text" value="" id="lastname" name="lastname">
         </label>
-        <label class="input" hidden="true"><span>Address 1</span>
+        <label class="input"><span hidden="true">Address 1</span>
           <input type="text" value="" id="caddress1" name="caddress1">
         </label>
-        <label class="input" hidden="true"><span>Address 2</span>
+        <label class="input"><span hidden="true">Address 2</span>
           <input type="text" value="" id="caddress2" name="caddress2">
         </label>
         
@@ -650,10 +650,10 @@ function ssuburbchange(){
         <label class="input"><span id="slastnamespan">Last Name</span>
           <input type="text" value="" id="slastname" name="slastname">
         </label>
-        <label class="input" hidden="true"><span id="saddress1span">Address 1</span>
+        <label class="input"><span hidden="true" id="saddress1span">Address 1</span>
           <input type="text" value="" id="saddress1" name="saddress1">
         </label>
-        <label class="input" hidden="true"><span id="saddress2span">Address 2</span>
+        <label class="input"><span hidden="true" id="saddress2span">Address 2</span>
           <input type="text" value="" id="saddress2" name="saddress2">
         </label>
         

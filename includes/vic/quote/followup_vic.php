@@ -402,7 +402,7 @@ if(isset($_POST['contract'])){
 															// ."</span></th></tr>";
 	// Test End
 	
-	echo "<table class=\"table-ff\"><tr><th>Project Name: <span class=\"subhead\">".$ProjectName."</span></th><th hidden=\"true\">Project Status: <span class=\"subhead\">".$Status."</span></th></tr>";
+	echo "<table class=\"table-ff\"><tr><th>Project Name: <span class=\"subhead\">".$ProjectName."</span></th><th>Project Status: <span class=\"subhead\">".$Status."</span></th></tr>";
 	 error_log("Status: 2". $Status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
 	// Get Date Quote 
 	//error_log("appointmentdate: ".$appointmentdate, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
@@ -426,7 +426,7 @@ if(isset($_POST['contract'])){
 	echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($date_contract_signed))."\" name=\"date_contract_signed\" class=\"date_entered\" autocomplete=\"off\" /></span>";} 
 	else { echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"\" name=\"date_contract_signed\" class=\"date_entered\" autocomplete=\"off\" /></span>";} 
 	
-	echo "</td><td hidden=\"true\">";
+	echo "</td><td>";
 	 
 	
 
@@ -465,8 +465,8 @@ if(isset($_POST['contract'])){
 	//process user_access_profiles
 	if ($current_signed_in_user_access_profiles['tab follow up']['project status'] == true) {
 		echo "<input type=\"button\" value=\"Not Interested \"  class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Not Interested')\" />";		
-		echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Costed\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Costed')\"/>";
-		echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Quoted\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Quoted')\" />";
+		echo "<input type=\"hidden\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Costed\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Costed')\"/>";
+		echo "<input type=\"hidden\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Quoted\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Quoted')\" />";
 		echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Under Consideration\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Under Consideration')\" />";
 		echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Future Project\"  class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Future Project')\" />";
 		echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Won\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Won')\"/>";
