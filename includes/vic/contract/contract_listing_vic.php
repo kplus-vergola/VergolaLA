@@ -451,9 +451,11 @@ FROM
 SELECT
 	c.*,
 	CONCAT( cp.client_firstname, ' ', cp.client_lastname ) AS client_name,
+	cp.site_sitename,
 	cp.site_streetno,
 	cp.site_streetname,
 	cp.builder_name,
+	cp.builder_contact, 
 	cp.is_builder,
 	check_measurer,
 	DATE_FORMAT( check_measure_date, '{$sql_dformat}' ) fcheck_measure_date,
@@ -731,9 +733,16 @@ while ($record = mysql_fetch_assoc($loop)) {
     $html .= "<tr  class=\"pointer td-smaller\" onclick=location.href=\"" . JURI::base() . "contract-listing-vic/contract-folder-vic?quoteid={$record['quoteid']}&projectid={$record['projectid']}\" >".
     ($is_admin==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['sales_rep']):$record['sales_rep'])."</td>":"").
     "<td>{$record['projectid']}</td>".
-	($record['is_builder']==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."</td>":"<td>".(isset($_POST['download_pdf'])?addslashes($record['client_name']):$record['client_name'])."</td>").
-	// "<td>".(isset($_POST['download_pdf'])?addslashes($record['site_address']):$record['site_address'])."</td>" . 
-	"<td>".(isset($_POST['download_pdf'])?addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address']):$record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address'])."</td>" . 	
+	/*($record['is_builder']==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."</td>":"<td>".(isset($_POST['download_pdf'])?addslashes($record['client_name']):$record['client_name'])."</td>").	
+	"<td>".(isset($_POST['download_pdf'])?addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address']):$record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address'])."</td>" . 	*/
+	($record['is_builder']==1?
+		"<td >
+			<div  style=\"\">".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."</div>
+			<div  style=\"font-weight: bold; color: #a056ad;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."</div>
+		</td>":"<td >
+			<div  style=\"font-weight: ;\">".(isset($_POST['download_pdf'])?addslashes($record['client_name']):$record['client_name'])."</div></td>").    
+	"<td><div  style=\"font-weight: bold; color: #a056ad;\">".(isset($_POST['download_pdf'])?addslashes($record['site_sitename']):$record['site_sitename'])."</div>
+		".(isset($_POST['download_pdf'])?addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address']):$record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address'])."</td>" . 
 	"<td>{$record['fclient_mobile']}</td>" .
 	"<td>{$record['fframework_type']}</td>" .	
 

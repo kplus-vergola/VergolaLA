@@ -425,6 +425,7 @@ $sql = "
 		*, 
 		c.clientid AS id, 
 		CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, 
+		c.site_sitename, 
 		c.site_streetno,
 		c.site_streetname,
 		c.site_address1, 
@@ -568,28 +569,14 @@ while ($record = mysql_fetch_assoc($loop)) {
 	$target_click_url_attr = isset($_POST['download_pdf']) ? "" : "onclick=location.href=\"" . JURI::base() . ($record['is_builder'] == "1" ? "builder-listing-vic/builder-folder-vic" : "client-listing-vic/client-folder-vic") . "?pid={$record['pid']}\"";
 	$td_style = $style;
 	$client_id = $record['id'];
-	
-	/*$customr_name_ = ($record['is_builder']==1?"
-			<div  style=\"font-weight: light-bold;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."<div>
-    		<div  style=\"font-size: 85%;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."<div>":"
-    		<div  style=\"font-weight: semi-bold;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."<div>
-			<div  style=\"font-weight: italic; font-size: 95%;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."<div>"
-		);*/
 	$customr_name = ($record['is_builder']==1?"
 			<div  style=\"\">".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."</div>
     		<div  style=\"font-weight: bold; color: #a056ad;\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."</div>":"
     		<div  style=\"\">".(isset($_POST['download_pdf'])?addslashes($record['client_name']):$record['client_name'])."</div>"
-		);
-
-	/*$customr_name1 = ($record['is_builder'] == 1) ? 
-			"<div  style=\"font-weight: light-bold;\">".(isset($_POST['download_pdf']) ? addslashes($record['builder_name']) : $record['builder_name']) : (isset($_POST['download_pdf']) ? addslashes($record['client_name']) : $record['client_name'])."<div> ";
-			"<td {$style} class=\"".(($record['is_builder']!=1)?"hide":"")."\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."</td>" .  */
-
-	// $builder_contact1 = "<td {$style} class=\"".(($record['is_builder']!=1)?"hide":"")."\">".(isset($_POST['download_pdf'])?addslashes($record['builder_contact']):$record['builder_contact'])."</td>" .  
-	// $contact_name_ = ($record['is_builder'] == 1) ? $record['builder_contact'] : "hide";
-	// $client_header_css = ($record['is_builder'] == 1) ? "Builder Name" : "Client Name";
-	
-	$site_address1 = (isset($_POST['download_pdf']) ? addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']) : $record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']);
+		);	
+	$site_address1 = "<div  style=\"font-weight: bold; color: #a056ad;\">".(isset($_POST['download_pdf'])?addslashes($record['site_sitename']):$record['site_sitename'])."</div>
+	".(isset($_POST['download_pdf'])?addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1'].' '.$record['site_address2']):$record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1'].' '.$record['site_address2'])." ".$record['site_suburb'].' '.$record['client_state'].' '.$record['site_state'];
+	// (isset($_POST['download_pdf']) ? addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']) : $record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']);
 	$site_suburb = (isset($_POST['download_pdf']) ? addslashes($record['site_suburb']) : $record['site_suburb']);
 	$customer_home_phone = $record['client_hmphone'];
 	$customer_mobile_phone = $record['client_mobile'];

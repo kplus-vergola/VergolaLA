@@ -85,6 +85,7 @@ $now = time();
     $ClientTitle = $retrieve['client_title'];
     $ClientFirstName = $retrieve['client_firstname']; 
     $ClientLastName = $retrieve['client_lastname'];
+    $BuilderContact = $retrieve['builder_contact'];
     $ClientStreetNo = $retrieve['client_streetno'];
     $ClientStreetName = $retrieve['client_streetname']; 
     $ClientAddress1 = $retrieve['client_address1'];
@@ -99,23 +100,11 @@ $now = time();
     $ClientEmail = $retrieve['client_email'];
  
     //error_log("ClientFirstName: ".$ClientFirstName, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');   
-                       
-                       
-                       
-                       
-                       
-                     
-                   
-                       
-                     
-                     
-                     
-                   
-                   
     
     $SiteTitle = $retrieve['site_title'];
     $SiteFirstName = $retrieve['site_firstname'];
     $SiteLastName = $retrieve['site_lastname'];
+    $SiteSiteName = $retrieve['site_sitename'];
     $SiteStreetNo = $retrieve['site_streetno'];
     $SiteStreetName = $retrieve['site_streetname']; 
     $SiteAddress1 = $retrieve['site_address1'];
@@ -1117,7 +1106,7 @@ if(isset($_POST['close']))
             <p><?php echo $ClientTitle; ?> <?php echo $ClientFirstName; ?> <?php echo $ClientLastName; ?> &nbsp; <a href ="<?php echo JURI::base()."new-client-enquiry-vic?pid={$retrieve['pid']}"; ?> ">Edit</a></p>
             <?php } ?>
         <?php } //end if?>
-
+        <p><?php echo $BuilderContact; ?></p>
         <p>
           <?php if ($ClientStreetNo!='') {echo $ClientStreetNo; } else {echo "";} ?>
           <?php if ($ClientStreetName!='') {echo "&nbsp;" .$ClientStreetName. "&nbsp;"; } else {echo "";} ?>        
@@ -1138,6 +1127,7 @@ if(isset($_POST['close']))
         
         <div class='site-address' > <h1 >Site Address:</h1> 
             <p> <?php echo $SiteTitle ; ?> <?php echo $SiteFirstName; ?> <?php echo $SiteLastName; ?>  </p>
+            <?php if ( $SiteSiteName!='') {echo "<p>" .  $SiteSiteName . "</p>";} else {echo "";} ?>
             <p>   
               <?php if ($SiteStreetNo!='') {echo $SiteStreetNo; } else {echo "";} ?>
               <?php if ($SiteStreetName!='') {echo "&nbsp;" .$SiteStreetName. "&nbsp;"; } else {echo "";} ?>        
