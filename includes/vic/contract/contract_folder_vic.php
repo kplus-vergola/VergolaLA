@@ -214,6 +214,8 @@ if ($enable_update_contract_details == true) {
 
 
 $check_measurer = mysql_real_escape_string($_POST['checkmeasurer']); 
+$controller_sn = mysql_real_escape_string($_POST['controllersn']); 
+$controller_pw = mysql_real_escape_string($_POST['controllerpw']); 
 
 $check_measure_date = "NULL";
 if (strlen($_POST['checkdate']) && $_POST['checkdate'] != "0000-00-00 00:00:00"){
@@ -403,7 +405,9 @@ if ($enable_update_contract_vergola == true) {
     handover_date = {$handover_date},
     fw_complete = {$fw_complete},
     time_frame_letter = {$time_frame_letter},
-    schedule_completion = {$schedule_completion} 
+    schedule_completion = {$schedule_completion},
+    controller_sn = '{$controller_sn}',
+    controller_pw = '{$controller_pw}'
     WHERE projectid = '$projectid'"; 
     mysql_query($sql) or die(mysql_error()); 
 }
@@ -524,6 +528,8 @@ if (strlen($_POST['development']) && $_POST['development'] != "0000-00-00 00:00:
 // $stat_req_easement = mysql_real_escape_string($_POST['stat_req_easement']); 
 $stat_req_planning = mysql_real_escape_string($_POST['stat_req_planning']);  
 $con_note_number = mysql_real_escape_string($_POST['con_note_number']);
+$controller_sn = mysql_real_escape_string($_POST['controller_sn']);
+$controller_pw = mysql_real_escape_string($_POST['controller_pw']);
    
 
 $m_o_d = mysql_real_escape_string($_POST['m_o_d']);
@@ -1535,6 +1541,8 @@ $groups = $user->get('groups');
                 <span class="visible">Con Note #: </span>
                 <input type="text" value="<?php echo $contract_stat['contract_note_number']; ?>" name="con_note_number" id="con_note_number" class=""  >                
             </label>
+            <label class="input controllersn"><span class="visible">Controller SN: </span><input type="text" value="<?php echo $contract_vergola['controller_sn']; ?>" name="controllersn" class=" "></label>
+            <label class="input controllerpw"><span class="visible">Controller PW: </span><input type="text" value="<?php echo $contract_vergola['controller_pw']; ?>" name="controllerpw" class=" "></label>
           </div>      
     </div>
     <!-- End of Vergola Standard --->
