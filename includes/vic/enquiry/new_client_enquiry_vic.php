@@ -982,7 +982,7 @@ $('#ibtn').click(function(){
             }, 
             select: function(event, ui) {    
                 $("#builder_name").val(ui.item.builder_name);
-
+                $("#builder_contact").val(ui.item.builder_contact);
                 $("#cstreetno").val(ui.item.streetno);
                 $("#cstreetname").val(ui.item.streetname);
 
@@ -992,16 +992,24 @@ $('#ibtn').click(function(){
                 $("#csuburbstate").val(ui.item.state);
                 $("#csuburbpostcode").val(ui.item.postcode);
                 $("#cwkphone").val(ui.item.workphone);
-
-                $("#cstreetno").parent().children('span').hide(); 
-                $("#cstreetname").parent().children('span').hide(); 
+                $("#chmphone").val(ui.item.homephone);
+                $("#cmobile").val(ui.item.mobilephone);
+                $("#cother").val(ui.item.other);
+                $("#cemail").val(ui.item.email);
                 
+                $("#builder_contact").parent().children('span').hide(); 
+                $("#cstreetno").parent().children('span').hide(); 
+                $("#cstreetname").parent().children('span').hide();                 
                 $("#caddress1").parent().children('span').hide(); 
                 $("#caddress2").parent().children('span').hide(); 
                 $("#csuburb").parent().children('span').hide(); 
                 $("#csuburbstate").parent().children('span').hide(); 
                 $("#csuburbpostcode").parent().children('span').hide(); 
                 $("#cwkphone").parent().children('span').hide();     
+                $("#chmphone").parent().children('span').hide(); 
+                $("#cmobile").parent().children('span').hide(); 
+                $("#cother").parent().children('span').hide(); 
+                $("#cemail").parent().children('span').hide(); 
             },
             minLength:2
         }; 

@@ -42,12 +42,19 @@ if ($con) {
   $result = mysql_query("
             SELECT 
                 `builder_name`,
+                `builder_contact`,
+                `client_streetno` AS streetno,
+                `client_streetname` AS streetname,
                 `client_address1` AS address1,
                 `client_address2` AS address2,
                 `client_suburb` AS suburb,
                 `client_state` AS state,
                 `client_postcode` AS postcode,
                 `client_wkphone` AS workphone,
+                `client_mobile` AS mobilephone,
+                `client_hmphone` AS homephone,
+                `client_other` AS other,
+                `client_email` AS email,                
                 `clientid`
             FROM 
                 $state_table
