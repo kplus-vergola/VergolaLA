@@ -434,6 +434,9 @@ $sql = "
 		c.client_state, 
 		c.client_postcode, 
 		c.builder_name, 
+		c.builder_contact_title,
+		c.builder_contact_firstname,
+		c.builder_contact_lastname,
 		f.status as followup_status_, 
 		IFNULL(f.status, c.status) AS `followup_status`,
 		n.content AS note 
@@ -566,6 +569,9 @@ $html_data_rows_client_listing = '';
 
 $showcontact = (($record['is_builder'] == 1) ? "" : "hide");
 while ($record = mysql_fetch_assoc($loop)) {
+	if(empty($record['builder_contact_firstname'])==false && empty($record['builder_contact_lastname'])==false){
+	  $record['builder_contact'] = $record['builder_contact_title']." ".$record['builder_contact_firstname']." ".$record['builder_contact_lastname'];}	  
+
 	$target_click_url_attr = isset($_POST['download_pdf']) ? "" : "onclick=location.href=\"" . JURI::base() . ($record['is_builder'] == "1" ? "builder-listing-vic/builder-folder-vic" : "client-listing-vic/client-folder-vic") . "?pid={$record['pid']}\"";
 	$td_style = $style;
 	$client_id = $record['id'];

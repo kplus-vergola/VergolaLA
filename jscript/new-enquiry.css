@@ -5,7 +5,8 @@
 	display: inline-block;
 	vertical-align: top;
 }
-#client #lastname, #client #firstname, #site-address #sfirstname, #site-address #slastname, #site #sfirstname, #site #slastname {
+/*#client #lastname, #client #firstname, #site-address #sfirstname, #site-address #slastname, #site #sfirstname, #site #slastname {*/
+#client #lastname, #client #firstname, #client #contact_firstname, #client #contact_lastname, #site-address #sfirstname, #site-address #slastname, #site #sfirstname, #site #slastname {	
 	width: 146px;
 }
 select {

@@ -39,33 +39,39 @@ if ($con) {
   $data = array();
   $initialSuburbsArray = array( );
   $term = trim(strip_tags($_GET['term']));
-  $result = mysql_query("
-            SELECT 
-                `builder_name`,
-                `builder_contact`,
-                `client_streetno` AS streetno,
-                `client_streetname` AS streetname,
-                `client_address1` AS address1,
-                `client_address2` AS address2,
-                `client_suburb` AS suburb,
-                `client_state` AS state,
-                `client_postcode` AS postcode,
-                `client_wkphone` AS workphone,
-                `client_mobile` AS mobilephone,
-                `client_hmphone` AS homephone,
-                `client_other` AS other,
-                `client_email` AS email,                
-                `clientid`
-            FROM 
-                $state_table
+  // Revised query call for retrieving builders data (codes was revised to prevent data redundancy and get more relevant builders lookup data and fix retrieve data results)
+    $result = mysql_query("
+      SELECT
+        c.pid,
+        c.builder_name,
+        c.builder_contact,
+        c.builder_contact_title AS btitle,
+        c.builder_contact_firstname AS contact_firstname,
+        c.builder_contact_lastname AS contact_lastname,
+        c.client_streetno AS streetno,
+        c.client_streetname AS streetname,
+        c.client_address1 AS address1,
+        c.client_address2 AS address2,
+        c.client_suburb AS suburb,
+        c.client_state AS state,
+        c.client_postcode AS postcode,
+        c.client_wkphone AS workphone,
+        c.client_mobile AS mobilephone,
+        c.client_hmphone AS homephone,
+        c.client_other AS other,
+        c.client_email AS email,
+        c.clientid 
+      FROM
+        (SELECT * FROM ver_chronoforms_data_clientpersonal_vic 
             WHERE 
-                builder_name LIKE '%{$term}%' 
-                AND !ISNULL(builder_name) 
-                AND builder_name != ''
-            GROUP BY 
-                builder_name
-            ORDER BY 
-                builder_name ASC ",$con) or die (mysql_error()); 
+              builder_name LIKE '%{$term}%' 
+              AND !ISNULL(builder_name)             
+              AND builder_name != ''
+            GROUP BY builder_name, pid ORDER BY builder_name, pid DESC ) c1
+            JOIN ver_chronoforms_data_clientpersonal_vic AS c ON c1.pid = c.pid 
+          GROUP BY
+            c.builder_name
+    ",$con) or die (mysql_error()); 
                   
   /*$result = mysql_query("SELECT * FROM $state_table where  builder_name LIKE '%{$term}%' ",$con) or die (mysql_error());*/
   while( $row = mysql_fetch_assoc( $result ) ) {

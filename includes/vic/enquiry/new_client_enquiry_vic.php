@@ -140,7 +140,10 @@ if(isset($_POST['update']) || isset($_POST['send_and_update']) )
 
   $builder_name = mysql_escape_string($_POST['builder_name']);
   $builder_contact = mysql_escape_string($_POST['builder_contact']); 
-  
+  $BuilderContactTitle = mysql_escape_string($_POST['btitle']); 
+  $BuilderContactFirstName = mysql_escape_string($_POST['contact_firstname']);   
+  $BuilderContactLastName = mysql_escape_string($_POST['contact_lastname']); 
+
   $SiteTitle = $_POST['stitle'];
   $SiteFirstName = mysql_escape_string($_POST['sfirstname']);
   $SiteLastName = mysql_escape_string($_POST['slastname']);
@@ -185,6 +188,7 @@ $sql = "UPDATE ver_chronoforms_data_clientpersonal_vic SET
                 client_lastname = '$ClientLastName',
                 builder_name = '$builder_name', 
                 builder_contact = '$builder_contact',  
+
                 client_streetno = '$ClientStreetNo', 
                 client_streetname = '$ClientStreetName', 
                 client_address1 = '$ClientAddress1', 
@@ -214,6 +218,11 @@ $sql = "UPDATE ver_chronoforms_data_clientpersonal_vic SET
                 site_mobile = '$SiteMobile',
                 site_other = '$SiteOther',
                 site_email = '$SiteEmail',  
+                builder_name = '$builder_name', 
+                builder_contact = '$builder_contact',  
+                builder_contact_title = '$BuilderContactTitle',
+                builder_contact_firstname = '$BuilderContactFirstName',
+                builder_contact_lastname = '$BuilderContactLastName',
                 repid = '$RepID',
                 repident = '$RepIdent',
                 repname = '$RepName',
@@ -271,7 +280,6 @@ if(HOST_SERVER=="Victoria"){
 
   $ClientID = $client_code.$row['Auto_increment'];
   $ClientSuburbID = $_POST['csuburbid'];
-
   $ClientTitle = $_POST['ctitle'];
   $ClientFirstName = mysql_escape_string($_POST['firstname']);
   $ClientLastName = mysql_escape_string($_POST['lastname']);
@@ -287,8 +295,6 @@ if(HOST_SERVER=="Victoria"){
   $ClientMobile = $_POST['cmobile'];
   $ClientOther = $_POST['cother'];
   $ClientEmail = $_POST['cemail'];
-  
-  
   $SiteTitle = $_POST['stitle'];
   $SiteFirstName = mysql_escape_string($_POST['sfirstname']);
   $SiteLastName = mysql_escape_string($_POST['slastname']);
@@ -306,6 +312,9 @@ if(HOST_SERVER=="Victoria"){
   $SiteMobile = $_POST['smobile'];
   $SiteOther = $_POST['sother'];
   $SiteEmail = $_POST['semail'];
+  $BuilderContactTitle = mysql_escape_string($_POST['btitle']); 
+  $BuilderContactFirstName = mysql_escape_string($_POST['contact_firstname']);   
+  $BuilderContactLastName = mysql_escape_string($_POST['contact_lastname']); 
     
   $date =  $_POST['idate']; 
     $timestamp = date('Y-m-d H:i:s', strtotime($date)); 
@@ -352,7 +361,7 @@ $sql = "INSERT INTO ver_chronoforms_data_clientpersonal_vic
                 site_title,
                 site_firstname,
                 site_lastname,
-				site_sitename,
+				        site_sitename,
                 site_streetno,
                 site_streetname,
                 site_address1,
@@ -376,55 +385,59 @@ $sql = "INSERT INTO ver_chronoforms_data_clientpersonal_vic
                 lastRepId,
                 builder_name,
                 builder_contact,
+                builder_contact_title,
+                builder_contact_firstname,
+                builder_contact_lastname,
                 is_builder) 
      VALUES ('$ClientID',
-             '$ClientSuburbID', 
-             '$ClientTitle', 
-         '$ClientFirstName', 
-         '$ClientLastName', 
-         '$ClientStreetNo', 
-         '$ClientStreetName', 
-         '$ClientAddress1', 
-         '$ClientAddress2', 
-         '$ClientSuburb', 
-         '$ClientState', 
-         '$ClientPostCode', 
-         '$ClientWPhone', 
-         '$ClientHPhone', 
-         '$ClientMobile', 
-         '$ClientOther', 
-         '$ClientEmail',
-         
-         '$SiteSuburbID',
-         '$SiteTitle',
-         '$SiteFirstName',
-         '$SiteLastName',
-		'$SiteSiteName',		 
-         '$SiteStreetNo',
-         '$SiteStreetName',          
-         '$SiteAddress1',
-         '$SiteAddress2',
-         '$SiteSuburb',
-         '$SiteState',
-         '$SitePostcode',
-         '$SiteWKPhone',
-                 '$SiteHMPhone',
-         '$SiteMobile',
-         '$SiteOther',
-         '$SiteEmail',
-                 
-                 '$DateLodged',
-                 '$RepID',
-         '$RepIdent',
-         '$RepName',
-         '$LeadID',
-         '$LeadName',
-         $AppointmentLodged,
-         '$EmployeeID',
-         '$lastRepId',
-         '$builder_name',
-         '$builder_contact',
-         '$is_builder')";
+                '$ClientSuburbID', 
+                '$ClientTitle', 
+                '$ClientFirstName', 
+                '$ClientLastName', 
+                '$ClientStreetNo', 
+                '$ClientStreetName', 
+                '$ClientAddress1', 
+                '$ClientAddress2', 
+                '$ClientSuburb', 
+                '$ClientState', 
+                '$ClientPostCode', 
+                '$ClientWPhone', 
+                '$ClientHPhone', 
+                '$ClientMobile', 
+                '$ClientOther', 
+                '$ClientEmail',
+                '$SiteSuburbID',
+                '$SiteTitle',
+                '$SiteFirstName',
+                '$SiteLastName',
+                '$SiteSiteName',		 
+                '$SiteStreetNo',
+                '$SiteStreetName',          
+                '$SiteAddress1',
+                '$SiteAddress2',
+                '$SiteSuburb',
+                '$SiteState',
+                '$SitePostcode',
+                '$SiteWKPhone',
+                '$SiteHMPhone',
+                '$SiteMobile',
+                '$SiteOther',
+                '$SiteEmail',
+                '$DateLodged',
+                '$RepID',
+                '$RepIdent',
+                '$RepName',
+                '$LeadID',
+                '$LeadName',
+                $AppointmentLodged,
+                '$EmployeeID',
+                '$lastRepId',
+                '$builder_name',
+                '$builder_contact',
+                '$BuilderContactTitle',
+                '$BuilderContactFirstName',
+                '$BuilderContactLastName',
+                '$is_builder')";
  //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); exit();
 mysql_query($sql);
 $result_id  = mysql_insert_id();
@@ -510,34 +523,35 @@ if(isset($_POST['save_site_address'])){
   $is_builder = $_POST['is_builder'];   
       
 $sql = "INSERT INTO ver_chronoforms_data_builderpersonal_site_address_vic
-               (clientid,
-                builder_contact, 
-                site_streetno,
-                site_streetname,
-                site_address1,
-                site_address2,
-                site_suburb,
-                site_state,
-                site_postcode,
-                site_wkphone,
-                site_hmphone,
-                site_mobile,
-                site_other,
-                site_email ) 
-     VALUES ( '$clientid', 
-          '$builder_contact',
-          '$SiteStreetNo',
-          '$SiteStreetName',
-          '$SiteAddress1',
-         '$SiteAddress2',
-         '$SiteSuburb',
-         '$SiteState',
-         '$SitePostcode',
-         '$SiteWKPhone',
-         '$SiteHMPhone',
-         '$SiteMobile',
-         '$SiteOther',
-         '$SiteEmail' )";
+           (clientid,
+            builder_contact, 
+            site_streetno,
+            site_streetname,
+            site_address1,
+            site_address2,
+            site_suburb,
+            site_state,
+            site_postcode,
+            site_wkphone,
+            site_hmphone,
+            site_mobile,
+            site_other,
+            site_email ) 
+     VALUES 
+            ('$clientid', 
+            '$builder_contact',
+            '$SiteStreetNo',
+            '$SiteStreetName',
+            '$SiteAddress1',
+            '$SiteAddress2',
+            '$SiteSuburb',
+            '$SiteState',
+            '$SitePostcode',
+            '$SiteWKPhone',
+            '$SiteHMPhone',
+            '$SiteMobile',
+            '$SiteOther',
+            '$SiteEmail' )";
 
 error_log("INSERT to site address: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); //exit();
 mysql_query($sql);
@@ -682,6 +696,14 @@ if(isset($_REQUEST['pid']) && $_REQUEST['pid']>0)
     
   $client = mysql_fetch_assoc(mysql_query($sql));
   $is_builder = $client['is_builder'];
+
+  //Check if builder contact is not empty and populate the lastname and firstname using the splitted value of the builder contact, would be better to automatically notify a popup msg for the user the save and apply the changes
+  if($client['builder_contact']!=null && $client['builder_contact_firstname']==null && $client['builder_contact_lastname']==null){
+    $name = $client['builder_contact'];
+    $name = explode(' ', $name);     
+    $client['builder_contact_firstname'] = $name[0];
+    $client['builder_contact_lastname'] = (isset($name[count($name)-1])) ? $name[count($name)-1] : '';
+  }
 
   if($client == null){ 
     echo "Can't find client.";
@@ -983,9 +1005,11 @@ $('#ibtn').click(function(){
             select: function(event, ui) {    
                 $("#builder_name").val(ui.item.builder_name);
                 $("#builder_contact").val(ui.item.builder_contact);
+                $("#btitle.title").val(ui.item.btitle);
+                $("#contact_firstname").val(ui.item.contact_firstname);
+                $("#contact_lastname").val(ui.item.contact_lastname);
                 $("#cstreetno").val(ui.item.streetno);
                 $("#cstreetname").val(ui.item.streetname);
-
                 $("#caddress1").val(ui.item.address1); 
                 $("#caddress2").val(ui.item.address2); 
                 $("#csuburb").val(ui.item.suburb);
@@ -995,9 +1019,11 @@ $('#ibtn').click(function(){
                 $("#chmphone").val(ui.item.homephone);
                 $("#cmobile").val(ui.item.mobilephone);
                 $("#cother").val(ui.item.other);
-                $("#cemail").val(ui.item.email);
-                
+                $("#cemail").val(ui.item.email);                
                 $("#builder_contact").parent().children('span').hide(); 
+                $("#btitle.title").parent().children('span').hide(); 
+                $("#contact_firstname").parent().children('span').hide(); 
+                $("#contact_lastname").parent().children('span').hide(); 
                 $("#cstreetno").parent().children('span').hide(); 
                 $("#cstreetname").parent().children('span').hide();                 
                 $("#caddress1").parent().children('span').hide(); 
@@ -1213,9 +1239,26 @@ function set_notification($msg){
               <input type="button" value="New" name="" class="btn"  style="width:75px;" onclick="open_create_builder_dialog()">
             <?php } ?>
           </label>
-          <label class="input"><span>Builder Contact</span>
-            <input type="text" value="<?php echo $client['builder_contact'] ?>" id="builder_contact" name="builder_contact">
-          </label> 
+          <!--           <label type="hidden" class="input"><span>Builder Contact</span>
+          <input type="hidden" value="<?php echo $client['builder_contact'] ?>" id="builder_contact" name="builder_contact">
+          </label>  -->
+
+          <label class="input"> <span><?php if($is_edit==0) echo "Title"; ?></span>
+            <select class="title" id='btitle' name='btitle'>
+              <option ></option>
+              <option value="Mr" <?php echo ($client['builder_contact_title']=="Mr"?"selected":""); ?> >Mr</option>
+              <option value="Mrs" <?php echo ($client['builder_contact_title']=="Mrs"?"selected":""); ?> >Mrs</option>
+              <option value="Ms" <?php echo ($client['builder_contact_title']=="Ms"?"selected":""); ?>>Ms</option>
+              <option value="Dr" <?php echo ($client['builder_contact_title']=="Dr"?"selected":""); ?>>Dr</option>
+              <option value="Prof." <?php echo ($client['builder_contact_title']=="Prof."?"selected":""); ?>>Prof.</option>
+            </select>
+          </label>  
+          <label class="input"><span>First Name</span>
+            <input type="text" value="<?php echo $client['builder_contact_firstname'] ?>" id="contact_firstname" name="contact_firstname" >
+          </label>
+          <label class="input"><span>Last Name</span>
+            <input type="text" value="<?php echo $client['builder_contact_lastname'] ?>" id="contact_lastname" name="contact_lastname">
+          </label>
 
         <?php } ?>  
         <label class="input"><span>Unit or Street No</span>
@@ -1827,6 +1870,10 @@ function copy_data_from_new_builder(event,o){
 
            
               $("#builder_name").val($("#nbuilder_name").val());
+              $("#builder_contact").val(ui.item.builder_contact);
+              $("#btitle.title").val(ui.item.builder_contact_title);
+              $("#contact_firstname").val(ui.item.builder_contact_firstname);
+              $("#contact_lastname").val(ui.item.builder_contact_lastname);     
               $("#cstreetno").val($("#nstreet_no").val());
               $("#cstreetname").val($("#nstreet_name").val());
               $("#caddress1").val($("#naddress1").val());
@@ -1838,6 +1885,10 @@ function copy_data_from_new_builder(event,o){
 
                
               $("#builder_name").parent().children('span').hide();
+              $("#builder_contact").parent().children('span').hide(); 
+              $("#btitle.title").parent().children('span').hide(); 
+              $("#contact_firstname").parent().children('span').hide(); 
+              $("#contact_lastname").parent().children('span').hide(); 
               $("#cstreetno").parent().children('span').hide();
               $("#cstreetname").parent().children('span').hide();
               $("#caddress1").parent().children('span').hide();

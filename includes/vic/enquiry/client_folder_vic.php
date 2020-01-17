@@ -67,6 +67,17 @@ if(isset($user->groups['10'])){
   $ClientFirstName = $retrieve['client_firstname'];
   $ClientLastName = $retrieve['client_lastname'];
   $BuilderContact = $retrieve['builder_contact'];
+  $BuilderContactTitle = $retrieve['builder_contact_title'];
+  $BuilderContactFirstName = $retrieve['builder_contact_firstname'];
+  $BuilderContactLastName = $retrieve['builder_contact_lastname'];   
+
+  if($BuilderContact!=null && $BuilderContactFirstName==null && $BuilderContactLastName==null){
+    $name = $BuilderContact;
+    $name = explode(' ', $name);     
+    $BuilderContactFirstName = $name[0];
+    $BuilderContactLastName = (isset($name[count($name)-1])) ? $name[count($name)-1] : '';
+    // alert("Please click save to apply changes for the builder contact...");
+  }
   $ClientStreetNo = $retrieve['client_streetno'];
   $ClientStreetName = $retrieve['client_streetname']; 
   $ClientAddress1 = $retrieve['client_address1'];
@@ -463,7 +474,9 @@ if(isset($_POST['delete-drawing'])) {
           <p><?php echo $ClientTitle; ?> <?php echo $ClientFirstName; ?> <?php echo $ClientLastName; ?> &nbsp; <a href ="<?php echo JURI::base()."new-client-enquiry-vic?pid={$pid}&ref=client-listing-vic/client-folder-vic?pid={$pid}"; ?> ">Edit</a></p>
         <?php } ?>
     <?php } //end if?>
-    <p><?php echo $BuilderContact; ?></p>
+    <!-- <p><?php echo $BuilderContact; ?></p> -->
+    <p><?php echo $BuilderContactTitle; ?> <?php echo $BuilderContactFirstName; ?> <?php echo $BuilderContactLastName; ?></p> 
+    
     <p>
       <?php if ($ClientStreetNo!='') {echo $ClientStreetNo; } else {echo "";} ?>
       <?php if ($ClientStreetName!='') {echo "&nbsp;" .$ClientStreetName. "&nbsp;"; } else {echo "";} ?>        
