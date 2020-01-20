@@ -76,6 +76,14 @@ if ($con) {
   /*$result = mysql_query("SELECT * FROM $state_table where  builder_name LIKE '%{$term}%' ",$con) or die (mysql_error());*/
   while( $row = mysql_fetch_assoc( $result ) ) {
 
+    // Check if builder contact is not empty and populate the lastname and firstname using the splitted value of the builder contact, would be better to automatically notify a popup msg for the user the save and apply the changes
+    if($row['builder_contact']!='' && $row['contact_firstname']==null && $row['contact_lastname']==null){        
+      $name = $row['builder_contact'];
+      $name = explode(' ', $name);     
+      $row['contact_firstname'] = $name[0];
+      $row['contact_lastname'] = (isset($name[count($name)-1])) ? $name[count($name)-1] : '';
+    }
+
     $row['value'] = $row['builder_name'];
     $row['label'] = $row['builder_name'];
     
