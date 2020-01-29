@@ -390,11 +390,6 @@ if(strlen($c_status)>0 && $advance_search==1){
 
 }
 
- 
-
-// $sql = "SELECT *, c.clientid AS id, CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, c.site_address1, c.builder_name,n.content AS note  FROM (SELECT * FROM ver_chronoforms_data_clientpersonal_vic AS c WHERE  1=1 {$builder_filter} {$rep_filter} {$suburb_filter} {$date_filter} {$search_string_filter} {$is_quoted_filter} ) AS c LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_followup_vic WHERE 1=1 {$rep_filter2}  ORDER BY updated_at DESC, cf_id DESC) as f0  GROUP BY quoteid ) AS f ON f.quoteid=c.clientid LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic WHERE cf_id IN (SELECT MAX(cf_id) as max_id FROM ver_chronoforms_data_notes_vic GROUP BY clientid)) as n ON n.clientid=c.clientid WHERE 1=1  {$rep_filter3} ";
-
-// $sql = "SELECT *, c.clientid AS id, CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, c.site_address1, c.builder_name, f.status as followup_status,n.content AS note  FROM (SELECT * FROM ver_chronoforms_data_clientpersonal_vic AS c WHERE  1=1 {$builder_filter} {$rep_filter} {$suburb_filter} {$date_filter} {$search_string_filter} {$is_quoted_filter} ) AS c LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_followup_vic WHERE 1=1 {$rep_filter2}  ORDER BY updated_at DESC, cf_id DESC) as f0  GROUP BY quoteid ) AS f ON f.quoteid=c.clientid LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic GROUP BY clientid) as n ON n.clientid=c.clientid WHERE 1=1  {$rep_filter3} ";
 $sql1 = "
 	SELECT *, c.clientid AS id, CONCAT(c.client_firstname,' ',c.client_lastname) AS client_name, c.site_address1, c.builder_name, f.status as followup_status_,n.content AS note,
 				IFNULL(f.status, c.status) AS `followup_status`
@@ -532,23 +527,8 @@ if(isset($_POST['download_pdf'])==true){
 } 
 	
 $html_head = "<table class=\"listing-table table-bordered\"   style=\"font-size: 10pt;\"> <tr><th width=\"3%\">ID</th><th width=\"10%\">Customer Name</th><th width=\"12%\">Site Address</th><th width=\"6%\">Home Phone</th><th width=\"6%\">Mobile</th><th class=\"".(isset($user->groups['9'])?"hide":"")."\" width=\"10%\">Consultant</th><th width=\"6%\">Date of Enquiry</th><th width=\"8%\">Appointment Date</th><th width=\"6%\">Quote Value</th><th width=\"6%\">Quote Delivered</th><th width=\"6%\">Follow Up</th><th width=\"3%\">Status</th><th>Note</th> </tr>";
-/*$html_head = "<table class=\"listing-table table-bordered\"   style=\"font-size: 10pt;\"> 
-				<tr>
-					<th width=\"3%\">ID</th><th width=\"10%\">Customer Name</th>            
-                    "."<th class=\"".$showcontact."\" width=\"10%\">Contact Name </th>"."
-                    <th width=\"12%\">Site Address</th>
-					<th width=\"6%\">Home Phone</th><th width=\"6%\">Mobile</th>
-					<th class=\"".(isset($user->groups['9'])?"hide":"")."\" width=\"10%\">Consultant</th>
-					<th width=\"6%\">Date of Enquiry</th><th width=\"8%\">Appointment Date</th>
-					<th width=\"6%\">Quote Value</th><th width=\"6%\">Quote Delivered</th>
-					<th width=\"6%\">Follow Up</th><th width=\"3%\">Status</th>
-					<th>Note</th> 
-				</tr>";
-*/
-  
 
 //error_log("start loop: ".microtime(true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
-
 
 include('sales_summary/functions_general.php');
 include('sales_summary/functions_module.php');
@@ -581,8 +561,7 @@ while ($record = mysql_fetch_assoc($loop)) {
     		<div  style=\"\">".(isset($_POST['download_pdf'])?addslashes($record['client_name']):$record['client_name'])."</div>"
 		);	
 	$site_address1 = "<div  style=\"font-weight: bold; color: #a056ad;\">".(isset($_POST['download_pdf'])?addslashes($record['site_sitename']):$record['site_sitename'])."</div>
-	".(isset($_POST['download_pdf'])?addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1'].' '.$record['site_address2']):$record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1'].' '.$record['site_address2'])." ".$record['site_suburb'].' '.$record['client_state'].' '.$record['site_state'];
-	// (isset($_POST['download_pdf']) ? addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']) : $record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1']);
+	".(isset($_POST['download_pdf'])?addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1'].' '.$record['site_address2']):$record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address1'].' '.$record['site_address2'])." <br /> ".$record['site_suburb'].' '.$record['site_state'].'  '.$record['site_postcode'];	
 	$site_suburb = (isset($_POST['download_pdf']) ? addslashes($record['site_suburb']) : $record['site_suburb']);
 	$customer_home_phone = $record['client_hmphone'];
 	$customer_mobile_phone = $record['client_mobile'];
