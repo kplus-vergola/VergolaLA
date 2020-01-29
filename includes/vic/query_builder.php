@@ -85,7 +85,8 @@ if ($con) {
     }
 
     $row['value'] = $row['builder_name'];
-    $row['label'] = $row['builder_name'];
+    // $row['label'] = $row['builder_name'];
+    $row['label'] = "{$row['builder_name']}, {$row['streetno']} {$row['streetname']} {$row['address1']} {$row['address2']},  {$row['suburb']} {$row['state']} {$row['postcode']}";
     
     array_push($data, $row);
   }
