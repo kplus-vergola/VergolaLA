@@ -408,7 +408,7 @@ while ($record = mysql_fetch_assoc($loop)) {
 
  $html .= "<tr class='pointer' onclick=location.href='" . $this->baseurl . "tender-listing-vic/tender-folder-vic?tenderid={$record['tenderid']}' >
 <td>{$record['tenderid']}</td>" . 
-"<td>{$record['site_streetno']} {$record['site_streetname']} {$record['site_address1']} {$record['site_address2']} <br />{$record['site_suburb']} </td>" . 
+"<td>{$record['site_streetno']} {$record['site_streetname']} {$record['site_address1']} {$record['site_address2']} <br />{$record['site_suburb']}  {$record['site_state']} {$record['site_postcode']} </td>" . 
 "<td>{$record['site_project']}</td>  ";
 	
 $html .= "<td>". date('d-M-Y',strtotime($record['datelodged'])). "</td>";	 
