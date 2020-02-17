@@ -304,7 +304,7 @@ if(isset($user->groups['10'])){
                         'Sales Rep: ' . 
                         "<br />\n" . 
                         $RepName, 
-          'do_send' => false, 
+          'do_send' => true, 
       );
 
       include "/includes/vic/libraries/PHPMailer_custom_loader.php";
