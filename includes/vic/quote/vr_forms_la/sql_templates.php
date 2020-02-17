@@ -59,7 +59,7 @@ $sql_template_insert_data_followup = "
         '[VR_PAYMENT_VERGOLA]',                 '[VR_PAYMENT_DISBURSEMENT_SUB_TOTAL]',  '[VR_PAYMENT_SUB_TOTAL]', 
         '[VR_PAYMENT_TAX]',                     '[VR_PAYMENT_TAX]',                     '[VR_PAYMENT_TOTAL]', 
         '[TOTAL_RRP]',                          '[GST_PERCENT]',                        '[COMM_PERCENT]', 
-        '[IS_BUILDER_PROJECT]',                 'Quoted',                               '[CUSTOMISATION_OPTIONS]', 
+        '[IS_BUILDER_PROJECT]',                 'Costed',                               '[CUSTOMISATION_OPTIONS]', 
         NOW(),                                  NOW() 
     );
 ";

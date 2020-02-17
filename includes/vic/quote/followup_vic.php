@@ -52,6 +52,33 @@ if (!$resultff) {die("Error: Data not found..");}
 	
 	$SiteAddress = $retrieveclient['site_address1']." ".$retrieveclient['site_address2']."<br />".$retrieveclient['site_suburb']." ".$retrieveclient['site_state']." ".$retrieveclient['site_postcode'];
 	$appointmentdate = $retrieveclient['appointmentdate'];
+
+
+	$PreviousDateDelivered = $retrieveff['qdelivered'];
+	$PreviousQuoteStatus = $Status_;
+	$PreviousCustomisationOptions = $retrieveff['customisation_options'];
+	if (trim($appointmentdate) == '' || substr($appointmentdate, 0, strlen('0000-00-00')) == '0000-00-00') {
+		$appointmentdate = '';
+	} else {
+		$appointmentdate = date(PHP_DFORMAT,strtotime($appointmentdate));
+	}
+	if (trim($DateDelivered) == '' || substr($DateDelivered, 0, strlen('0000-00-00')) == '0000-00-00') {
+		$DateDelivered = '';
+	} else {
+		$DateDelivered = date(PHP_DFORMAT,strtotime($DateDelivered));
+	}
+	if (trim($DateFF1) == '' || substr($DateFF1, 0, strlen('0000-00-00')) == '0000-00-00') {
+		$DateFF1 = '';
+	} else {
+		$DateFF1 = date(PHP_DFORMAT,strtotime($DateFF1));
+	}
+	if (trim($date_contract_signed) == '' || substr($date_contract_signed, 0, strlen('0000-00-00')) == '0000-00-00') {
+		$date_contract_signed = '';
+	} else {
+		$date_contract_signed = date(PHP_DFORMAT,strtotime($date_contract_signed));
+	}
+
+
 	//} 
 	// else {
 	// 	$resultbuilder = mysql_query("SELECT * FROM ver_chronoforms_data_builderpersonal_vic WHERE builderid  = '$QuoteID'");
@@ -403,6 +430,22 @@ if(isset($_POST['contract'])){
 	// Test End
 	
 	echo "<table class=\"table-ff\"><tr><th>Project Name: <span class=\"subhead\">".$ProjectName."</span></th><th>Project Status: <span class=\"subhead\">".$Status."</span></th></tr>";
+
+
+	echo "<input type=\"hidden\" id=\"previous_date_delivered\" name=\"previous_date_delivered\" value=\"" . $PreviousDateDelivered . "\" />";
+	echo "<input type=\"hidden\" id=\"previous_quote_status\" name=\"previous_quote_status\" value=\"" . $PreviousQuoteStatus . "\" />";
+	echo "<input type=\"hidden\" id=\"contract_lost_reason\" name=\"contract_lost_reason\" value=\"\" />";
+	echo "<input type=\"hidden\" id=\"previous_customisation_options\" name=\"previous_customisation_options\" value=\"" . $PreviousCustomisationOptions . "\" />";
+	echo "<input type=\"hidden\" id=\"current_quote_id\" name=\"current_quote_id\" value=\"" . $QuoteID . "\" />";
+	echo "<input type=\"hidden\" id=\"current_project_id\" name=\"current_project_id\" value=\"" . $ProjectID . "\" />";
+
+	echo "<tr><td><span class=\"ffinfo\"><label>Appointment Date</label><input type=\"text\" value=\"" . $appointmentdate . "\" name=\"appointmentdate\" class=\"date_entered\" autocomplete=\"off\" readonly=\"readonly\" /></span>";
+	echo "<span class=\"ffinfo\"><label>Date Delivered</label><input type=\"text\" value=\"" . $DateDelivered . "\" name=\"qdelivered\" class=\"date_entered\" autocomplete=\"off\" /></span>";
+	echo " <span class=\"ffinfo\"><label>Next Follow Up</label><input type=\"text\" value=\"" . $DateFF1 . "\" name=\"ffdate1\" class=\"date_entered\" autocomplete=\"off\" /></span>";
+	echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"" . $date_contract_signed . "\" name=\"date_contract_signed\" class=\"date_entered\" autocomplete=\"off\" /></span>";
+
+
+	/*
 	 error_log("Status: 2". $Status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
 	// Get Date Quote 
 	//error_log("appointmentdate: ".$appointmentdate, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
@@ -425,7 +468,7 @@ if(isset($_POST['contract'])){
 	if ($date_contract_signed != "") {
 	echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"".date(PHP_DFORMAT,strtotime($date_contract_signed))."\" name=\"date_contract_signed\" class=\"date_entered\" autocomplete=\"off\" /></span>";} 
 	else { echo "<span class=\"ffinfo\"><label>Contract Delivered/Signed</label><input type=\"text\" value=\"\" name=\"date_contract_signed\" class=\"date_entered\" autocomplete=\"off\" /></span>";} 
-	
+	*/
 	echo "</td><td>";
 	 
 	
@@ -469,7 +512,7 @@ if(isset($_POST['contract'])){
 		echo "<input type=\"hidden\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Quoted\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Quoted')\" />";
 		echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Under Consideration\" class=\"submit-look\"  onclick=\"setCostingStatusAndSubmit('Under Consideration')\" />";
 		echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Future Project\"  class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Future Project')\" />";
-		echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Won\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Won')\"/>";
+		//echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Won\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Won')\"/>";
 		echo "<input type=\"button\" ".(strtolower($ProjectName)==""?"disabled":"")." value=\"Lost\" class=\"submit-look\" onclick=\"setCostingStatusAndSubmit('Lost')\"/>";
 		$isfollowup_btn = true;
 	} //end if

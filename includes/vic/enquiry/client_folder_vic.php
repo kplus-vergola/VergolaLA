@@ -134,6 +134,184 @@ if(isset($user->groups['10'])){
   $datestamp = date(PHP_DFORMAT." h:i:sa");
   if(isset($_POST['save'])) // save note created part
   {   
+  $temp_appointment_date = 'NULL';
+  if (isset($_POST['appointmentdate']) && 
+      strlen(trim($_POST['appointmentdate'])) > 0) {
+      $temp_appointment_date = trim($_POST['appointmentdate']);
+      $temp_appointment_date = date('Y-m-d H:i:s', strtotime($temp_appointment_date));
+  }
+  $temp_date_delivered = 'NULL';
+  if (isset($_POST['qdelivered']) && 
+      strlen(trim($_POST['qdelivered'])) > 0) {
+      $temp_date_delivered = trim($_POST['qdelivered']);
+      $temp_date_delivered = date('Y-m-d H:i:s', strtotime($temp_date_delivered));
+  }
+  $temp_next_followup_date = 'NULL';
+  if (isset($_POST['ffdate1']) && 
+      strlen(trim($_POST['ffdate1'])) > 0) {
+      $temp_next_followup_date = trim($_POST['ffdate1']);
+      $temp_next_followup_date = date('Y-m-d H:i:s', strtotime($temp_next_followup_date));
+  }
+  $temp_date_contract_signed = 'NULL';
+  if (isset($_POST['date_contract_signed']) && 
+      strlen(trim($_POST['date_contract_signed'])) > 0) {
+      $temp_date_contract_signed = trim($_POST['date_contract_signed']);
+      $temp_date_contract_signed = date('Y-m-d H:i:s', strtotime($temp_date_contract_signed));
+  }
+
+
+  $temp_previous_date_delivered = 'NULL';
+  if (isset($_POST['previous_date_delivered'])) {
+      $temp_previous_date_delivered = trim($_POST['previous_date_delivered']);
+  }
+
+
+  $temp_previous_quote_status = '';
+  if (isset($_POST['previous_quote_status'])) {
+      $temp_previous_quote_status = trim($_POST['previous_quote_status']);
+  }
+
+
+  $temp_quote_status = '';
+  $temp_quote_status = $temp_previous_quote_status;
+  if ($temp_previous_date_delivered == 'NULL' || strlen($temp_previous_date_delivered) == 0) {
+      if (strtolower($temp_previous_quote_status) == 'quoted') {
+          $temp_quote_status = 'Costed';
+      }
+      if ($temp_date_delivered != 'NULL' && strlen($temp_date_delivered) > 0) {
+          $temp_quote_status = 'Quoted';
+      }
+  }
+
+
+  if (isset($_POST['status'])) {
+      if (strtolower(trim($_POST['status'])) == 'under consideration' || 
+          strtolower(trim($_POST['status'])) == 'future project') {
+          if (strtolower($temp_previous_quote_status) == 'quoted') {
+              $temp_quote_status = trim($_POST['status']);
+          }
+      } elseif (strtolower(trim($_POST['status'])) == 'lost') {
+          $temp_quote_status = trim($_POST['status']);
+      } elseif (strtolower(trim($_POST['status'])) == 'not interested') {
+          $temp_quote_status = trim($_POST['status']);
+      }
+  }
+
+
+  $temp_customisation_options = array();
+  if (strtolower($temp_quote_status) == 'lost' && 
+      isset($_POST['contract_lost_reason']) && 
+      isset($_POST['previous_customisation_options'])) {
+      if (strlen(trim($_POST['previous_customisation_options'])) > 0 && 
+          json_decode(trim($_POST['previous_customisation_options']), true) != NULL) {
+          $temp_customisation_options = json_decode(trim($_POST['previous_customisation_options']), true);
+          if (!isset($temp_customisation_options['contract_lost_reason'])) {
+              $temp_customisation_options['contract_lost_reason'] = trim($_POST['contract_lost_reason']);
+          }
+      } else {
+          $temp_customisation_options['contract_lost_reason'] = trim($_POST['contract_lost_reason']);
+      }
+  }
+
+
+  if ((isset($_POST['cf_id']) && strlen(trim($_POST['cf_id'])) > 0) && 
+      (isset($_POST['current_quote_id']) && strlen(trim($_POST['current_quote_id'])) > 0) && 
+      (isset($_POST['current_project_id']) && strlen(trim($_POST['current_project_id'])) > 0)) {
+      $sql = "
+          UPDATE ver_chronoforms_data_followup_vic SET 
+              qdelivered = '". $temp_date_delivered . "', 
+              ffdate1 = '". $temp_next_followup_date . "', 
+              date_contract_signed = '". $temp_date_contract_signed . "', 
+              status = '". $temp_quote_status . "', 
+              customisation_options = '". json_encode($temp_customisation_options) . "' 
+          WHERE cf_id = '" . $_POST['cf_id'] . "' 
+          AND quoteid = '" . $_POST['current_quote_id'] . "' 
+          AND projectid = '" . $_POST['current_project_id'] . "';
+      ";
+      mysql_query($sql)or die(mysql_error()); 
+
+      $sql = "
+          UPDATE ver_chronoforms_data_clientpersonal_vic SET 
+              appointmentdate = '". $temp_appointment_date . "', 
+              qdelivered = '". $temp_date_delivered . "', 
+              next_followup = '". $temp_next_followup_date . "', 
+              date_contract_signed = '". $temp_date_contract_signed . "', 
+              status = '". $temp_quote_status . "' 
+          WHERE clientid = '" . $_POST['current_quote_id'] . "';
+      ";
+      mysql_query($sql)or die(mysql_error()); 
+  } else {
+      $sql = "
+          UPDATE ver_chronoforms_data_clientpersonal_vic SET 
+              appointmentdate = '". $temp_appointment_date . "', 
+              qdelivered = '". $temp_date_delivered . "', 
+              next_followup = '". $temp_next_followup_date . "', 
+              date_contract_signed = '". $temp_date_contract_signed . "', 
+              status = '". $temp_quote_status . "' 
+          WHERE clientid = '" . $_POST['current_quote_id'] . "';
+      ";
+      mysql_query($sql)or die(mysql_error()); 
+  }
+
+  if (strtolower($temp_quote_status) == 'lost') {
+      /* --- begin mail sending --- */
+      $mailer_sender = array(
+          'name' => 'Vergola Australia', 
+          'email' => 'Vergola.Aus@knowledgeplus.net.au'
+      );
+
+      $mailer_recipients = array();
+      $sql = "
+          SELECT 
+              ver_users.RepID, 
+              ver_users.name, 
+              ver_users.username, 
+              ver_users.email, 
+              ver_usergroups.title 
+          FROM ver_users 
+              LEFT JOIN ver_user_usergroup_map 
+                  ON ver_users.id = ver_user_usergroup_map.user_id 
+              LEFT JOIN ver_usergroups 
+                  ON ver_user_usergroup_map.group_id = ver_usergroups.id 
+          WHERE ver_users.block = '0' 
+          AND (LOWER(title) LIKE '%admin%' OR LOWER(title) LIKE '%sales manager%') 
+          ORDER BY ver_users.RepID;
+      ";
+      $results1 = mysql_query($sql);
+      while ($row1 = mysql_fetch_array($results1)) {
+          $mailer_recipients[] = array(
+              'name' => $row1['name'], 
+              'email' => $row1['email']
+          );
+      }
+
+      $mailer_ccs = array();
+
+      $mailer_params = array(
+          'mailer_type' => 'smtp', 
+          'host' => 'smtp.gmail.com', 
+          'username' => 'vglkp4u5@gmail.com', 
+          'password' => '0ceanV!ew', 
+          'sender' => $mailer_sender, 
+          'recipients' => $mailer_recipients, 
+          'ccs' => $mailer_ccs, 
+          'subject' => 'Vergola SA > Contract Lost > ' . $_POST['current_quote_id'] . ' (' . date('d-M-Y') . ')', 
+          'content' => 'Reason for losing this contract: ' . 
+                        "<br />\n" . 
+                        $_POST['contract_lost_reason'] . 
+                        "<br />\n" . 
+                        "<br />\n" . 
+                        'Sales Rep: ' . 
+                        "<br />\n" . 
+                        $RepName, 
+          'do_send' => false, 
+      );
+
+      include "/includes/vic/libraries/PHPMailer_custom_loader.php";
+      /* --- end mail sending --- */
+  }
+
+
   $getclientid = $ClientID; 
   $checknotes = implode(", ", $_POST['notestxt']);
   $cnt = count($_POST['date_notes']);
@@ -1760,6 +1938,15 @@ if (!$resultimg) {
   } 
   function setCostingStatusAndSubmit(status)
   {
+    if (status.toLowerCase() == 'lost') {
+        var prompt_response = prompt('Please enter reason for losing this contract:');
+        if (prompt_response) {
+            $("#contract_lost_reason").val(prompt_response);
+        } else {
+            return false;
+        }
+    }
+
   $("#costing_status").val(status);//alert(status);
   $("#save_client_folder").click();
   }
