@@ -295,7 +295,7 @@ if(isset($user->groups['10'])){
           'sender' => $mailer_sender, 
           'recipients' => $mailer_recipients, 
           'ccs' => $mailer_ccs, 
-          'subject' => 'Vergola SA > Contract Lost > ' . $_POST['current_quote_id'] . ' (' . date('d-M-Y') . ')', 
+          'subject' => 'Vergola LA > Contract Lost > ' . $_POST['current_quote_id'] . ' (' . date('d-M-Y') . ')', 
           'content' => 'Reason for losing this contract: ' . 
                         "<br />\n" . 
                         $_POST['contract_lost_reason'] . 
