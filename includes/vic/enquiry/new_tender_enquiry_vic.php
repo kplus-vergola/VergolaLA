@@ -1281,7 +1281,7 @@ function bsuburbchange6(){
   <!-- ------------------------------------------------------ Tender Builder Enquiry ------------------------------------------------- --> 
   
    <!-- ----------------------------------------------- Builder Content Tab ------------------------------------------------------------- -->
-<div id="tabs_wrapper" class="builder-tab">
+<div id="tabs_wrapper" class="builder-tab" style="width:28%; margin-left:10px; margin-right:10px;" >
   <div id="tabs_container">
     <ul id="builder-tabs" class="shadetabs">
       <li><a href="#" rel="builder1" class="selected">Builder 1</a></li>
