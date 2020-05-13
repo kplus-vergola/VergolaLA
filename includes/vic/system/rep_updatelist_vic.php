@@ -388,8 +388,8 @@ if(isset($_POST['cancel']))
                 $dTo = substr($r['dateFromTo'], -10,10);
 
                 if (strlen($dFrom) == 0 || strlen($dTo) == 0) {
-                    $dFrom = date('Y') . '-07-01';
-                    $dTo = (intval(date('Y')) + 1) . '-06-30';
+                    $dFrom = (intval(date('Y')) - 1) . '-07-01';
+                    $dTo = date('Y') . '-06-30';
                 }
 
                 $formatFrom = date_format(date_create($dFrom),PHP_DFORMAT);
