@@ -1277,323 +1277,304 @@ $RetPhoto=$RetDrawInfo['photo'];
   <!-------------------------------------------------------- Tender Builder Enquiry ---------------------------------------------------> 
   
    <!------------------------------------------------- Builder Content Tab ---------------------------------------------------------->
-<div id="tabs_wrapper" class="builder-tab" style="width:28%; margin-left:10px; margin-right:10px;" >
-  <div id="tabs_container">
-    <ul id="builder-tabs" class="shadetabs">
-      <li><a href="#" rel="builder1" class="selected">Builder 1</a></li>
-      <li><a href="#" rel="builder2">Builder 2</a></li>
-      <li><a href="#" rel="builder3">Builder 3</a></li>
-      <li><a href="#" rel="builder4">Builder 4</a></li>
-      <li><a href="#" rel="builder5">Builder 5</a></li>
-      <li><a href="#" rel="builder6">Builder 6</a></li>
-    </ul>
-  </div>
-  <div id="tabs_content_container"> 
-    
-    <!---------------------------------------------------------------- Builder 1 Tab ------------------------------------------------------->
-    
-    <div id="builder1" class="tab_content" style="display: block;"> 
-    
-    <!------------------------------------------------------- Builder 1 Details ------------------------------------------------------------>
-         
-        <label class="input" style="width:95%"><span id="bnameid1">Company Name</span> 
-          <input type="text" value="<?php echo $BuildName1; ?>" id="build_name1" name="builder_name1" onkeypress="bcompanychange1();" style="width:75%;">  
-          <input type="button" value="New" name="save_new_builder" class="btn"  style="width:75px;" onclick="open_create_builder_dialog('builder_dialog1')" >
-        </label>
-        <label class="input"><span id="bcontactid1">Contact</span>
-          <input type="text" value="<?php echo $BuildContact1; ?>" id="build_contact1" name="builder_contact1">
-        </label>
-        <label class="input"><span id="baddress1id1">Address 1</span>
-          <input type="text" value="<?php echo $BuildAddress11; ?>" id="baddress_11" name="baddress11">
-        </label>
-        <label class="input"><span id="baddress2id1">Address 2</span>
-          <input type="text" value="<?php echo $BuildAddress21; ?>" id="baddress_21" name="baddress21">
-        </label>
-        
+   <div id="tabs_wrapper" class="builder-tab" style="width:28%; margin-left:10px; margin-right:10px;" >
+     <div id="tabs_container">
+       <ul id="builder-tabs" class="shadetabs">
+         <li><a href="#" rel="builder1" class="selected">Builder 1</a></li>
+         <li><a href="#" rel="builder2">Builder 2</a></li>
+         <li><a href="#" rel="builder3">Builder 3</a></li>
+         <li><a href="#" rel="builder4">Builder 4</a></li>
+         <li><a href="#" rel="builder5">Builder 5</a></li>
+         <li><a href="#" rel="builder6">Builder 6</a></li>
+       </ul>
+     </div>
+     <div id="tabs_content_container"> 
+       
+       <!---------------------------------------------------------------- Builder 1 Tab ------------------------------------------------------->
+       
+       <div id="builder1" class="tab_content" style="display: block;"> 
+       
+       <!------------------------------------------------------- Builder 1 Details ------------------------------------------------------------>
+       <label class="input" style="width:95%"><span id="bnameid1">Company Name</span>
+           <input type="text" value="<?php echo isset($_POST['builder_name1']) ? $_POST['builder_name1'] : $BuildName1 ?>" id="build_name1" name="builder_name1" onkeypress="bcompanychange1();" style="width:75%;">
+           <input type="button" value="New" name="save_new_builder" class="btn" style="width:75px;" onclick="open_create_builder_dialog('builder_dialog1')">
+       </label>
+       <label class="input"><span id="bcontactid1">Contact</span>
+           <input type="text" value="<?php echo isset($_POST['builder_contact1']) ? $_POST['builder_contact1'] : $BuildContact1; ?>" id="build_contact1" name="builder_contact1">
+       </label>
+       <label class="input"><span id="baddress1id1">Address 1</span>
+           <input type="text" value="<?php echo isset($_POST['baddress11']) ? $_POST['baddress11'] : $BuildAddress11; ?>" id="baddress_11" name="baddress11">
+       </label>
+       <label class="input"><span id="baddress1id1">Address 1</span>
+           <input type="text" value="<?php echo isset($_POST['baddress21']) ? $_POST['baddress21'] : $BuildAddress21; ?>" id="baddress_21" name="baddress21">
+       </label>
        <!--- Builder Suburb -->
-        <label class="input"><span id="bsuburbspan1">Suburb</span>
-          <input type="text" id="bsuburb1" name="builder_suburb1" class="bsub-class" value="<?php echo $BuildSuburb1; ?>"  onkeypress="bsuburbchange1();" />
-         </label>
-        <input type="hidden" id="bsuburb_id1" name="bsuburbid1" value="<?php echo $BuildSuburbID1; ?>" readonly />
+       <label class="input"><span id="bsuburbspan1">Suburb</span>
+           <input type="text" id="bsuburb1" name="builder_suburb1" class="bsub-class" value="<?php echo isset($_POST['builder_suburb1']) ? $_POST['builder_suburb1'] : $BuildSuburb1; ?>" onkeypress="bsuburbchange1();" />
+       </label>
+       <input type="hidden" id="bsuburb_id1" name="bsuburbid1" value="<?php echo isset($_POST['bsuburbid1']) ? $_POST['bsuburbid1'] : $BuildSuburbID1; ?>" readonly />
+       <label class="input"><span id="bstateid1">State</span>
+           <input type="text" id="bsuburbstate1" name="builder_state1" class="bstate-class" value="<?php echo isset($_POST['builder_state1']) ? $_POST['builder_state1'] : $BuildState1; ?>" readonly />
+       </label>
+       <label class="input"><span id="bpostid1">Postcode</span>
+           <input type="text" id="bsuburbpostcode1" name="builder_postcode1" class="bpost-class" value="<?php echo isset($_POST['builder_postcode1']) ? $_POST['builder_postcode1'] : $BuildPostcode1; ?>" readonly />
+       </label>
+       <!-- End of Builder Suburb -->
+       <label class="input"><span id="bwphoneid1">Work Phone</span>
+           <input type="text" class="bphone-class" value="<?php echo isset($_POST['bwphone1']) ? $_POST['bwphone1'] : $BuildWPhone1; ?>" id="b_wphone1" name="bwphone1">
+       </label>
+       <label class="input"><span id="bmobileid1">Mobile</span>
+           <input type="text" class="bmobile-class" value="<?php echo isset($_POST['bmobile1']) ? $_POST['bmobile1'] : $BuildMobile1; ?>" id="b_mobile1" name="bmobile1">
+       </label>
+       <label class="input"><span id="bfaxid1">Fax</span>
+           <input type="text" class="bfax-class" value="<?php echo isset($_POST['bfax1']) ? $_POST['bfax1'] : $BuildFax1; ?>" id="b_fax1" name="bfax1">
+       </label>
+       <label class="input"><span id="bemailid1">Email</span>
+           <input type="text" class="bemail-class" value="<?php echo isset($_POST['bemail1']) ? $_POST['bemail1'] : $BuildEmail1; ?>" id="b_email1" name="bemail1">
+       </label>
 
-        <label class="input"><span id="bstateid1">State</span>
-          <input type="text" id="bsuburbstate1" name="builder_state1" class="bstate-class" value="<?php echo $BuildState1; ?>" readonly />
-        </label>
-        <label class="input"><span id="bpostid1">Postcode</span>
-          <input type="text" id="bsuburbpostcode1" name="builder_postcode1" class="bpost-class" value="<?php echo $BuildPostcode1; ?>" readonly />
-        </label>
-         <!-- End of Builder Suburb -->
-         
-        <label class="input"><span id="bwphoneid1">Work Phone</span>
-          <input type="text" class="bphone-class" value="<?php echo $BuildWPhone1; ?>" id="b_wphone1" name="bwphone1">
-        </label>
-        <label class="input"><span id="bmobileid1">Mobile</span>
-          <input type="text" class="bmobile-class" value="<?php echo $BuildMobile1; ?>" id="b_mobile1" name="bmobile1">
-        </label>
-        <label class="input"><span id="bfaxid1">Fax</span>
-          <input type="text" class="bfax-class" value="<?php echo $BuildFax1; ?>" id="b_fax2" name="bfax2" >
-          <!-- <input type="text" class="bfax-class" value="<?php echo $BuildFax1; ?>" id="b_other1" name="bother1" > -->
-        </label>
-        <label class="input"><span id="bemailid1">Email</span>
-          <input type="text" class="bemail-class" value="<?php echo $BuildEmail1; ?>" id="b_email1" name="bemail1" >
-        </label>
-
-        <input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 395px; margin:2px 0px 5px 2px; padding: 4px;">
-    
-    </div>
-    
-    <!---------------------------------------------------- Builder 2 Tab ------------------------------------------------->
-    
-    <div id="builder2" class="tab_content"> 
-    
-    <!------------------------------------------------------- Builder 2 Details ------------------------------------------------------------>
-        
-         <label class="input" style="width:95%"><span id="bnameid2">Company Name</span>
-          <input type="text" value="<?php echo $BuildName2; ?>" id="build_name2" name="builder_name2" onkeypress="bcompanychange2();" style="width:75%;">
-          <input type="button" value="New" name="save_new_builder" class="btn"  style="width:75px;" onclick="open_create_builder_dialog('builder_dialog2')" >
-        </label>
-        <label class="input"><span id="bcontactid2">Contact</span>
-          <input type="text" value="<?php echo $BuildContact2; ?>" id="build_contact2" name="builder_contact2">
-        </label>
-        <label class="input"><span id="baddress1id2">Address 1</span>
-          <input type="text" value="<?php echo $BuildAddress12; ?>" id="baddress_12" name="baddress12">
-        </label>
-        <label class="input"><span id="baddress2id2">Address 2</span>
-          <input type="text" value="<?php echo $BuildAddress22; ?>" id="baddress_22" name="baddress22">
-        </label>
-        
+       <input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 195px; margin:1px 0px 5px 1px; padding: 4px;">    
+       
+       </div>
+       
+       <!---------------------------------------------------- Builder 2 Tab ------------------------------------------------->
+       
+       <div id="builder2" class="tab_content"> 
+       
+       <!------------------------------------------------------- Builder 2 Details ------------------------------------------------------------>
+           
+       <label class="input" style="width:95%"><span id="bnameid2">Company Name</span>
+           <input type="text" value="<?php echo isset($_POST['builder_name2']) ? $_POST['builder_name2'] : $BuildName2 ?>" id="build_name2" name="builder_name2" onkeypress="bcompanychange1();" style="width:75%;">
+           <input type="button" value="New" name="save_new_builder" class="btn" style="width:75px;" onclick="open_create_builder_dialog('builder_dialog2')">
+       </label>
+       <label class="input"><span id="bcontactid2">Contact</span>
+           <input type="text" value="<?php echo isset($_POST['builder_contact2']) ? $_POST['builder_contact2'] : $BuildContact2; ?>" id="build_contact2" name="builder_contact2">
+       </label>
+       <label class="input"><span id="baddress1id2">Address 1</span>
+           <input type="text" value="<?php echo isset($_POST['baddress12']) ? $_POST['baddress12'] : $BuildAddress12; ?>" id="baddress_12" name="baddress12">
+       </label>
+       <label class="input"><span id="baddress2id2">Address 2</span>
+           <input type="text" value="<?php echo isset($_POST['baddress22']) ? $_POST['baddress22'] : $BuildAddress22; ?>" id="baddress_22" name="baddress22">
+       </label>
        <!--- Builder Suburb -->
-        <label class="input"><span id="bsuburbspan2">Suburb</span>
-          <input type="text" id="bsuburb2" name="builder_suburb2" class="bsub-class" value="<?php echo $BuildSuburb2; ?>"  onkeypress="bsuburbchange2();" />
-         </label>
-        <input type="hidden" id="bsuburb_id2" name="bsuburbid2" value="<?php echo $BuildSuburbID2; ?>" readonly />
+       <label class="input"><span id="bsuburbspan2">Suburb</span>
+           <input type="text" id="bsuburb2" name="builder_suburb2" class="bsub-class" value="<?php echo isset($_POST['builder_suburb2']) ? $_POST['builder_suburb2'] : $BuildSuburb2; ?>" onkeypress="bsuburbchange2();" />
+       </label>
+       <input type="hidden" id="bsuburb_id2" name="bsuburbid2" value="<?php echo isset($_POST['bsuburbid2']) ? $_POST['bsuburbid2'] : $BuildSuburbID2; ?>" readonly />
+       <label class="input"><span id="bstateid2">State</span>
+           <input type="text" id="bsuburbstate2" name="builder_state2" class="bstate-class" value="<?php echo isset($_POST['builder_state2']) ? $_POST['builder_state2'] : $BuildState2; ?>" readonly />
+       </label>
+       <label class="input"><span id="bpostid2">Postcode</span>
+           <input type="text" id="bsuburbpostcode2" name="builder_postcode2" class="bpost-class" value="<?php echo isset($_POST['builder_postcode2']) ? $_POST['builder_postcode2'] : $BuildPostcode2; ?>" readonly />
+       </label>
+       <!-- End of Builder Suburb -->
+       <label class="input"><span id="bwphoneid2">Work Phone</span>
+           <input type="text" class="bphone-class" value="<?php echo isset($_POST['bwphone2']) ? $_POST['bwphone2'] : $BuildWPhone2; ?>" id="b_wphone2" name="bwphone2">
+       </label>
+       <label class="input"><span id="bmobileid2">Mobile</span>
+           <input type="text" class="bmobile-class" value="<?php echo isset($_POST['bmobile2']) ? $_POST['bmobile2'] : $BuildMobile2; ?>" id="b_mobile2" name="bmobile2">
+       </label>
+       <label class="input"><span id="bfaxid2">Fax</span>
+           <input type="text" class="bfax-class" value="<?php echo isset($_POST['bfax2']) ? $_POST['bfax2'] : $BuildFax2; ?>" id="b_fax2" name="bfax2">
+       </label>
+       <label class="input"><span id="bemailid2">Email</span>
+           <input type="text" class="bemail-class" value="<?php echo isset($_POST['bemail2']) ? $_POST['bemail2'] : $BuildEmail2; ?>" id="b_email2" name="bemail2">
+       </label>
 
-        <label class="input"><span id="bstateid2">State</span>
-          <input type="text" id="bsuburbstate2" name="builder_state2" class="bstate-class" value="<?php echo $BuildState2; ?>" readonly />
-        </label>
-        <label class="input"><span id="bpostid2">Postcode</span>
-          <input type="text" id="bsuburbpostcode2" name="builder_postcode2" class="bpost-class" value="<?php echo $BuildPostcode2; ?>" readonly />
-        </label>
-         <!-- End of Builder Suburb -->
-         
-        <label class="input"><span id="bwphoneid2">Work Phone</span>
-          <input type="text" class="bphone-class" value="<?php echo $BuildWPhone2; ?>" id="b_wphone2" name="bwphone2">
-        </label>
-        <label class="input"><span id="bmobileid2">Mobile</span>
-          <input type="text" class="bmobile-class" value="<?php echo $BuildMobile2; ?>" id="b_mobile2" name="bmobile2">
-        </label>
-        <label class="input"><span id="bfaxid2">Fax</span>
-          <input type="text" class="bfax-class" value="<?php echo $BuildFax2; ?>" id="b_fax2" name="bfax2" >
-        </label>
-        <label class="input"><span id="bemailid2">Email</span>
-          <input type="text" class="bemail-class" value="<?php echo $BuildEmail2; ?>" id="b_email2" name="bemail2" >
-        </label>
-    	
-    	<input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 395px; margin:2px 0px 5px 2px; padding: 4px;">
-        
-    </div>
-    
-    <!---------------------------------------------------- Builder 3 Tab ------------------------------------------------->
-    
-    <div id="builder3" class="tab_content"> 
-    
-    <!------------------------------------------------------- Builder 3 Details ------------------------------------------------------------>
-        
-        <label class="input" style="width:95%"><span id="bnameid3">Company Name</span>
-          <input type="text" value="<?php echo $BuildName3; ?>" id="build_name3" name="builder_name3" onkeypress="bcompanychange3();" style="width:75%;"  >
-          <input type="button" value="New" name="save_new_builder" class="btn"  style="width:75px;" onclick="open_create_builder_dialog('builder_dialog3')" >
-        </label>
-        <label class="input"><span id="bcontactid3">Contact</span>
-          <input type="text" value="<?php echo $BuildContact3; ?>" id="build_contact3" name="builder_contact3">
-        </label>
-        <label class="input"><span id="baddress1id3">Address 1</span>
-          <input type="text" value="<?php echo $BuildAddress13; ?>" id="baddress_13" name="baddress13">
-        </label>
-        <label class="input"><span id="baddress2id3">Address 2</span>
-          <input type="text" value="<?php echo $BuildAddress23; ?>" id="baddress_23" name="baddress23">
-        </label>
-        
+       <input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 295px; margin:2px 0px 5px 2px; padding: 4px;">    
+           
+       </div>
+       
+       <!---------------------------------------------------- Builder 3 Tab ------------------------------------------------->
+       
+       <div id="builder3" class="tab_content"> 
+       
+       <!------------------------------------------------------- Builder 3 Details ------------------------------------------------------------>
+       <label class="input" style="width:95%"><span id="bnameid3">Company Name</span>
+           <input type="text" value="<?php echo isset($_POST['builder_name3']) ? $_POST['builder_name3'] : $BuildName3 ?>" id="build_name3" name="builder_name3" onkeypress="bcompanychange1();" style="width:75%;">
+           <input type="button" value="New" name="save_new_builder" class="btn" style="width:75px;" onclick="open_create_builder_dialog('builder_dialog3')">
+       </label>
+       <label class="input"><span id="bcontactid3">Contact</span>
+           <input type="text" value="<?php echo isset($_POST['builder_contact3']) ? $_POST['builder_contact3'] : $BuildContact3; ?>" id="build_contact3" name="builder_contact3">
+       </label>
+       <label class="input"><span id="baddress1id3">Address 1</span>
+           <input type="text" value="<?php echo isset($_POST['baddress13']) ? $_POST['baddress13'] : $BuildAddress13; ?>" id="baddress_13" name="baddress13">
+       </label>
+       <label class="input"><span id="baddress3id3">Address 3</span>
+           <input type="text" value="<?php echo isset($_POST['baddress23']) ? $_POST['baddress23'] : $BuildAddress23; ?>" id="baddress_23" name="baddress23">
+       </label>
        <!--- Builder Suburb -->
-        <label class="input"  ><span id="bsuburbspan3">Suburb</span>
-          <input type="text" id="bsuburb3" name="builder_suburb3" class="bsub-class" value="<?php echo $BuildSuburb3; ?>"  onkeypress="bsuburbchange3();" style="width:75px;"  /> 
-        </label>
-        <input type="hidden" id="bsuburb_id3" name="bsuburbid3" value="<?php echo $BuildSuburbID3; ?>" readonly />
+       <label class="input"><span id="bsuburbspan3">Suburb</span>
+           <input type="text" id="bsuburb3" name="builder_suburb3" class="bsub-class" value="<?php echo isset($_POST['builder_suburb3']) ? $_POST['builder_suburb3'] : $BuildSuburb3; ?>" onkeypress="bsuburbchange3();" />
+       </label>
+       <input type="hidden" id="bsuburb_id3" name="bsuburbid3" value="<?php echo isset($_POST['bsuburbid3']) ? $_POST['bsuburbid3'] : $BuildSuburbID3; ?>" readonly />
+       <label class="input"><span id="bstateid3">State</span>
+           <input type="text" id="bsuburbstate3" name="builder_state3" class="bstate-class" value="<?php echo isset($_POST['builder_state3']) ? $_POST['builder_state3'] : $BuildState3; ?>" readonly />
+       </label>
+       <label class="input"><span id="bpostid3">Postcode</span>
+           <input type="text" id="bsuburbpostcode3" name="builder_postcode3" class="bpost-class" value="<?php echo isset($_POST['builder_postcode3']) ? $_POST['builder_postcode3'] : $BuildPostcode3; ?>" readonly />
+       </label>
+       <!-- End of Builder Suburb -->
+       <label class="input"><span id="bwphoneid3">Work Phone</span>
+           <input type="text" class="bphone-class" value="<?php echo isset($_POST['bwphone3']) ? $_POST['bwphone3'] : $BuildWPhone3; ?>" id="b_wphone3" name="bwphone3">
+       </label>
+       <label class="input"><span id="bmobileid3">Mobile</span>
+           <input type="text" class="bmobile-class" value="<?php echo isset($_POST['bmobile3']) ? $_POST['bmobile3'] : $BuildMobile3; ?>" id="b_mobile3" name="bmobile3">
+       </label>
+       <label class="input"><span id="bfaxid3">Fax</span>
+           <input type="text" class="bfax-class" value="<?php echo isset($_POST['bfax3']) ? $_POST['bfax3'] : $BuildFax3; ?>" id="b_fax3" name="bfax3">
+       </label>
+       <label class="input"><span id="bemailid3">Email</span>
+           <input type="text" class="bemail-class" value="<?php echo isset($_POST['bemail3']) ? $_POST['bemail3'] : $BuildEmail3; ?>" id="b_email3" name="bemail3">
+       </label>
 
-        <label class="input"><span id="bstateid3">State</span>
-          <input type="text" id="bsuburbstate3" name="builder_state3" class="bstate-class" value="<?php echo $BuildState3; ?>" readonly />
-        </label>
-        <label class="input"><span id="bpostid3">Postcode</span>
-          <input type="text" id="bsuburbpostcode3" name="builder_postcode3" class="bpost-class" value="<?php echo $BuildPostcode3; ?>" readonly />
-        </label>
-         <!-- End of Builder Suburb -->
-         
-        <label class="input"><span id="bwphoneid3">Work Phone</span>
-          <input type="text" class="bphone-class" value="<?php echo $BuildWPhone3; ?>" id="b_wphone3" name="bwphone3">
-        </label>
-        <label class="input"><span id="bmobileid3">Mobile</span>
-          <input type="text" class="bmobile-class" value="<?php echo $BuildMobile3; ?>" id="b_mobile3" name="bmobile3">
-        </label>
-        <label class="input"><span id="bfaxid3">Fax</span>
-          <input type="text" class="bfax-class" value="<?php echo $BuildFax3; ?>" id="b_fax3" name="bfax3" >
-        </label>
-        <label class="input"><span id="bemailid3">Email</span>
-          <input type="text" class="bemail-class" value="<?php echo $BuildEmail3; ?>" id="b_email3" name="bemail3" >
-        </label>
+       <input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 395px; margin:3px 0px 5px 3px; padding: 4px;">    
+       
+       </div>
+       
+       <!---------------------------------------------------- Builder 4 Tab ------------------------------------------------>
+       
+       <div id="builder4" class="tab_content"> 
+       
+       	<label class="input" style="width:95%"><span id="bnameid4">Company Name</span>
+       	    <input type="text" value="<?php echo isset($_POST['builder_name4']) ? $_POST['builder_name4'] : $BuildName4 ?>" id="build_name4" name="builder_name4" onkeypress="bcompanychange1();" style="width:75%;">
+       	    <input type="button" value="New" name="save_new_builder" class="btn" style="width:75px;" onclick="open_create_builder_dialog('builder_dialog4')">
+       	</label>
+       	<label class="input"><span id="bcontactid4">Contact</span>
+       	    <input type="text" value="<?php echo isset($_POST['builder_contact4']) ? $_POST['builder_contact4'] : $BuildContact4; ?>" id="build_contact4" name="builder_contact4">
+       	</label>
+       	<label class="input"><span id="baddress1id4">Address 1</span>
+       	    <input type="text" value="<?php echo isset($_POST['baddress14']) ? $_POST['baddress14'] : $BuildAddress14; ?>" id="baddress_14" name="baddress14">
+       	</label>
+       	<label class="input"><span id="baddress4id4">Address 4</span>
+       	    <input type="text" value="<?php echo isset($_POST['baddress24']) ? $_POST['baddress24'] : $BuildAddress24; ?>" id="baddress_24" name="baddress24">
+       	</label>
+       	<!--- Builder Suburb -->
+       	<label class="input"><span id="bsuburbspan4">Suburb</span>
+       	    <input type="text" id="bsuburb4" name="builder_suburb4" class="bsub-class" value="<?php echo isset($_POST['builder_suburb4']) ? $_POST['builder_suburb4'] : $BuildSuburb4; ?>" onkeypress="bsuburbchange4();" />
+       	</label>
+       	<input type="hidden" id="bsuburb_id4" name="bsuburbid4" value="<?php echo isset($_POST['bsuburbid4']) ? $_POST['bsuburbid4'] : $BuildSuburbID4; ?>" readonly />
+       	<label class="input"><span id="bstateid4">State</span>
+       	    <input type="text" id="bsuburbstate4" name="builder_state4" class="bstate-class" value="<?php echo isset($_POST['builder_state4']) ? $_POST['builder_state4'] : $BuildState4; ?>" readonly />
+       	</label>
+       	<label class="input"><span id="bpostid4">Postcode</span>
+       	    <input type="text" id="bsuburbpostcode4" name="builder_postcode4" class="bpost-class" value="<?php echo isset($_POST['builder_postcode4']) ? $_POST['builder_postcode4'] : $BuildPostcode4; ?>" readonly />
+       	</label>
+       	<!-- End of Builder Suburb -->
+       	<label class="input"><span id="bwphoneid4">Work Phone</span>
+       	    <input type="text" class="bphone-class" value="<?php echo isset($_POST['bwphone4']) ? $_POST['bwphone4'] : $BuildWPhone4; ?>" id="b_wphone4" name="bwphone4">
+       	</label>
+       	<label class="input"><span id="bmobileid4">Mobile</span>
+       	    <input type="text" class="bmobile-class" value="<?php echo isset($_POST['bmobile4']) ? $_POST['bmobile4'] : $BuildMobile4; ?>" id="b_mobile4" name="bmobile4">
+       	</label>
+       	<label class="input"><span id="bfaxid4">Fax</span>
+       	    <input type="text" class="bfax-class" value="<?php echo isset($_POST['bfax4']) ? $_POST['bfax4'] : $BuildFax4; ?>" id="b_fax4" name="bfax4">
+       	</label>
+       	<label class="input"><span id="bemailid4">Email</span>
+       	    <input type="text" class="bemail-class" value="<?php echo isset($_POST['bemail4']) ? $_POST['bemail4'] : $BuildEmail4; ?>" id="b_email4" name="bemail4">
+       	</label>
 
-        <input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none;  width: 395px; margin:2px 0px 5px 2px; padding: 4px;">
-    
-    </div>
-    
-    <!---------------------------------------------------- Builder 4 Tab ------------------------------------------------>
-    
-    <div id="builder4" class="tab_content"> 
-    
-    <label class="input" style="width:95%"><span id="bnameid4">Company Name</span>
-          <input type="text" value="<?php echo $BuildName4; ?>" id="build_name4" name="builder_name4" onkeypress="bcompanychange4();" style="width:75%;">
-          <input type="button" value="New" name="save_new_builder" class="btn"  style="width:75px;" onclick="open_create_builder_dialog('builder_dialog4')" >
-        </label>
-        <label class="input"><span id="bcontactid4">Contact</span>
-          <input type="text" value="<?php echo $BuildContact4; ?>" id="build_contact4" name="builder_contact4">
-        </label>
-        <label class="input"><span id="baddress1id4">Address 1</span>
-          <input type="text" value="<?php echo $BuildAddress14; ?>" id="baddress_14" name="baddress14">
-        </label>
-        <label class="input"><span id="baddress2id4">Address 2</span>
-          <input type="text" value="<?php echo $BuildAddress24; ?>" id="baddress_24" name="baddress24">
-        </label>
-        
-       <!--- Builder Suburb -->
-        <label class="input"><span id="bsuburbspan4">Suburb</span>
-          <input type="text" id="bsuburb4" name="builder_suburb4" class="bsub-class" value="<?php echo $BuildSuburb4; ?>"  onkeypress="bsuburbchange4();" />
-         </label>
-        <input type="hidden" id="bsuburb_id4" name="bsuburbid4" value="<?php echo $BuildSuburbID4; ?>" readonly />
+       	<input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 495px; margin:4px 0px 5px 4px; padding: 4px;">    
+       </div>
+       
+       <!---------------------------------------------------- Builder 5 Tab ------------------------------------------------>
+       
+       <div id="builder5" class="tab_content"> 
+       
+       	<label class="input" style="width:95%"><span id="bnameid5">Company Name</span>
+       	    <input type="text" value="<?php echo isset($_POST['builder_name5']) ? $_POST['builder_name5'] : $BuildName5 ?>" id="build_name5" name="builder_name5" onkeypress="bcompanychange1();" style="width:75%;">
+       	    <input type="button" value="New" name="save_new_builder" class="btn" style="width:75px;" onclick="open_create_builder_dialog('builder_dialog5')">
+       	</label>
+       	<label class="input"><span id="bcontactid5">Contact</span>
+       	    <input type="text" value="<?php echo isset($_POST['builder_contact5']) ? $_POST['builder_contact5'] : $BuildContact5; ?>" id="build_contact5" name="builder_contact5">
+       	</label>
+       	<label class="input"><span id="baddress1id5">Address 1</span>
+       	    <input type="text" value="<?php echo isset($_POST['baddress15']) ? $_POST['baddress15'] : $BuildAddress15; ?>" id="baddress_15" name="baddress15">
+       	</label>
+       	<label class="input"><span id="baddress5id5">Address 5</span>
+       	    <input type="text" value="<?php echo isset($_POST['baddress25']) ? $_POST['baddress25'] : $BuildAddress25; ?>" id="baddress_25" name="baddress25">
+       	</label>
+       	<!--- Builder Suburb -->
+       	<label class="input"><span id="bsuburbspan5">Suburb</span>
+       	    <input type="text" id="bsuburb5" name="builder_suburb5" class="bsub-class" value="<?php echo isset($_POST['builder_suburb5']) ? $_POST['builder_suburb5'] : $BuildSuburb5; ?>" onkeypress="bsuburbchange5();" />
+       	</label>
+       	<input type="hidden" id="bsuburb_id5" name="bsuburbid5" value="<?php echo isset($_POST['bsuburbid5']) ? $_POST['bsuburbid5'] : $BuildSuburbID5; ?>" readonly />
+       	<label class="input"><span id="bstateid5">State</span>
+       	    <input type="text" id="bsuburbstate5" name="builder_state5" class="bstate-class" value="<?php echo isset($_POST['builder_state5']) ? $_POST['builder_state5'] : $BuildState5; ?>" readonly />
+       	</label>
+       	<label class="input"><span id="bpostid5">Postcode</span>
+       	    <input type="text" id="bsuburbpostcode5" name="builder_postcode5" class="bpost-class" value="<?php echo isset($_POST['builder_postcode5']) ? $_POST['builder_postcode5'] : $BuildPostcode5; ?>" readonly />
+       	</label>
+       	<!-- End of Builder Suburb -->
+       	<label class="input"><span id="bwphoneid5">Work Phone</span>
+       	    <input type="text" class="bphone-class" value="<?php echo isset($_POST['bwphone5']) ? $_POST['bwphone5'] : $BuildWPhone5; ?>" id="b_wphone5" name="bwphone5">
+       	</label>
+       	<label class="input"><span id="bmobileid5">Mobile</span>
+       	    <input type="text" class="bmobile-class" value="<?php echo isset($_POST['bmobile5']) ? $_POST['bmobile5'] : $BuildMobile5; ?>" id="b_mobile5" name="bmobile5">
+       	</label>
+       	<label class="input"><span id="bfaxid5">Fax</span>
+       	    <input type="text" class="bfax-class" value="<?php echo isset($_POST['bfax5']) ? $_POST['bfax5'] : $BuildFax5; ?>" id="b_fax5" name="bfax5">
+       	</label>
+       	<label class="input"><span id="bemailid5">Email</span>
+       	    <input type="text" class="bemail-class" value="<?php echo isset($_POST['bemail5']) ? $_POST['bemail5'] : $BuildEmail5; ?>" id="b_email5" name="bemail5">
+       	</label>
 
-        <label class="input"><span id="bstateid4">State</span>
-          <input type="text" id="bsuburbstate4" name="builder_state4" class="bstate-class" value="<?php echo $BuildState4; ?>" readonly />
-        </label>
-        <label class="input"><span id="bpostid4">Postcode</span>
-          <input type="text" id="bsuburbpostcode4" name="builder_postcode4" class="bpost-class" value="<?php echo $BuildPostcode4; ?>" readonly />
-        </label>
-         <!-- End of Builder Suburb -->
-         
-        <label class="input"><span id="bwphoneid4">Work Phone</span>
-          <input type="text" class="bphone-class" value="<?php echo $BuildWPhone4; ?>" id="b_wphone4" name="bwphone4">
-        </label>
-        <label class="input"><span id="bmobileid4">Mobile</span>
-          <input type="text" class="bmobile-class" value="<?php echo $BuildMobile4; ?>" id="b_mobile4" name="bmobile4">
-        </label>
-        <label class="input"><span id="bfaxid4">Fax</span>
-          <input type="text" class="bfax-class" value="<?php echo $BuildFax4; ?>" id="b_fax4" name="bfax4" >
-        </label>
-        <label class="input"><span id="bemailid4">Email</span>
-          <input type="text" class="bemail-class" value="<?php echo $BuildEmail4; ?>" id="b_email4" name="bemail4" >
-        </label>
+       	<input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 595px; margin:5px 0px 5px 5px; padding: 4px;">    
+       
+       </div>
+       
+        <!---------------------------------------------------- Builder 6 Tab ------------------------------------------------>
+       
+       <div id="builder6" class="tab_content"> 
+       	<label class="input" style="width:95%"><span id="bnameid6">Company Name</span>
+       	    <input type="text" value="<?php echo isset($_POST['builder_name6']) ? $_POST['builder_name6'] : $BuildName6 ?>" id="build_name6" name="builder_name6" onkeypress="bcompanychange1();" style="width:75%;">
+       	    <input type="button" value="New" name="save_new_builder" class="btn" style="width:75px;" onclick="open_create_builder_dialog('builder_dialog6')">
+       	</label>
+       	<label class="input"><span id="bcontactid6">Contact</span>
+       	    <input type="text" value="<?php echo isset($_POST['builder_contact6']) ? $_POST['builder_contact6'] : $BuildContact6; ?>" id="build_contact6" name="builder_contact6">
+       	</label>
+       	<label class="input"><span id="baddress1id6">Address 1</span>
+       	    <input type="text" value="<?php echo isset($_POST['baddress16']) ? $_POST['baddress16'] : $BuildAddress16; ?>" id="baddress_16" name="baddress16">
+       	</label>
+       	<label class="input"><span id="baddress6id6">Address 6</span>
+       	    <input type="text" value="<?php echo isset($_POST['baddress26']) ? $_POST['baddress26'] : $BuildAddress26; ?>" id="baddress_26" name="baddress26">
+       	</label>
+       	<!--- Builder Suburb -->
+       	<label class="input"><span id="bsuburbspan6">Suburb</span>
+       	    <input type="text" id="bsuburb6" name="builder_suburb6" class="bsub-class" value="<?php echo isset($_POST['builder_suburb6']) ? $_POST['builder_suburb6'] : $BuildSuburb6; ?>" onkeypress="bsuburbchange6();" />
+       	</label>
+       	<input type="hidden" id="bsuburb_id6" name="bsuburbid6" value="<?php echo isset($_POST['bsuburbid6']) ? $_POST['bsuburbid6'] : $BuildSuburbID6; ?>" readonly />
+       	<label class="input"><span id="bstateid6">State</span>
+       	    <input type="text" id="bsuburbstate6" name="builder_state6" class="bstate-class" value="<?php echo isset($_POST['builder_state6']) ? $_POST['builder_state6'] : $BuildState6; ?>" readonly />
+       	</label>
+       	<label class="input"><span id="bpostid6">Postcode</span>
+       	    <input type="text" id="bsuburbpostcode6" name="builder_postcode6" class="bpost-class" value="<?php echo isset($_POST['builder_postcode6']) ? $_POST['builder_postcode6'] : $BuildPostcode6; ?>" readonly />
+       	</label>
+       	<!-- End of Builder Suburb -->
+       	<label class="input"><span id="bwphoneid6">Work Phone</span>
+       	    <input type="text" class="bphone-class" value="<?php echo isset($_POST['bwphone6']) ? $_POST['bwphone6'] : $BuildWPhone6; ?>" id="b_wphone6" name="bwphone6">
+       	</label>
+       	<label class="input"><span id="bmobileid6">Mobile</span>
+       	    <input type="text" class="bmobile-class" value="<?php echo isset($_POST['bmobile6']) ? $_POST['bmobile6'] : $BuildMobile6; ?>" id="b_mobile6" name="bmobile6">
+       	</label>
+       	<label class="input"><span id="bfaxid6">Fax</span>
+       	    <input type="text" class="bfax-class" value="<?php echo isset($_POST['bfax6']) ? $_POST['bfax6'] : $BuildFax6; ?>" id="b_fax6" name="bfax6">
+       	</label>
+       	<label class="input"><span id="bemailid6">Email</span>
+       	    <input type="text" class="bemail-class" value="<?php echo isset($_POST['bemail6']) ? $_POST['bemail6'] : $BuildEmail6; ?>" id="b_email6" name="bemail6">
+       	</label>
 
-        <input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none;  width: 395px; margin:2px 0px 5px 2px; padding: 4px;">
-    </div>
-    
-    <!---------------------------------------------------- Builder 5 Tab ------------------------------------------------>
-    
-    <div id="builder5" class="tab_content"> 
-    
-    <label class="input" style="width:95%"><span id="bnameid5">Company Name</span>
-          <input type="text" value="<?php echo $BuildName5; ?>" id="build_name5" name="builder_name5" onkeypress="bcompanychange5();" style="width:75%;">
-          <input type="button" value="New" name="save_new_builder" class="btn"  style="width:75px;" onclick="open_create_builder_dialog('builder_dialog5')" >
-        </label>
-        <label class="input"><span id="bcontactid5">Contact</span>
-          <input type="text" value="<?php echo $BuildContact5; ?>" id="build_contact5" name="builder_contact5">
-        </label>
-        <label class="input"><span id="baddress1id5">Address 1</span>
-          <input type="text" value="<?php echo $BuildAddress15; ?>" id="baddress_15" name="baddress15">
-        </label>
-        <label class="input"><span id="baddress2id5">Address 2</span>
-          <input type="text" value="<?php echo $BuildAddress25; ?>" id="baddress_25" name="baddress25">
-        </label>
-        
-       <!--- Builder Suburb -->
-        <label class="input"><span id="bsuburbspan5">Suburb</span>
-          <input type="text" id="bsuburb5" name="builder_suburb5" class="bsub-class" value="<?php echo $BuildSuburb5; ?>"  onkeypress="bsuburbchange5();" />
-         </label>
-        <input type="hidden" id="bsuburb_id5" name="bsuburbid5" value="<?php echo $BuildSuburbID5; ?>" readonly />
+       	<input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 695px; margin:6px 0px 5px 6px; padding: 4px;">    
+       
+       </div>
+       
+       <!----------------------------------------- End of Builder Tab Content -------------------------------------------------->
+       
 
-        <label class="input"><span id="bstateid5">State</span>
-          <input type="text" id="bsuburbstate5" name="builder_state5" class="bstate-class" value="<?php echo $BuildState5; ?>" readonly />
-        </label>
-        <label class="input"><span id="bpostid5">Postcode</span>
-          <input type="text" id="bsuburbpostcode5" name="builder_postcode5" class="bpost-class" value="<?php echo $BuildPostcode5; ?>" readonly />
-        </label>
-         <!-- End of Builder Suburb -->
-         
-        <label class="input"><span id="bwphoneid5">Work Phone</span>
-          <input type="text" class="bphone-class" value="<?php echo $BuildWPhone5; ?>" id="b_wphone5" name="bwphone5">
-        </label>
-        <label class="input"><span id="bmobileid5">Mobile</span>
-          <input type="text" class="bmobile-class" value="<?php echo $BuildMobile5; ?>" id="b_mobile5" name="bmobile5">
-        </label>
-        <label class="input"><span id="bfaxid5">Fax</span>
-          <input type="text" class="bfax-class" value="<?php echo $BuildFax5; ?>" id="b_fax5" name="bfax5" >
-        </label>
-        <label class="input"><span id="bemailid5">Email</span>
-          <input type="text" class="bemail-class" value="<?php echo $BuildEmail5; ?>" id="b_email5" name="bemail5" >
-        </label>
+     </div>
+   </div>
 
-        <input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 395px; margin:2px 0px 5px 2px; padding: 4px;">
-    
-    </div>
-    
-     <!---------------------------------------------------- Builder 6 Tab ------------------------------------------------>
-    
-    <div id="builder6" class="tab_content"> 
-    <label class="input" style="width:95%"><span id="bnameid6">Company Name</span>
-          <input type="text" value="<?php echo $BuildName6; ?>" id="build_name6" name="builder_name6" onkeypress="bcompanychange6();" style="width:75%;" >
-          <input type="button" value="New" name="save_new_builder" class="btn"  style="width:75px;" onclick="open_create_builder_dialog('builder_dialog6')" >
-        </label>
-        <label class="input"><span id="bcontactid6">Contact</span>
-          <input type="text" value="<?php echo $BuildContact6; ?>" id="build_contact6" name="builder_contact6">
-        </label>
-        <label class="input"><span id="baddress1id6">Address 1</span>
-          <input type="text" value="<?php echo $BuildAddress16; ?>" id="baddress_16" name="baddress16">
-        </label>
-        <label class="input"><span id="baddress2id6">Address 2</span>
-          <input type="text" value="<?php echo $BuildAddress26; ?>" id="baddress_26" name="baddress26">
-        </label>
-        
-       <!--- Builder Suburb -->
-        <label class="input"><span id="bsuburbspan6">Suburb</span>
-          <input type="text" id="bsuburb6" name="builder_suburb6" class="bsub-class" value="<?php echo $BuildSuburb6; ?>"  onkeypress="bsuburbchange6();" />
-         </label>
-        <input type="hidden" id="bsuburb_id6" name="bsuburbid6" value="<?php echo $BuildSuburbID6; ?>" readonly />
 
-        <label class="input"><span id="bstateid6">State</span>
-          <input type="text" id="bsuburbstate6" name="builder_state6" class="bstate-class" value="<?php echo $BuildState6; ?>" readonly />
-        </label>
-        <label class="input"><span id="bpostid6">Postcode</span>
-          <input type="text" id="bsuburbpostcode6" name="builder_postcode6" class="bpost-class" value="<?php echo $BuildPostcode6; ?>" readonly />
-        </label>
-         <!-- End of Builder Suburb -->
-         
-        <label class="input"><span id="bwphoneid6">Work Phone</span>
-          <input type="text" class="bphone-class" value="<?php echo $BuildWPhone6; ?>" id="b_wphone6" name="bwphone6">
-        </label>
-        <label class="input"><span id="bmobileid6">Mobile</span>
-          <input type="text" class="bmobile-class" value="<?php echo $BuildMobile6; ?>" id="b_mobile6" name="bmobile6">
-        </label>
-        <label class="input"><span id="bfaxid6">Fax</span>
-          <input type="text" class="bfax-class" value="<?php echo $BuildFax6; ?>" id="b_fax6" name="bfax6" >
-        </label>
-        <label class="input"><span id="bemailid6">Email</span>
-          <input type="text" class="bemail-class" value="<?php echo $BuildEmail6; ?>" id="b_email6" name="bemail6" >
-        </label>
-
-        <input type="submit" value="Save Builder" id="" name="save_choosen_builder" class="btn" style="display:none; width: 395px; margin:2px 0px 5px 2px; padding: 4px;">
-    
-    </div>
-    
-    <!----------------------------------------- End of Builder Tab Content -------------------------------------------------->
-    
-
-  </div>
-</div>
  
 
 
