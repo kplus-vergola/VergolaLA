@@ -2018,8 +2018,8 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
             //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
             echo $construction_kpi;
 
-            // echo "<br/><br/><br/><br/>"; 
-            // echo $contracts_weekly_report_table;
+            echo "<br/><br/><br/><br/>"; 
+            echo $contracts_weekly_report_table;
           
             echo "<br/><br/><br/><br/>";
             echo $installer_calendar;
