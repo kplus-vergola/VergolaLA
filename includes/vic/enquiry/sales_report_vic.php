@@ -1034,7 +1034,7 @@ include('sales_summary/main.php');
  		//----------------CONTRUCTION SUMMARY TABLE -----------------
  		$kpi_table_manager = "";
         $kpi_table_manager .= "
-        <h3 style='margin:10px 0 0 0; text-decoration:underline; '><span>Contract Summary</span> 
+        <h3 style='margin:10px 0 0 0; text-decoration:underline; '><span>Contract Summary</span>
 		<span style='float:right; margin-right:47%; text-decoration: underline;'>Construction KPI</span></h3> <br/>
         <ul  class='list-table kpi-table'  style='margin:0 0% 0 0; width:43%; display:inline-block;vertical-align: top; font-size:12px; '>
         ";
@@ -1064,9 +1064,9 @@ include('sales_summary/main.php');
         if($interval->format('%m')>1){ //
             //error_log(" target_month1: ".$rContracts['target_month']." date1: ".date('F Y'), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
      		//for($k=11;$k>=1;$k--){ //Run this script only for 1st time to fill up the tblcontractsummary.
-         	
+
 //START (Moved Insert function to scheduler)
-			
+
 			// for($k=0;$k>=0;$k--){
          		// $cdate = new DateTime('first day of previous month');
          		// //$_target_month = date("Y-m-01", strtotime("-1 months"));
@@ -1102,28 +1102,28 @@ include('sales_summary/main.php');
 				// echo $qContracts;
 
             // }
-			
+
 //BEGIN (Moved Insert function to scheduler)
-			
+
         }
 
 					 // COUNT(cf_id) as no_contract,
 					 // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$current_month}') AND LAST_DAY('{$current_month}')) AS no_contract,
 					 // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$cdate}') AND LAST_DAY('{$target_date}')) AS no_contract,
-					
+
         $cdate = new DateTime('first day of this month');
         date_sub($cdate, date_interval_create_from_date_string($k.' months'));
         $target_date = date_format($cdate, 'Y-m-d');
         $mDate = date_format($cdate, 'F Y');
 
-		
+
 		//alert($target_date);
 
         $sql = "SELECT
-                    '{$target_date}' as target_month,                    					
+                    '{$target_date}' as target_month,
 					-- (SELECT COUNT(cf_id)) AS no_contract,
 					(SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 1 MONTH) AND LAST_DAY('{$target_date}')) AS no_contract,
-					
+
 					COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
                 	COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
                     COUNT(IFNULL(drawing_approve_date, 1))-IF(drawing_approve_date = NULL,false,COUNT(drawing_approve_date)) as no_drawing_approve,
@@ -1143,14 +1143,14 @@ include('sales_summary/main.php');
                         ) AS t";
         //error_log(" Construction KPI sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
         $cContracts = mysql_query($sql);
-		
 
-        $sql = "SELECT DATE_FORMAT(target_month,'%M %Y') AS target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete  
+
+        $sql = "SELECT DATE_FORMAT(target_month,'%M %Y') AS target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete
 					FROM tblcontractsummary ORDER BY id desc LIMIT 10";
 
         $qContracts = mysql_query($sql);
 
-		
+
         $i=0;
         while ($r = mysql_fetch_assoc($qContracts)){ //-- Start of while for montly
      	//for($k=0;$k<12;$k++){ //Latest on the top
@@ -1461,101 +1461,83 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
         //------------- CONTRACT WEEKLY SUMMARY REPORT ---------------------- -->
 
-        
-        $contracts_weekly_report_table = "";
-      
-            $contracts_weekly_report_table .= "<table id='' class='update-table' style='width:48%;  display:inline-block;vertical-align: top; font-size:12px; text-align:center; '>";
+          // $connect = mysqli_connect("localhost", "root", "", "vergola_quotedb_v5_us_as_live");
+          $connect = mysqli_connect("localhost", "root", "pass123", "vergola_quotedb_v5_us_as_live");
+          $contracts_weekly_report_table = '';
+          $sql = "SELECT
+                 cp.clientid,
+                 cv.schedule_completion,
+                 cv.weekly_target_amount,
+                 cv.weekly_working_days,
+                 DATE_FORMAT( cv.schedule_completion, '%V' ) AS numberWeeks,
+                 DATE_FORMAT( cv.schedule_completion, '%V' ) AS id,
+                 DATE_FORMAT( cv.schedule_completion, '%Y' ) AS numberYear,
+                 CONCAT(DATE_FORMAT(SUBDATE(schedule_completion, dayofweek(schedule_completion) - 1),'%Y/%d'), '  -  ' ,DATE_FORMAT(SUBDATE(schedule_completion, dayofweek(schedule_completion) - 7),'%Y/%d')) AS weekly_period,
+                 COUNT(DATE_FORMAT(cv.schedule_completion, '%Y-%V')) AS numberofjobs,
 
-            $sql = "SELECT          
-                        cp.clientid,                    
-                        cv.schedule_completion,     
-                        COUNT(DATE_FORMAT(cv.schedule_completion, '%Y-%V')) AS numberofjobs,
-                        SUM(c.total_cost) AS total_cost_per_week            
-                    FROM
-                        ver_chronoforms_data_contract_vergola_vic AS cv
-                        JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid = cv.projectid
-                        JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid = cv.quoteid 
-                    WHERE
-                        (
-                        cv.schedule_completion BETWEEN CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-'), '01') 
-                        AND CONCAT(
-                        DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-'),
-                        DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 1 MONTH))) 
-                        ) 
-                        ) 
-                        OR (
-                        cv.schedule_completion BETWEEN CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 0 MONTH), '%Y-%m-'), '01') 
-                        AND CONCAT(DATE_FORMAT(NOW(), '%Y-%m-'), DAY(LAST_DAY(NOW()))) 
-                        )
-                        AND cv.erectors_name != '' 
-                        AND cv.schedule_completion IS NOT NULL 
-                    GROUP BY
-                        DATE_FORMAT(cv.schedule_completion, '%Y-%m'),       
-                        DATE_FORMAT(cv.schedule_completion, '%Y-%V')
-                    ORDER BY
-                        cv.schedule_completion";
+                 SUM(c.total_cost) AS total_cost_per_week
+               FROM
+                 ver_chronoforms_data_contract_vergola_vic AS cv
+                 JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid = cv.projectid
+                 JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid = cv.quoteid
+               WHERE
+                 (
+                 cv.schedule_completion BETWEEN CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-'), '01')
+                 AND CONCAT(
+                 DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-'),
+                 DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 1 MONTH)))
+                 )
+                 )
+                 OR (
+                 cv.schedule_completion BETWEEN CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 0 MONTH), '%Y-%m-'), '01')
+                 AND CONCAT(DATE_FORMAT(NOW(), '%Y-%m-'), DAY(LAST_DAY(NOW())))
+                 )
+                 AND cv.erectors_name != ''
+                 AND cv.schedule_completion IS NOT NULL
+               GROUP BY
+                 DATE_FORMAT(cv.schedule_completion, '%Y-%m'),
+                 DATE_FORMAT(cv.schedule_completion, '%Y-%V')
+               ORDER BY
+                 cv.schedule_completion";
 
-            $qResult3 = mysql_query($sql);
-            $tqResult3 = mysql_num_rows($qResult3);
+          $result = mysqli_query($connect, $sql);
 
-    // begin to extract start - end of the week of completion date ($r['schedule_completion'])
-            function Start_End_Date_of_a_week($week, $year)
-            {
-                $time = strtotime("1 January $year", time());
-                // $time = strtotime($r['schedule_completion'], time());
-                // $day = date('w', $time);
-                $day = date('w', $r['schedule_completion']);
-                $time += ((7*$week)+1-$day)*24*3600;
-                // $r['schedule_completion']
-                $dates[0] = date('Y-M-j', $time);
-                $time += 6*24*3600;
-                $dates[1] = date('Y-M-j', $time);
-                return $dates;
+          $contracts_weekly_report_table .= '
+               <div class="table-responsive">
+                    <table class="table table-bordered">
+                         <tr>
+                           <th colspan="3">Construction Target</th>
+                           <th colspan="2">Actual Performance</th>
+                         </tr>
+                         <tr>
+                           <th width="150">Period</th>
+                           <th width="150">Target value</th>
+                           <th width="75">No. of working days</th>
+                           <th width="75">No. of jobs</th>
+                           <th width="150">Contract completion value</th>
+                         </tr>';
+          $rows = mysqli_num_rows($result);
+          if($rows > 0)
+          {
+               while($row = mysqli_fetch_array($result))
+               {
+                    $contracts_weekly_report_table .= '
+                         <tr>
+                              <td>'.$row["weekly_period"].'</td>
+                              <td class="weekly_target_amount" data-id1="'.$row["id"].'" contenteditable>'.$row["weekly_target_amount"].'</td>
+                              <td class="weekly_working_days" data-id2="'.$row["id"].'" contenteditable>'.$row["weekly_working_days"].'</td>
+                              <td>'.$row["numberofjobs"].'</td>
+                              <td>$  '.number_format($row["total_cost_per_week"],2).'</td>
+                         </tr>
+                    ';
+               }
+          }
+          else
+          {
 
-                // print_r($r);return; 
-            }
-
-            function getWeekDates($year, $week, $start=true)
-            {
-                $from = date("Y-m-d", strtotime("{$year}-W{$week}-1")); //Returns the date of monday in week
-                $to = date("Y-m-d", strtotime("{$year}-W{$week}-7"));   //Returns the date of sunday in week
-             
-                if($start) {
-                    return $from;
-                } else {
-                    return $to;
-                }
-                //return "Week {$week} in {$year} is from {$from} to {$to}.";
-            }
-            // $result = Start_End_Date_of_a_week(50,2020);
-            // $day = date('w', $r['schedule_completion']);
-            // echo 'Starting date of the week: '. $day."\n";
-            // echo 'Starting date of the week: '. $result[0]."\n";
-            // echo 'End date the week: '. $result[1];
-
-
-    // end to extract start - end of the week of completion date ($r['schedule_completion'])
-
-            $i=0; $j=0;         
-            //mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return; 
-            while ($r = mysql_fetch_assoc($qResult3)) { 
-                // $week_period_start = date('Y-m-d', strtotime('sunday last week '.date('Y-m-d', strtotime($r['schedule_completion'].' +42 weeks'))));
-                // $week_period_end = date('Y-m-d', strtotime('sunday last week '.date('Y-m-d', strtotime($r['schedule_completion'].' +42 weeks'))));
-                if(empty($r)) break; 
-                if($i==0){
-                    $contracts_weekly_report_table .= "<tr><th width=''></th><th colspan='2'>Construction Target</th><th colspan='2'>Actual Performance</th></tr> ";
-                    $contracts_weekly_report_table .= "<tr><th width='200'>Period</th><th width='150'>Target value</th><th width='75'>No. of working days</th><th width='75'>No. of jobs</th><th width='150'>Contract completion value</th></tr> ";
-                } 
-
-                $contracts_weekly_report_table .= "<tr>";
-                // $contracts_weekly_report_table .= "<td>{$r['schedule_completion']}</td><td contenteditable='true'>$000,000.00</td><td contenteditable='true'>00</td><td>{$r['numberofjobs']}</td><td>$".number_format($r['total_cost_per_week'],2)."</td>";  
-                $contracts_weekly_report_table .= "<td>{$r['schedule_completion']}</td><td contenteditable='true'>$000,000.00</td><td contenteditable='true'>00</td><td>{$r['numberofjobs']}</td><td>$".number_format($r['total_cost_per_week'],2)."</td>"; 
-                $contracts_weekly_report_table .= "</tr>";
-                $i++; 
-            }
-     
-            $contracts_weekly_report_table .= "</table>"; 
-
+          }
+          $contracts_weekly_report_table .= '</table>
+               </div>';
     ?>
 
 
@@ -2018,9 +2000,9 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
             //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
             echo $construction_kpi;
 
-            echo "<br/><br/><br/><br/>"; 
+            echo "<br/><br/><br/><br/>";
             echo $contracts_weekly_report_table;
-          
+
             echo "<br/><br/><br/><br/>";
             echo $installer_calendar;
 
@@ -2054,6 +2036,30 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
 <script type="text/javascript">
     $(document).ready(function(){
+
+          function edit_data(id, text, column_name)
+              {
+                  $.ajax({
+                      url:"includes/vic/weekly_edit.php",
+                      method:"POST",
+                      data:{id:id, text:text, column_name:column_name},
+                      dataType:"text",
+                      success:function(data){
+                          // alert(data);
+                  $('#result').html("<div class='alert alert-success'>"+data+"</div>");
+                      }
+                  });
+              }
+              $(document).on('blur', '.weekly_target_amount', function(){
+                  var id = $(this).data("id1");
+                  var weekly_target_amount = $(this).text();
+                  edit_data(id, weekly_target_amount, "weekly_target_amount");
+              });
+              $(document).on('blur', '.weekly_working_days', function(){
+                  var id = $(this).data("id2");
+                  var weekly_working_days = $(this).text();
+                  edit_data(id,weekly_working_days, "weekly_working_days");
+              });
 
         window.addEvent('load', function() {
                 new DatePicker('.datepicker,date_time', {pickerClass: 'datepicker_dashboard', format: PHP_DFORMAT, inputOutputFormat: PHP_DFORMAT, allowEmpty: 1, timePicker: 0, timePickerOnly: 0});
