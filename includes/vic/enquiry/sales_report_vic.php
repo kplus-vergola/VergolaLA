@@ -1153,29 +1153,99 @@ include('sales_summary/main.php');
 
         $i=0;
         while ($r = mysql_fetch_assoc($qContracts)){ //-- Start of while for montly
-     	//for($k=0;$k<12;$k++){ //Latest on the top
-     	//for($k=11;$k>=0;$k--){ //lates on the bottom. use this in the 1st run insert script.
-
+        
             if($i==0){
-                $kpi_table_manager .= "<li class='li-header'> <span style='width:13%;'>Month </span><span style='width:9%;'>No. of Contracts</span><span style='width:9%;'>Waiting for Check Measure</span><span style='width:9%;'>Waiting for Drawing </span><span style='width:9%;'>Waiting for Drawing Approval</span><span style='width:9%;'> No. of Development Approval</span><span style='width:9%;'>Waiting for Framework Completed</span><span style='width:9%;'>Waiting For Job Start</span><span style='width:9%;'>Job Complete</span> </li>  ";
-
-                while ($v = mysql_fetch_assoc($cContracts)){
-                    $kpi_table_manager .= "<li >";
-                    $kpi_table_manager .= "<span style='width:13%;'>".$mDate."  </span><span style='width:9%;'>".$v["no_contract"]."  </span><span style='width:9%;'>".$v["no_check_measure"]." </span><span style='width:9%;'>".$v["no_drawing_prep"]."  </span><span style='width:9%;'>".$v["no_drawing_approve"]."  </span><span style='width:9%;'>". $v["no_dev_approve"] ."  </span><span style='width:9%;'>". $v["no_fw_complete_not_done"] ."  </span><span style='width:9%;'>". $v["no_fw_complete_done"] ."  </span><span style='width:9%;'>". $v["no_job_complete"] ."  </span> ";
-                    $kpi_table_manager .= "</li>";
-                }
-
             }
+            $i++;
 
-            //---- START ------> Not need in this case bec. Jit/Les get rid of the monthly and just want the sum of result from last 30 months
-             $kpi_table_manager .= "<li >";
-             $kpi_table_manager .= "<span style='width:13%;'>".$r["target_month"]."  </span><span style='width:9%;'>".$r["no_contract"]."  </span><span style='width:9%;'>".$r["no_check_measure"]." </span><span style='width:9%;'>".$r["no_drawing_prep"]."  </span><span style='width:9%;'>".$r["no_drawing_approve"]."  </span><span style='width:9%;'>". $r["no_dev_approve"] ."  </span><span style='width:9%;'>". $r["no_fw_complete_not_done"] ."  </span><span style='width:9%;'>". $r["no_fw_complete_done"] ."  </span><span style='width:9%;'>". $r["no_job_complete"] ."  </span> ";
-             $kpi_table_manager .= "</li>";
-            //---- END of Table ------
- 			$i++;
+
+
 
         } //-- Enf of while for montly
 
+//------------- CONTRACT WEEKLY SUMMARY REPORT ---------------------- -->
+
+            $connect = mysqli_connect("localhost", "root", "pass123", "vergola_quotedb_v4_as_live");
+            // $connect = mysqli_connect("localhost", "root", "", "vergola_quotedb_v5_us_as_live");
+            $kpi_table_manager = '';
+            $sql = "SELECT
+                         cp.clientid,
+                         cv.schedule_completion,
+                         cv.weekly_target_amount,
+                         cv.weekly_working_days,
+                         DATE_FORMAT( cv.schedule_completion, '%V' ) AS numberWeeks,
+                         DATE_FORMAT( cv.schedule_completion, '%V' ) AS id,
+                         DATE_FORMAT( cv.schedule_completion, '%Y' ) AS numberYear,
+                         CONCAT(DATE_FORMAT(SUBDATE(schedule_completion, dayofweek(schedule_completion) - 1),'%b%d'),' - ',DATE_FORMAT(SUBDATE(schedule_completion, dayofweek(schedule_completion) - 7),'%b%d')) AS weekly_period,
+                         COUNT(DATE_FORMAT(cv.schedule_completion, '%Y-%V')) AS numberofjobs,
+
+                         SUM(c.total_cost) AS total_cost_per_week
+                     FROM
+                         ver_chronoforms_data_contract_vergola_vic AS cv
+                         JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid = cv.projectid
+                         JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid = cv.quoteid
+                     WHERE
+                         (
+                         cv.schedule_completion BETWEEN CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-'), '01')
+                         AND CONCAT(
+                         DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-'),
+                         DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 1 MONTH)))
+                         )
+                         )
+                         OR (
+                         cv.schedule_completion BETWEEN CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 0 MONTH), '%Y-%m-'), '01')
+                         AND CONCAT(DATE_FORMAT(NOW(), '%Y-%m-'), DAY(LAST_DAY(NOW())))
+                         )
+                         AND cv.erectors_name != ''
+                         AND cv.schedule_completion IS NOT NULL
+                     GROUP BY
+                         DATE_FORMAT(cv.schedule_completion, '%Y-%m'),
+                         DATE_FORMAT(cv.schedule_completion, '%Y-%V')
+                     ORDER BY
+                         cv.schedule_completion";
+
+            $result = mysqli_query($connect, $sql);
+        $kpi_table_manager = "";
+        $kpi_table_manager .= "
+        <h3 style='margin:10px 0 0 0; text-decoration:underline; '><span>Weekly Contract Summary</span> <span style='float:right; margin-right:47%; text-decoration: underline;'>Construction KPI</span></h3> <br/>
+        <ul  class='list-table kpi-table'  style='margin:0 0% 0 0; width:43%; display:inline-block;vertical-align: top; font-size:12px; '>
+        ";
+            $kpi_table_manager .= '
+                     <div class="table-responsive">
+                                <table width="100%" class="table table-bordered">
+                                         <tr>
+                                             <th colspan="3">Construction Target</th>
+                                             <th colspan="3">Actual Performance</th>
+                                         </tr>
+                                         <tr>
+                                             <th width="120">Period</th>
+                                             <th width="150" colspan="2">Target value</th>
+                                             <th width="75">No. of working days</th>
+                                             <th width="75">No. of jobs</th>
+                                             <th width="150">Contract completion value</th>
+                                         </tr>';
+            $rows = mysqli_num_rows($result);
+            if($rows > 0)
+            {
+                     while($row = mysqli_fetch_array($result))
+                     {
+                                $kpi_table_manager .= '
+                                         <tr>
+                                                    <td>'.$row["weekly_period"].'</td>
+                                                    <td width="5">$ </td>
+                                                    <td class="weekly_target_amount" data-id1="'.$row["id"].'" contenteditable>'.$row["weekly_target_amount"].'</td>
+                                                    <td class="weekly_working_days" data-id2="'.$row["id"].'" contenteditable>'.$row["weekly_working_days"].'</td>
+                                                    <td>'.$row["numberofjobs"].'</td>
+                                                    <td>$  '.number_format($row["total_cost_per_week"],2).'</td>
+                                         </tr>
+                                ';
+                     }
+            }
+            else
+            {
+
+            }
+            $kpi_table_manager .= '</table>';
 
         $kpi_table_manager .= "</ul>";
 
@@ -2001,7 +2071,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
             echo $construction_kpi;
 
             echo "<br/><br/><br/><br/>";
-            echo $contracts_weekly_report_table;
+            // echo $contracts_weekly_report_table;
 
             echo "<br/><br/><br/><br/>";
             echo $installer_calendar;
