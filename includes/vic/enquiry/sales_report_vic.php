@@ -1165,7 +1165,7 @@ include('sales_summary/main.php');
 
 //------------- CONTRACT WEEKLY SUMMARY REPORT ---------------------- -->
 
-            $connect = mysqli_connect("localhost", "root", "pass123", "vergola_quotedb_v4_as_live");
+            $connect = mysqli_connect("localhost", "root", "pass123", "vergola_quotedb_v5_us_as_live");
             // $connect = mysqli_connect("localhost", "root", "", "vergola_quotedb_v5_us_as_live");
             $kpi_table_manager = '';
             $sql = "SELECT
