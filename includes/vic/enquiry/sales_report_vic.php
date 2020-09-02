@@ -1220,8 +1220,8 @@ include('sales_summary/main.php');
                                          <tr>
                                              <th width="120">Period</th>
                                              <th width="150" colspan="2">Target value</th>
-                                             <th width="75">No. of working days</th>
-                                             <th width="75">No. of jobs</th>
+                                             <th width="95">No. of working days</th>
+                                             <th width="95">No. of jobs</th>
                                              <th width="150">Contract completion value</th>
                                          </tr>';
             $rows = mysqli_num_rows($result);
@@ -1230,7 +1230,7 @@ include('sales_summary/main.php');
                      while($row = mysqli_fetch_array($result))
                      {
                                 $kpi_table_manager .= '
-                                         <tr>
+                                         <tr style="font-size:17px">
                                                     <td>'.$row["weekly_period"].'</td>
                                                     <td width="5">$ </td>
                                                     <td class="weekly_target_amount" data-id1="'.$row["id"].'" contenteditable>'.$row["weekly_target_amount"].'</td>
