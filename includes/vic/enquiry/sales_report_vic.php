@@ -1213,14 +1213,14 @@ include('sales_summary/main.php');
             $kpi_table_manager .= '
                      <div class="table-responsive">
                                 <table width="100%" class="table table-bordered">
-                                         <tr>
+                                         <tr style="font-size:17px">
                                              <th colspan="3">Construction Target</th>
                                              <th colspan="3">Actual Performance</th>
                                          </tr>
-                                         <tr>
-                                             <th width="120">Period</th>
+                                         <tr style="font-size:17px">
+                                             <th width="150">Period</th>
                                              <th width="150" colspan="2">Target value</th>
-                                             <th width="95">No. of working days</th>
+                                             <th width="115">No. of working days</th>
                                              <th width="95">No. of jobs</th>
                                              <th width="150">Contract completion value</th>
                                          </tr>';
