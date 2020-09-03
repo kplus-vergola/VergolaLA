@@ -33,6 +33,7 @@
 $user = JFactory::getUser();
 
 $is_admin = 0; $is_manager = 0; $is_operation_manager = 0; $is_top_admin = 0; $is_user = 0; $is_reception = 0; $is_account_user = 0; $is_site_manager = 0;
+$is_sales_manager = 0;
 if(isset($user->groups['10'])){
     $is_top_admin = 1;
     $is_admin = 1;
@@ -42,6 +43,7 @@ if(isset($user->groups['10'])){
 }else if( isset($user->groups['27'])){
     $is_manager = 1;
     $is_admin = 1;
+    $is_sales_manager = 1;
 }else if( isset($user->groups['28'])){
     $is_reception = 1;
     return;
@@ -1164,7 +1166,7 @@ include('sales_summary/main.php');
         } //-- Enf of while for montly
 
 //------------- CONTRACT WEEKLY SUMMARY REPORT ---------------------- -->
-
+        if($is_operation_manager || $is_top_admin || $is_manager){
             $connect = mysqli_connect("localhost", "root", "pass123", "vergola_quotedb_v5_us_as_live");
             // $connect = mysqli_connect("localhost", "root", "", "vergola_quotedb_v5_us_as_live");
             $kpi_table_manager = '';
@@ -1225,6 +1227,10 @@ include('sales_summary/main.php');
                                              <th width="150">Contract completion value</th>
                                          </tr>';
             $rows = mysqli_num_rows($result);
+            $iscontenteditable = "contenteditable";
+            if($is_operation_manager || $is_sales_manager){
+                $iscontenteditable = "";
+            }            
             if($rows > 0)
             {
                      while($row = mysqli_fetch_array($result))
@@ -1233,8 +1239,8 @@ include('sales_summary/main.php');
                                          <tr style="font-size:17px">
                                                     <td>'.$row["weekly_period"].'</td>
                                                     <td width="5">$ </td>
-                                                    <td class="weekly_target_amount" data-id1="'.$row["id"].'" contenteditable>'.$row["weekly_target_amount"].'</td>
-                                                    <td class="weekly_working_days" data-id2="'.$row["id"].'" contenteditable>'.$row["weekly_working_days"].'</td>
+                                                    <td class="weekly_target_amount" data-id1="'.$row["id"].'" '.$iscontenteditable.'>'.$row["weekly_target_amount"].'</td>
+                                                    <td class="weekly_working_days" data-id2="'.$row["id"].'" '.$iscontenteditable.'>'.$row["weekly_working_days"].'</td>
                                                     <td>'.$row["numberofjobs"].'</td>
                                                     <td>$  '.number_format($row["total_cost_per_week"],2).'</td>
                                          </tr>
@@ -1246,7 +1252,7 @@ include('sales_summary/main.php');
 
             }
             $kpi_table_manager .= '</table>';
-
+        }
         $kpi_table_manager .= "</ul>";
 
         //---------------- END OF CONTRUCTION SUMMARY TABLE -----------------
