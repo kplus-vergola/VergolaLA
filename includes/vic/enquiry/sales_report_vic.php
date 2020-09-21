@@ -280,6 +280,9 @@ $sales_period2 = array();
 $sales_target2 = array();
 $sales_amount = array();
 $sales_amount_last_yr = array();
+$weekly_period1 = array();  // storage of weekly period
+$weekly_sales1 = array();   // storage of weekly sales actual
+$weekly_target1 = array();  // storage of weekly sales target
 //echo $dTo;return;
 
 //error_log(print_r($user,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
@@ -616,6 +619,12 @@ include('sales_summary/main.php');
          	<canvas id='sales_compare_graph' width='500' height='370' style='margin:0 0 0 0px;'></canvas>
          	<div id='sales_compare_graph_placeholder'></div>
         </div>";
+
+        // $weekly_sales_compare_graph = "<div style='display:inline-block; width:43%; margin:0px 0 0 0;'>
+        //     <h3 style='margin:15px 0 10px 70px; text-decoration:underline;'>Weekly Sales Summary Chart</h3>
+        //     <canvas id='weekly_sales_compare_graph' width='500' height='370' style='margin:0 0 0 0px;'></canvas>
+        //     <div id='weekly_sales_compare_graph_placeholder'></div>
+        // </div>";
 
         $construction_analysis_graph = "
         <div style='display:inline-block; margin:0 0 0 0; width:45%; '>
@@ -1167,8 +1176,8 @@ include('sales_summary/main.php');
 
 //------------- CONTRACT WEEKLY SUMMARY REPORT ---------------------- -->
         if($is_operation_manager || $is_top_admin || $is_manager){
-            $connect = mysqli_connect("localhost", "root", "pass123", "vergola_quotedb_v5_us_as_live");
-            // $connect = mysqli_connect("localhost", "root", "", "vergola_quotedb_v5_us_as_live");
+            // $connect = mysqli_connect("localhost", "root", "pass123", "vergola_quotedb_v5_us_as_live");
+            // $connect = mysqli_connect("localhost", "root", "", "vergola_quotedb_sa_v1_as_live");
             $kpi_table_manager = '';
             $sql = "SELECT
                          cp.clientid,
@@ -1206,7 +1215,7 @@ include('sales_summary/main.php');
                      ORDER BY
                          cv.schedule_completion";
 
-            $result = mysqli_query($connect, $sql);
+        $wResult = mysql_query($sql);  
         $kpi_table_manager = "";
         $kpi_table_manager .= "
         <h3 style='margin:10px 0 0 0; text-decoration:underline; '><span>Weekly Contract Summary</span> <span style='float:right; margin-right:47%; text-decoration: underline;'>Construction KPI</span></h3> <br/>
@@ -1226,26 +1235,29 @@ include('sales_summary/main.php');
                                              <th width="95">No. of jobs</th>
                                              <th width="150">Contract completion value</th>
                                          </tr>';
-            $rows = mysqli_num_rows($result);
+            $rows = mysql_num_rows($wResult);   
             $iscontenteditable = "contenteditable";
             if($is_operation_manager || $is_sales_manager){
                 $iscontenteditable = "";
             }            
             if($rows > 0)
             {
-                     while($row = mysqli_fetch_array($result))
-                     {
-                                $kpi_table_manager .= '
-                                         <tr style="font-size:17px">
-                                                    <td>'.$row["weekly_period"].'</td>
-                                                    <td width="5">$ </td>
-                                                    <td class="weekly_target_amount" data-id1="'.$row["id"].'" '.$iscontenteditable.'>'.$row["weekly_target_amount"].'</td>
-                                                    <td class="weekly_working_days" data-id2="'.$row["id"].'" '.$iscontenteditable.'>'.$row["weekly_working_days"].'</td>
-                                                    <td>'.$row["numberofjobs"].'</td>
-                                                    <td>$  '.number_format($row["total_cost_per_week"],2).'</td>
-                                         </tr>
-                                ';
-                     }
+                 while($row = mysql_fetch_assoc($wResult))
+                 {
+                    array_push($weekly_target1,$row['weekly_target_amount']);
+                    array_push($weekly_sales1,$row['total_cost_per_week']);
+                    array_push($weekly_period1,$row['weekly_period']);
+                    $kpi_table_manager .= '
+                     <tr style="font-size:17px">
+                        <td>'.$row["weekly_period"].'</td>
+                        <td width="5">$ </td>
+                        <td class="weekly_target_amount" data-id1="'.$row["id"].'" '.$iscontenteditable.'>'.$row["weekly_target_amount"].'</td>
+                        <td class="weekly_working_days" data-id2="'.$row["id"].'" '.$iscontenteditable.'>'.$row["weekly_working_days"].'</td>
+                        <td>'.$row["numberofjobs"].'</td>
+                        <td>$  '.number_format($row["total_cost_per_week"],2).'</td>
+                     </tr>
+                    ';
+                 }
             }
             else
             {
@@ -1255,6 +1267,11 @@ include('sales_summary/main.php');
         }
         $kpi_table_manager .= "</ul>";
 
+        $weekly_sales_compare_graph = "<div style='display:inline-block; width:43%; margin:0px 0px 0px 0px;'>           
+            <canvas id='weekly_sales_compare_graph' width='500' height='370' style='margin:0 0 0 -30px;'></canvas>
+            <div id='weekly_sales_compare_graph_placeholder'></div>
+        </div>";
+
         //---------------- END OF CONTRUCTION SUMMARY TABLE -----------------
 
 
@@ -1263,7 +1280,7 @@ include('sales_summary/main.php');
 
         $construction_kpi = "";
         $construction_kpi .= "
-        <ul  class='list-table kpi-table'  style='margin:0 0 0 30px; width:53%;   display:inline-block;vertical-align: top; font-size:12px; overflow-y:scroll; max-height:1000px;'>
+        <ul  class='list-table kpi-table'  style='margin:-200px 0 0 30px; width:53%;   display:inline-block;vertical-align: top; font-size:12px; overflow-y:scroll; max-height:1000px;'>
         ";
 
         $i = 0;
@@ -2020,6 +2037,9 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
         echo "<br/><br/><br/>";
         echo $kpi_table_manager;
+
+        echo "<br/><br/><br/>";
+        echo $weekly_sales_compare_graph;
         //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
         echo $construction_kpi;
         echo "<br/><br/><br/><br/>";
@@ -2034,6 +2054,9 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
             echo $to_do_list_construction;
             echo "<br/><br/><br/>";
             echo $kpi_table_manager;
+
+            echo "<br/><br/><br/>";
+            echo $weekly_sales_compare_graph;
             //error_log(" Construction KPI table graph: ".$kpi_table_manager, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
             //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
             echo $construction_kpi;
@@ -2072,6 +2095,9 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
             echo "<br/><br/><br/>";
             echo $kpi_table_manager;
+
+            echo "<br/><br/><br/>";
+            echo $weekly_sales_compare_graph;
 
             //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
             echo $construction_kpi;
@@ -2490,6 +2516,52 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
     ?>
 
     //--------- END Enquiry / Quote / Contract Summary BAR CHART ----------
+
+    //--------- WEEKLY SUMMARY BAR CHART ----------
+    <?php
+    $weekly_target1 = $weekly_target1;
+    $weekly_sales1 = $weekly_sales1;
+    ?>
+
+    var weekly_target1 = [<?php echo implode(",", $weekly_target1); ?>];
+    var weekly_sales1 = [<?php echo implode(",", $weekly_sales1); ?>];
+
+    var data = {
+        labels: [<?php echo "'".implode("','", $weekly_period1)."'"; ?>],
+        datasets: [
+             {
+                label: "Weekly Target",
+                fillColor: "rgba(31, 105, 165,0.9)",
+                strokeColor: "rgba(31, 105, 165,1)",
+                pointColor: "rgba(31, 105, 165,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(31, 105, 165,1)",
+                data: weekly_target1
+            },
+            {
+                label: "Actual Target",
+                fillColor: "rgba(254, 191, 1,0.8)",
+                strokeColor: "rgba(254, 191, 1,0.6)",
+                pointColor: "rgba(254, 191, 1,0.6)",
+                pointStrokeColor: "#111",
+                pointHighlightFill: "#111",
+                pointHighlightStroke: "rgba(254, 191, 1,1)",
+                data: weekly_sales1
+            }
+
+        ]
+    };
+
+
+
+    // This will get the first returned node in the jQuery collection.
+    //var myNewChart = new Chart(ctx);
+    var ctx = $("#weekly_sales_compare_graph").get(0).getContext("2d");
+    var myLineChart = new Chart(ctx).Bar(data, options);
+    legend(document.getElementById('weekly_sales_compare_graph_placeholder'), data);
+
+    //--------- END WEEKLY SUMMARY BAR CHART ----------
 
 
     <?php
