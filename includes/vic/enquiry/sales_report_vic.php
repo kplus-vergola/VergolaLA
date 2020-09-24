@@ -1045,7 +1045,7 @@ include('sales_summary/main.php');
  		//----------------CONTRUCTION SUMMARY TABLE -----------------
  		$kpi_table_manager = "";
         $kpi_table_manager .= "
-        <h3 style='margin:10px 0 0 0; text-decoration:underline; '><span>Contract Summary</span>
+        <h3 style='margin:10px 0 0 0; text-decoration:underline; '><span></span>
 		<span style='float:right; margin-right:47%; text-decoration: underline;'>Construction KPI</span></h3> <br/>
         <ul  class='list-table kpi-table'  style='margin:0 0% 0 0; width:43%; display:inline-block;vertical-align: top; font-size:12px; '>
         ";
@@ -1265,12 +1265,16 @@ include('sales_summary/main.php');
             }
             $kpi_table_manager .= '</table>';
         }
-        $kpi_table_manager .= "</ul>";
-
-        $weekly_sales_compare_graph = "<div style='display:inline-block; width:43%; margin:0px 0px 0px 0px;'>           
-            <canvas id='weekly_sales_compare_graph' width='500' height='370' style='margin:0 0 0 -30px;'></canvas>
+        $kpi_table_manager .= "<div style='display:inline-block; width:43%; margin:0px 0px 0px 0px;'>           
+            <canvas id='weekly_sales_compare_graph' width='500' height='370' style='margin:0 0 0 0px;'></canvas>
             <div id='weekly_sales_compare_graph_placeholder'></div>
         </div>";
+        $kpi_table_manager .= "</ul>";
+
+/*        $weekly_sales_compare_graph = "<div style='display:inline-block; width:43%; margin:0px 0px 0px 0px;'>           
+            <canvas id='weekly_sales_compare_graph' width='500' height='370' style='margin:0 0 0 0px;'></canvas>
+            <div id='weekly_sales_compare_graph_placeholder'></div>
+        </div>";*/
 
         //---------------- END OF CONTRUCTION SUMMARY TABLE -----------------
 
@@ -1280,7 +1284,7 @@ include('sales_summary/main.php');
 
         $construction_kpi = "";
         $construction_kpi .= "
-        <ul  class='list-table kpi-table'  style='margin:-200px 0 0 30px; width:53%;   display:inline-block;vertical-align: top; font-size:12px; overflow-y:scroll; max-height:1000px;'>
+        <ul  class='list-table kpi-table'  style='margin:0px 0 0 30px; width:53%;   display:inline-block;vertical-align: top; font-size:12px; overflow-y:scroll; max-height:1000px;'>
         ";
 
         $i = 0;
@@ -2038,8 +2042,8 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
         echo "<br/><br/><br/>";
         echo $kpi_table_manager;
 
-        echo "<br/><br/><br/>";
-        echo $weekly_sales_compare_graph;
+        // echo "<br/><br/><br/>";
+        // echo $weekly_sales_compare_graph;
         //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
         echo $construction_kpi;
         echo "<br/><br/><br/><br/>";
@@ -2052,11 +2056,13 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
         echo "<div style='width:100%; margin:0;'>";
 
             echo $to_do_list_construction;
-            echo "<br/><br/><br/>";
-            echo $kpi_table_manager;
-
-            echo "<br/><br/><br/>";
-            echo $weekly_sales_compare_graph;
+            
+            if($is_operation_manager){
+                echo "<br/><br/><br/>";
+                echo $kpi_table_manager;
+            // echo "<br/><br/><br/>";
+            // echo $weekly_sales_compare_graph;
+            }
             //error_log(" Construction KPI table graph: ".$kpi_table_manager, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
             //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
             echo $construction_kpi;
@@ -2096,8 +2102,8 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
             echo "<br/><br/><br/>";
             echo $kpi_table_manager;
 
-            echo "<br/><br/><br/>";
-            echo $weekly_sales_compare_graph;
+            // echo "<br/><br/><br/>";
+            // echo $weekly_sales_compare_graph;
 
             //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
             echo $construction_kpi;
