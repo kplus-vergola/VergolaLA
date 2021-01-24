@@ -2932,12 +2932,12 @@ var installer_list_curmon = [
             -- AND
             --    CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW())))
             (cv.install_date BETWEEN
-                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), '01')
                 AND
-                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 2 MONTH)))) )
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 3 MONTH)))) )
             OR
             (cv.install_date BETWEEN
-                CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
+                CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), '01')
                 AND
                 CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW()))) )
         AND cv.erectors_name != ''
@@ -3001,12 +3001,12 @@ var installer_list_nextmon = [
             -- AND
             --    CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 2 MONTH))))
             (cv.install_date BETWEEN
-                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), '01')
                 AND
-                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 2 MONTH)))) )
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 3 MONTH)))) )
             OR
             (cv.install_date BETWEEN
-                CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
+                CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), '01')
                 AND
                 CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW()))) )
         AND cv.erectors_name != ''
