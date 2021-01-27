@@ -2873,7 +2873,7 @@ $current_erector_index = -1;
 var installer_list_prevmon = [
 <?php
 
- 	$sql = "SELECT c.cf_id, cp.clientid, CONCAT(coalesce(cp.client_firstname,''),' ',coalesce(cp.client_lastname,''),' ',coalesce(cp.builder_name,'')) as customer_name, cp.client_suburb, cv.erectors_name, cv.erectors_name2, c.projectid, cv.install_date, cv.schedule_completion, c.contractdate, c.total_cost,  DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate FROM ver_chronoforms_data_contract_vergola_vic as cv JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid WHERE cv.install_date BETWEEN DATE_FORMAT(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH),'%Y-%m-01') AND NOW() AND   cv.erectors_name != '' AND cv.schedule_completion IS NOT NULL  ";
+ 	$sql = "SELECT c.cf_id, cp.clientid, CONCAT(coalesce(cp.client_firstname,''),' ',coalesce(cp.client_lastname,''),' ',coalesce(cp.builder_name,'')) as customer_name, cp.client_suburb, cv.erectors_name, cv.erectors_name2, c.projectid, cv.install_date, cv.schedule_completion, c.contractdate, c.total_cost,  DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate FROM ver_chronoforms_data_contract_vergola_vic as cv JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid WHERE cv.install_date BETWEEN DATE_FORMAT(DATE_SUB(CURRENT_DATE(), INTERVAL 2 MONTH),'%Y-%m-01') AND NOW() AND   cv.erectors_name != '' AND cv.schedule_completion IS NOT NULL  ";
  	//error_log(" sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
  	$qResult = mysql_query($sql);
     $obj = ""; $j=1;
@@ -2927,12 +2927,8 @@ var installer_list_curmon = [
             JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid
             JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid
         WHERE
-            -- cv.install_date BETWEEN
-            --    CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
-            -- AND
-            --    CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW())))
             (cv.install_date BETWEEN
-                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), '01')
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
                 AND
                 CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 3 MONTH)))) )
             OR
@@ -2996,12 +2992,8 @@ var installer_list_nextmon = [
             JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid
             JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid
         WHERE
-            -- cv.install_date BETWEEN
-            --    CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
-            -- AND
-            --    CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 2 MONTH))))
             (cv.install_date BETWEEN
-                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), '01')
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
                 AND
                 CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 3 MONTH)))) )
             OR
