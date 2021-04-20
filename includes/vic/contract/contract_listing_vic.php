@@ -91,6 +91,8 @@ if (!isset($mod)) $mod= '';
 if (!isset($contract_status)) $contract_status= '';
 if (!isset($framework_type)) $framework_type= '';
 if (!isset($job_status)) $job_status= 'incomplete';
+if (!isset($search_ID)) $search_ID = '';
+if (!isset($default_18mon)) $default_18mon = 1;
 //if (!isset($mod)) $suburb_name= null;
 
 
@@ -102,6 +104,8 @@ if(isset($user->groups['9'])){
 
 
 if(isset($_REQUEST['submit']) || isset($_REQUEST['search'])){
+
+	$default_18mon = 0;
 
 	if(isset($_POST['search_string'])){ $search_string = $_POST['search_string']; }
 	 
@@ -133,7 +137,11 @@ if(isset($_REQUEST['submit']) || isset($_REQUEST['search'])){
 	
 	if(isset($_POST['job_status'])){ $job_status = $_POST['job_status']; }
 
-	error_log("1111: ", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+	if(isset($_POST['search_ID'])){ $search_ID = $_POST['search_ID']; } 
+
+	if(isset($_POST['default_18mon'])){ $default_18mon = $_POST['default_18mon']; }
+
+	// error_log("1111: ", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 
 }else{
 
@@ -166,6 +174,10 @@ if(isset($_REQUEST['submit']) || isset($_REQUEST['search'])){
 	if(isset($_REQUEST['framework_type'])){ $framework_type = $_REQUEST['framework_type']; }
 	
 	if(isset($_REQUEST['job_status'])){ $job_status = $_REQUEST['job_status']; }
+
+	if(isset($_REQUEST['search_ID'])){ $search_ID = $_REQUEST['search_ID']; }
+
+	if(isset($_REQUEST['default_18mon'])){ $default_18mon = $_REQUEST['default_18mon']; }
 
 	$page = isset($_GET['page']) ? $_GET['page'] : 1;
 	$start = ($page-1) * NUMBER_PER_PAGE;
@@ -241,6 +253,16 @@ if($framework_type){
 if($job_status){
 	$paging_url .= "&job_status=".$job_status;
 }  
+
+if($search_ID){
+	$paging_url .= "&search_ID=".$search_ID;
+}
+
+if ($default_18mon){ //error_log("default_18mon:".$default_18mon, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+	$paging_url .= "&default_18mon=1";
+}else{
+	$paging_url .= "&default_18mon=0";
+} 
 //-------------------------------- END Paging Parameter --------------------------------
 
 $user = JFactory::getUser();
@@ -267,6 +289,11 @@ if ($search_string)
 
 $rep_filter = "   ";
 $rep_filter2 = "  ";
+
+$default_18month_filter = "";
+if ($default_18mon==1)
+	$default_18month_filter = " AND c.contractdate BETWEEN DATE_ADD(NOW(),INTERVAL -18 MONTH) AND DATE_ADD(NOW(),INTERVAL 1 DAY) ";
+
 if($is_admin ){
 	if($rep_id!=""){  
 		// $rep_filter .= " AND c.repident='{$rep_id}' ";
@@ -485,7 +512,7 @@ SELECT
 	DATE_FORMAT(cv.footing_inspection_date,'{$sql_dformat}') ffooting_inspection,
 	IF ( c.framework_type = 'Drop-In', 'DI', 'FR' ) AS fframework_type 
 	FROM ver_chronoforms_data_contract_list_vic AS c LEFT JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid = c.projectid LEFT JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=c.projectid LEFT JOIN (SELECT projectid, orderdate FROM ver_chronoforms_data_contract_bom_vic  where inventory_section='Frame' GROUP BY projectid) AS bom ON bom.projectid=c.projectid LEFT JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=c.quoteid 
-	WHERE 1=1 {$default_filter} {$rep_filter2} {$suburb_filter} {$date_filter} {$search_string_filter}   {$installer_filter} {$site_address_filter} {$contract_status_filter} {$framework_type_filter} {$job_status_filter}  ORDER BY c.cf_id DESC) AS c LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic WHERE cf_id IN (SELECT MAX(cf_id) as max_id FROM ver_chronoforms_data_notes_vic GROUP BY clientid))  as n ON n.clientid=c.quoteid  ";
+	WHERE 1=1 {$default_18month_filter} {$default_filter} {$rep_filter2} {$suburb_filter} {$date_filter} {$search_string_filter}   {$installer_filter} {$site_address_filter} {$contract_status_filter} {$framework_type_filter} {$job_status_filter}  ORDER BY c.cf_id DESC) AS c LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic WHERE cf_id IN (SELECT MAX(cf_id) as max_id FROM ver_chronoforms_data_notes_vic GROUP BY clientid))  as n ON n.clientid=c.quoteid  ";
 //error_log("f: ".SQL_DFORMAT, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 //error_log($sql, 3,'/home/vergola/public_html/quote-system/my-error.log');	 
 //error_log("drawing_no_date".$drawing_no_date, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
@@ -517,6 +544,9 @@ echo "<input type='button' id='advlist2' class='advance-search' value='Advance S
 
 echo "<input type='submit' id='' class='advance-search' value='Download PDF' name='download_pdf'>";	
 echo "<input type='hidden' name='advance_search' id='advance_search' value='{$advance_search}' />";
+
+echo "<label for='chk_default_18mon' id='lbl_default_18mon'><input type='checkbox' name='default_18mon' id='chk_default_18mon' ".($default_18mon==1?'checked':'')." value='1' style='height:14px; margin:0 5px 0 15px; padding:0; width:14px; vertical-align:middle;'   ".($advance_search==1?"is_advance_search":""
+)." />Last 18 months</label>";
 
 echo "	
 <div id='advance-search' style='display:".($advance_search==1?'block':'none')."; width:90%; position:relative; float:none;'>
