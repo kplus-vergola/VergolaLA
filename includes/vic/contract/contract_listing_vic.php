@@ -533,7 +533,7 @@ $sql .= " LIMIT $start, " . NUMBER_PER_PAGE;
 * this information to the page numbers. That way as they click from page
 * to page the query will pull up the correct results
 **/
-echo $sql;
+// echo $sql;
 echo "<div class='search-listing'>
 <form  action=\"\" method=\"post\" id=\"chronoform_Listing_Module\" class='Chronoform hasValidation'  style='float:none; width:90%'>
 	<label>Search:</label> <input type='text' name='search_string' value='{$search_string}' /> <input type='submit' name='submit' value='Search' class='search-btn' />";
