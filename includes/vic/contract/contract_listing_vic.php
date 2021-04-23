@@ -292,8 +292,7 @@ $rep_filter2 = "  ";
 
 $default_18month_filter = "";
 if ($default_18mon==1)
-	$default_18month_filter = " AND c.contractdate BETWEEN DATE_ADD(NOW(),INTERVAL -18 MONTH) AND DATE_ADD(NOW(),INTERVAL 1 DAY) ";
-
+	$default_18month_filter = " AND c.contractdate BETWEEN DATE_ADD(NOW(),INTERVAL -18 MONTH) AND DATE_ADD(NOW(),INTERVAL 1 DAY) AND final_inspection_date IS NULL";
 if($is_admin ){
 	if($rep_id!=""){  
 		// $rep_filter .= " AND c.repident='{$rep_id}' ";
@@ -534,7 +533,7 @@ $sql .= " LIMIT $start, " . NUMBER_PER_PAGE;
 * this information to the page numbers. That way as they click from page
 * to page the query will pull up the correct results
 **/
-
+echo $sql;
 echo "<div class='search-listing'>
 <form  action=\"\" method=\"post\" id=\"chronoform_Listing_Module\" class='Chronoform hasValidation'  style='float:none; width:90%'>
 	<label>Search:</label> <input type='text' name='search_string' value='{$search_string}' /> <input type='submit' name='submit' value='Search' class='search-btn' />";
