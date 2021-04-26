@@ -451,18 +451,26 @@ if($framework_type){
 
 $job_status_filter = "";
 //error_log("1: job_status: ".$job_status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
-if($job_status=="incomplete"){ 
-	$job_status_filter = " AND cv.handover_date IS NULL ";
+if($job_status){
+	if($job_status=="incomplete"){ 
+		// $job_status_filter = " AND cv.handover_date IS NULL ";
+		$job_status_filter = " AND cv.handover_date IS NULL OR final_inspection_date IS NULL";
 	 
-}else if($job_status=="complete"){ 
-	$job_status_filter = " AND cv.handover_date IS NOT NULL ";
-	// if ($searchdate){
-	// 	$date_filter  = " AND DATE(cv.handover_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
-	// } 
+	}else if($job_status=="complete"){ 
+		// $job_status_filter = " AND cv.handover_date IS NOT NULL ";
+		$job_status_filter = " AND cv.handover_date IS NOT NULL  OR final_inspection_date IS NOT NULL";		
+		if ($searchdate) {
+			$job_status_filter = " AND cv.handover_date IS NOT NULL OR DATE(final_inspection_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		}else{$job_status_filter = " ";}
+		// if ($searchdate){
+		// 	$date_filter  = " AND DATE(cv.handover_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		// } 
+	}
 }
 
 if($advance_search==0){
-	$default_filter = " AND cv.handover_date IS NULL  ";
+	// $default_filter = " AND cv.handover_date IS NULL  ";
+	$default_filter = " AND cv.handover_date IS NULL OR final_inspection_date IS NULL";
 }else{
 	$default_filter = " AND 1=1 ";
 }
