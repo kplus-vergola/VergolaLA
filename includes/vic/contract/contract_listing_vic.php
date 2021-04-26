@@ -461,7 +461,7 @@ if($job_status){
 		$job_status_filter = " AND cv.handover_date IS NOT NULL  OR final_inspection_date IS NOT NULL";		
 		if ($searchdate) {
 			$job_status_filter = " AND cv.handover_date IS NOT NULL OR DATE(final_inspection_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
-		}else{$job_status_filter = " ";}
+		}else{$job_status_filter = "AND cv.handover_date IS NOT NULL  OR final_inspection_date IS NOT NULL";}
 		// if ($searchdate){
 		// 	$date_filter  = " AND DATE(cv.handover_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
 		// } 
