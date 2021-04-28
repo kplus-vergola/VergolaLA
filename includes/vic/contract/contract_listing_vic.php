@@ -429,6 +429,13 @@ if($contract_status=="drawing_approval"){
 	if ($searchdate) {
 		$date_filter = " AND DATE(cv.fw_complete) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
 	}
+
+}else if($contract_status=="install_date"){ 
+	$contract_status_filter = " AND cv.install_date IS NOT NULL ";
+	if ($searchdate) {
+		$date_filter = " AND DATE(cv.install_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+	}
+
 }else if($contract_status=="production_completed"){ 
 	$contract_status_filter = " AND cv.production_complete_date IS NOT NULL ";			
 	if ($searchdate)
