@@ -2515,13 +2515,6 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
     var myLineChart1 = new Chart(ctx1).Bar(data, options2);
     legend(document.getElementById('contract_chart_placeholder'), data);
 
-    <?php
-        }
-        //error_log(" sales_amount: ".print_r($sales_amount,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-        //error_log(" sales_amount_last_yr: ".print_r($sales_amount_last_yr,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-    ?>
-
-    //--------- END Enquiry / Quote / Contract Summary BAR CHART ----------
 
     //--------- WEEKLY SUMMARY BAR CHART ----------
     <?php
@@ -2568,6 +2561,59 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
     legend(document.getElementById('weekly_sales_compare_graph_placeholder'), data);
 
     //--------- END WEEKLY SUMMARY BAR CHART ----------
+    <?php
+        }
+        //error_log(" sales_amount: ".print_r($sales_amount,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+        //error_log(" sales_amount_last_yr: ".print_r($sales_amount_last_yr,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+    ?>
+
+    //--------- END Enquiry / Quote / Contract Summary BAR CHART ----------
+
+/*    //--------- WEEKLY SUMMARY BAR CHART ----------
+    <?php
+    $weekly_target1 = $weekly_target1;
+    $weekly_sales1 = $weekly_sales1;
+    ?>
+
+    var weekly_target1 = [<?php echo implode(",", $weekly_target1); ?>];
+    var weekly_sales1 = [<?php echo implode(",", $weekly_sales1); ?>];
+
+    var data = {
+        labels: [<?php echo "'".implode("','", $weekly_period1)."'"; ?>],
+        datasets: [
+             {
+                label: "Weekly Target",
+                fillColor: "rgba(31, 105, 165,0.9)",
+                strokeColor: "rgba(31, 105, 165,1)",
+                pointColor: "rgba(31, 105, 165,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(31, 105, 165,1)",
+                data: weekly_target1
+            },
+            {
+                label: "Actual Target",
+                fillColor: "rgba(254, 191, 1,0.8)",
+                strokeColor: "rgba(254, 191, 1,0.6)",
+                pointColor: "rgba(254, 191, 1,0.6)",
+                pointStrokeColor: "#111",
+                pointHighlightFill: "#111",
+                pointHighlightStroke: "rgba(254, 191, 1,1)",
+                data: weekly_sales1
+            }
+
+        ]
+    };
+
+
+
+    // This will get the first returned node in the jQuery collection.
+    //var myNewChart = new Chart(ctx);
+    var ctx = $("#weekly_sales_compare_graph").get(0).getContext("2d");
+    var myLineChart = new Chart(ctx).Bar(data, options);
+    legend(document.getElementById('weekly_sales_compare_graph_placeholder'), data);
+
+    //--------- END WEEKLY SUMMARY BAR CHART ----------*/
 
 
     <?php
