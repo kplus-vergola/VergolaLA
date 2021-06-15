@@ -32,7 +32,8 @@
 //top_admin is Jit user $user->groups['10']
 $user = JFactory::getUser();
 
-$is_admin = 0; $is_manager = 0; $is_operation_manager = 0; $is_top_admin = 0; $is_user = 0; $is_reception = 0; $is_account_user = 0; $is_site_manager = 0;
+$user_group = "";
+$is_admin = 0; $is_manager = 0; $is_operation_manager = 0; $is_top_admin = 0; $is_user = 0; $is_reception = 0; $is_account_user = 0; $is_site_manager = 0; $is_sales_manager = 0;
 $is_sales_manager = 0;
 if(isset($user->groups['10'])){
     $is_top_admin = 1;
@@ -44,6 +45,7 @@ if(isset($user->groups['10'])){
     $is_manager = 1;
     $is_admin = 1;
     $is_sales_manager = 1;
+    $user_group = "sales_manager";
 }else if( isset($user->groups['28'])){
     $is_reception = 1;
     return;
@@ -1638,340 +1640,354 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
     ?>
 
 
-    <?php
+        <?php   
+        if($is_user || $is_manager){ //To do list for sales consultant users
 
-    if($is_user || $is_manager){ //To do list for sales consultant users
+        $to_do_list = ""; $i = 0;
 
-    $to_do_list = ""; $i = 0;
+        $to_do_list .= "
+            <div style='width:85%; display: inline-block;'>
 
-    $to_do_list .= "
-        <div style='width:85%; display: inline-block;'>
-
-        <h3 style='margin:10px 0 0 0; text-decoration:underline; '>To Do List</h3>
-
-        <ul id='to_do_list' class='list-table'  style='margin:0 0; width: 100%;  display:inline-block;vertical-align: top; font-size:12px;'>
-        ";
-
-            $sql = "SELECT c.datelodged, c.pid, c.clientid, repident AS rep_id,  c.appointmentdate,  c.client_firstname, c.client_lastname, c.qdelivered, c.next_followup, c.is_first_appointment, n.content AS note FROM ver_chronoforms_data_clientpersonal_vic  AS c
- LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_notes_vic ORDER BY cf_id desc) as t GROUP BY clientid  ) as n ON n.clientid=c.clientid
- WHERE c.deleted_at IS NULL AND repident='{$user->RepID}' AND (appointmentdate IS NOT NULL OR next_followup IS NOT NULL) AND if(next_followup IS NULL,DATE(appointmentdate)<=DATE(NOW()), DATE(next_followup)<=DATE(NOW())) AND (c.status!='Won' OR c.status!='Lost') AND c.date_contract_signed IS NULL ";
-
- 			$fResult = mysql_query($sql);
-            $total_records1 = mysql_num_rows($fResult);
-            error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-
- 			$sql .= " ORDER BY IF(DATE(appointmentdate) = DATE(NOW()), 0, 1), IF(DATE(next_followup) = DATE(NOW()), 0, 1), appointmentdate DESC, c.next_followup DESC LIMIT {$start}, ".NUMBER_PER_PAGE." ";
-
-            $fResult = mysql_query($sql);
-            $i=0;
-            while ($l = mysql_fetch_assoc($fResult)) {
-
-                if($i==0){$to_do_list .= "<li class='li-header'>
-                    <span class='col-date'>Due Date</span><span class='col-client-id'>Client ID</span><span class='col-name'> Name </span><span class='col-date'> Mobile </span><span class='col-note'>Last notes</span><span class='col-status'>Status</span> </li>  ";
-                }
-
-                $is_overdue = false;
-                $client_status = "Initial Appointment";
-                $due_date = "";
-
-                if(empty($l['qdelivered'])==true && empty($l['next_followup'])==true){
-                        $client_status = "Initial Appointment";
-                        $phpdate = strtotime( $l['appointmentdate'] );
-                        $due_date = date( PHP_DFORMAT, $phpdate );
-                        //error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-
-                }
-
-                if(empty($l['qdelivered'])==true && isset($l['next_followup'])){
-                        $client_status = "Initial Appointment";
-                        $phpdate = strtotime( $l['next_followup'] );
-                        $due_date = date( PHP_DFORMAT, $phpdate );
-                        //error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-
-                }
-
-                if(isset($l['qdelivered']) && isset($l['next_followup'])){
-                        $client_status = "Followup";
-                        $phpdate = strtotime( $l['next_followup'] );
-                        $due_date = date( PHP_DFORMAT, $phpdate );
-                        //error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-
-                }
-
-                // if(isset($l['qdelivered'])){
-                // 		$client_status = "Followup - Quote Delivered";
-                // 		$phpdate = strtotime( $l['next_followup'] );
-                // 		$due_date = date( PHP_DFORMAT, $phpdate );
-                // 		//error_log("inside 3..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-  		// 		}
-
-                // if(empty($l['qdelivered'])==true){
-                // 		$client_status = "Initial Appointment";
-                // 		$phpdate = strtotime( $l['appointmentdate'] );
-                // 		$due_date = date( PHP_DFORMAT, $phpdate );
-                // 		//error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-
-                // }else if(empty($l['next_followup'])==true){
-                // 		//break;
-                // 		$client_status = "Follow-up";
-                // 		//$phpdate = strtotime( $l['next_followup'] );
-                // 		//$due_date = date( PHP_DFORMAT, $phpdate );
-                // 		$due_date = "Need appointment";
-                // 		//error_log("inside 2..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                // }else{
-                // 		$client_status = "Quote Delivered";
-                // 		$phpdate = strtotime( $l['next_followup'] );
-                // 		$due_date = date( PHP_DFORMAT, $phpdate );
-                // 		//error_log("inside 3..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-  		// 		}
-
-
-                $_due_date = date( 'Y-m-d', $phpdate );
-                $is_overdue = 0;
-                if($_due_date<date('Y-m-d')){
-                    $is_overdue = 1;
-                }else{
-                    $is_overdue = 0;
-                }
-
-                $input_followup = "<input type='text' name='followup_date' value=''  autocomplete='off' class='datepicker' onchange='' />";
-
-
-                $chk_done = "<input type='button' name='' value='update'  onclick='save_status(event,this)' />";
-
-
-                $link_client = "<a  class='' href='".JURI::base()."client-listing-vic/client-folder-vic?pid={$l['pid']}&ref=/'
-                >{$l['clientid']}</a>";
-
-                $to_do_list .= "<li class=\"li-row ".($is_overdue?'highligh-red':'')." \">".
-                                "<input type='hidden'  class='cf_id' value='' /> ".
-                     			"<input type='hidden'  class='pid' value='{$l['pid']}' /> ";
-
-                $to_do_list .= "<span class='col-date'> {$due_date} </span>".
-                                "<span  class='col-client-id'>  {$link_client} </span>".
-                                "<span class='col-name'> ". ($l['is_builder']==1 ? $l['builder_name'] : $l['client_firstname'].' '.$l['client_lastname'])."</span>".
-                                "<span class='col-date'> {$l['mobile']} </span>".
-                                "<span class='col-note'> {$l['note']} </span>".
-                                "<span class='col-status'> {$client_status}  </span>";
-                $to_do_list .= "</li>";
-                $i++;
-         	}
-
-
-        $to_do_list .= "</ul>";
-        $to_do_list .= "</div>";
-
-        $to_do_list .= "<div class='pagination-layer'>";
-        $to_do_list .= pagination($page, $total_records, "");
-        $to_do_list .= "</div>";
-
-    }
-    else if($is_operation_manager || $is_site_manager){ //To do list for construction users
-
-    $to_do_list_construction = ""; $i = 0;
-
-    $to_do_list_construction .= "
-        <div style='width:85%; display: inline-block;'>
-            <h3 style='margin:0; text-decoration:underline; '>Reminder List</h3>
+            <h3 style='margin:10px 0 0 0; text-decoration:underline; '>To Do List</h3>
 
             <ul id='to_do_list' class='list-table'  style='margin:0 0; width: 100%;  display:inline-block;vertical-align: top; font-size:12px;'>
             ";
 
-            $sql = " SELECT f.cf_id, c.datelodged, pid, c.clientid, f.projectid, c.repident AS rep_id, c.client_firstname, c.client_lastname, c.is_builder, c.builder_name, f.status, f.date_won, f.date_contract_signed, f.date_contract_system_created, n.content
- FROM ver_chronoforms_data_followup_vic AS f JOIN  ver_chronoforms_data_clientpersonal_vic  AS c ON c.clientid=f.quoteid
- LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_notes_vic ORDER BY cf_id desc) as t GROUP BY clientid  ) as n ON n.clientid=c.clientid
- WHERE c.deleted_at IS NULL AND (f.cf_id>5534 AND f.status='Won')"; //f.cf_id>5534 is the next number the new system generate a new quotations.
+                $sql = "SELECT c.datelodged, c.pid, c.clientid, repident AS rep_id,  c.appointmentdate,  c.client_firstname, c.client_lastname, c.qdelivered, c.next_followup, c.is_first_appointment, n.content AS note FROM ver_chronoforms_data_clientpersonal_vic  AS c
+     LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_notes_vic ORDER BY cf_id desc) as t GROUP BY clientid  ) as n ON n.clientid=c.clientid
+     WHERE c.deleted_at IS NULL AND repident='{$user->RepID}' AND (appointmentdate IS NOT NULL OR next_followup IS NOT NULL) AND if(next_followup IS NULL,DATE(appointmentdate)<=DATE(NOW()), DATE(next_followup)<=DATE(NOW())) AND (c.status!='Won' OR c.status!='Lost') AND c.date_contract_signed IS NULL ";
 
- 			//error_log("is_construction: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                $fResult = mysql_query($sql);
+                $total_records1 = mysql_num_rows($fResult);
+                error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
 
- 			$fResult = mysql_query($sql);
-            $total_records1 = mysql_num_rows($fResult);
+                $sql .= " ORDER BY IF(DATE(appointmentdate) = DATE(NOW()), 0, 1), IF(DATE(next_followup) = DATE(NOW()), 0, 1), appointmentdate DESC, c.next_followup DESC LIMIT {$start}, ".NUMBER_PER_PAGE." ";
 
- $sql .= " ORDER BY date_won DESC, f.date_contract_signed DESC LIMIT {$start}, ".NUMBER_PER_PAGE." ";
+                $fResult = mysql_query($sql);
+                $i=0;
+                while ($l = mysql_fetch_assoc($fResult)) {
 
-            $fResult = mysql_query($sql);
-
-            $i=0; $is_contract_generated = 0;
-            while ($l = mysql_fetch_assoc($fResult)) {
-                //error_log(print_r($l,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                if($i==0){$to_do_list_construction .= "<li class='li-header'>
-                    <span class='col-date'>Date</span><span class='col-client-id'>Project ID</span><span class='col-name'> Client Name </span> <span class='col-note'>Last notes</span><span class='col-name'>Follow-up</span> </li>  ";
-                }
-
-                $c = null;
-                if(!empty($l['date_contract_system_created'])){
-
-                    $sql = "SELECT cv.drawing_prepare_date, cv.drawing_prepare_date_followup, cv.drawing_approve_date, cv.drawing_approve_date_followup, cv.job_start_date, cv.job_start_date_followup, cs.stat_req_easement_waterboard_approval_date, cs.stat_req_easement_waterboard_followup, cs.stat_req_easement_council_approval_date, cs.stat_req_easement_council_followup, cs.m_o_d_followup
- FROM  ver_chronoforms_data_contract_list_vic AS cl   JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid=cl.projectid
- JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=cl.projectid
- WHERE cl.projectid='{$l['projectid']}' AND ((drawing_prepare_date IS NULL OR DATE(cv.drawing_prepare_date_followup)<=DATE(NOW()) )
- OR (cv.drawing_approve_date IS NULL AND DATE(cv.drawing_approve_date_followup)<=DATE(NOW()) )
- OR (cv.job_start_date IS NULL AND DATE(cv.job_start_date_followup)<=DATE(NOW()) )
- OR (cs.stat_req_easement_waterboard_approval_date IS NULL AND DATE(cs.stat_req_easement_waterboard_followup)<=DATE(NOW()) )
- OR (cs.stat_req_easement_council_approval_date IS NULL AND DATE(cs.stat_req_easement_council_followup)<=DATE(NOW()) )
- OR (cs.m_o_d IS NULL AND DATE(cs.m_o_d_followup)<=DATE(NOW())))";
-
-                    $fResult1 = mysql_query($sql);
-                    $c = mysql_fetch_assoc($fResult1);
-                    $is_contract_generated = 1;
-
-                    //error_log(print_r($c,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                    //error_log(" date_contract_system_created: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');  exit();
-                }
-
-                $is_overdue = false;
-                $status = "";
-                $date = "";
-                //error_log( " i: ".$i, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                //if($l['projectid']=="PRV11282")
-                //	error_log(print_r($l,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                // if(strtolower($l['status'])=="won" && empty($l['date_won'])==false && empty($l['date_contract_signed'])==true){
-                // 	$status = "Contract for delivery";
-                // 	$phpdate = strtotime( $l['date_won'] );
-                // 	$date = date( PHP_DFORMAT, $phpdate );
-                $status="";$status1="";$status2="";$status3="";$status4="";$status5="";$status6="";$status7="";$status8="";
-
-
-                if(!empty($l['date_contract_signed']) || !empty($l['date_contract_system_created']) ){
-                    //error_log("inside 1:".$l['date_contract_signed'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                    $status1 = "Ready for Contract";
-                    $status .= $status1;
-                    if(!empty($l['date_contract_signed'])){
-                        $phpdate = strtotime( $l['date_contract_signed'] );
-                    }else{
-                        $phpdate = strtotime( $l['date_contract_system_created'] );
+                    if($i==0){$to_do_list .= "<li class='li-header'>
+                        <span class='col-date'>Due Date</span><span class='col-client-id'>Client ID</span><span class='col-name'> Name </span><span class='col-date'> Mobile </span><span class='col-note'>Last notes</span><span class='col-status'>Status</span> </li>  ";
                     }
 
-                    $date = date( PHP_DFORMAT, $phpdate );
-                }
+                    $is_overdue = false;
+                    $client_status = "Initial Appointment";
+                    $due_date = "";
 
-                if($is_contract_generated && empty($c['drawing_approve_date']) && !empty($c['drawing_prepare_date_followup'])){
+                    if(empty($l['qdelivered'])==true && empty($l['next_followup'])==true){
+                            $client_status = "Initial Appointment";
+                            $phpdate = strtotime( $l['appointmentdate'] );
+                            $due_date = date( PHP_DFORMAT, $phpdate );
+                            //error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
 
-                    $phpdate = strtotime( $c['drawing_prepare_date_followup'] );
-                    $date = date( PHP_DFORMAT, $phpdate );
-                    if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
-                        $status2 = (!empty($status)?"<br/>":"")."Drawing & Prepare";
-                        $status .= $status2;
                     }
 
-                }
+                    if(empty($l['qdelivered'])==true && isset($l['next_followup'])){
+                            $client_status = "Initial Appointment";
+                            $phpdate = strtotime( $l['next_followup'] );
+                            $due_date = date( PHP_DFORMAT, $phpdate );
+                            //error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
 
-                if($is_contract_generated && empty($c['drawing_approve_date']) && !empty($c['drawing_approve_date_followup'])){
-
-                    $phpdate = strtotime( $c['drawing_approve_date_followup'] );
-                    $date = date( PHP_DFORMAT, $phpdate );
-
-                    if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
-                        $status3 = (!empty($status)?"<br/>":"")."Drawing Approval";
-                        $status .= $status3;
                     }
-                }
 
-                if($is_contract_generated && empty($c['job_start_date']) && !empty($c['job_start_date_followup'])){
+                    if(isset($l['qdelivered']) && isset($l['next_followup'])){
+                            $client_status = "Followup";
+                            $phpdate = strtotime( $l['next_followup'] );
+                            $due_date = date( PHP_DFORMAT, $phpdate );
+                            //error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
 
-                    $phpdate = strtotime( $c['job_start_date_followup'] );
-                    $date = date( PHP_DFORMAT, $phpdate );
-
-                    if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
-                        $status4 = (!empty($status)?"<br/>":"")."Job Start";
-                        $status .= $status4;
                     }
-                }
-
-                if($is_contract_generated && empty($c['stat_req_easement_waterboard_approval_date']) && !empty($c['stat_req_easement_waterboard_followup'])){
-                    $phpdate = strtotime( $c['stat_req_easement_waterboard_followup'] );
-                    $date = date( PHP_DFORMAT, $phpdate );
-
-                    if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
-                        $status5 = (!empty($status)?"<br/>":"")."Waterboard Approval";
-                        $status .= $status5;
-                    }
-                }
-
-                if($is_contract_generated && empty($c['stat_req_easement_council_approval_date']) && !empty($c['stat_req_easement_council_followup'])){
-
-                    $phpdate = strtotime( $c['stat_req_easement_council_followup'] );
-                    $date = date( PHP_DFORMAT, $phpdate );
-
-                    if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
-                        $status6 = (!empty($status)?"<br/>":"")."Council Approval";
-                        $status .= $status6;
-                    }
-                }
 
 
-                if($is_contract_generated && !empty($c['m_o_d']) && !empty($c['m_o_d_followup'])){
-                    $phpdate = strtotime( $c['m_o_d_followup'] );
-                    $date = date( PHP_DFORMAT, $phpdate );
-
-                    if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
-                        $status7 = (!empty($status)?"<br/>":"")."Modifications";
-                        $status .= $status7;
-                    }
-                }
-
-                if($is_contract_generated && empty($c['engineering_approved_date']) && !empty($c['engineering_approved_date_followup'])){
-
-                    $phpdate = strtotime( $c['engineering_approved_date_followup'] );
-                    $date = date( PHP_DFORMAT, $phpdate );
-
-                    if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
-                        $status8 = (!empty($status)?"<br/>":"")."Engineering Epproval";
-                        $status .= $status8;
-                    }
-                }
-
-                if(empty($status)){
-                    //error_log("status".$status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                    $i++;
-                    continue;
-                }
-
-                $_due_date = date( 'Y-m-d', $phpdate );
-                $is_overdue = 0;
-                if($_due_date<date('Y-m-d')){
-                    $is_overdue = 1;
-                }else{
+                    $_due_date = date( 'Y-m-d', $phpdate );
                     $is_overdue = 0;
+                    if($_due_date<date('Y-m-d')){
+                        $is_overdue = 1;
+                    }else{
+                        $is_overdue = 0;
+                    }
+
+                    $input_followup = "<input type='text' name='followup_date' value=''  autocomplete='off' class='datepicker' onchange='' />";
+
+
+                    $chk_done = "<input type='button' name='' value='update'  onclick='save_status(event,this)' />";
+
+
+                    $link_client = "<a  class='' href='".JURI::base()."client-listing-vic/client-folder-vic?pid={$l['pid']}&ref=/'
+                    >{$l['clientid']}</a>";
+
+                    $to_do_list .= "<li class=\"li-row ".($is_overdue?'highligh-red':'')." \">".
+                                    "<input type='hidden'  class='cf_id' value='' /> ".
+                                    "<input type='hidden'  class='pid' value='{$l['pid']}' /> ";
+
+                    $to_do_list .= "<span class='col-date'> {$due_date} </span>".
+                                    "<span  class='col-client-id'>  {$link_client} </span>".
+                                    "<span class='col-name'> ". ($l['is_builder']==1 ? $l['builder_name'] : $l['client_firstname'].' '.$l['client_lastname'])."</span>".
+                                    "<span class='col-date'> {$l['mobile']} </span>".
+                                    "<span class='col-note'> {$l['note']} </span>".
+                                    "<span class='col-status'> {$client_status}  </span>";
+                    $to_do_list .= "</li>";
+                    $i++;
                 }
 
 
-                $input_followup = "<input type='text' name='followup_date' value=''  autocomplete='off' class='datepicker' onchange='' />";
+            $to_do_list .= "</ul>";
+            $to_do_list .= "</div>";
+
+            $to_do_list .= "<div class='pagination-layer'>";
+            $to_do_list .= pagination($page, $total_records, "");
+            $to_do_list .= "</div>";
 
 
-                $chk_done = "<input type='button' name='' value='update'  onclick='save_status(event,this)' />";
+        }
+    // echo $user_group;
+        if($is_operation_manager || $is_site_manager || $user_group=="sales_manager"){
+        // else if($is_operation_manager || $is_site_manager || $is_sales_manager){ //To do list for construction users
+        // echo $user_group;
+        $to_do_list_construction = ""; $i = 0;
+        $to_do_list_construction .= "
+            <div style='width:85%; display: inline-block;'>
+                <h3 style='margin:0; text-decoration:underline; '>Reminder List</h3>
 
-  	  			if(!empty($status1)){
-  	  				$link_client = "<a  class='' href='".JURI::base()."client-listing-vic/client-folder-vic?cid={$l['clientid']}&cf_id={$l['cf_id']}&ref=/'
-                >{$l['projectid']}</a>";
-  	  			}else{
-                    $link_client = "<a  class='' href='".JURI::base()."contract-listing-vic/contract-folder-vic?projectid={$l['projectid']}&ref=/'
-                >{$l['projectid']}</a>";
-  	  			}
+                <ul id='to_do_list' class='list-table'  style='margin:0 0; width: 100%;  display:inline-block;vertical-align: top; font-size:12px;'>
+                ";
 
-                $to_do_list_construction .= "<li class=\"li-row ".($is_overdue?'highligh-red':'')." \">".
-                                "<input type='hidden'  class='cf_id' value='' /> ".
-                     			"<input type='hidden'  class='pid' value='{$l['pid']}' /> ";
-
-                $to_do_list_construction .= "<span class='col-date'> {$date} </span>".
-                                "<span  class='col-client-id'>  {$link_client} </span>".
-                                "<span class='col-name'> ". ($l['is_builder']==1 ? $l['builder_name'] : $l['client_firstname'].' '.$l['client_lastname'])."</span>".
-                                "<span class='col-note'> {$l['note']} </span>".
-                                "<span class='col-status'> {$status1}{$status2}{$status3}{$status4}{$status5}{$status6}{$status7}{$status8} </span>";
-                $to_do_list_construction .= "</li>";
-                $i++;
-
-         	}
+                $sql1 = " SELECT f.cf_id, c.datelodged, pid, c.clientid, f.projectid, c.repident AS rep_id, c.client_firstname, c.client_lastname, c.is_builder, c.builder_name, f.status, f.date_won, f.date_contract_signed, f.date_contract_system_created, n.content
+     FROM ver_chronoforms_data_followup_vic AS f JOIN  ver_chronoforms_data_clientpersonal_vic  AS c ON c.clientid=f.quoteid
+     LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_notes_vic ORDER BY cf_id desc) as t GROUP BY clientid  ) as n ON n.clientid=c.clientid
+     WHERE c.deleted_at IS NULL AND (f.cf_id>5534 AND f.status='Won')"; //f.cf_id>5534 is the next number the new system generate a new quotations.
 
 
-        $to_do_list_construction .= "</ul>";
-        $to_do_list_construction .= "</div>";
-        //error_log(" to_do_list_construction".$to_do_list_construction, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-        $to_do_list_construction .= "<div class='pagination-layer'>";
-        $to_do_list_construction .= pagination($page, $total_records, "");
+    if($is_operation_manager || $is_site_manager || $user_group=="sales_manager"){
+                $sql = "SELECT
+                            f.cf_id,
+                            c.datelodged,
+                            pid,
+                            c.clientid,
+                            f.projectid,
+                            c.repident AS rep_id,
+                            c.client_firstname,
+                            c.client_lastname,
+                            c.is_builder,
+                            c.builder_name,
+                            f.STATUS,
+                            f.date_won,
+                            f.date_contract_signed,
+                            f.date_contract_system_created,
+                            n.content
+                        FROM
+                            ver_chronoforms_data_followup_vic AS f
+                            JOIN ver_chronoforms_data_clientpersonal_vic AS c ON c.clientid = f.quoteid
+                            LEFT JOIN ( SELECT * FROM ( SELECT * FROM ver_chronoforms_data_notes_vic GROUP BY cf_id DESC ORDER BY cf_id DESC, date_created DESC ) AS t GROUP BY clientid) AS n ON n.clientid = c.clientid
+                        WHERE
+                            c.deleted_at IS NULL 
+                            -- AND ( f.cf_id > 5534 
+                            ";
+
+                        if($is_site_manager){$sql .= " AND (f.STATUS = 'Under Consideration' OR f.STATUS = 'Quoted' OR f.STATUS = 'Costed')"; 
+                        }else if($user_group=="sales_manager"){ $sql .= "AND (f.STATUS = 'Won')"; }
+                        
+                        $sql .= "";
+
+                        }
+                //error_log("is_construction: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+
+                $fResult = mysql_query($sql);
+                $total_records1 = mysql_num_rows($fResult);
+     $sql .= " ORDER BY date_won DESC, f.date_contract_signed DESC LIMIT {$start}, ".NUMBER_PER_PAGE." ";
+    // echo $sql;
+                $fResult = mysql_query($sql);
+
+                $i=0; $is_contract_generated = 0;
+                while ($l = mysql_fetch_assoc($fResult)) {
+                    //error_log(print_r($l,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                    if($i==0){
+                        $to_do_list_construction .= "<li class='li-header'>";
+                        if($user_group=="sales_manager"){
+                        $to_do_list_construction .= "<span class='col-date'>Date</span>";}
+                        
+                        $to_do_list_construction .= "<span class='col-client-id'>Project ID</span>
+                        <span class='col-name'> Client Name </span> 
+                        <span class='col-note'>Last notes</span>
+                        <span class='col-name'>Follow-up</span> </li>  ";
+                    }
+
+                    $c = null;
+                    if(!empty($l['date_contract_system_created'])){
+
+                        $sql = "SELECT cv.drawing_prepare_date, cv.drawing_prepare_date_followup, cv.drawing_approve_date, cv.drawing_approve_date_followup, cv.job_start_date, cv.job_start_date_followup, cs.stat_req_easement_waterboard_approval_date, cs.stat_req_easement_waterboard_followup, cs.stat_req_easement_council_approval_date, cs.stat_req_easement_council_followup, cs.m_o_d_followup
+     FROM  ver_chronoforms_data_contract_list_vic AS cl   JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid=cl.projectid
+     JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=cl.projectid
+     WHERE cl.projectid='{$l['projectid']}' AND ((drawing_prepare_date IS NULL OR DATE(cv.drawing_prepare_date_followup)<=DATE(NOW()) )
+     OR (cv.drawing_approve_date IS NULL AND DATE(cv.drawing_approve_date_followup)<=DATE(NOW()) )
+     OR (cv.job_start_date IS NULL AND DATE(cv.job_start_date_followup)<=DATE(NOW()) )
+     OR (cs.stat_req_easement_waterboard_approval_date IS NULL AND DATE(cs.stat_req_easement_waterboard_followup)<=DATE(NOW()) )
+     OR (cs.stat_req_easement_council_approval_date IS NULL AND DATE(cs.stat_req_easement_council_followup)<=DATE(NOW()) )
+     OR (cs.m_o_d IS NULL AND DATE(cs.m_o_d_followup)<=DATE(NOW())))";
+
+                        $fResult1 = mysql_query($sql);
+                        $c = mysql_fetch_assoc($fResult1);
+                        $is_contract_generated = 1;
+
+                        //error_log(print_r($c,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                        //error_log(" date_contract_system_created: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');  exit();
+                    }
+
+                    $is_overdue = false;
+                    $status = "";
+                    $date = "";
+                    //error_log( " i: ".$i, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                    //if($l['projectid']=="PRV11282")
+                    //  error_log(print_r($l,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                    // if(strtolower($l['status'])=="won" && empty($l['date_won'])==false && empty($l['date_contract_signed'])==true){
+                    //  $status = "Contract for delivery";
+                    //  $phpdate = strtotime( $l['date_won'] );
+                    //  $date = date( PHP_DFORMAT, $phpdate );
+                    $status="";$status1="";$status2="";$status3="";$status4="";$status5="";$status6="";$status7="";$status8="";
 
 
-    }
+                    if(!empty($l['date_contract_signed']) || !empty($l['date_contract_system_created']) ){
+
+                        //error_log("inside 1:".$l['date_contract_signed'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                        $status1 = "Ready for Contract";
+                        $status .= $status1;
+                        if(!empty($l['date_contract_signed'])){
+                            $phpdate = strtotime( $l['date_contract_signed'] );
+                        }else{
+                            $phpdate = strtotime( $l['date_contract_system_created'] );
+                        }
+
+                        $date = date( PHP_DFORMAT, $phpdate );
+                    }
+
+                    if($is_contract_generated && empty($c['drawing_approve_date']) && !empty($c['drawing_prepare_date_followup'])){
+
+                        $phpdate = strtotime( $c['drawing_prepare_date_followup'] );
+                        $date = date( PHP_DFORMAT, $phpdate );
+                        if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                            $status2 = (!empty($status)?"<br/>":"")."Drawing & Prepare";
+                            $status .= $status2;
+                        }
+
+                    }
+
+                    if($is_contract_generated && empty($c['drawing_approve_date']) && !empty($c['drawing_approve_date_followup'])){
+
+                        $phpdate = strtotime( $c['drawing_approve_date_followup'] );
+                        $date = date( PHP_DFORMAT, $phpdate );
+
+                        if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                            $status3 = (!empty($status)?"<br/>":"")."Drawing Approval";
+                            $status .= $status3;
+                        }
+                    }
+
+                    if($is_contract_generated && empty($c['job_start_date']) && !empty($c['job_start_date_followup'])){
+
+                        $phpdate = strtotime( $c['job_start_date_followup'] );
+                        $date = date( PHP_DFORMAT, $phpdate );
+
+                        if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                            $status4 = (!empty($status)?"<br/>":"")."Job Start";
+                            $status .= $status4;
+                        }
+                    }
+
+                    if($is_contract_generated && empty($c['stat_req_easement_waterboard_approval_date']) && !empty($c['stat_req_easement_waterboard_followup'])){
+                        $phpdate = strtotime( $c['stat_req_easement_waterboard_followup'] );
+                        $date = date( PHP_DFORMAT, $phpdate );
+
+                        if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                            $status5 = (!empty($status)?"<br/>":"")."Waterboard Approval";
+                            $status .= $status5;
+                        }
+                    }
+
+                    if($is_contract_generated && empty($c['stat_req_easement_council_approval_date']) && !empty($c['stat_req_easement_council_followup'])){
+
+                        $phpdate = strtotime( $c['stat_req_easement_council_followup'] );
+                        $date = date( PHP_DFORMAT, $phpdate );
+
+                        if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                            $status6 = (!empty($status)?"<br/>":"")."Council Approval";
+                            $status .= $status6;
+                        }
+                    }
+
+
+                    if($is_contract_generated && !empty($c['m_o_d']) && !empty($c['m_o_d_followup'])){
+                        $phpdate = strtotime( $c['m_o_d_followup'] );
+                        $date = date( PHP_DFORMAT, $phpdate );
+
+                        if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                            $status7 = (!empty($status)?"<br/>":"")."Modifications";
+                            $status .= $status7;
+                        }
+                    }
+
+                    if($is_contract_generated && empty($c['engineering_approved_date']) && !empty($c['engineering_approved_date_followup'])){
+
+                        $phpdate = strtotime( $c['engineering_approved_date_followup'] );
+                        $date = date( PHP_DFORMAT, $phpdate );
+
+                        if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                            $status8 = (!empty($status)?"<br/>":"")."Engineering Epproval";
+                            $status .= $status8;
+                        }
+                    }
+
+                    if(empty($status)){
+                        //error_log("status".$status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                        $i++;
+                        continue;
+
+                    }
+
+                    $_due_date = date( 'Y-m-d', $phpdate );
+                    $is_overdue = 0;
+                    if($_due_date<date('Y-m-d')){
+                        $is_overdue = 1;
+                    }else{
+                        $is_overdue = 0;
+                    }
+
+
+                    $input_followup = "<input type='text' name='followup_date' value=''  autocomplete='off' class='datepicker' onchange='' />";
+
+
+                    $chk_done = "<input type='button' name='' value='update'  onclick='save_status(event,this)' />";
+
+                    if(!empty($status1)){
+                        $link_client = "<a  class='' href='".JURI::base()."client-listing-vic/client-folder-vic?cid={$l['clientid']}&cf_id={$l['cf_id']}&ref=/'
+                    >{$l['projectid']}</a>";
+                    }else{
+                        $link_client = "<a  class='' href='".JURI::base()."contract-listing-vic/contract-folder-vic?projectid={$l['projectid']}&ref=/'
+                    >{$l['projectid']}</a>";
+                    }
+
+                    $to_do_list_construction .= "<li class=\"li-row ".($is_overdue?'highligh-red':'')." \">".
+                                    "<input type='hidden'  class='cf_id' value='' /> ".
+                                    "<input type='hidden'  class='pid' value='{$l['pid']}' /> ";
+                    if($user_group=="sales_manager"){
+                    $to_do_list_construction .= "<span class='col-date'> {$date} </span>";}
+                    $to_do_list_construction .= "<span  class='col-client-id'>  {$link_client} </span>".
+                                    "<span class='col-name'> ". ($l['is_builder']==1 ? $l['builder_name'] : $l['client_firstname'].' '.$l['client_lastname'])."</span>".
+                                    "<span class='col-note'> " .$l['content']. "  </span>".
+                                    "<span class='col-status'> {$status1}{$status2}{$status3}{$status4}{$status5}{$status6}{$status7}{$status8} </span>";
+                    $to_do_list_construction .= "</li>";
+                    $i++;
+
+                }
+
+
+            $to_do_list_construction .= "</ul>";
+            $to_do_list_construction .= "</div>";
+            //error_log(" to_do_list_construction".$to_do_list_construction, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+            $to_do_list_construction .= "<div class='pagination-layer'>";
+            $to_do_list_construction .= pagination($page, $total_records, "");
+
+        }
 
 
     if($is_user){
@@ -2015,7 +2031,9 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
 
     }else if($is_manager){
-
+        echo "<div style='width:100%; margin:0;'>";
+        echo $to_do_list_construction;
+        echo "<br/><br/><br/>";
         //echo "<div style='width:65%;  '>";
             echo $to_do_list;
         //echo "</div>";
@@ -2051,11 +2069,12 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
 
 
-    }else if($is_operation_manager || $is_site_manager){
+    }else if($is_operation_manager || $is_site_manager || $is_site_manager || $is_sales_manager){
 
         echo "<div style='width:100%; margin:0;'>";
 
             echo $to_do_list_construction;
+            echo "<br/><br/><br/>";
             
             if($is_operation_manager){
                 echo "<br/><br/><br/>";
