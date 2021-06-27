@@ -118,13 +118,13 @@ $custom_configs_user = array(
                     'project status' => false, 
                     'create contract' => true
                 ), 
-                'tab sales' => array('save' => false, 'delete' => false), 
-                'tab correspondence' => array('save' => false, 'delete' => false), 
-                'tab statutory' => array('save' => false, 'delete' => false), 
-                'tab photos' => array('save' => false, 'delete' => false), 
-                'tab drawings' => array('save' => false, 'delete' => false), 
-                'tab general' => array('save' => false, 'delete' => false), 
-                'record action' => array('save' => false, 'delete' => false)
+                'tab sales' => array('save' => true, 'delete' => true), 
+                'tab correspondence' => array('save' => true, 'delete' => true), 
+                'tab statutory' => array('save' => true, 'delete' => true), 
+                'tab photos' => array('save' => true, 'delete' => true), 
+                'tab drawings' => array('save' => true, 'delete' => true), 
+                'tab general' => array('save' => true, 'delete' => true), 
+                'record action' => array('save' => true, 'delete' => true)
             ), 
             'builder-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
@@ -210,13 +210,13 @@ $custom_configs_user = array(
                     'project status' => false, 
                     'create contract' => true
                 ), 
-                'tab sales' => array('save' => false, 'delete' => false), 
-                'tab correspondence' => array('save' => false, 'delete' => false), 
-                'tab statutory' => array('save' => false, 'delete' => false), 
-                'tab photos' => array('save' => false, 'delete' => false), 
-                'tab drawings' => array('save' => false, 'delete' => false), 
-                'tab general' => array('save' => false, 'delete' => false), 
-                'record action' => array('save' => false, 'delete' => false)
+                'tab sales' => array('save' => true, 'delete' => true), 
+                'tab correspondence' => array('save' => true, 'delete' => true), 
+                'tab statutory' => array('save' => true, 'delete' => true), 
+                'tab photos' => array('save' => true, 'delete' => true), 
+                'tab drawings' => array('save' => true, 'delete' => true), 
+                'tab general' => array('save' => true, 'delete' => true), 
+                'record action' => array('save' => true, 'delete' => true)
             ), 
             'builder-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
@@ -302,13 +302,13 @@ $custom_configs_user = array(
                     'project status' => false, 
                     'create contract' => false
                 ), 
-                'tab sales' => array('save' => false, 'delete' => false), 
-                'tab correspondence' => array('save' => false, 'delete' => false), 
-                'tab statutory' => array('save' => false, 'delete' => false), 
-                'tab photos' => array('save' => false, 'delete' => false), 
-                'tab drawings' => array('save' => false, 'delete' => false), 
-                'tab general' => array('save' => false, 'delete' => false), 
-                'record action' => array('save' => false, 'delete' => false)
+                'tab sales' => array('save' => true, 'delete' => true), 
+                'tab correspondence' => array('save' => true, 'delete' => true), 
+                'tab statutory' => array('save' => true, 'delete' => true), 
+                'tab photos' => array('save' => true, 'delete' => true), 
+                'tab drawings' => array('save' => true, 'delete' => true), 
+                'tab general' => array('save' => true, 'delete' => true), 
+                'record action' => array('save' => true, 'delete' => true)
             ), 
             'builder-folder-vic' => array(
                 'tab client details' => array('edit' => false), 
