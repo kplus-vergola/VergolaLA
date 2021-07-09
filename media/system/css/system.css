@@ -96,9 +96,9 @@ tr.subheading{
 
 
 input[type="button"], input[type="submit"], .btn, .bbtn{
-	background-image: linear-gradient(to bottom, #337ab7 0px, #265a88 100%) !important;
+	background-image: linear-gradient(to bottom, #FFAF00 0px, #FFAF00 100%) !important;
     background-repeat: repeat-x !important;
-    border: 1px solid #245580 !important;
+    border: 1px solid #4D4D4D !important;
     border-radius: 2px !important; 
     color: #fff !important;
     cursor: pointer;
