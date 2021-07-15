@@ -182,7 +182,7 @@ $supplier = mysql_fetch_array($qSupplier);
 <table class="template_tbl" cellspacing="0" cellpadding="0" width="600px">
 	<tr>
 		<td  style="width:50%; text-align:left; " >
-		 	<img src="<?php echo JURI::base().'images/company_logo.png'; ?> " class="" style="float:left;padding:0px 0px 10px 0; width: 120px;"/>
+		 	<img src="<?php echo JURI::base().'images/company_logo.png'; ?> " class="" style="float:left;padding:0px 0px 10px 0; width: 180px;"/>
 			 
 		
 		</td>
