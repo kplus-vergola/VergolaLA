@@ -4,12 +4,12 @@
 
 #client .site-address {padding:6px 0px;}
 #client .site-address p:first-of-type {padding-top:30px;}
-#client .site-address  h1{font-size:14px; border-top:1px solid #ddd; position:absolute;margin:0px 0px 0px 5px;width:25%; background-color:#EEEEEE;color:#A056AD;}
+#client .site-address  h1{font-size:14px; border-top:1px solid #ddd; position:absolute;margin:0px 0px 0px 5px;width:25%; background-color:#EEEEEE;color:#4D4D4D;}
 #notes table, #notes table td, #notes table tr {border:none!important;} 
 #tabs_wrapper #notes #tbl-notes, #tabs_wrapper #notes #tbl-content {width:800px;}
 #tabs_wrapper #notes #tbl-notes td textarea {width:785px;height:100px;}
 #tabs_wrapper.notes-tab #notes {min-height:280px;}
-#tabs_wrapper.notes-tab #notes  #tbl-content  h1 {font-size:14px;padding-left:1px;margin-top:10px;border-bottom:2px solid #A056AD;margin:8px;color:#A056AD;}
+#tabs_wrapper.notes-tab #notes  #tbl-content  h1 {font-size:14px;padding-left:1px;margin-top:10px;border-bottom:2px solid #4D4D4D;margin:8px;color:#4D4D4D;}
 #tabs_wrapper.notes-tab #notes  #tbl-content  h1, #tabs_wrapper.notes-tab #notes  #tbl-content  p{text-align:left;}
 #tabs_wrapper.notes-tab #notes  #tbl-content  p {padding-bottom:10px;word-wrap:break-word;width:780px;white-space:pre-line;}
 #tbl-content tr, #tbl-content td {border:none;}
@@ -118,7 +118,7 @@ display:inline-block;
 
 #tracker h1 {background-color: #EEEEEE;
     border-top: 1px solid #ddd;
-    color: #a056ad;
+    color: #4D4D4D;
     font-size: 14px;
     margin: 8px;
     padding: 5px;

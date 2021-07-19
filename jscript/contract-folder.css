@@ -15,7 +15,7 @@
 .quote-tab .spanproject label {line-height:5px;}
 .quote-tab #contractdetails h1, .quote-tab #quotedetails h1, .quote-tab #billofmaterials h1, .quote-tab #purchaseorder h1 {background-color: #EEEEEE;
     border-top: 1px solid #ddd;
-    color: #a056ad;
+    color: #4D4D4D;
     font-size: 14px;
     margin: 0px 0px 5px;
     padding: 5px;}
@@ -235,7 +235,7 @@ body[class^='contract-listing'] #lightbox h1 img {float:right;margin:-20px -10px
 #chronoform_Client_Bom_Vic h2 span {
 	visibility:visible!important;
     border: 1px solid #ddd;
-    color: #a056ad;
+    color: #4D4D4D;
     font-size: 14px;
     margin: 0 0 5px;
     padding: 5px;}
