@@ -4,7 +4,7 @@
 
 #client .site-address {padding:6px 0px;}
 #client .site-address p:first-of-type {padding-top:30px;}
-#client .site-address  h1{font-size:14px; border-top:1px solid #ddd; position:absolute;margin:0px 0px 0px 5px;width:25%; background-color:#BDDFFF;color:#A056AD;}
+#client .site-address  h1{font-size:14px; border-top:1px solid #ddd; position:absolute;margin:0px 0px 0px 5px;width:25%; background-color:#EEEEEE;color:#A056AD;}
 #notes table, #notes table td, #notes table tr {border:none!important;} 
 #tabs_wrapper #notes #tbl-notes, #tabs_wrapper #notes #tbl-content {width:800px;}
 #tabs_wrapper #notes #tbl-notes td textarea {width:785px;height:100px;}
@@ -116,7 +116,7 @@ display:inline-block;
 
 #tracker {min-height:263px; overflow:auto;}
 
-#tracker h1 {background-color: #bddfff;
+#tracker h1 {background-color: #EEEEEE;
     border-top: 1px solid #ddd;
     color: #a056ad;
     font-size: 14px;
