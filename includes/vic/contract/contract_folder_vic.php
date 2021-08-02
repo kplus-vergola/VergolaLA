@@ -455,6 +455,18 @@ if (strlen($_POST['citypermitapproveddate']) && $_POST['citypermitapproveddate']
   $city_permit_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['citypermitapproveddate'])))."'";
 }
 
+$site_spec_engineering_dates_enabled = "No";
+if (strlen($_POST['followupactive'])){
+  $site_spec_engineering_dates_enabled = "'".mysql_real_escape_string($_POST['followupactive'])."'";
+}
+$site_spec_engineering_application_date = "NULL"; 
+if (strlen($_POST['followupdate']) && $_POST['followupdate'] != "0000-00-00 00:00:00"){
+  $site_spec_engineering_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['followupdate'])))."'";
+}
+$site_spec_engineering_approved_date = "NULL"; 
+if (strlen($_POST['bywhomselect']) && $_POST['bywhomselect'] != "Follow-up by:"){
+  $site_spec_engineering_approved_date = $_POST['bywhomselect'];
+}
 
 $site_spec_engineering_dates_enabled = "No";
 if (strlen($_POST['engractive'])){
@@ -1825,6 +1837,15 @@ $groups = $user->get('groups');
                     {"field_id":"citypermitapproveddateid", "field_value":"<?php echo $contract_stat['fcitypermit_application_approved_date']; ?>"}
                 ]
             }, 
+
+            {
+                "date_enabler":{"field_id":"followupactive", "field_value":"<?php echo $contract_stat['ffollowup_active']; ?>"},  
+                "date_fields": [
+                    {"field_id":"followupdateid", "field_value":"<?php echo $contract_stat['ffollowup_application_date']; ?>"}, 
+                    {"field_id":"bywhomselectid", "field_value":"<?php echo $contract_stat['ffollowup_by_whom']; ?>"}
+                ]
+            }, 
+
             {
                 "date_enabler":{"field_id":"engractive", "field_value":"<?php echo $contract_stat['fengr_active']; ?>"}, 
                 "date_fields": [
@@ -1849,7 +1870,25 @@ $groups = $user->get('groups');
         ];
         </script>
         <!-- end: enable/disable date fields settings -->
+        <!-- begin: For the Follow-up DropDown -->
+        <?php
+          $cbo_followupby = "<select    name=\"bywhomselect\" id=\"bywhomselectid\"  style='width:103%; padding:0px'><option value=''>Follow-up by: </option>"; 
+          // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
+          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30";
+          $resultsub = mysql_query($querysub);
+              if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
+          while ($data=mysql_fetch_assoc($resultsub)){  
+
+              if($data['name']==$contract_vergola['erectors_name']){ 
+                  $cbo_followupby .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+              }else{
+                  $cbo_followupby .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
+              } 
+          }
+          $cbo_followupby .= "</select>"; 
+        ?> 
+        <!-- end: For the Follow-up DropDown -->
         <div class="label-input-row">   
             <input type="hidden" name="council" id="council" value="By Vergola" />
             <label class="input " ><span class="visible" >Enable Date Entry: </span>
@@ -1860,6 +1899,19 @@ $groups = $user->get('groups');
             </label>
             <label class="input planningdate"><span class="visible">City Permit Appl.: </span><input type="text" name="citypermitdate" id="citypermitdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
             <label class="input planningapprove"><span class="visible">City Permit Appr.: </span><input type="text" name="citypermitapproveddate" id="citypermitapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+        </div>
+
+        <div class="label-input-row">   
+            <label class="input " ><span class="visible" >Enable Date Entry: </span>
+                <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="followupactive" id="followupactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>          
+            </label>
+            <label class="input planningdate"><span class="visible">Follow-up Appl.: </span><input type="text" name="followupdate" id="followupdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input checkmeasure"> 
+              <?php echo $cbo_followupby; ?>
+            </label>
         </div>
 
         <div class="label-input-row">   
