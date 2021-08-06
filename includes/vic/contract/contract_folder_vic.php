@@ -1889,16 +1889,22 @@ $groups = $user->get('groups');
           $cbo_followupby .= "</select>"; 
         ?> 
         <!-- end: For the Follow-up DropDown -->
-        <div class="label-input-row">   
+        <div class="label-input-row">  
+        <div> 
             <input type="hidden" name="council" id="council" value="By Vergola" />
-            <label class="input " ><span class="visible" >Enable Date Entry: </span>
-                <select class="visible" style="width:60px; text-align:left;margin-left: 120px" disabled="disabled" name="citypermitactive" id="citypermitactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+            <label class="input " style="width:20.5%;" ><span class="visible" >Enable Date Entry: </span>
+                <select class="visible" style="width:50px; text-align:left;margin-left: 110px" disabled="disabled" name="citypermitactive" id="citypermitactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>          
             </label>
-            <label class="input planningdate"><span class="visible">City Permit Appl.: </span><input type="text" name="citypermitdate" id="citypermitdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
-            <label class="input planningapprove"><span class="visible">City Permit Appr.: </span><input type="text" name="citypermitapproveddate" id="citypermitapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input planningdate" style="width:18%;"><span class="visible">City Permit Appl.: </span><input style="width:55px;" type="text" name="citypermitdate" id="citypermitdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input planningapprove" style="width:18%;"><span class="visible">City Permit Appr.: </span><input style="width:55px;" type="text" name="citypermitapproveddate" id="citypermitapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input planningdate" style="width:18%;"><span class="visible">Follow-up Appl.: </span><input style="width:55px;" type="text" name="followupdate" id="followupdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input checkmeasure" style="width:18%;"> 
+              <?php echo $cbo_followupby; ?>
+            </label>
+          </div>
         </div>
 
         <div class="label-input-row">   
