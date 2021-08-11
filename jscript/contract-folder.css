@@ -92,6 +92,17 @@ div.label-input-row label input{
     padding: 4px 3px 3px 55%;
 }
 
+.info-tab #statutory div.label-input-row label input {padding:4px 3px 3px 4px;}
+/*.info-tab #statutory div.label-input-row label.input.planningdate {width:60%; padding:4px 3px 3px 4px;}*/
+/*.info-tab #statutory label.planningapprove input {width:60%; }*/
+.info-tab #statutory div.label-input-row table label {width:20%; }
+.info-tab #statutory div.label-input-row table label.input select {width:150px; margin-left: 10px;}
+
+.info-tab #statutory div.label-input-row table.table-statutory th {border-collapse: collapse; border: 1px solid #fff;}
+.info-tab #statutory div.label-input-row table.table-statutory td {border-collapse: collapse; border: 1px solid #fff;}
+
+/*table.table-statutory {border-collapse: collapse;
+  border: 2px solid #EEE; }*/
 /*
 .info-tab #standard label.recheckmeasure input.date_entered {width:83px; padding:4px 3px 3px 115px;}
 .info-tab #standard label.drawingdate input.date_entered {width:auto; padding:4px 3px 3px 112px;}

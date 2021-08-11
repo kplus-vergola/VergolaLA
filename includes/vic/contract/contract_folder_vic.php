@@ -454,19 +454,11 @@ $city_permit_approved_date = "NULL";
 if (strlen($_POST['citypermitapproveddate']) && $_POST['citypermitapproveddate'] != "0000-00-00 00:00:00"){
   $city_permit_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['citypermitapproveddate'])))."'";
 }
-
-$site_spec_engineering_dates_enabled = "No";
-if (strlen($_POST['followupactive'])){
-  $site_spec_engineering_dates_enabled = "'".mysql_real_escape_string($_POST['followupactive'])."'";
+$city_permit_followup_date = "NULL"; 
+if (strlen($_POST['citypermitfollowupdate']) && $_POST['citypermitfollowupdate'] != "0000-00-00 00:00:00"){
+  $city_permit_followup_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['citypermitfollowupdate'])))."'";
 }
-$site_spec_engineering_application_date = "NULL"; 
-if (strlen($_POST['followupdate']) && $_POST['followupdate'] != "0000-00-00 00:00:00"){
-  $site_spec_engineering_application_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['followupdate'])))."'";
-}
-$site_spec_engineering_approved_date = "NULL"; 
-if (strlen($_POST['bywhomselect']) && $_POST['bywhomselect'] != "Follow-up by:"){
-  $site_spec_engineering_approved_date = $_POST['bywhomselect'];
-}
+$city_permit_followup_bywhom = mysql_real_escape_string($_POST['citypermitfollowupbywhom']);
 
 $site_spec_engineering_dates_enabled = "No";
 if (strlen($_POST['engractive'])){
@@ -480,6 +472,11 @@ $site_spec_engineering_approved_date = "NULL";
 if (strlen($_POST['sitespecengrapproveddate']) && $_POST['sitespecengrapproveddate'] != "0000-00-00 00:00:00"){
   $site_spec_engineering_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sitespecengrapproveddate'])))."'";
 }
+$site_spec_engineering_followup_date = "NULL"; 
+if (strlen($_POST['sitespecengrfollowupdate']) && $_POST['sitespecengrfollowupdate'] != "0000-00-00 00:00:00"){
+  $site_spec_engineering_followup_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sitespecengrfollowupdate'])))."'";
+}
+$site_spec_engineering_followup_bywhom = mysql_real_escape_string($_POST['sitespecengfollowupbywhom']);
 
 
 $hoa_dates_enabled = "No";
@@ -494,7 +491,11 @@ $hoa_approved_date = "NULL";
 if (strlen($_POST['strataapproveddate']) && $_POST['strataapproveddate'] != "0000-00-00 00:00:00"){
   $hoa_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['strataapproveddate'])))."'";
 }
-
+$hoa_followup_date = "NULL"; 
+if (strlen($_POST['stratafollowupdate']) && $_POST['stratafollowupdate'] != "0000-00-00 00:00:00"){
+  $hoa_followup_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['stratafollowupdate'])))."'";
+}
+$hoa_followup_bywhom = mysql_real_escape_string($_POST['stratafollowupbywhom']);
 
 $coastal_dates_enabled = "No";
 if (strlen($_POST['coastalactive'])){
@@ -508,6 +509,11 @@ $coastal_approved_date = "NULL";
 if (strlen($_POST['coastalapproveddate']) && $_POST['coastalapproveddate'] != "0000-00-00 00:00:00"){
   $coastal_approved_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['coastalapproveddate'])))."'";
 }
+$coastal_followup_date = "NULL"; 
+if (strlen($_POST['coastalfollowupdate']) && $_POST['coastalfollowupdate'] != "0000-00-00 00:00:00"){
+  $coastal_followup_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['coastalfollowupdate'])))."'";
+}
+$coastal_followup_bywhom = mysql_real_escape_string($_POST['coastalfollowupbywhom']);
         
                                           
    
@@ -664,7 +670,16 @@ if ($enable_update_contract_statutory == true) {
     dev_application_date = {$dev_application_date},
     bldg_rules_application = {$bldg_rules_application},
     bldg_rules_approval = {$bldg_rules_approval},
-    planning_application_followup = {$planning_application_followup}
+    planning_application_followup = {$planning_application_followup},
+    citypermit_followup_date = {$city_permit_followup_date},
+    citypermit_followup_bywhom = '{$city_permit_followup_bywhom}',
+    site_spec_followup_date = {$site_spec_engineering_followup_date},
+    site_spec_followup_bywhom = '{$site_spec_engineering_followup_bywhom}',
+    hoa_followup_date = {$hoa_followup_date},
+    hoa_followup_bywhom = '{$hoa_followup_bywhom}',
+    coastal_followup_date = {$coastal_followup_date},
+    coastal_followup_bywhom = '{$coastal_followup_bywhom}'
+    
     WHERE projectid = '$projectid'"; 
     mysql_query($sql)or die(mysql_error()); 
 }
@@ -1370,6 +1385,7 @@ $groups = $user->get('groups');
             *, 
             DATE_FORMAT(citypermit_application_date,'" . SQL_DFORMAT_21 . "') AS fcitypermit_application_date, 
             DATE_FORMAT(citypermit_application_approved_date,'" . SQL_DFORMAT_21 . "') AS fcitypermit_application_approved_date, 
+            DATE_FORMAT(citypermit_followup_date,'" . SQL_DFORMAT_21 . "') AS fcitypermit_followup_date, 
             DATE_FORMAT(sitespec_engr_date,'" . SQL_DFORMAT_21 . "') AS fsitespec_engr_date,
             DATE_FORMAT(sitespec_engr_approved_date,'" . SQL_DFORMAT_21 . "') AS fsitespec_engr_approved_date, 
             DATE_FORMAT(strata_date,'" . SQL_DFORMAT_21 . "') AS fstrata_date, 
@@ -1378,7 +1394,16 @@ $groups = $user->get('groups');
             DATE_FORMAT(coastal_approved_date,'" . SQL_DFORMAT_21 . "') AS fcoastal_approved_date,
             engr_active AS fengr_active,
             strata_active AS fstrata_active,
-            coastal_active AS fcoastal_active
+            coastal_active AS fcoastal_active,
+
+            citypermit_followup_bywhom AS fcitypermit_followup_bywhom,
+
+            DATE_FORMAT(site_spec_followup_date,'" . SQL_DFORMAT_21 . "') AS fsitespec_engr_followup_date,
+            site_spec_followup_bywhom AS fsitespec_engr_followup_bywhom,
+
+            DATE_FORMAT(hoa_followup_date,'" . SQL_DFORMAT_21 . "') AS fstrata_followup_date, 
+            DATE_FORMAT(coastal_followup_date,'" . SQL_DFORMAT_21 . "') AS fcoastal_followup_date
+
             FROM ver_chronoforms_data_contract_statutory_vic 
             WHERE quoteid = '$cust_id' 
             AND projectid = '$ListProjectID'
@@ -1834,37 +1859,36 @@ $groups = $user->get('groups');
                 "date_enabler":{"field_id":"citypermitactive", "field_value":"Yes"}, 
                 "date_fields": [
                     {"field_id":"citypermitdateid", "field_value":"<?php echo $contract_stat['fcitypermit_application_date']; ?>"}, 
-                    {"field_id":"citypermitapproveddateid", "field_value":"<?php echo $contract_stat['fcitypermit_application_approved_date']; ?>"}
+                    {"field_id":"citypermitapproveddateid", "field_value":"<?php echo $contract_stat['fcitypermit_application_approved_date']; ?>"},
+                    {"field_id":"citypermitfollowupdateid", "field_value":"<?php echo $contract_stat['fcitypermit_followup_date']; ?>"},
+                    {"field_id":"citypermitfollowupbywhomid", "field_value":"<?php echo $contract_stat['fcitypermit_followup_bywhom']; ?>"}
                 ]
             }, 
-
-            {
-                "date_enabler":{"field_id":"followupactive", "field_value":"<?php echo $contract_stat['ffollowup_active']; ?>"},  
-                "date_fields": [
-                    {"field_id":"followupdateid", "field_value":"<?php echo $contract_stat['ffollowup_application_date']; ?>"}, 
-                    {"field_id":"bywhomselectid", "field_value":"<?php echo $contract_stat['ffollowup_by_whom']; ?>"}
-                ]
-            }, 
-
             {
                 "date_enabler":{"field_id":"engractive", "field_value":"<?php echo $contract_stat['fengr_active']; ?>"}, 
                 "date_fields": [
                     {"field_id":"sitespecengrdateid", "field_value":"<?php echo $contract_stat['fsitespec_engr_date']; ?>"}, 
-                    {"field_id":"sitespecengrapproveddateid", "field_value":"<?php echo $contract_stat['fsitespec_engr_approved_date']; ?>"}
+                    {"field_id":"sitespecengrapproveddateid", "field_value":"<?php echo $contract_stat['fsitespec_engr_approved_date']; ?>"},
+                    {"field_id":"sitespecengrfollowupdateid", "field_value":"<?php echo $contract_stat['fsitespec_engr_followup_date']; ?>"},
+                    {"field_id":"sitespecengfollowupbywhomid", "field_value":"<?php echo $contract_stat['fsitespec_engr_followup_bywhom']; ?>"}
                 ]
             }, 
             {
                 "date_enabler":{"field_id":"strataactive", "field_value":"<?php echo $contract_stat['fstrata_active']; ?>"}, 
                 "date_fields": [
                     {"field_id":"stratadateid", "field_value":"<?php echo $contract_stat['fstrata_date']; ?>"}, 
-                    {"field_id":"strataapproveddateid", "field_value":"<?php echo $contract_stat['fstrata_approved_date']; ?>"}
+                    {"field_id":"strataapproveddateid", "field_value":"<?php echo $contract_stat['fstrata_approved_date']; ?>"},
+                    {"field_id":"stratafollowupdateid", "field_value":"<?php echo $contract_stat['fstrata_followup_date']; ?>"},
+                    {"field_id":"stratafollowupbywhomid", "field_value":"<?php echo $contract_stat['fstrata_followup_bywhom']; ?>"}
                 ]
             }, 
             {
                 "date_enabler":{"field_id":"coastalactive", "field_value":"<?php echo $contract_stat['fcoastal_active']; ?>"}, 
                 "date_fields": [
                     {"field_id":"coastaldateid", "field_value":"<?php echo $contract_stat['fcoastal_date']; ?>"}, 
-                    {"field_id":"coastalapproveddateid", "field_value":"<?php echo $contract_stat['fcoastal_approved_date']; ?>"}
+                    {"field_id":"coastalapproveddateid", "field_value":"<?php echo $contract_stat['fcoastal_approved_date']; ?>"},
+                    {"field_id":"coastalfollowupdateid", "field_value":"<?php echo $contract_stat['fcoastal_followup_date']; ?>"},
+                    {"field_id":"coastalfollowupbywhomid", "field_value":"<?php echo $contract_stat['fcoastal_followup_bywhom']; ?>"}
                 ]
             }
         ];
@@ -1872,7 +1896,7 @@ $groups = $user->get('groups');
         <!-- end: enable/disable date fields settings -->
         <!-- begin: For the Follow-up DropDown -->
         <?php
-          $cbo_followupby = "<select    name=\"bywhomselect\" id=\"bywhomselectid\"  style='width:103%; padding:0px'><option value=''>Follow-up by: </option>"; 
+          $cbo_citypermitfollowupby = "<select    name=\"citypermitfollowupbywhom\" id=\"citypermitfollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
           // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
           $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30";
           $resultsub = mysql_query($querysub);
@@ -1880,79 +1904,185 @@ $groups = $user->get('groups');
 
           while ($data=mysql_fetch_assoc($resultsub)){  
 
-              if($data['name']==$contract_vergola['erectors_name']){ 
-                  $cbo_followupby .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+              if($data['name']==$contract_stat['citypermit_followup_bywhom']){ 
+                  $cbo_citypermitfollowupby .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
               }else{
-                  $cbo_followupby .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
+                  $cbo_citypermitfollowupby .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
               } 
           }
-          $cbo_followupby .= "</select>"; 
+          $cbo_citypermitfollowupby .= "</select>"; 
+
+          $cbo_sitespecengfollowupby = "<select    name=\"sitespecengfollowupbywhom\" id=\"sitespecengfollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
+          // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
+          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30";
+          $resultsub = mysql_query($querysub);
+              if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
+
+          while ($data=mysql_fetch_assoc($resultsub)){  
+
+              if($data['name']==$contract_stat['site_spec_followup_bywhom']){ 
+                  $cbo_sitespecengfollowupby .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+              }else{
+                  $cbo_sitespecengfollowupby .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
+              } 
+          }
+          $cbo_sitespecengfollowupby .= "</select>"; 
+
+          $cbo_stratafollowupby = "<select    name=\"stratafollowupbywhom\" id=\"stratafollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
+          // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
+          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30";
+          $resultsub = mysql_query($querysub);
+              if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
+
+          while ($data=mysql_fetch_assoc($resultsub)){  
+
+              if($data['name']==$contract_stat['hoa_followup_bywhom']){ 
+                  $cbo_stratafollowupby .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+              }else{
+                  $cbo_stratafollowupby .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
+              } 
+          }
+          $cbo_stratafollowupby .= "</select>"; 
+
+          $cbo_coastalfollowupby = "<select    name=\"coastalfollowupbywhom\" id=\"coastalfollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
+          // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
+          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30";
+          $resultsub = mysql_query($querysub);
+              if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
+
+          while ($data=mysql_fetch_assoc($resultsub)){  
+
+              if($data['name']==$contract_stat['coastal_followup_bywhom']){ 
+                  $cbo_coastalfollowupby .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+              }else{
+                  $cbo_coastalfollowupby .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
+              } 
+          }
+          $cbo_coastalfollowupby .= "</select>"; 
         ?> 
         <!-- end: For the Follow-up DropDown -->
-        <div class="label-input-row">  
+        <div class="label-input-row" > 
+          <input type="hidden" name="council" id="council" value="By Vergola" />
+          <table class="table-statutory" style="font-size:12px; " ><tbody>
+            <tr  class="" >
+              <th width=""></th>
+              <th width="5%" style="text-align: center;">Required</th>
+              <th width="15%" style="text-align: center;">Application</th>
+              <th width="15%" style="text-align: center;">Follow up</th>
+              <th width="25%" style="text-align: center;">By Whom</th>
+              <th width="15%" style="text-align: center;">Approval</th>
+            </tr>
+            <tr>
+              <td width="">City Permit</td>
+                <td><select class="visible" style="" disabled="disabled" name="citypermitactive" id="citypermitactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select></td>
+                <td><label class="input planningdate" ><input type="text" name="citypermitdate" id="citypermitdateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td>
+                <td><label class="input planningdate" ><span class=""></span><input type="text" name="citypermitfollowupdate" id="citypermitfollowupdateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td>
+                <td><label class="input " > 
+                  <?php echo $cbo_citypermitfollowupby; ?>
+                </label></td>
+                <td><label class="input planningapprove"><span class=""></span><input type="text" name="citypermitapproveddate" id="citypermitapproveddateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td>
+              </tr>
+              <tr><td width="">Sit Spec Engr</td>
+                <td><select class="visible" style="" name="engractive" id="engractive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select></td>
+                <td><label class="input planningdate" ><input type="text" name="sitespecengrdate" id="sitespecengrdateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td>
+                <td><label class="input planningdate" ><span class=""></span><input type="text" name="sitespecengrfollowupdate" id="sitespecengrfollowupdateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td>
+                <td><label class="input " > 
+                  <?php echo $cbo_sitespecengfollowupby; ?>
+                </label></td>
+                <td><label class="input planningapprove"><span class=""></span><input type="text" name="sitespecengrapproveddate" id="sitespecengrapproveddateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td></tr>
+              <tr><td width="">HoA</td>
+                <td><select class="visible" style="" name="strataactive" id="strataactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select></td>
+                <td><label class="input planningdate" ><input type="text" name="stratadate" id="stratadateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td>
+                <td><label class="input planningdate" ><span class=""></span><input type="text" name="stratafollowupdate" id="stratafollowupdateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td>
+                <td><label class="input " > 
+                  <?php echo $cbo_stratafollowupby; ?>
+                </label></td>
+                <td><label class="input planningapprove"><span class=""></span><input type="text" name="strataapproveddate" id="strataapproveddateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td></tr>
+              <tr><td width="">Costal</td>
+                <td><select class="visible" style="" name="coastalactive" id="coastalactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select></td>
+                <td><label class="input planningdate" ><input type="text" name="coastaldate" id="coastaldateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td>
+                <td><label class="input planningdate" ><span class=""></span><input type="text" name="coastalfollowupdate" id="coastalfollowupdateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td>
+                <td><label class="input " > 
+                  <?php echo $cbo_coastalfollowupby; ?>
+                </label></td>
+                <td><label class="input planningapprove"><span class=""></span><input type="text" name="coastalapproveddate" id="coastalapproveddateid" class="" value="" style="text-align: center;" autocomplete="off"></label></td></tr>
+          </tbody></table>
+        </div>
+        <!-- <div hidden="true" class="label-input-row" style="padding-bottom:30px;">   
+            <label class="input " style="width:10%;"><span class="visible" >  </span></label>
+            <label class="input " style="width:6%; text-align:center;"><span class="visible" > Required </span></label>
+            <label class="input " style="width:18%; text-align:center;"><span class="visible"> Application </span></label>
+            <label class="input " style="width:18%; text-align:center;"><span class="visible" > Follow up </span></label>
+            <label class="input " style="width:18%; text-align:center;"><span class="visible"> By Whom </span></label>
+            <label class="input " style="width:18%; text-align:center;"><span class="visible" > Approval </span></label>
+        </div>
+
+         <div class="label-input-row">  
         <div> 
             <input type="hidden" name="council" id="council" value="By Vergola" />
-            <label class="input " style="width:20.5%;" ><span class="visible" >Enable Date Entry: </span>
-                <select class="visible" style="width:50px; text-align:left;margin-left: 110px" disabled="disabled" name="citypermitactive" id="citypermitactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
+            <label class="input " ><span class="visible" > City Permit </span>
+                <select class="visible" style="width:60px; text-align:left;margin-left: 120px" disabled="disabled" name="citypermitactive" id="citypermitactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>          
             </label>
-            <label class="input planningdate" style="width:18%;"><span class="visible">City Permit Appl.: </span><input style="width:55px;" type="text" name="citypermitdate" id="citypermitdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
-            <label class="input planningapprove" style="width:18%;"><span class="visible">City Permit Appr.: </span><input style="width:55px;" type="text" name="citypermitapproveddate" id="citypermitapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
-            <label class="input planningdate" style="width:18%;"><span class="visible">Follow-up Appl.: </span><input style="width:55px;" type="text" name="followupdate" id="followupdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+            <label class="input planningdate" ><span class=""></span><input type="text" name="citypermitdate" id="citypermitdateid" class="" value="" style="text-align: center;" autocomplete="off"></label>            
+            <label class="input planningdate" ><span class=""></span><input type="text" name="followupdate" id="followupdateid" class="" value="" style="text-align: center;" autocomplete="off"></label>
             <label class="input checkmeasure" style="width:18%;"> 
               <?php echo $cbo_followupby; ?>
             </label>
+            <label class="input planningapprove"><span class=""></span><input type="text" name="citypermitapproveddate" id="citypermitapproveddateid" class="" value="" style="text-align: center;" autocomplete="off"></label>
           </div>
-        </div>
+        </div> 
 
         <div class="label-input-row">   
-            <label class="input " ><span class="visible" >Enable Date Entry: </span>
-                <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="followupactive" id="followupactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>          
-            </label>
-            <label class="input planningdate"><span class="visible">Follow-up Appl.: </span><input type="text" name="followupdate" id="followupdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
-            <label class="input checkmeasure"> 
-              <?php echo $cbo_followupby; ?>
-            </label>
-        </div>
-
-        <div class="label-input-row">   
-            <label class="input " ><span class="visible" >Enable Date Entry: </span>
+            <label class="input " ><span class="visible" >Sit Spec Engr </span>
                 <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="engractive" id="engractive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>          
             </label>
             <label class="input planningdate"><span class="visible">Site Spec. Egnr. Appl.: </span><input type="text" name="sitespecengrdate" id="sitespecengrdateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+
             <label class="input planningapprove"><span class="visible">Site Spec. Egnr. Appr.: </span><input type="text" name="sitespecengrapproveddate" id="sitespecengrapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
         </div>
 
         <div class="label-input-row">   
-            <label class="input " ><span class="visible" >Enable Date Entry: </span>
+            <label class="input " ><span class="visible" >HoA </span>
                 <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="strataactive" id="strataactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>          
             </label>
             <label class="input planningdate"><span class="visible">HoA Appl.: </span><input type="text" name="stratadate" id="stratadateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+
             <label class="input planningapprove"><span class="visible">HoA Appr.: </span><input type="text" name="strataapproveddate" id="strataapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
         </div>
 
         <div class="label-input-row">   
-            <label class="input " ><span class="visible" >Enable Date Entry: </span>
+            <label class="input " ><span class="visible" >Costal </span>
                 <select class="visible" style="width:60px; text-align:left;margin-left: 120px" name="coastalactive" id="coastalactive" class="" onchange="switchDateFieldEntryStatus(target_date_fields_11, this.id, this.value)">
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>          
             </label>
             <label class="input planningdate"><span class="visible">Coastal Appl.: </span><input type="text" name="coastaldate" id="coastaldateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
+
             <label class="input planningapprove"><span class="visible">Coastal Appr.: </span><input type="text" name="coastalapproveddate" id="coastalapproveddateid" class="" value="" style="text-align: right;" autocomplete="off"></label>
-        </div>
-    </div>
+        </div> -->
+    </div> 
     <!-- End of Statutory Approval -->
 
     <!--- Start of Contract Cancellation -->
