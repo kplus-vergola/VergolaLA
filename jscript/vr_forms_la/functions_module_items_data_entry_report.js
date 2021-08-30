@@ -455,7 +455,8 @@
                     }
                     .vr_table_head_2 {
                         border: 1px solid #cccccc;
-                        background-color: #cfb6fd;
+                        color: #4D4D4D;
+                        background-color: #EEEEEE;
                         padding: 4px;
                         text-align: left;
                         font-size: 9pt;
