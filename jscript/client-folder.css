@@ -147,7 +147,7 @@ body[class^="view-contractquote"] #projectcomm, body[class^="view-contractquote"
 .no-top-border tr td:nth-child(6) {width:7%;min-width:26px;}
 .no-top-border tr td:nth-child(7) {width:8%;min-width:42px;}
 .no-top-border tr td:nth-child(8) {width:20%;min-width:50px;}
-.subheading {font-size:14px; background-color:#cfb6fd; font-weight:bold;}
+.subheading {font-size:14px; color: #4D4D4D; background-color:#EEEEEE; font-weight:bold;}
 
 .ui-widget{
     font-size: 1em;

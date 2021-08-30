@@ -24,7 +24,8 @@
             text-align: left;
             font-weight: bold;
             border: 1px solid #cccccc;
-            background-color: #cfb6fd;
+            color: #4D4D4D;
+            background-color: #EEEEEE;
         }
 
         .vr_table_head_3 {
@@ -268,7 +269,7 @@
             text-align: left;
             border: 0px solid #cccccc;
             font-size: 14pt;
-            color: #02628F;
+            color: #4D4D4D;
         }
 
         .bom_table_body_2 {
