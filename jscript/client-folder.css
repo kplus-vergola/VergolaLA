@@ -12,6 +12,15 @@
 #tabs_wrapper.notes-tab #notes  #tbl-content  h1 {font-size:14px;padding-left:1px;margin-top:10px;border-bottom:2px solid #4D4D4D;margin:8px;color:#4D4D4D;}
 #tabs_wrapper.notes-tab #notes  #tbl-content  h1, #tabs_wrapper.notes-tab #notes  #tbl-content  p{text-align:left;}
 #tabs_wrapper.notes-tab #notes  #tbl-content  p {padding-bottom:10px;word-wrap:break-word;width:780px;white-space:pre-line;}
+
+#special table, #special table td, #special table tr {border:none!important;} 
+#tabs_wrapper #special #tbl-special, #tabs_wrapper #special #tbl-content {width:800px;}
+#tabs_wrapper #special #tbl-special td textarea {width:785px;height:100px;}
+#tabs_wrapper.notes-tab #special {min-height:280px;}
+#tabs_wrapper.notes-tab #special  #tbl-content  h1 {font-size:14px;padding-left:1px;margin-top:10px;border-bottom:2px solid #4D4D4D;margin:8px;color:#4D4D4D;}
+#tabs_wrapper.notes-tab #special  #tbl-content  h1, #tabs_wrapper.notes-tab #special  #tbl-content  p{text-align:left;}
+#tabs_wrapper.notes-tab #special  #tbl-content  p {padding-bottom:10px;word-wrap:break-word;width:780px;white-space:pre-line;}
+
 #tbl-content tr, #tbl-content td {border:none;}
 #tbl-content .layer-date {width:166px; text-align:left;}
 #tbl-content .layer-whom {width:200px; text-align:left;}

@@ -157,6 +157,10 @@ select {
 	border: none;
 	width: 133px;
 }
+.notes-tab #tbl-special td input, .notes-tab #tbl-content td input {
+	border: none;
+	width: 133px;
+}
 .notes-tab #tbl-notes td input#check, .notes-tab #tbl-content td input#check {
 	width: 125px;
 }
@@ -197,11 +201,18 @@ select {
 	display: inline-block;
 	padding-top: 5px;
 }
+#special .layer-date, #special .layer-whom {
+	width: auto;
+	display: inline-block;
+	padding-top: 5px;
+}
 #tabs_wrapper.notes-tab #notes, #tabs_wrapper #tabs_content_container #drawing #drawing-tbl {
 	height: 230px;
 	overflow: auto;
 }
 #tabs_wrapper.notes-tab #notes {width:825px;}
+
+#tabs_wrapper.notes-tab #special {width:825px;}
 
 #tabs_wrapper.drawing-tab #draw, #tabs_wrapper #tabs_content_container #quote, #tabs_wrapper #tabs_content_container #letter {
 	height: 265px;
