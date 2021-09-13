@@ -714,6 +714,31 @@ if ($cnt > 0 && $cnt == $cnt2 && $cnt2 == $cnt3 && $checknotes != '') {
 
 
     //header('Location:'.JURI::base().'contract-listing-vic');      
+
+// begin Special Condition
+  $getclientid = $ClientID; 
+  $checkspecialcondition = implode(", ", $_POST['specialconditions']);
+  $cnt_special = count($_POST['date_specialconditions']);
+  $cnt_special2 = count($_POST['username_specialconditions']);
+  $cnt_special3 = count($_POST['specialconditions']);
+
+  // get the local timezone 
+  $date_created = $default_local_timezone;
+  
+  if ($cnt_special > 0 && $cnt_special == $cnt_special2 && $cnt_special2 == $cnt_special3 && $checkspecialcondition != '') {
+    $insertArr = array();
+    //, '" . mysql_real_escape_string($_POST['date_notes'][$i]) . "'
+  for ($i=0; $i<$cnt; $i++) {
+      $insertArr[] = "('$getclientid', '" . mysql_real_escape_string($_POST['date_specialconditions'][$i]) . "', '" . mysql_real_escape_string($_POST['username_specialconditions'][$i]) . "', '" . mysql_real_escape_string($_POST['specialconditions'][$i]) . "', '". mysql_real_escape_string($date_created) . "')";
+  }
+  $queryn = "INSERT INTO ver_chronoforms_data_special_condition_vic (clientid, datenotes, username, content, date_created) VALUES " . implode(", ", $insertArr);
+  
+  mysql_query($queryn) or trigger_error("Insert failed: " . mysql_error()); 
+  echo($queryn);
+  } 
+
+// end Special Condition
+
 }
 
 
@@ -2311,6 +2336,7 @@ $groups = $user->get('groups');
       <li><a href="#" rel="photos">Photos</a></li>  
       <li><a href="#" rel="drawing">Drawings</a></li> 
       <li><a href="#" rel="general">General</a></li> 
+      <li><a href="#" rel="special">Special Conditions</a></li>
     </ul>
   </div>
   <div id="tabs_content_container"> 
@@ -3440,7 +3466,51 @@ if (!$resultimg) {
         
     </div>
     <!---------------------------------------------- END of General Tab -->
-    
+
+    <!-------BEGIN of Special Conditions Tab ----- -->
+    <div id="special" class="tab_content" style="display: block;">
+      <table id="tbl-special">
+        <?php
+        $userName = $user->get( 'name' );
+        ?>
+       <tr>
+          <td class="tbl-content">              
+            <div class="layer-date">Date: <input type="text" id="date_display" name="date_display" class="datetime_display" value="<?php print(Date(PHP_DFORMAT)); ?>" readonly>
+              <input type="hidden" id="date_specialconditions" name="date_specialconditions[]" class="date_time" value="<?php print(Date(PHP_DFORMAT." H:i:s")); ?>" readonly />
+            </div>
+            <div class="layer-whom">By Whom: <input type="text" id="username_specialconditions" name="username_specialconditions[]" class="username" value="<?php echo $userName; ?>" readonly></div>           
+            <textarea name="specialconditions[]" id="specialconditions"></textarea>              
+          </td>
+        </tr>
+      </table>
+      <table id="tbl-content">
+        <?php
+        $resultnotes = mysql_query("
+          SELECT cf_id, datenotes, username, content, date_created 
+          FROM ver_chronoforms_data_special_condition_vic 
+          WHERE clientid = '$ClientID' 
+          ORDER by cf_id DESC
+        ");
+        $i=1;
+        if (!$resultnotes) {
+          echo 'Could not run query: ' . mysql_error();
+          exit;
+        }
+        while($row = mysql_fetch_assoc($resultnotes))
+        {
+          echo "
+          <tr><td class=\"tbl-content\"><h1>Notes ". $i++ ."</h1><p>{$row['content']}</p>
+          <div class=\"layer-date\">Date: " .date(PHP_DFORMAT, strtotime ($row['date_created'])) . "</div>
+          <div class=\"layer-whom\">By Whom: {$row['username']}</div>
+          </td>
+          </tr>";
+        }
+        ?>
+      </table>
+    </div>
+    <!-------BEGIN of Special Conditions Tab ----- -->
+
+
     </div>
   </div>
 </div>
