@@ -1243,7 +1243,7 @@ if(isset($_POST['close']))
         include "contract_details_vic.php";     
     } ?>
 
-</div>    
+<div>    
     <!-- Quote Details Tab -->
     
     <div id="quotedetails" class="tab_content" style="display: block;">    
@@ -1271,9 +1271,9 @@ $groups = $user->get('groups');
      <!-- Check List  Tab -->
       <?php foreach($groups as $group) {
     if ($group == '10') { ?>
-<!--     <div id="checklist" class="tab_content" style="display: block;">    
-        Check List Here
-    </div> -->
+    <div id="checklist" class="tab_content" style="display: block;">    
+        <!-- Check List Here -->
+    </div>
  
     <?php } else {echo "";} } ?>
   </div>
