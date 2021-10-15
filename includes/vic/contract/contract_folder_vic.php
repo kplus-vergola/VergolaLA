@@ -1271,9 +1271,10 @@ $groups = $user->get('groups');
      <!-- Check List  Tab -->
       <?php foreach($groups as $group) {
     if ($group == '10') { ?>
-    <div id="checklist" class="tab_content" style="display: block;">    
-      Checklist Here
-    </div>
+<!--     <div id="checklist" class="tab_content" style="display: block;">    
+        Check List Here
+    </div> -->
+ 
     <?php } else {echo "";} } ?>
   </div>
 </div>     

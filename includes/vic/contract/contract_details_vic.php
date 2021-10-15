@@ -484,7 +484,7 @@ while($row = mysql_fetch_assoc($resultlist))
         } //end if
 
         if ($current_signed_in_user_access_profiles['tab check list']['show'] == true) {
-			echo "<li><a href=\"#\" rel=\"checklist\">Check List</a></li>";
+			echo "<li ><a href=\"#\" rel=\"checklist\" class=\"".($tab_active=='checklist'?'selected':'')."\">Check List</a></li>";
         } //end if
         ?>
 
@@ -576,3 +576,19 @@ while($row = mysql_fetch_assoc($resultlist))
 <?php } else { ?>
 <?php } ?>
 
+  </div>
+
+  	<?php 
+  	$user = JFactory::getUser();
+		$groups = $user->get('groups');	
+		foreach($groups as $group) {
+	   		if($group == '10' || $group == '26' || $group == '27') { 
+		    	echo "<div id='checklist' class='tab_content' style='display: none;'>";  
+					include "check_list.php"; 	  
+		    	echo "</div>";
+	     	}  
+	 	}
+
+	?> 	
+
+</div>	
