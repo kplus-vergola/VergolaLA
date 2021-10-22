@@ -404,6 +404,35 @@ if($contract_status=="drawing_approval"){
 	if ($searchdate) {
 		$date_filter = " AND DATE(cs.da_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
 	}
+
+// begin Insert new condition
+}else if ($contract_status == "contract_date") {
+    $contract_status_filter = " AND c.contractdate IS NOT NULL AND cv.handover_date IS NULL ";
+    if ($searchdate) {
+        $date_filter = " AND DATE(c.contractdate) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+    }
+}else if ($contract_status == "check_measure_date") {
+    $contract_status_filter = " AND cv.check_measure_date IS NOT NULL AND cv.handover_date IS NULL ";
+    if ($searchdate) {
+        $date_filter = " AND DATE(cv.check_measure_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+    }
+}else if ($contract_status == "footing_inspection") {
+    $contract_status_filter = " AND cv.footing_inspection_date IS NOT NULL AND cv.handover_date IS NULL ";
+    if ($searchdate) {
+        $date_filter = " AND DATE(cv.footing_inspection_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+    }
+}else if ($contract_status == "completed") {
+    $contract_status_filter = " AND cv.job_end_date IS NOT NULL AND cv.handover_date IS NULL ";
+    if ($searchdate) {
+        $date_filter = " AND DATE(cv.job_end_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+    }
+}else if ($contract_status == "final_inspection") {
+    $contract_status_filter = " AND cv.final_inspection_date IS NOT NULL AND cv.handover_date IS NULL ";
+    if ($searchdate) {
+        $date_filter = " AND DATE(cv.final_inspection_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+    }
+// end Insert new condition
+
 }else if($contract_status=="permit_application_date"){ 
 	$contract_status_filter = " AND cs.citypermit_application_date IS NOT NULL ";	
 	if ($searchdate) {
@@ -655,6 +684,8 @@ $cbo_installer .= "</select>";
 				<label class='input' style=''>  
 				<select name='contract_status' style='width: 160px;'> 
 					<option value='' ". ($contract_status=='' ? 'selected':'').">Select Filter </option> 
+					<option value='contract_date' ". ($contract_status=='contract_date' ? 'selected':'').">Contract Date</option>
+					<option value='check_measure_date' ". ($contract_status=='check_measure_date' ? 'selected':'').">Check Measure Date</option>
 					<option value='drawing_approval' ". ($contract_status=='drawing_approval' ? 'selected':'').">Drawing Approval</option> 
 					<option value='permit_application_date' ". ($contract_status=='permit_application_date' ? 'selected':'').">City Permit Application</option>
 					<option value='site_engineering_date' ". ($contract_status=='site_engineering_date' ? 'selected':'').">Site Spec Engineering</option> 
@@ -662,7 +693,11 @@ $cbo_installer .= "</select>";
 					<option value='city_permit_approval' ". ($contract_status=='city_permit_approval' ? 'selected':'').">City Permital Approval</option> 
 					<option value='framework_ordered' ". ($contract_status=='framework_ordered' ? 'selected':'').">Framework Ordered</option> 					
 					<option value='production_completed' ". ($contract_status=='production_completed' ? 'selected':'').">Production Completed</option> 
-					<option value='install_date' ". ($contract_status=='install_date' ? 'selected':'').">Install Date</option></select>
+					<option value='install_date' ". ($contract_status=='install_date' ? 'selected':'').">Install Date</option>
+					<option value='footing_inspection' ". ($contract_status=='footing_inspection' ? 'selected':'').">Footing Inspection</option>
+					<option value='completed' ". ($contract_status=='completed' ? 'selected':'').">Completion Date</option>
+					<option value='final_inspection' ". ($contract_status=='final_inspection' ? 'selected':'').">Final Inspection</option>
+				</select>
 				</label> 
 				<label class='input ' > <select name='framework_type' style='width:150px'  > <option value='all' ". ($framework_type=='all' ? 'selected':'').">All Framework</option> <option value='dp' ". ($framework_type=='dp' ? 'selected':'')." >Drop-In</option><option value='fw' ". ($framework_type=='fw' ? 'selected':'')." >Framework</option> </select>
 				</label>
