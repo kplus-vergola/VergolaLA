@@ -196,7 +196,7 @@ if($is_user){
     //error_log("HERE: 2", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
     //$qry_filter = " rep_id IN (SELECT RepID FROM ver_users WHERE usertype='{$user->usertype}') AND ";
     //$sql = "SELECT RepID FROM ver_users WHERE block=0 ";
-    $sql="SELECT * FROM ver_users WHERE  (id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9 ".($is_top_admin?" OR group_id=27 ":"")." ) || id={$user->id})  and block=0 ORDER BY name ASC";
+    $sql="SELECT * FROM ver_users WHERE  (id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9 OR group_id=10 ".($is_top_admin?" OR group_id=27 ":"OR group_id=27")." ) || id={$user->id})  and block=0 ORDER BY name ASC";
 
     // if($is_top_admin){
     // 	$sql = "SELECT RepID FROM ver_users WHERE block=0 "; //usertype='{$user->usertype}' and
@@ -381,7 +381,7 @@ include('sales_summary/main.php');
     //top admin is Jit user $user->groups['10']
  	if($is_user==0){ // only admin, manager, construction has cbo users filter.
 
-        $querysub2="SELECT * FROM ver_users WHERE  (id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9 ".($is_top_admin?" OR group_id=27 ":"")." ) || id={$user->id})  and block=0 ORDER BY name ASC";
+        $querysub2="SELECT * FROM ver_users WHERE  (id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9 OR group_id=10 ".($is_top_admin?" OR group_id=27 ":"OR group_id=27")." ) || id={$user->id})  and block=0 ORDER BY name ASC";
 
 
         //$sql = "SELECT id, RepID, name  FROM ver_users WHERE id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9)";
