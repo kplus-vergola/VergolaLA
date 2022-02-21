@@ -699,7 +699,7 @@ $cbo_installer .= "</select>";
 					<option value='final_inspection' ". ($contract_status=='final_inspection' ? 'selected':'').">Final Inspection</option>
 				</select>
 				</label> 
-				<label class='input ' > <select name='framework_type' style='width:150px'  > <option value='all' ". ($framework_type=='all' ? 'selected':'').">All Framework</option> <option value='dp' ". ($framework_type=='dp' ? 'selected':'')." >Drop-In</option><option value='fw' ". ($framework_type=='fw' ? 'selected':'')." >Framework</option> </select>
+				<label class='input ' > <select name='framework_type' style='width:150px'  > <option value='all' ". ($framework_type=='all' ? 'selected':'').">All </option> <option value='dp' ". ($framework_type=='dp' ? 'selected':'')." >Drop-In</option><option value='fw' ". ($framework_type=='fw' ? 'selected':'')." >Framework</option> </select>
 				</label>
 				<label class='input ' > <select name='job_status' style='width:150px'  > <option value='all' ". ($job_status=='all' ? 'selected':'').">All Contracts</option> <option value='incomplete' ". ($job_status=='incomplete' ? 'selected':'')." >Unbuilt Contracts</option><option value='complete' ". ($job_status=='complete' ? 'selected':'')." >Completed Contracts</option> </select>
 				</label>
