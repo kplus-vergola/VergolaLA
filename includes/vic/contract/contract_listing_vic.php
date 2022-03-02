@@ -395,9 +395,29 @@ if($contract_status=="drawing_approval"){
 //Begin
 $contract_status_filter = "";
 if($contract_status=="drawing_approval"){ 
-	$contract_status_filter = " AND cv.drawing_approve_date IS NOT NULL ";
+	$contract_status_filter = " AND cv.drawing_approve_date IS NOT NULL 
+	        					AND cs.citypermit_application_date IS NULL
+	        					AND cs.sitespec_engr_date IS NULL
+	        					AND cs.coastal_date IS NULL
+	        					AND cs.citypermit_application_approved_date IS NULL        					
+	        					AND cv.fw_complete IS NULL
+	        					AND cv.production_complete_date IS NULL
+	        					AND cv.install_date IS NULL
+	        					AND cv.footing_inspection_date IS NULL
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";
 	if ($searchdate) {
-		$date_filter = " AND DATE(cv.drawing_approve_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		$date_filter = " AND DATE(cv.drawing_approve_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
+        					AND cs.citypermit_application_date IS NULL
+        					AND cs.sitespec_engr_date IS NULL
+        					AND cs.coastal_date IS NULL
+        					AND cs.citypermit_application_approved_date IS NULL        					
+        					AND cv.fw_complete IS NULL
+        					AND cv.production_complete_date IS NULL
+        					AND cv.install_date IS NULL
+        					AND cv.footing_inspection_date IS NULL
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
 	}
 }else if($contract_status=="development_approval"){ 
 	$contract_status_filter = " AND cs.da_date IS NOT NULL ";
@@ -412,19 +432,47 @@ if($contract_status=="drawing_approval"){
         $date_filter = " AND DATE(c.contractdate) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
     }
 }else if ($contract_status == "check_measure_date") {
-    $contract_status_filter = " AND cv.check_measure_date IS NOT NULL AND cv.handover_date IS NULL ";
+    $contract_status_filter = " AND cv.check_measure_date IS NOT NULL AND cv.handover_date IS NULL 
+	        					AND cv.drawing_approve_date IS NULL
+	        					AND cs.citypermit_application_date IS NULL
+	        					AND cs.sitespec_engr_date IS NULL
+	        					AND cs.coastal_date IS NULL
+	        					AND cs.citypermit_application_approved_date IS NULL        					
+	        					AND cv.fw_complete IS NULL
+	        					AND cv.production_complete_date IS NULL
+	        					AND cv.install_date IS NULL
+	        					AND cv.footing_inspection_date IS NULL
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";
     if ($searchdate) {
-        $date_filter = " AND DATE(cv.check_measure_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+        $date_filter = " AND DATE(cv.check_measure_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
+        					AND cv.drawing_approve_date IS NULL
+        					AND cs.citypermit_application_date IS NULL
+        					AND cs.sitespec_engr_date IS NULL
+        					AND cs.coastal_date IS NULL
+        					AND cs.citypermit_application_approved_date IS NULL        					
+        					AND cv.fw_complete IS NULL
+        					AND cv.production_complete_date IS NULL
+        					AND cv.install_date IS NULL
+        					AND cv.footing_inspection_date IS NULL
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
     }
 }else if ($contract_status == "footing_inspection") {
-    $contract_status_filter = " AND cv.footing_inspection_date IS NOT NULL AND cv.handover_date IS NULL ";
+    $contract_status_filter = " AND cv.footing_inspection_date IS NOT NULL AND cv.handover_date IS NULL 
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";
     if ($searchdate) {
-        $date_filter = " AND DATE(cv.footing_inspection_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+        $date_filter = " AND DATE(cv.footing_inspection_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
     }
 }else if ($contract_status == "completed") {
-    $contract_status_filter = " AND cv.job_end_date IS NOT NULL AND cv.handover_date IS NULL ";
+    $contract_status_filter = " AND cv.job_end_date IS NOT NULL AND cv.handover_date IS NULL 
+	        					AND cv.final_inspection_date IS NULL";
     if ($searchdate) {
-        $date_filter = " AND DATE(cv.job_end_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+        $date_filter = " AND DATE(cv.job_end_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
+        					AND cv.final_inspection_date IS NULL";
     }
 }else if ($contract_status == "final_inspection") {
     $contract_status_filter = " AND cv.final_inspection_date IS NOT NULL AND cv.handover_date IS NULL ";
@@ -434,41 +482,125 @@ if($contract_status=="drawing_approval"){
 // end Insert new condition
 
 }else if($contract_status=="permit_application_date"){ 
-	$contract_status_filter = " AND cs.citypermit_application_date IS NOT NULL ";	
+	$contract_status_filter = " AND cs.citypermit_application_date IS NOT NULL 
+	        					AND cs.sitespec_engr_date IS NULL
+	        					AND cs.coastal_date IS NULL
+	        					AND cs.citypermit_application_approved_date IS NULL        					
+	        					AND cv.fw_complete IS NULL
+	        					AND cv.production_complete_date IS NULL
+	        					AND cv.install_date IS NULL
+	        					AND cv.footing_inspection_date IS NULL
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";	
 	if ($searchdate) {
-		$date_filter = " AND DATE(cs.citypermit_application_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		$date_filter = " AND DATE(cs.citypermit_application_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
+        					AND cs.sitespec_engr_date IS NULL
+        					AND cs.coastal_date IS NULL
+        					AND cs.citypermit_application_approved_date IS NULL        					
+        					AND cv.fw_complete IS NULL
+        					AND cv.production_complete_date IS NULL
+        					AND cv.install_date IS NULL
+        					AND cv.footing_inspection_date IS NULL
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
 	}
 }else if($contract_status=="site_engineering_date"){ 
-	$contract_status_filter = " AND cs.sitespec_engr_date IS NOT NULL ";	
+	$contract_status_filter = " AND cs.sitespec_engr_date IS NOT NULL 
+	        					AND cs.coastal_date IS NULL
+	        					AND cs.citypermit_application_approved_date IS NULL        					
+	        					AND cv.fw_complete IS NULL
+	        					AND cv.production_complete_date IS NULL
+	        					AND cv.install_date IS NULL
+	        					AND cv.footing_inspection_date IS NULL
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";	
 	if ($searchdate) {
-		$date_filter = " AND DATE(cs.sitespec_engr_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		$date_filter = " AND DATE(cs.sitespec_engr_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
+        					AND cs.coastal_date IS NULL
+        					AND cs.citypermit_application_approved_date IS NULL        					
+        					AND cv.fw_complete IS NULL
+        					AND cv.production_complete_date IS NULL
+        					AND cv.install_date IS NULL
+        					AND cv.footing_inspection_date IS NULL
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
 	}
 }else if($contract_status=="coastal_date"){ 
-	$contract_status_filter = " AND cs.coastal_date IS NOT NULL ";	
+	$contract_status_filter = " AND cs.coastal_date IS NOT NULL 
+	        					AND cs.citypermit_application_approved_date IS NULL        					
+	        					AND cv.fw_complete IS NULL
+	        					AND cv.production_complete_date IS NULL
+	        					AND cv.install_date IS NULL
+	        					AND cv.footing_inspection_date IS NULL
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";	
 	if ($searchdate) {
-		$date_filter = " AND DATE(cs.coastal_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		$date_filter = " AND DATE(cs.coastal_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
+        					AND cs.citypermit_application_approved_date IS NULL        					
+        					AND cv.fw_complete IS NULL
+        					AND cv.production_complete_date IS NULL
+        					AND cv.install_date IS NULL
+        					AND cv.footing_inspection_date IS NULL
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
 	}
 }else if($contract_status=="city_permit_approval"){ 
-	$contract_status_filter = " AND cs.citypermit_application_approved_date IS NOT NULL ";	
+	$contract_status_filter = " AND cs.citypermit_application_approved_date IS NOT NULL       					
+	        					AND cv.fw_complete IS NULL
+	        					AND cv.production_complete_date IS NULL
+	        					AND cv.install_date IS NULL
+	        					AND cv.footing_inspection_date IS NULL
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";	
 	if ($searchdate) {
-		$date_filter = " AND DATE(cs.citypermit_application_approved_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		$date_filter = " AND DATE(cs.citypermit_application_approved_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}')       					
+        					AND cv.fw_complete IS NULL
+        					AND cv.production_complete_date IS NULL
+        					AND cv.install_date IS NULL
+        					AND cv.footing_inspection_date IS NULL
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
 	}
 }else if($contract_status=="framework_ordered"){ 
-	$contract_status_filter = " AND cv.fw_complete IS NOT NULL ";
+	$contract_status_filter = " AND cv.fw_complete IS NOT NULL  
+	        					AND cv.production_complete_date IS NULL
+	        					AND cv.install_date IS NULL
+	        					AND cv.footing_inspection_date IS NULL
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";
 	if ($searchdate) {
-		$date_filter = " AND DATE(cv.fw_complete) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		$date_filter = " AND DATE(cv.fw_complete) BETWEEN DATE('{$frdate}') AND DATE('{$todate}')  
+        					AND cv.production_complete_date IS NULL
+        					AND cv.install_date IS NULL
+        					AND cv.footing_inspection_date IS NULL
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
 	}
 
 }else if($contract_status=="install_date"){ 
-	$contract_status_filter = " AND cv.install_date IS NOT NULL ";
+	$contract_status_filter = " AND cv.install_date IS NOT NULL 
+	        					AND cv.footing_inspection_date IS NULL
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";
 	if ($searchdate) {
-		$date_filter = " AND DATE(cv.install_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		$date_filter = " AND DATE(cv.install_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
+        					AND cv.footing_inspection_date IS NULL
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
 	}
 
 }else if($contract_status=="production_completed"){ 
-	$contract_status_filter = " AND cv.production_complete_date IS NOT NULL ";			
+	$contract_status_filter = " AND cv.production_complete_date IS NOT NULL 
+	        					AND cv.install_date IS NULL
+	        					AND cv.footing_inspection_date IS NULL
+	        					AND cv.job_end_date IS NULL
+	        					AND cv.final_inspection_date IS NULL";			
 	if ($searchdate)
-		$date_filter = " AND DATE(cv.production_complete_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') ";
+		$date_filter = " AND DATE(cv.production_complete_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
+        					AND cv.install_date IS NULL
+        					AND cv.footing_inspection_date IS NULL
+        					AND cv.job_end_date IS NULL
+        					AND cv.final_inspection_date IS NULL";
 }
 
 
