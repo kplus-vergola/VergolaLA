@@ -562,14 +562,14 @@ if($contract_status=="drawing_approval"){
         					AND cv.final_inspection_date IS NULL";
 	}
 }else if($contract_status=="framework_ordered"){ 
-	$contract_status_filter = " AND cv.fw_complete IS NOT NULL  
+	$contract_status_filter = " AND cv.fw_orderdate IS NOT NULL  
 	        					AND cv.production_complete_date IS NULL
 	        					AND cv.install_date IS NULL
 	        					AND cv.footing_inspection_date IS NULL
 	        					AND cv.job_end_date IS NULL
 	        					AND cv.final_inspection_date IS NULL";
 	if ($searchdate) {
-		$date_filter = " AND DATE(cv.fw_complete) BETWEEN DATE('{$frdate}') AND DATE('{$todate}')  
+		$date_filter = " AND DATE(cv.fw_orderdate) BETWEEN DATE('{$frdate}') AND DATE('{$todate}')  
         					AND cv.production_complete_date IS NULL
         					AND cv.install_date IS NULL
         					AND cv.footing_inspection_date IS NULL
@@ -684,6 +684,7 @@ SELECT
 	m_o_d,
 	contract_note_number,
 	DATE_FORMAT( cv.fw_orderdate, '{$sql_dformat}' ) ffw_orderdate,
+	DATE_FORMAT( cv.fw_orderdate, '{$sql_dformat}' ) forderdate,
 	DATE_FORMAT( cs.permit_application_date, '{$sql_dformat}' ) fpermit_application_date,
 	DATE_FORMAT( cs.engineering_approved_date, '{$sql_dformat}' ) fengineering_approved_date,
 	DATE_FORMAT( cs.permit_approved_date, '{$sql_dformat}' ) fpermit_approved_date,
