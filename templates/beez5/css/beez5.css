@@ -1549,7 +1549,8 @@ body.dashboard #contentarea {/*background:#fff url(../images/dashboard-bg.jpg) n
 .search-listing form label {font-size:14px; font-weight:bold;}
 .search-listing form {width:355px;float:left;}
 .search-listing form input {border: 1px solid #000000;
-    height: 20px;
+    /*height: 20px;*/
+    height: 17px;
     padding: 2px;
     width: 175px;}
 	

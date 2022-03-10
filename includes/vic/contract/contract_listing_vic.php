@@ -400,7 +400,7 @@ if($contract_status=="drawing_approval"){
 	        					AND cs.sitespec_engr_date IS NULL
 	        					AND cs.coastal_date IS NULL
 	        					AND cs.citypermit_application_approved_date IS NULL        					
-	        					AND cv.fw_complete IS NULL
+	        					AND cv.fw_orderdate IS NULL
 	        					AND cv.production_complete_date IS NULL
 	        					AND cv.install_date IS NULL
 	        					AND cv.footing_inspection_date IS NULL
@@ -412,7 +412,7 @@ if($contract_status=="drawing_approval"){
         					AND cs.sitespec_engr_date IS NULL
         					AND cs.coastal_date IS NULL
         					AND cs.citypermit_application_approved_date IS NULL        					
-        					AND cv.fw_complete IS NULL
+        					AND cv.fw_orderdate IS NULL
         					AND cv.production_complete_date IS NULL
         					AND cv.install_date IS NULL
         					AND cv.footing_inspection_date IS NULL
@@ -438,7 +438,7 @@ if($contract_status=="drawing_approval"){
 	        					AND cs.sitespec_engr_date IS NULL
 	        					AND cs.coastal_date IS NULL
 	        					AND cs.citypermit_application_approved_date IS NULL        					
-	        					AND cv.fw_complete IS NULL
+	        					AND cv.fw_orderdate IS NULL
 	        					AND cv.production_complete_date IS NULL
 	        					AND cv.install_date IS NULL
 	        					AND cv.footing_inspection_date IS NULL
@@ -451,7 +451,7 @@ if($contract_status=="drawing_approval"){
         					AND cs.sitespec_engr_date IS NULL
         					AND cs.coastal_date IS NULL
         					AND cs.citypermit_application_approved_date IS NULL        					
-        					AND cv.fw_complete IS NULL
+        					AND cv.fw_orderdate IS NULL
         					AND cv.production_complete_date IS NULL
         					AND cv.install_date IS NULL
         					AND cv.footing_inspection_date IS NULL
@@ -486,7 +486,7 @@ if($contract_status=="drawing_approval"){
 	        					AND cs.sitespec_engr_date IS NULL
 	        					AND cs.coastal_date IS NULL
 	        					AND cs.citypermit_application_approved_date IS NULL        					
-	        					AND cv.fw_complete IS NULL
+	        					AND cv.fw_orderdate IS NULL
 	        					AND cv.production_complete_date IS NULL
 	        					AND cv.install_date IS NULL
 	        					AND cv.footing_inspection_date IS NULL
@@ -497,7 +497,7 @@ if($contract_status=="drawing_approval"){
         					AND cs.sitespec_engr_date IS NULL
         					AND cs.coastal_date IS NULL
         					AND cs.citypermit_application_approved_date IS NULL        					
-        					AND cv.fw_complete IS NULL
+        					AND cv.fw_orderdate IS NULL
         					AND cv.production_complete_date IS NULL
         					AND cv.install_date IS NULL
         					AND cv.footing_inspection_date IS NULL
@@ -508,7 +508,7 @@ if($contract_status=="drawing_approval"){
 	$contract_status_filter = " AND cs.sitespec_engr_date IS NOT NULL 
 	        					AND cs.coastal_date IS NULL
 	        					AND cs.citypermit_application_approved_date IS NULL        					
-	        					AND cv.fw_complete IS NULL
+	        					AND cv.fw_orderdate IS NULL
 	        					AND cv.production_complete_date IS NULL
 	        					AND cv.install_date IS NULL
 	        					AND cv.footing_inspection_date IS NULL
@@ -518,7 +518,7 @@ if($contract_status=="drawing_approval"){
 		$date_filter = " AND DATE(cs.sitespec_engr_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
         					AND cs.coastal_date IS NULL
         					AND cs.citypermit_application_approved_date IS NULL        					
-        					AND cv.fw_complete IS NULL
+        					AND cv.fw_orderdate IS NULL
         					AND cv.production_complete_date IS NULL
         					AND cv.install_date IS NULL
         					AND cv.footing_inspection_date IS NULL
@@ -528,7 +528,7 @@ if($contract_status=="drawing_approval"){
 }else if($contract_status=="coastal_date"){ 
 	$contract_status_filter = " AND cs.coastal_date IS NOT NULL 
 	        					AND cs.citypermit_application_approved_date IS NULL        					
-	        					AND cv.fw_complete IS NULL
+	        					AND cv.fw_orderdate IS NULL
 	        					AND cv.production_complete_date IS NULL
 	        					AND cv.install_date IS NULL
 	        					AND cv.footing_inspection_date IS NULL
@@ -537,7 +537,7 @@ if($contract_status=="drawing_approval"){
 	if ($searchdate) {
 		$date_filter = " AND DATE(cs.coastal_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}') 
         					AND cs.citypermit_application_approved_date IS NULL        					
-        					AND cv.fw_complete IS NULL
+        					AND cv.fw_orderdate IS NULL
         					AND cv.production_complete_date IS NULL
         					AND cv.install_date IS NULL
         					AND cv.footing_inspection_date IS NULL
@@ -546,7 +546,7 @@ if($contract_status=="drawing_approval"){
 	}
 }else if($contract_status=="city_permit_approval"){ 
 	$contract_status_filter = " AND cs.citypermit_application_approved_date IS NOT NULL       					
-	        					AND cv.fw_complete IS NULL
+	        					AND cv.fw_orderdate IS NULL
 	        					AND cv.production_complete_date IS NULL
 	        					AND cv.install_date IS NULL
 	        					AND cv.footing_inspection_date IS NULL
@@ -554,7 +554,7 @@ if($contract_status=="drawing_approval"){
 	        					AND cv.final_inspection_date IS NULL";	
 	if ($searchdate) {
 		$date_filter = " AND DATE(cs.citypermit_application_approved_date) BETWEEN DATE('{$frdate}') AND DATE('{$todate}')       					
-        					AND cv.fw_complete IS NULL
+        					AND cv.fw_orderdate IS NULL
         					AND cv.production_complete_date IS NULL
         					AND cv.install_date IS NULL
         					AND cv.footing_inspection_date IS NULL
