@@ -642,6 +642,11 @@ if($job_status){
 	}
 }
 
+$search_ID_filter = "";
+if($search_ID!=""){ 
+		$search_ID_filter = " AND cp.clientid LIKE '%"  . $search_ID .  "%'";
+}
+
 if($advance_search==0){
 	// $default_filter = " AND cv.handover_date IS NULL  ";
 	$default_filter = " AND final_inspection_date IS NULL";
@@ -694,7 +699,7 @@ SELECT
 	DATE_FORMAT(cv.footing_inspection_date,'{$sql_dformat}') ffooting_inspection,
 	IF ( c.framework_type = 'Drop-In', 'DI', 'FR' ) AS fframework_type 
 	FROM ver_chronoforms_data_contract_list_vic AS c LEFT JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid = c.projectid LEFT JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=c.projectid LEFT JOIN (SELECT projectid, orderdate FROM ver_chronoforms_data_contract_bom_vic  where inventory_section='Frame' GROUP BY projectid) AS bom ON bom.projectid=c.projectid LEFT JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=c.quoteid 
-	WHERE 1=1 {$default_18month_filter} {$default_filter} {$rep_filter2} {$suburb_filter} {$date_filter} {$search_string_filter}   {$installer_filter} {$site_address_filter} {$contract_status_filter} {$framework_type_filter} {$job_status_filter}  ORDER BY c.cf_id DESC) AS c LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic WHERE cf_id IN (SELECT MAX(cf_id) as max_id FROM ver_chronoforms_data_notes_vic GROUP BY clientid))  as n ON n.clientid=c.quoteid  ";
+	WHERE 1=1 {$default_18month_filter} {$default_filter} {$rep_filter2} {$suburb_filter} {$date_filter} {$search_string_filter}   {$installer_filter} {$site_address_filter} {$contract_status_filter} {$framework_type_filter} {$job_status_filter} {$search_ID_filter} ORDER BY c.cf_id DESC) AS c LEFT JOIN (SELECT * FROM ver_chronoforms_data_notes_vic WHERE cf_id IN (SELECT MAX(cf_id) as max_id FROM ver_chronoforms_data_notes_vic GROUP BY clientid))  as n ON n.clientid=c.quoteid  ";
 //error_log("f: ".SQL_DFORMAT, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 //error_log($sql, 3,'/home/vergola/public_html/quote-system/my-error.log');	 
 //error_log("drawing_no_date".$drawing_no_date, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
@@ -837,6 +842,7 @@ $cbo_installer .= "</select>";
 				<label class='input ' > <select name='job_status' style='width:150px'  > <option value='all' ". ($job_status=='all' ? 'selected':'').">All Contracts</option> <option value='incomplete' ". ($job_status=='incomplete' ? 'selected':'')." >Unbuilt Contracts</option><option value='complete' ". ($job_status=='complete' ? 'selected':'')." >Completed Contracts</option> </select>
 				</label>
 			";
+		echo " <label class='input'><span>CRC</span><input type='input' name='search_ID' value='".($search_ID!=''?$search_ID:"")."' style='border:1px solid #7C7D7F;' ></label>";
 	
 // <label class='input' style=''> <span class='' >Installer </span><input type='text' value='{$installer}' name='installer' class=' ' style='border:1px solid #97989a;' > &nbsp;&nbsp; </label>
 		
@@ -896,6 +902,7 @@ if(isset($_POST['download_pdf'])==false){
 	$html .= "<table class=\"listing-table table-bordered\" style=\"font-size:9px\"><tbody><tr  class='th-smaller'>".($is_admin?"<th width=\"\">
 		Consultant</th>  ":"")."<th width=\"\">
 		Contract</th><th width=\"\">
+		CRC</th><th width=\"\">
 		Client Name</th><th width=\"\">
 		Site Address</th><th>
 		Mobile Number</th><th>
@@ -922,6 +929,7 @@ if(isset($_POST['download_pdf'])==false){
 	$html .= "<table style=\"font-size:6pt\" class=\"listing-table table-bordered\"><tbody><tr >".($is_admin?"<th width=\"5%\">
 		Consultant_PDF</th>  ":"")."<th width=\"4%\">
 		Contract</th><th width=\"5%\">
+		CRC</th><th width=\"5%\">
 		Client Name</th><th width=\"7%\">
 		Site Address</th> <th width=\"4%\">
 		Contract Date</th><th width=\"4%\">
@@ -950,7 +958,7 @@ while ($record = mysql_fetch_assoc($loop)) {
 	$money =$record['total_rrp_gst'];
     $html .= "<tr  class=\"pointer td-smaller\" onclick=location.href=\"" . JURI::base() . "contract-listing-vic/contract-folder-vic?quoteid={$record['quoteid']}&projectid={$record['projectid']}\" >".
     ($is_admin==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['sales_rep']):$record['sales_rep'])."</td>":"").
-    "<td>{$record['projectid']}</td>".
+    "<td>{$record['projectid']}</td><td>{$record['clientid']}</td>".
 	/*($record['is_builder']==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."</td>":"<td>".(isset($_POST['download_pdf'])?addslashes($record['client_name']):$record['client_name'])."</td>").	
 	"<td>".(isset($_POST['download_pdf'])?addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address']):$record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address'])."</td>" . 	*/
 	($record['is_builder']==1?
