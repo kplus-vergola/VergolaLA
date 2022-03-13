@@ -958,7 +958,7 @@ while ($record = mysql_fetch_assoc($loop)) {
 	$money =$record['total_rrp_gst'];
     $html .= "<tr  class=\"pointer td-smaller\" onclick=location.href=\"" . JURI::base() . "contract-listing-vic/contract-folder-vic?quoteid={$record['quoteid']}&projectid={$record['projectid']}\" >".
     ($is_admin==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['sales_rep']):$record['sales_rep'])."</td>":"").
-    "<td>{$record['projectid']}</td><td>{$record['clientid']}</td>".
+    "<td>{$record['projectid']}</td><td>{$record['quoteid']}</td>".
 	/*($record['is_builder']==1?"<td>".(isset($_POST['download_pdf'])?addslashes($record['builder_name']):$record['builder_name'])."</td>":"<td>".(isset($_POST['download_pdf'])?addslashes($record['client_name']):$record['client_name'])."</td>").	
 	"<td>".(isset($_POST['download_pdf'])?addslashes($record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address']):$record['site_streetno'].' '.$record['site_streetname'].' '.$record['site_address'])."</td>" . 	*/
 	($record['is_builder']==1?
