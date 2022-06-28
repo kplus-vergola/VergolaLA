@@ -549,7 +549,7 @@ $custom_configs_user = array(
                 'tab photos' => array('save' => false, 'delete' => false), 
                 'tab drawings' => array('save' => false, 'delete' => false), 
                 'tab general' => array('save' => false, 'delete' => false), 
-                'record action' => array('update' => false, 'cancel contract' => false)
+                'record action' => array('update' => true, 'cancel contract' => false)
             ), 
             'add-quote-vic > contract_bom' => array(
                 'button bill of materials' => array('show' => true), 
