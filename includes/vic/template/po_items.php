@@ -400,7 +400,6 @@ FROM
 	
 WHERE
 	bm.projectid = '{$projectid}' 
-	-- AND b.projectid = '{$projectid}' 
 	AND s.supplierid = '{$supplierid}' 	
 	
 	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
@@ -410,11 +409,13 @@ GROUP BY
 CASE
 		
 		WHEN inv.section = 'Guttering' 
-		OR inv.section = 'Flashings' THEN
+		OR inv.section = 'Flashings' 
+		THEN
 			bm.id ELSE bm.materialid END,
 CASE			
 		WHEN m.uom = 'Inches' THEN
 		( ( bm.length_feet * 12 ) + bm.length_inch ) END,
+		bm.length_fraction,
 		b.colour 
 	ORDER BY
 		m.cf_id ASC,
