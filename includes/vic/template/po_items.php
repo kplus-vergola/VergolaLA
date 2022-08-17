@@ -772,7 +772,7 @@ CASE
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
 								,'.',1)
 								AS girth_side_a_fraction_total_whole,	
-								(id.dimension_b_inch + id.dimension_b_inch + id.dimension_e_inch + id.dimension_f_inch + id.dimension_p_inch) AS girth_side_b_inch,								
+								(id.dimension_b_inch + id.dimension_d_inch + id.dimension_e_inch + id.dimension_f_inch + id.dimension_p_inch) AS girth_side_b_inch,								
 								CASE									
 									WHEN 
 										(((FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',2),2)+0)),0) )) +
@@ -827,18 +827,20 @@ CASE
 								JOIN ver_chronoforms_data_contract_items_default_deminsions AS id ON id.inventoryid = bm.inventoryid
 								WHERE bm.projectid = '{$projectid}' AND id.inventoryid='{$m['inventoryid']}' LIMIT 1 ";
 						//error_log("sql G: ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
-						// echo $sql;
+						 // echo $sql;
 						$r_item_dimension = mysql_query ($sql);
 						$item_dimension = mysql_fetch_assoc($r_item_dimension);	
 
 
 						if($item_dimension["girth_side_a_fraction_total"] >= 1){
 							$item_dimension["girth_side_a_inch"] += $item_dimension["girth_side_a_fraction_total_whole"];
-							$item_dimension["girth_side_a_fraction_numerator"] -= 32;}
+							// $item_dimension["girth_side_a_fraction_numerator"] -= 32;
+						}
 
 						if($item_dimension["girth_side_b_fraction_total"] >= 1){
-							$item_dimension["girth_side_b_inch"] += $item_dimension["girth_side_b_fraction_total_whole"];
-							$item_dimension["girth_side_b_fraction_numerator"] -= 32;}
+							$item_dimension["girth_side_b_inch"] = $item_dimension["girth_side_b_inch"] + $item_dimension["girth_side_b_fraction_total_whole"];
+							// $item_dimension["girth_side_b_fraction_numerator"] -= 32;
+						}
 
 						if(!empty($item_dimension)){
 
