@@ -729,8 +729,92 @@ CASE
 								CONCAT( id.dimension_e_inch, '<br />', id.dimension_e_fraction ) AS dimension_e,
 								CONCAT( id.dimension_f_inch, '<br />', id.dimension_f_fraction ) AS dimension_f,
 								CONCAT( id.dimension_p_inch, '<br />', id.dimension_p_fraction ) AS dimension_p, 
-								id.girth_side_a_inch, id.girth_side_a_fraction,
-								id.girth_side_b_inch, id.girth_side_b_fraction,
+								(id.dimension_a_inch + id.dimension_c_inch + id.dimension_e_inch + id.dimension_f_inch + id.dimension_p_inch) AS girth_side_a_inch,		
+								CASE									
+									WHEN 
+										(((FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))) 
+										 >= 1)
+								THEN
+								CONCAT(
+									(FLOOR (32) * (
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
+										) - 32),'/',32
+									) 
+								ELSE 
+								CONCAT(
+									(FLOOR (32) * (
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
+										)),'/',32
+									) 
+								END AS girth_side_a_fraction,
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) )) AS girth_side_a_fraction_total,
+								SUBSTRING_INDEX(
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
+								,'.',1)
+								AS girth_side_a_fraction_total_whole,	
+								(id.dimension_b_inch + id.dimension_b_inch + id.dimension_e_inch + id.dimension_f_inch + id.dimension_p_inch) AS girth_side_b_inch,								
+								CASE									
+									WHEN 
+										(((FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))) 
+										 >= 1)
+								THEN
+								CONCAT(
+									(FLOOR (32) * (
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
+										) - 32),'/',32
+									) 
+								ELSE 
+								CONCAT(
+									(FLOOR (32) * (
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
+										)),'/',32
+									) 
+								END AS girth_side_b_fraction,
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) )) AS girth_side_b_fraction_total,
+								SUBSTRING_INDEX(
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
+								,'.',1)
+								AS girth_side_b_fraction_total_whole,
 								id.dimension_a_inch, id.dimension_a_fraction,
 								id.dimension_b_inch, id.dimension_b_fraction,
 								id.dimension_c_inch, id.dimension_c_fraction,
@@ -739,16 +823,22 @@ CASE
 								id.dimension_f_inch, id.dimension_f_fraction,
 								id.dimension_p_inch, id.dimension_p_fraction 
 								FROM 
-								-- ver_chronoforms_data_contract_items_default_deminsions  AS id  
-								-- JOIN ver_chronoforms_data_contract_bom_vic AS b ON b.inventoryid = id.inventoryid
 								ver_chronoforms_data_contract_bom_meterial_vic AS bm
 								JOIN ver_chronoforms_data_contract_items_default_deminsions AS id ON id.inventoryid = bm.inventoryid
 								WHERE bm.projectid = '{$projectid}' AND id.inventoryid='{$m['inventoryid']}' LIMIT 1 ";
 						//error_log("sql G: ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
-						
+						// echo $sql;
 						$r_item_dimension = mysql_query ($sql);
 						$item_dimension = mysql_fetch_assoc($r_item_dimension);	
 
+
+						if($item_dimension["girth_side_a_fraction_total"] >= 1){
+							$item_dimension["girth_side_a_inch"] += $item_dimension["girth_side_a_fraction_total_whole"];
+							$item_dimension["girth_side_a_fraction_numerator"] -= 32;}
+
+						if($item_dimension["girth_side_b_fraction_total"] >= 1){
+							$item_dimension["girth_side_b_inch"] += $item_dimension["girth_side_b_fraction_total_whole"];
+							$item_dimension["girth_side_b_fraction_numerator"] -= 32;}
 
 						if(!empty($item_dimension)){
 
