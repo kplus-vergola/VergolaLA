@@ -10,7 +10,9 @@ if(isset($_POST['section']))
 {
 	$section = $_POST['section'];
 
-	$sql = "SELECT category FROM  ver_chronoforms_data_inventory_vic AS inv   WHERE  inv.section='{$section}' GROUP BY category ";
+	$sql = "SELECT IF(section LIKE '%Fixings%',
+            replace(category, 'Beam Fixings', 'Beam Fittings'), category) 
+        AS `category` FROM  ver_chronoforms_data_inventory_vic AS inv   WHERE  inv.section='{$section}' GROUP BY category ";	
 	$sectionResult = mysql_query ($sql);
 	  
 }else{
@@ -61,7 +63,8 @@ echo "<div class='search-listing'>
 	<label>Section:</label> 
 	<select name='section' id='select_section' style='font-size:14px; padding:4px;' onchange='document.getElementById(\"filter_form\").submit();'>
 		<option value='Frame' ".($section=="Frame" ? "selected":"") .">Frame</option>  
-		<option value='Fittings' ".($section=="Fittings" ? "selected":"") .">Fittings</option>
+		<option value='Fixings' ".($section=="Fixings" ? "selected":"") .">Fittings</option>
+		<!-- <option value='Fixings' ".($section=="Fixings" ? "selected":"") .">Fixings</option> -->
 		<option value='Guttering' ".($section=="Guttering" ? "selected":"") .">Guttering</option>    
 		<option value='Flashings' ".($section=="Flashings" ? "selected":"") .">Flashings</option> 
 		<option value='Downpipe' ".($section=="Downpipe" ? "selected":"") .">Downpipe</option> 
@@ -73,7 +76,9 @@ echo "<div class='search-listing'>
 	<select name='category' id='select_category' style='font-size:14px; padding:4px; min-width:100px;' onchange='document.getElementById(\"filter_form\").submit();'>";
 		echo "<option value=\"\"  >Select All</option>";
 		while ($data = mysql_fetch_array($sectionResult)) 
-		{
+		{	
+			if($category=='Beam Fittings') {
+			$category='Beam Fixings';}
 			echo "<option value=\"{$data['category']}\" ".($data["category"]==$category ? "selected":"")." >{$data['category']}</option>";
 		}	
 	echo"
@@ -101,7 +106,12 @@ $start = ($page-1) * NUMBER_PER_PAGE;
 * variables passed in the URL because someone clicked on a page number
 **/
 $search = (isset($_POST['search_string'])?$_POST['search_string']:"");
-$sql = "SELECT * FROM ver_chronoforms_data_inventory_vic WHERE 1=1 ";
+$sql = "SELECT IF(section LIKE '%Fixings%',
+            replace(section, 'Fixings', 'Fittings'), section) 
+        AS `section`, 
+				IF(section LIKE '%Fixings%',
+            replace(category, 'Beam Fixings', 'Beam Fittings'), category) 
+        AS `category`, description, uom FROM ver_chronoforms_data_inventory_vic WHERE 1=1 ";
 $result = mysql_query($sql) or die(mysql_error());
 
 if ($search){

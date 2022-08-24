@@ -66,10 +66,25 @@
             var vr_width_inch_in_string = '';
             var vr_width_inch_in_value_for_display = '';
             var temp_array = [];
-            var temp_float = 0.0;
-
-            vr_width_feet_in_string = document.getElementById('vr_width_feet_form_query').value;
-            vr_width_inch_in_string = document.getElementById('vr_width_inch_form_query').value;
+            var temp_float = 0.0;            
+            if (document.getElementById('vr_width_feet_form_query')) {
+                if (document.getElementById('vr_width_feet_form_query').value.length == 0 || 
+                    isNaN(document.getElementById('vr_width_feet_form_query').value)) {
+                    vr_width_feet_in_string = '0';
+                }else{
+                    vr_width_feet_in_string = document.getElementById('vr_width_feet_form_query').value;
+                }
+            }
+            if (document.getElementById('vr_width_inch_form_query')) {
+                if (document.getElementById('vr_width_inch_form_query').value.length == 0 || 
+                    isNaN(document.getElementById('vr_width_inch_form_query').value)) {
+                    vr_width_inch_in_string = '0';
+                }else{
+                    vr_width_inch_in_string = document.getElementById('vr_width_inch_form_query').value;
+                }
+            }
+            // vr_width_feet_in_string = document.getElementById('vr_width_feet_form_query').value;
+            // vr_width_inch_in_string = document.getElementById('vr_width_inch_form_query').value;
             vr_width_in_string = vr_width_feet_in_string + '\'' + vr_width_inch_in_string;
             vr_width_in_value_for_calculation = convertValueForCalculation(vr_width_in_string);
             vr_width_in_value_for_display = revertValueForCalculation(vr_width_in_value_for_calculation);
