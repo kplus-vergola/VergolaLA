@@ -9,8 +9,7 @@ $uom = "";
 if(isset($_POST['section']))
 {
 	$section = $_POST['section'];
-	$sql = "SELECT category FROM  ver_chronoforms_data_inventory_vic AS inv   WHERE  inv.section='{$section}' GROUP BY category ";
-	$sql1 = "SELECT IF(section LIKE '%Fixings%',
+	$sql = "SELECT IF(section LIKE '%Fixings%',
             replace(category, 'Beam Fixings', 'Beam Fittings'), category) 
         AS `category` FROM  ver_chronoforms_data_inventory_vic AS inv   WHERE  inv.section='{$section}' GROUP BY category ";	
 	$sectionResult = mysql_query ($sql);
@@ -106,13 +105,12 @@ $start = ($page-1) * NUMBER_PER_PAGE;
 * variables passed in the URL because someone clicked on a page number
 **/
 $search = (isset($_POST['search_string'])?$_POST['search_string']:"");
-$sql = "SELECT * FROM ver_chronoforms_data_inventory_vic WHERE 1=1 ";
-$sql1 = "SELECT IF(section LIKE '%Fixings%',
+$sql = "SELECT IF(section LIKE '%Fixings%',
             replace(section, 'Fixings', 'Fittings'), section) 
         AS `section`, 
 				IF(section LIKE '%Fixings%',
             replace(category, 'Beam Fixings', 'Beam Fittings'), category) 
-        AS `category`, description, uom FROM ver_chronoforms_data_inventory_vic WHERE 1=1 ";
+        AS `category`, description, uom, inventoryid FROM ver_chronoforms_data_inventory_vic WHERE 1=1 ";
 $result = mysql_query($sql) or die(mysql_error());
 
 if ($search){
