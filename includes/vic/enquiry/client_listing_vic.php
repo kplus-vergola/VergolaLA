@@ -270,7 +270,8 @@ echo "</select></label>
 echo "</select></label>";
 
 echo "<label class='input'><select class=\"\"  name=\"c_status\">
-	<option value='Enquiry' ".($c_status=='Enquiry'?"selected":"").">Enquiry</option> 
+	<option value='Show All' ".($c_status=='Show All'?"selected":"").">Show All</option> 
+	<option value='Enquiry' ".($c_status=='Enquiry'?"selected":"").">Open Enquiry</option> 
 	<option value='Quoted' ".($c_status=='Quoted'?"selected":"").">Quoted</option> 
 	<option value='Costed' ".($c_status=='Costed'?"selected":"").">Costed</option>  
 	<option value='Not Interested' ".($c_status=='Not Interested'?"selected":"").">Not Interested</option>  
@@ -375,8 +376,10 @@ $c_status_filter_a = ""; //same filter but in different table query.
 //error_log("c_status: ".$c_status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 if(strlen($c_status)>0 && $advance_search==1){
 	
-	if($c_status=="Enquiry"){
-		$c_status_filter_a = " AND c.qdelivered IS NULL ";
+	if($c_status=="Show All"){
+		$c_status_filter_a = "";
+	}else if ($c_status=="Enquiry") {
+		$c_status_filter_a = "AND status != 'Not Interested' AND status != 'Won' AND status != 'Lost'";	
 	}else{
 		$c_status_filter = " AND status='".$c_status."' ";
 	}
@@ -448,7 +451,7 @@ $sql = "
 		{$search_string_filter} 
 		{$c_status_filter_a} 
 	) AS c 
-		".((strlen($search_string_filter)>0 || $c_status=="Enquiry" || $advance_search==0)?" LEFT ":"")." JOIN (
+		".((strlen($search_string_filter)>0 || $c_status=="Show All" || $advance_search==0)?" LEFT ":"")." JOIN (
 			SELECT * 
 			FROM (
 				SELECT * 
