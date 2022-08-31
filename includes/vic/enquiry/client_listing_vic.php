@@ -383,7 +383,8 @@ if(strlen($c_status)>0 && $advance_search==1){
 	if($c_status=="Show All"){
 		$c_status_filter_a = "";
 	}else if ($c_status=="Enquiry") {
-		$c_status_filter_a = "AND status != 'Not Interested' AND status != 'Won' AND status != 'Lost'";	
+		// $c_status_filter_a = " AND c.qdelivered IS NULL AND status != 'Not Interested' AND status != 'Won' AND status != 'Lost' AND status != 'Quoted' AND status != 'Costed' AND status != 'Under Consideration' AND status != 'Future Project'";	
+		$c_status_filter_a = " AND status = ''";
 	}else{
 		$c_status_filter = " AND status='".$c_status."' ";
 	}
@@ -440,7 +441,7 @@ $sql = "
 		c.builder_contact_firstname,
 		c.builder_contact_lastname,
 		f.status as followup_status_, 
-		IFNULL(f.status, c.status) AS `followup_status`,
+		".(($c_status=='Enquiry')?" IFNULL(c.status, f.status) ":" IFNULL(f.status, c.status) ")." AS `followup_status`,
 		n.content AS note 
 	FROM (
 		SELECT * 
