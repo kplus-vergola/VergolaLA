@@ -276,7 +276,7 @@ echo "</select></label>";
 echo "<label class='input'><select class=\"\"  name=\"c_status\">
 	<option value='Show All' ".($c_status=='Show All'?"selected":"").">Show All</option> 
 	<option value='Enquiry' ".($c_status=='Enquiry'?"selected":"").">Open Enquiry</option> 
-	<option value='Quoted' ".($c_status=='Quoted'?"selected":"").">Quoted</option> 
+	<!-- <option value='Quoted' ".($c_status=='Quoted'?"selected":"").">Quoted</option> -->
 	<option value='Costed' ".($c_status=='Costed'?"selected":"").">Costed</option>  
 	<option value='Not Interested' ".($c_status=='Not Interested'?"selected":"").">Not Interested</option>  
 	<option value='Under Consideration' ".($c_status=='Under Consideration'?"selected":"").">Under Consideration</option> 
