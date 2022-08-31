@@ -182,6 +182,10 @@ if($is_quoted){
 	$paging_url .= "&is_quoted=1";
 }
 
+if($c_status){
+	$paging_url .= "&c_status=".$c_status;
+}
+
 if($advance_search){
 	$paging_url .= "&advance_search=1";
 }
