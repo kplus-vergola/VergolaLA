@@ -383,10 +383,13 @@ if(strlen($c_status)>0 && $advance_search==1){
 	if($c_status=="Show All"){
 		$c_status_filter_a = "";
 	}else if ($c_status=="Enquiry") {
-		// $c_status_filter_a = " AND c.qdelivered IS NULL AND status != 'Not Interested' AND status != 'Won' AND status != 'Lost' AND status != 'Quoted' AND status != 'Costed' AND status != 'Under Consideration' AND status != 'Future Project'";	
-		$c_status_filter_a = " AND status = ''";
+		// $c_status_filter_a = "AND c.qdelivered IS NULL AND status != 'Not Interested' AND status != 'Won' AND status != 'Lost' AND status != 'Quoted' AND status != 'Costed' AND status != 'Under Consideration' AND status != 'Future Project' AND status IS NULL";	
+		// $c_status_filter_a = " AND c.qdelivered IS NULL AND status = ''";
+		// $c_status_filter_a = " AND c.qdelivered IS NULL AND status IS NULL AND appointmentdate IS NULL";
+		// $c_status_filter_a = "";
+		$c_status_filter_a = " 	AND (c.status IS  NULL OR c.status = '')";
 	}else{
-		$c_status_filter = " AND status='".$c_status."' ";
+		$c_status_filter = " AND status='".$c_status."' ";	
 	}
 
 	if($search_ID!=""){ 
@@ -441,7 +444,7 @@ $sql = "
 		c.builder_contact_firstname,
 		c.builder_contact_lastname,
 		f.status as followup_status_, 
-		".(($c_status=='Enquiry')?" IFNULL(c.status, f.status) ":" IFNULL(f.status, c.status) ")." AS `followup_status`,
+		IFNULL(f.status, c.status) AS `followup_status`,
 		n.content AS note 
 	FROM (
 		SELECT * 
@@ -456,7 +459,7 @@ $sql = "
 		{$search_string_filter} 
 		{$c_status_filter_a} 
 	) AS c 
-		".((strlen($search_string_filter)>0 || $c_status=="Show All" || $advance_search==0)?" LEFT ":"")." JOIN (
+		".((strlen($search_string_filter)>0 || $c_status=="Show All" || $c_status=="Enquiry" || $advance_search==0)?" LEFT ":"")." JOIN (
 			SELECT * 
 			FROM (
 				SELECT * 
@@ -484,12 +487,15 @@ $sql = "
 				GROUP BY clientid
 		)
 	) as n ON n.clientid=c.clientid 
-	WHERE 1=1 
+	
+	WHERE 
+	".(($c_status=="Enquiry")?" f.status IS NULL AND ":"")."
+	1=1 
 	{$rep_filter3} 
 
 ";
 
-
+// echo $sql;
 //this return the total number of records returned by our query
 //error_log("start count: ".microtime(true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
 $total_records = mysql_num_rows(mysql_query($sql));
