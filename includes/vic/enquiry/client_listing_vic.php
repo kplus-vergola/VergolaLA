@@ -388,6 +388,8 @@ if(strlen($c_status)>0 && $advance_search==1){
 		// $c_status_filter_a = " AND c.qdelivered IS NULL AND status IS NULL AND appointmentdate IS NULL";
 		// $c_status_filter_a = "";
 		$c_status_filter_a = " 	AND (c.status IS  NULL OR c.status = '')";
+	}else if ($c_status=="Costed") {
+		$c_status_filter = " 	AND (total_cost IS NOT NULL OR total_cost > 0.00)";		
 	}else{
 		$c_status_filter = " AND status='".$c_status."' ";	
 	}
