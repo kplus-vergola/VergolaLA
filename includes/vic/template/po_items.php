@@ -254,7 +254,7 @@ $supplier = mysql_fetch_array($qSupplier);
 </table> 
 <br/> 
  
-<b>PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?>
+<b>123PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?>
 <br/><br/>
 <table class="" border="1" cellspacing="0" style="border-collapse:collapse;font-size:9pt;" width="600px">
 	<tr>
@@ -901,9 +901,12 @@ CASE
 
 			   		if($m["photo"] !="" ){
 
-			   			echo "<tr>
-					  			<td colspan=\"9\" style=\"border:none\">&nbsp;</td> 
-					  		</tr>";
+			   			// echo "<tr>
+					  	// 		<td colspan=\"10\" style=\"border:none\">&nbsp;</td> 
+					  	// 	</tr>";
+						echo "<tr style=\"background-color: lightgrey\">
+							  <td colspan=\"10\" style=\"border:none\">&nbsp;</td> 
+						  	</tr>";						
 			   		}  
 			   	?>
 
