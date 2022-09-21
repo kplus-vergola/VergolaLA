@@ -254,7 +254,7 @@ $supplier = mysql_fetch_array($qSupplier);
 </table> 
 <br/> 
  
-<b>123PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?>
+<b>PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?>
 <br/><br/>
 <table class="" border="1" cellspacing="0" style="border-collapse:collapse;font-size:9pt;" width="600px">
 	<tr>
