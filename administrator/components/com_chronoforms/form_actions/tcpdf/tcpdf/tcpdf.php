@@ -7507,7 +7507,7 @@ class TCPDF {
 	 * @public
 	 * @since 1.1
 	 */
-	public function Image($file, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox=false, $hidden=false, $fitonpage=false, $alt=false, $altimgs=array()) {
+	public function Image($file, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='center', $ismask=false, $imgmask=false, $border=0, $fitbox='CM', $hidden=false, $fitonpage=false, $alt=false, $altimgs=array()) {
 		if ($x === '') {
 			$x = $this->x;
 		}
@@ -7542,13 +7542,16 @@ class TCPDF {
 			// check if is local file
 			if (!@file_exists($file)) {
 				// encode spaces on filename (file is probably an URL)
-				$file = str_replace(' ', '%20', $file);
+				$file = str_replace(' ', '%20', $file);			
 			}
 			if (@file_exists($file)) {
 				// get image dimensions
 				$imsize = @getimagesize($file);
 			} else {
 				$imsize = false;
+
+				$file = str_replace(' ', '%20', 'images/inventory/_blank.png');
+				$imsize = @getimagesize($file);
 			}
 			if ($imsize === FALSE) {
 				if (function_exists('curl_init')) {

@@ -179,7 +179,7 @@ $supplier = mysql_fetch_array($qSupplier);
  
 <textarea name="htmlcontent" id="htmlcontent" class="mce_editable" style="width:100%;height:100%!important; ">
 <div style="font-family:Arial, Helvetica, sans-serif; width:700px;  font-size: 10pt;">
-<table class="template_tbl" cellspacing="0" cellpadding="0" width="600px">
+<table class="template_tbl" cellspacing="0" cellpadding="0" width="100%">
 	<tr>
 		<td  style="width:50%; text-align:left; " >
 		 	<img src="<?php echo JURI::base().'images/company_logo.png'; ?> " class="" style="float:left;padding:0px 0px 10px 0; width: 180px;"/>
@@ -256,12 +256,12 @@ $supplier = mysql_fetch_array($qSupplier);
  
 <b>PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?>
 <br/><br/>
-<table class="" border="1" cellspacing="0" style="border-collapse:collapse;font-size:9pt;" width="600px">
+<table class="" border="1" cellspacing="0" style="border-collapse:collapse;font-size:9pt; " width="100%">
 	<tr>
 		 	<th width="240" colspan="2">
 				&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
 			</th>
-			<th width="50">
+			<th width="35">
 				&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
 			</th>
 			<th width="50">
@@ -276,7 +276,7 @@ $supplier = mysql_fetch_array($qSupplier);
 			<th width="60">
 				&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
 			</th>
-			<th width="60">
+			<th width="65">
 				&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
 			</th>
 			<th width="60">
@@ -287,6 +287,8 @@ $supplier = mysql_fetch_array($qSupplier);
 			</th>
 		 
 	</tr>
+
+	<tr></tr>
 
 
 	<?php
@@ -562,10 +564,11 @@ CASE
 	bm.qty DESC
 	,FIELD( inv.category, 'Post Fixings', 'Beam Fixings', 'Intermediates', 'Beams' ) DESC ";
 
+// echo $sql;
 //ORDER BY is_per_length DESC
 
  				$totalRrp = 0; 
- 				
+ 				$count = 0;
 				//error_log("sql : ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log'); 
 				//error_log("sql 2: ". $sql2, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 				
@@ -604,7 +607,7 @@ CASE
 					$m_qty = 0; $m_amount = 0; $is_group = 1;
 					if($m['id']==""){continue;} 
 					$totalRrp += $m['ls_amount']; 
-					
+					$count++;
 					
 
 					if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
@@ -638,8 +641,9 @@ CASE
 					
 
  
-				?>  
-					<tr> 
+				?>
+ 
+					<tr style='page-break-before: auto !important;'> 
 						<td colspan="2"><?php echo $m['raw_description']; ?></td>  
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td>  -->
@@ -666,26 +670,17 @@ CASE
 				if($m["photo"] !=""  ){ //$section=="Guttering"
 
 				?>
-					<tr>
-			  			<td colspan="9" style="border:none">
+<table style='page-break-inside: avoid !important; table-row-group;'> 
+	<tbody style='page-break-inside: avoid !important;'> 
+		<tr style='page-break-inside: avoid !important;'>
+					<tr >
+			  			<td colspan="8" rowspan="9" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;">
 			  				<?php
 				  			if($m["photo"] !="") { 
-				  				echo " <img src='".JURI::base()."images/inventory/".$m['photo']."' class='' style='float:left;padding:0px 0px 0px 0; width: 345px;'/>";
+				  				echo " <img src='".JURI::base()."images/inventory/".$m['photo']."' class='' style='float:middle; margin:1px; height: 176px; max-width: 600px;'/>";
 							} 
 							?>
-
-			  			</td>
-			  			<!-- <td colspan="2" style="column-width: 15%;">
-			  				<tr>
-			  					<th colspan="1" align="right"  style="border:none;">Girth A&nbsp;&nbsp;</th>
-				  				<th colspan="1" align="right"  style="border:none;">Girth B&nbsp;&nbsp;</th>
-				  			</tr>
-				  			<tr>
-				  				<td colspan="1" valign="top" align="right" style="border:none;"><?php echo $item_dimension["girth_a"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
-							<td colspan="1" valign="top" align="right" style="border:none;"><?php echo $item_dimension["girth_b"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
-				  			</tr>
-			  			</td> -->
-			  		</tr>
+			  			</td>						
 
 				<?php 
 					//mysql_data_seek($item_result, 0); 
@@ -853,46 +848,42 @@ CASE
 							$dimension_e_output = $item_dimension["dimension_e_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_e_fraction"]];
 							$dimension_f_output = $item_dimension["dimension_f_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_f_fraction"]];
 							$dimension_p_output = $item_dimension["dimension_p_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["dimension_p_fraction"]];
-					?>   
-					  	   
-				  		<tr>
-				  			<!-- <th colspan="1" align="right"  style="border:none;">Length&nbsp;&nbsp;</th> -->
-				  			<th colspan="1" align="left"  style="border:none;">Girth A</th>
-				  			<th colspan="1" align="left"  style="border:none;">Girth B&nbsp;&nbsp;</th>
-				  			<th align="center"  style="border:none;">A</th>
-				  			<th align="left"  style="border:none;">B</th>
-				  			<th align="left"   style="border:none;">C</th>
-				  			<th align="left"   style="border:none;">D</th>
-				  			<th align="left"  style="border:none;">E</th>
-				  			<th align="left" style="border:none;">F</th>
-				  			<th align="left" style="border:none;">P</th>
-				  			 
-				  		</tr> 
-				  		<tr> 
-							<!-- <td colspan="1" valign="top" align="right" style="border:none;"><?php echo $item_dimension["l"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td> -->
-							<!--
-							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $item_dimension["girth_a"]; ?></td>
-							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $item_dimension["girth_b"]; ?>&nbsp;&nbsp;</td>
-							<td valign="top" align="center" style="border:none;"><?php echo $item_dimension["dimension_a"]; ?></td>
-							<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_b"]; ?></td>
-							<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_c"]; ?></td>
-				  			<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_d"]; ?></td>
-				  			<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_e"]; ?></td>
-				  			<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_f"]; ?></td>
-				  			<td valign="top" align="left" style="border:none;"><?php echo $item_dimension["dimension_p"]; ?></td> 	
-							-->
-							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $girth_side_a_output; ?></td>
-							<td colspan="1" valign="top" align="left" style="border:none;"><?php echo $girth_side_b_output; ?>&nbsp;&nbsp;</td>
-							<td valign="top" align="center" style="border:none;"><?php echo $dimension_a_output; ?></td>
-							<td valign="top" align="left" style="border:none;"><?php echo $dimension_b_output; ?></td>
-							<td valign="top" align="left" style="border:none;"><?php echo $dimension_c_output; ?></td>
-				  			<td valign="top" align="left" style="border:none;"><?php echo $dimension_d_output; ?></td>
-				  			<td valign="top" align="left" style="border:none;"><?php echo $dimension_e_output; ?></td>
-				  			<td valign="top" align="left" style="border:none;"><?php echo $dimension_f_output; ?></td>
-				  			<td valign="top" align="left" style="border:none;"><?php echo $dimension_p_output; ?></td> 	
-				  		</tr>
-					  		 
-					   
+					?>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; height:28.9px;">Girth A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="center" style="border:none; background-color:#cccccc; "><?php echo $girth_side_a_output; ?> </td>						
+					</tr>
+					<tr >
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28.9px;">Girth B&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="center" style="border:none; background-color:#cccccc; "><?php echo $girth_side_b_output; ?> </td>
+					</tr>							
+					<tr >
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28.9px;">A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="center" style="border:none; background-color:#cccccc; "><?php echo $dimension_a_output; ?> </td>
+					</tr>
+					<tr >
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28.9px;">B&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="center" style="border:none; background-color:#cccccc; "><?php echo $dimension_b_output; ?> </td>
+					</tr>
+					<tr >
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28.9px;">C&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="center" style="border:none; background-color:#cccccc; "><?php echo $dimension_c_output; ?> </td>
+					</tr>
+					<tr >
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28.9px;">D&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="center" style="border:none; background-color:#cccccc; "><?php echo $dimension_d_output; ?> </td>
+					</tr>
+					<tr > 
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28.9px;">E&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="center" style="border:none; background-color:#cccccc; "><?php echo $dimension_e_output; ?> </td>
+					</tr>
+					<tr >
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28.9px;">F&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="center" style="border:none; background-color:#cccccc; "><?php echo $dimension_f_output; ?> </td>
+					</tr>
+					<tr >
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28.9px;">P&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="center" style="border:none; background-color:#cccccc; "><?php echo $dimension_p_output; ?> </td>
+					</tr> 
 			  	<?php 
 			  		
 			  	 	} //end if if it has a dimension
@@ -904,12 +895,15 @@ CASE
 			   			// echo "<tr>
 					  	// 		<td colspan=\"10\" style=\"border:none\">&nbsp;</td> 
 					  	// 	</tr>";
-						echo "<tr style=\"background-color: lightgrey\">
-							  <td colspan=\"10\" style=\"border:none\">&nbsp;</td> 
-						  	</tr>";						
-			   		}  
-			   	?>
+						echo "<tr style=\"background-color: #cccccc;\">
+							  <td colspan=\"10\" style=\"border:none; page-break-after: auto; clear:both;\"></td> 
+						  	</tr>
 
+</tr></tbody></table><br/> ";						
+			   		}
+					
+			   	?>
+<!-- </tr></tbody></table><br/> -->
 			  	<?php 
 			  		} //end of if it has a photo	
 			  	} //end of while for the no main item materials
@@ -949,6 +943,10 @@ CASE
 	<td> &nbsp; </td>
 	<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>
 	<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td> 
+</tr>
+					
+<tr>
+
 </tr>
 			  	<?php
 
