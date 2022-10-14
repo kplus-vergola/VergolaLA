@@ -256,7 +256,7 @@ $supplier = mysql_fetch_array($qSupplier);
  
 <b>PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?>
 <br/><br/>
-<table class="" border="1" cellspacing="0" style="border-collapse:collapse;font-size:9pt; " width="100%">
+<table class="" border="1" cellspacing="0" style="border-collapse:collapse;font-size:9pt; " width="110%">
 	<tr>
 		 	<th width="240" colspan="2">
 				&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
@@ -836,8 +836,19 @@ CASE
 							$item_dimension["girth_side_b_inch"] = $item_dimension["girth_side_b_inch"] + $item_dimension["girth_side_b_fraction_total_whole"];
 							// $item_dimension["girth_side_b_fraction_numerator"] -= 32;
 						}
-
-						if(!empty($item_dimension)){
+						$is_dimension = "";
+						$girth_side_a_output = "";
+						$girth_side_b_output = "";
+						$dimension_a_output = "";
+						$dimension_b_output = "";
+						$dimension_c_output = "";
+						$dimension_d_output = "";
+						$dimension_e_output = "";
+						$dimension_f_output = "";
+						$dimension_f_output = "";
+						// if(!empty($item_dimension) || $section == "Guttering" || $section == "Flashings"){
+						if(!empty($item_dimension) || empty($item_dimension) || $section == "Guttering" || $section == "Flashings"){
+							$is_dimension = "9";
 
 							$girth_side_a_output = $item_dimension["girth_side_a_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["girth_side_a_fraction"]];
 							$girth_side_b_output = $item_dimension["girth_side_b_inch"] . '<br />' . $config_vr_fractions_output_format[$item_dimension["girth_side_b_fraction"]];
