@@ -200,18 +200,18 @@ $supplier = mysql_fetch_array($qSupplier);
 			<!-- <div><b>To:</b></div> -->
 			<div>				
 				<b>PO Number: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;
-				<br/><br/>
+				<br/><br/><br/>
 				<b>Order To:</b><br/>
 				<?php if(empty($supplier["company_name"])==false){ 
-					  echo $supplier["company_name"]; } ?> <br/>
+					  echo $supplier["company_name"] .'<br/>'; } ?> 
 				<?php if(empty($supplier["address1"])==false){ 
-					  echo $supplier["address1"]; } ?> <br/>
+					  echo $supplier["address1"] .'<br/>'; } ?> 
 				<?php if(empty($supplier["suburb"])==false){ 
-					  echo $supplier["suburb"]." ".$supplier["state"]." ".$supplier["postcode"]; } ?> <br/>
+					  echo $supplier["suburb"]." ".$supplier["state"]." ".$supplier["postcode"] .'<br/>'; } ?>
 				<?php if(empty($supplier["phone"])==false){ 
-					  echo $supplier["phone"]; } ?> <br/>
+					  echo $supplier["phone"] .'<br/>'; } ?>
 				<?php if(empty($supplier["fax"])==false){ 
-					  echo $supplier["fax"]; } ?> <br/>			
+					  echo $supplier["fax"] .'<br/>'; } ?> 		
 			</div>
 		</td>
 		<td style="padding-left: 5px; border-collapse: collapse; vertical-align: top">
@@ -250,19 +250,15 @@ $supplier = mysql_fetch_array($qSupplier);
 					echo $contract["site_mobile"] .'<br/>';
 				}else if(empty($contract["site_mobile"])==false){   
 					echo $contract["client_mobile"] .'<br/>';
-				} ?><br/>		
+				} ?>		
 			</div>
 		</td>
 	</tr>
 	<!-- <tr><td colspan="2"></td></tr>	 -->
 	<tr>	
-		<td colspan="2">
-			<!-- 
-			<b>Client:</b> <?php if($contract["is_builder"]==1){ echo $contract["builder_name"]; }else{ echo $contract["client_firstname"]." ".$contract["client_lastname"];} ?> &nbsp;&nbsp;&nbsp;&nbsp; 
-			<b>Project ID:</b> <?php echo $contract["projectid"]; ?>&nbsp;&nbsp;
-			<b>Account No:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+		<td colspan="2" style="padding-left: 5px;" height="45">
 			<b>Date Ordered:</b> <?php print(Date(PHP_DFORMAT)); ?><br/>
-			<b> Date Required:</b> 
+			<b>Date Required:</b> 
 		</td> 
 	</tr> 
 </table> 
@@ -306,7 +302,7 @@ $supplier = mysql_fetch_array($qSupplier);
  <?php
  if($m["photo"] =="") { 
  	echo " <tr>
- 		 	<th height='22' width='250' colspan='2'>
+ 		 	<th height='23' width='250' colspan='2'>
  				&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
  			</th>
  			<th width='35'>
@@ -721,7 +717,7 @@ CASE
 				 	<?php
 				 	if($m["photo"] !="" && $count > 1) { 
 				 		echo " <tr>
-				 			 	<th height='22' width='250' colspan='2'>
+				 			 	<th height='23' width='250' colspan='2'>
 				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
 				 				</th>
 				 				<th width='35'>
@@ -750,24 +746,24 @@ CASE
 				 		}else{} ?>
 
 					<tr style='page-break-before: auto !important;'> 
-						<td colspan="2"><?php echo $m['raw_description']; ?></td>  
+						<td colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>  
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td>  -->
-						<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?></td> 
+						<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?>&nbsp;&nbsp;</td> 
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?></td>  -->
 						<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td> -->
 						<!-- <td style="text-align:right;"><?php echo ($is_group== 1?number_format($m['m_qty']):number_format($m['ts_qty'])); ?></td> -->
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:($is_group==1?$m['ts_qty']:$m['ls_qty']))); ?></td>  -->
 
-						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_lengtd']):($m['uom']=="Inches"?$m['1_length']:"")); ?></td>
-						<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?></td> 
+						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_lengtd']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
+						<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : ''); ?>&nbsp;&nbsp;</td> 
 						<!-- <td style="text-align:right;"><?php echo $m['uom']; ?></td>  -->
 						<!-- <td><?php echo $m['colour']; ?></td> -->
-						<td><?php echo ($m['colour'] == null?"":$m['colour']); ?></td>
-						<td><?php echo ($m['finish'] == "null"?" ":$m['finish']); ?></td>
-						<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>
-						<td style="text-align:right;">$<?php echo number_format(($m_amount>0?$m_amount:$m['ls_amount']),2); ?></td>
+						<td style="text-align:right;"><?php echo ($m['colour'] == null?"":$m['colour']); ?>&nbsp;&nbsp;</td>
+						<td style="text-align:right;"><?php echo ($m['finish'] == "null"?" ":$m['finish']); ?>&nbsp;&nbsp;</td>
+						<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?>&nbsp;&nbsp;</td>
+						<td style="text-align:right;">$<?php echo number_format(($m_amount>0?$m_amount:$m['ls_amount']),2); ?>&nbsp;&nbsp;</td>
 					</tr>  
 
 				<?php
@@ -1079,14 +1075,14 @@ echo "</tr></tbody></table><br/> ";
 	<td colspan="2"><?php echo $m['raw_description']; ?></td>  
 	<!-- <td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td> -->
 	<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['ts_qty']):number_format($m['ls_qty']))); ?></td> -->
-	<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?></td> 
-	<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?></td>
-	<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?></td> 
-	<td style="text-align:right;"><?php echo $m['uom']; ?></td> 
+	<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?>&nbsp;&nbsp;</td> 
+	<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
+	<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?>&nbsp;&nbsp;</td> 
+	<!-- <td style="text-align:center;"><?php echo $m['uom']; ?></td>  -->
 	<td> &nbsp; </td>
 	<td> &nbsp; </td>
-	<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?></td>
-	<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td> 
+	<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?>&nbsp;&nbsp;</td>
+	<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?>&nbsp;&nbsp;</td> 
 </tr>
 					
 <tr>
