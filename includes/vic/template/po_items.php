@@ -149,7 +149,7 @@ $projectid = mysql_real_escape_string($_REQUEST['projectid']);
 $section = mysql_real_escape_string($_REQUEST['section']);
 $titleID = mysql_real_escape_string($_REQUEST['titleID']);
 $supplierid = mysql_real_escape_string($_REQUEST['supplierid']);
-
+$is_uom_visible = 1;
 $inventoryid = "";
 $is_reorder = 0;
 if($section=="reorder"){
@@ -203,15 +203,15 @@ $supplier = mysql_fetch_array($qSupplier);
 				<br/><br/><br/>
 				<b>Order To:</b><br/>
 				<?php if(empty($supplier["company_name"])==false){ 
-					  echo $supplier["company_name"] .'<br/>'; } ?> 
+					  echo $supplier["company_name"]; } ?> <br/>
 				<?php if(empty($supplier["address1"])==false){ 
-					  echo $supplier["address1"] .'<br/>'; } ?> 
+					  echo $supplier["address1"]; } ?> <br/>
 				<?php if(empty($supplier["suburb"])==false){ 
-					  echo $supplier["suburb"]." ".$supplier["state"]." ".$supplier["postcode"] .'<br/>'; } ?>
+					  echo $supplier["suburb"]." ".$supplier["state"]." ".$supplier["postcode"]; } ?> <br/>
 				<?php if(empty($supplier["phone"])==false){ 
-					  echo $supplier["phone"] .'<br/>'; } ?>
+					  echo $supplier["phone"]; } ?> <br/>
 				<?php if(empty($supplier["fax"])==false){ 
-					  echo $supplier["fax"] .'<br/>'; } ?> 		
+					  echo $supplier["fax"]; } ?> <br/>	
 			</div>
 		</td>
 		<td style="padding-left: 5px; border-collapse: collapse; vertical-align: top">
@@ -223,34 +223,34 @@ $supplier = mysql_fetch_array($qSupplier);
 				<br/>
 				<b>Deliver To:</b><br/>
 				<?php if($contract['is_builder']==1){  
-					  echo $contract["builder_name"] .'<br/>';    
+					  echo $contract["builder_name"];    
 				}else{
-					 echo $contract["client_firstname"]." ".$contract["client_lastname"] .'<br/>'; 
-				} ?> 
+					 echo $contract["client_firstname"]." ".$contract["client_lastname"]; 
+				} ?> <br/>
 
 				<?php if(empty($contract['site_address1'])==false){  
-					echo $contract["site_address1"]." ".$contract["site_address2"] .'<br/>';  
+					echo $contract["site_address1"]." ".$contract["site_address2"];  
 				}else if(empty($contract['client_address1'])==false){
-					echo $contract["client_address1"]." ".$contract["client_address2"] .'<br/>'; 
-				} ?>
+					echo $contract["client_address1"]." ".$contract["client_address2"]; 
+				} ?><br/>
 				
 				<?php if(empty($contract['site_suburb'])==false){ 
-					echo $contract["site_suburb"]." ".$contract["site_state"]." ".$contract["site_postcode"] .'<br/>'; 
+					echo $contract["site_suburb"]." ".$contract["site_state"]." ".$contract["site_postcode"]; 
 				}else if(empty($contract['client_suburb'])==false){
-					echo $contract["client_suburb"]." ".$contract["client_state"]." ".$contract["client_postcode"] .'<br/>'; 
-				} ?>
+					echo $contract["client_suburb"]." ".$contract["client_state"]." ".$contract["client_postcode"]; 
+				} ?><br/>
 
 				<?php if(empty($contract["site_hmphone"])==false){ 
-					 echo $contract["site_hmphone"] .'<br/>';
+					 echo $contract["site_hmphone"];
 				}else if(empty($contract["client_hmphone"])==false){
-					echo $contract["client_hmphone"] .'<br/>';
-				} ?>	
+					echo $contract["client_hmphone"] ;
+				} ?><br/>
  
 				<?php if(empty($contract["site_mobile"])==false){ 
-					echo $contract["site_mobile"] .'<br/>';
+					echo $contract["site_mobile"];
 				}else if(empty($contract["site_mobile"])==false){   
-					echo $contract["client_mobile"] .'<br/>';
-				} ?>		
+					echo $contract["client_mobile"];
+				} ?><br/>		
 			</div>
 		</td>
 	</tr>
@@ -299,36 +299,59 @@ $supplier = mysql_fetch_array($qSupplier);
 		 
 	</tr>
  -->
- <?php
- if($m["photo"] =="") { 
- 	echo " <tr>
- 		 	<th height='23' width='250' colspan='2'>
- 				&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
- 			</th>
- 			<th width='35'>
- 				&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
- 			</th>
- 			<th width='60'>
- 				&nbsp;<b>Length</b> &nbsp;
- 			</th>
- 			<th width='65'>
- 				&nbsp; <b>Fraction</b> &nbsp;
- 			</th>
- 			<th width='60'>
- 				&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
- 			</th>
- 			<th width='65'>
- 				&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
- 			</th>
- 			<th width='65'>
- 				&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
- 			</th>
- 			<th  >
- 				&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
- 			</th>
- 		 
- 	</tr>";
- 	} ?>
+ 
+ 			 	<?php
+ 			 	// if($m["photo"] =="" && $count <= 0) { 
+ 			 	// 	echo " <tr>
+ 			 	// 		 	<th height='23' width='250' colspan='2'>
+ 			 	// 				&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
+ 			 	// 			</th>
+ 			 	// 			<th width='35'>
+ 			 	// 				&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
+ 			 	// 			</th>
+ 			 	// 			<th width='60'>
+ 			 	// 				 &nbsp;<b>Length</b> &nbsp;
+ 			 	// 			</th>
+ 			 	// 			<th width='65'>
+ 			 	// 				&nbsp;<b>Fraction</b> &nbsp;
+ 			 	// 			</th>";
+ 			 	// 			switch(true)
+ 			 	// 			{
+ 			 	// 			    case ($section == "Flashings" || $section == "Guttering"):
+ 			 	// 			        echo "<th width=\"40\'><b>UOM</b></th> ";
+ 			 	// 			        break;
+
+ 			 	// 			    default:
+ 			 	// 			        echo "";
+ 			 	// 			}
+
+  				//  			// if (($section != 'Flashings' 
+  				//  			// 	|| $section != 'Guttering') 
+  				//  			// 	// || ($m['photo'] == '')
+  				//  			// ){
+  				// 	 		// 	echo "<th width=\"40\'>
+  				// 	 		// 		 <b>UOM</b> 
+  				// 	 		// 	</th> ";
+  				// 	 		// }
+
+  				//  	echo "	
+ 			 	// 			 <th width='60'>
+ 			 	// 				&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
+ 			 	// 			</th>
+ 			 	// 			<th width='65'>
+ 			 	// 				&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
+ 			 	// 			</th>
+ 			 	// 			<th width='65'>
+ 			 	// 				&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
+ 			 	// 			</th>
+ 			 	// 			<th  >
+ 			 	// 				&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
+ 			 	// 			</th>
+ 			 			 
+ 			 	// 	</tr>";
+ 			 	// 	}else{} 
+ 			 		?>
+
 	<tr></tr>
 
 
@@ -621,12 +644,81 @@ CASE
 				$m_qty = 0; $m_amount = 0; $is_1st=1; $is_2nd = 0;  
 				$m_qty_IRV59 = 0; $m_amount_IRV59 = 0; $m_qty_IRV60 = 0; $m_amount_IRV60 = 0; // Just only for link bar and pivot strip
 				//Get the ungrouped amount,qty and length if section is Guttering or Flashings
+
+				 
+
+				 
+
 				if ($section == "Guttering" || $section == "Flashings"){ 
 						// $m['ts_qty'] = $m['1_qty']; 
 						$m['ts_qty'] = $m['m_qty']; 
 						$m['s_length'] = $m['1_length']; 
 						$m['ls_amount'] = $m['1_amount'];
+
+						$is_uom_visible = 0;
+						echo " <tr>
+				 			 	<th height='23' width='250' colspan='2'>
+				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
+				 				</th>
+				 				<th width='35'>
+				 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
+				 				</th>
+				 				<th width='60'>
+				 					 &nbsp;<b>Length</b> &nbsp;
+				 				</th>
+				 				<th width='65'>
+				 					&nbsp;<b>Fraction</b> &nbsp;
+				 				</th>
+				 				<th width='60'>
+				 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
+				 				</th>
+				 				<th width='65'>
+				 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
+				 				</th>
+				 				<th width='65'>
+				 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
+				 				</th>
+				 				<th  >
+				 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
+				 				</th>
+				 			 
+				 		</tr>";
+
+					}else
+					{
+						$is_uom_visible = 1;
+						echo " <tr>
+				 			 	<th height='23' width='250' colspan='2'>
+				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
+				 				</th>
+				 				<th width='35'>
+				 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
+				 				</th>
+				 				<th width='60'>
+				 					 &nbsp;<b>Length</b> &nbsp;
+				 				</th>
+				 				<th width='65'>
+				 					&nbsp;<b>Fraction</b> &nbsp;
+				 				</th>
+				 				<th width=40>
+				 					<b>UOM</b> 
+				 				</th>
+				 				<th width='60'>
+				 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
+				 				</th>
+				 				<th width='65'>
+				 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
+				 				</th>
+				 				<th width='65'>
+				 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
+				 				</th>
+				 				<th  >
+				 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
+				 				</th>
+				 			 
+				 		</tr>";
 					}	
+				 		
 
 				while ($m = mysql_fetch_assoc($item_result)){ //this is just to get get the sum of the link bar and pivot strip.
 					if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
@@ -715,7 +807,7 @@ CASE
 				 	</tr> -->
 
 				 	<?php
-				 	if($m["photo"] !="" && $count > 1) { 
+				 	if($m["photo"] !="" && $count > 1 && $is_uom_visible == 0) { 
 				 		echo " <tr>
 				 			 	<th height='23' width='250' colspan='2'>
 				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
@@ -743,7 +835,8 @@ CASE
 				 				</th>
 				 			 
 				 		</tr>";
-				 		}else{} ?>
+				 		}else{} 
+				 		?>
 
 					<tr style='page-break-before: auto !important;'> 
 						<td colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>  
@@ -755,11 +848,18 @@ CASE
 						<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td> -->
 						<!-- <td style="text-align:right;"><?php echo ($is_group== 1?number_format($m['m_qty']):number_format($m['ts_qty'])); ?></td> -->
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:($is_group==1?$m['ts_qty']:$m['ls_qty']))); ?></td>  -->
-
+					
 						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_lengtd']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
 						<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : ''); ?>&nbsp;&nbsp;</td> 
+						<?php 
+						// if ($section != "Guttering" || $section != "Flashings"){ 
+						// if($m["photo"] !="" && $count > 1) { 
+							
+						// echo "<td style=\'text-align:center;\'>"; echo $m['uom'] . '123</td>'  ;} ?>
 						<!-- <td style="text-align:right;"><?php echo $m['uom']; ?></td>  -->
 						<!-- <td><?php echo $m['colour']; ?></td> -->
+						<?php if($is_uom_visible==1){ ?>
+							<td style="text-align:right;"><?php echo $m['uom']; ?>&nbsp;&nbsp;</td> <?php } ?>
 						<td style="text-align:right;"><?php echo ($m['colour'] == null?"":$m['colour']); ?>&nbsp;&nbsp;</td>
 						<td style="text-align:right;"><?php echo ($m['finish'] == "null"?" ":$m['finish']); ?>&nbsp;&nbsp;</td>
 						<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?>&nbsp;&nbsp;</td>
@@ -776,6 +876,11 @@ CASE
 	<tbody style='page-break-inside: avoid !important;'> 
 		<tr style='page-break-inside: avoid !important;'>
 					<tr >
+						<?php if($is_uom_visible==1){ ?>
+							<td colspan="8" rowspan="9" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;"> 
+							<?php }else{
+
+							} ?>
 			  			<td colspan="7" rowspan="9" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;">
 			  				<?php
 				  			if($m["photo"] !="") { 
@@ -1078,7 +1183,7 @@ echo "</tr></tbody></table><br/> ";
 	<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?>&nbsp;&nbsp;</td> 
 	<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
 	<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?>&nbsp;&nbsp;</td> 
-	<!-- <td style="text-align:center;"><?php echo $m['uom']; ?></td>  -->
+	<td style="text-align:center;"> <?php echo $m['uom']; ?>&nbsp;&nbsp;</td> 
 	<td> &nbsp; </td>
 	<td> &nbsp; </td>
 	<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?>&nbsp;&nbsp;</td>

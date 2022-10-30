@@ -64,7 +64,7 @@ class CfactionTcpdfHelper{
 		//set margins
 		//$pdf->SetMargins($params->get('pdf_margin_left', 15), $params->get('pdf_margin_top', 17), $params->get('pdf_margin_right', 15));
 		//SetMargins ( $left, $top, $right = -1, $keepmargins = false )
-		$pdf->SetMargins(15,10,15,false);
+		$pdf->SetMargins(5,10,5,false);
 		//$pdf->SetHeaderMargin($params->get('pdf_margin_header', 5));
 		//$pdf->SetFooterMargin($params->get('pdf_margin_footer', 10));
 		$pdf->SetFooterMargin(15);
