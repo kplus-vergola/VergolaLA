@@ -210,8 +210,6 @@ $supplier = mysql_fetch_array($qSupplier);
 					  echo $supplier["suburb"]." ".$supplier["state"]." ".$supplier["postcode"]; } ?> <br/>
 				<?php if(empty($supplier["phone"])==false){ 
 					  echo $supplier["phone"]; } ?> <br/>
-				<?php if(empty($supplier["fax"])==false){ 
-					  echo $supplier["fax"]; } ?> <br/>	
 			</div>
 		</td>
 		<td style="padding-left: 5px; border-collapse: collapse; vertical-align: top">
@@ -239,24 +237,17 @@ $supplier = mysql_fetch_array($qSupplier);
 				}else if(empty($contract['client_suburb'])==false){
 					echo $contract["client_suburb"]." ".$contract["client_state"]." ".$contract["client_postcode"]; 
 				} ?><br/>
-
-				<?php if(empty($contract["site_hmphone"])==false){ 
-					 echo $contract["site_hmphone"];
-				}else if(empty($contract["client_hmphone"])==false){
-					echo $contract["client_hmphone"] ;
-				} ?><br/>
- 
-				<?php if(empty($contract["site_mobile"])==false){ 
-					echo $contract["site_mobile"];
-				}else if(empty($contract["site_mobile"])==false){   
-					echo $contract["client_mobile"];
-				} ?><br/>		
+				<?php if((empty($contract["site_hmphone"])==false) || (empty($contract["site_mobile"])==false)) { 
+					 echo $contract["site_hmphone"] ."      ". $contract["site_mobile"];
+				}else if((empty($contract["client_hmphone"])==false) || (empty($contract["client_mobile"])==false)){
+					echo $contract["client_hmphone"] ."      ". $contract["client_mobile"];
+				} ?><br/>			
 			</div>
 		</td>
 	</tr>
-	<!-- <tr><td colspan="2"></td></tr>	 -->
+	<tr><td colspan="2"></td></tr>	
 	<tr>	
-		<td colspan="2" style="padding-left: 5px;" height="45">
+		<td colspan="2" style="padding-left: 5px;" height="30">
 			<b>Date Ordered:</b> <?php print(Date(PHP_DFORMAT)); ?><br/>
 			<b>Date Required:</b> 
 		</td> 
@@ -267,90 +258,6 @@ $supplier = mysql_fetch_array($qSupplier);
 <!-- <b>PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?> -->
 <!-- <br/><br/> -->
 <table class="" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:9pt; " width="100%">
-<!-- 
-	<tr>
-		 	<th width="240" colspan="2">
-				&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
-			</th>
-			<th width="35">
-				&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
-			</th>
-			<th width="50">
-				 <b>Length</b> 
-			</th>
-			<th width="50">
-				 <b>Fraction</b> 
-			</th>
-			<th width="40">
-				 <b>UOM</b> 
-			</th> 
-			<th width="60">
-				&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
-			</th>
-			<th width="65">
-				&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
-			</th>
-			<th width="60">
-				&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
-			</th>
-			<th  >
-				&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
-			</th>
-		 
-	</tr>
- -->
- 
- 			 	<?php
- 			 	// if($m["photo"] =="" && $count <= 0) { 
- 			 	// 	echo " <tr>
- 			 	// 		 	<th height='23' width='250' colspan='2'>
- 			 	// 				&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
- 			 	// 			</th>
- 			 	// 			<th width='35'>
- 			 	// 				&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
- 			 	// 			</th>
- 			 	// 			<th width='60'>
- 			 	// 				 &nbsp;<b>Length</b> &nbsp;
- 			 	// 			</th>
- 			 	// 			<th width='65'>
- 			 	// 				&nbsp;<b>Fraction</b> &nbsp;
- 			 	// 			</th>";
- 			 	// 			switch(true)
- 			 	// 			{
- 			 	// 			    case ($section == "Flashings" || $section == "Guttering"):
- 			 	// 			        echo "<th width=\"40\'><b>UOM</b></th> ";
- 			 	// 			        break;
-
- 			 	// 			    default:
- 			 	// 			        echo "";
- 			 	// 			}
-
-  				//  			// if (($section != 'Flashings' 
-  				//  			// 	|| $section != 'Guttering') 
-  				//  			// 	// || ($m['photo'] == '')
-  				//  			// ){
-  				// 	 		// 	echo "<th width=\"40\'>
-  				// 	 		// 		 <b>UOM</b> 
-  				// 	 		// 	</th> ";
-  				// 	 		// }
-
-  				//  	echo "	
- 			 	// 			 <th width='60'>
- 			 	// 				&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
- 			 	// 			</th>
- 			 	// 			<th width='65'>
- 			 	// 				&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
- 			 	// 			</th>
- 			 	// 			<th width='65'>
- 			 	// 				&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
- 			 	// 			</th>
- 			 	// 			<th  >
- 			 	// 				&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
- 			 	// 			</th>
- 			 			 
- 			 	// 	</tr>";
- 			 	// 	}else{} 
- 			 		?>
 
 	<tr></tr>
 
@@ -657,30 +564,28 @@ CASE
 
 						$is_uom_visible = 0;
 						echo " <tr>
-				 			 	<th height='23' width='250' colspan='2'>
+				 			 	<th height='23' width='220' colspan='2'>
 				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th width='35'>
+				 				<th style='text-align:center;' width='35'>
 				 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
 				 				</th>
-				 				<th width='60'>
+				 				<th style='text-align:center;' width='60'>
 				 					 &nbsp;<b>Length</b> &nbsp;
-				 				</th>
-				 				<th width='65'>
-				 					&nbsp;<b>Fraction</b> &nbsp;
-				 				</th>
-				 				<th width='60'>
+				 				</th>				 				
+				 				<th style='text-align:center;' width='65'>
 				 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th width='65'>
+				 				<th style='text-align:center;' width='70'>
 				 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th width='65'>
+				 				<th style='text-align:center;' width='55'>
 				 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th  >
+				 				<th style='text-align:center;' width='65' >
 				 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
 				 				</th>
+				 				<th colspan='2' rowspan='2' style='border:none;' width='130'>&nbsp;&nbsp; <b></b> &nbsp;&nbsp;</th>
 				 			 
 				 		</tr>";
 
@@ -688,31 +593,31 @@ CASE
 					{
 						$is_uom_visible = 1;
 						echo " <tr>
-				 			 	<th height='23' width='250' colspan='2'>
+				 			 	<th height='23' width='240' colspan='2'>
 				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th width='35'>
+				 				<th style='text-align:center;' width='35'>
 				 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
 				 				</th>
-				 				<th width='60'>
+				 				<th style='text-align:center;' width='60'>
 				 					 &nbsp;<b>Length</b> &nbsp;
 				 				</th>
-				 				<th width='65'>
-				 					&nbsp;<b>Fraction</b> &nbsp;
+				 				<th style='text-align:center;' width='55'>
+				 					<b>Fraction</b>
 				 				</th>
-				 				<th width=40>
+				 				<th style='text-align:center;' width=45>
 				 					<b>UOM</b> 
 				 				</th>
-				 				<th width='60'>
+				 				<th style='text-align:center;' width='65'>
 				 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th width='65'>
+				 				<th style='text-align:center;' width='70'>
 				 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th width='65'>
+				 				<th style='text-align:center;' width='55'>
 				 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th  >
+				 				<th  width='65' >
 				 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
 				 				</th>
 				 			 
@@ -775,82 +680,53 @@ CASE
 
  
 				?>
-<!-- 				 	<tr>
-				 		 	<th height="22" width="250" colspan="2">
-				 				&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
-				 			</th>
-				 			<th width="35">
-				 				&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
-				 			</th>
-				 			<th width="50">
-				 				 <b>Length</b> 
-				 			</th>
-				 			<th width="50">
-				 				 <b>Fraction</b> 
-				 			</th>
-				 			<th width="40">
-				 				 <b>UOM</b> 
-				 			</th> 
-				 			<th width="60">
-				 				&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
-				 			</th>
-				 			<th width="65">
-				 				&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
-				 			</th>
-				 			<th width="65">
-				 				&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;&nbsp;&nbsp;
-				 			</th>
-				 			<th  >
-				 				&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
-				 			</td>
-				 		 
-				 	</tr> -->
 
 				 	<?php
 				 	if($m["photo"] !="" && $count > 1 && $is_uom_visible == 0) { 
 				 		echo " <tr>
-				 			 	<th height='23' width='250' colspan='2'>
+				 			 	<th height='23' width='220' colspan='2'>
 				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th width='35'>
+				 				<th style='text-align:center;' width='35'>
 				 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
 				 				</th>
-				 				<th width='60'>
+				 				<th style='text-align:center;' width='60'>
 				 					 &nbsp;<b>Length</b> &nbsp;
 				 				</th>
-				 				<th width='65'>
-				 					&nbsp;<b>Fraction</b> &nbsp;
-				 				</th>
-				 				<th width='60'>
+				 				<th style='text-align:center;' width='66'>
 				 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th width='65'>
+				 				<th style='text-align:center;' width='70'>
 				 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th width='65'>
+				 				<th style='text-align:center;' width='55'>
 				 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
 				 				</th>
-				 				<th  >
+				 				<th style='text-align:center;' width='65' >
 				 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
 				 				</th>
+				 				<th colspan='2' rowspan='2' style='border:none;' width='130'>&nbsp;&nbsp; <b></b> &nbsp;&nbsp;</th>
+
 				 			 
 				 		</tr>";
 				 		}else{} 
 				 		?>
 
 					<tr style='page-break-before: auto !important;'> 
-						<td colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>  
+						<td style="border-collapse:collapse;font-size:9.8;" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>  
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td>  -->
-						<td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?>&nbsp;&nbsp;</td> 
+						<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?>&nbsp;&nbsp;</td> 
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?></td>  -->
 						<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['m_qty']):number_format($m['ts_qty']))); ?></td> -->
 						<!-- <td style="text-align:right;"><?php echo ($is_group== 1?number_format($m['m_qty']):number_format($m['ts_qty'])); ?></td> -->
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:($is_group==1?$m['ts_qty']:$m['ls_qty']))); ?></td>  -->
 					
-						<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_lengtd']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
-						<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : ''); ?>&nbsp;&nbsp;</td> 
+						<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_lengtd']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
+
+						<?php if($is_uom_visible==1){ ?>
+							<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : ''); ?>&nbsp;&nbsp;</td>  <?php } ?>
 						<?php 
 						// if ($section != "Guttering" || $section != "Flashings"){ 
 						// if($m["photo"] !="" && $count > 1) { 
@@ -859,11 +735,15 @@ CASE
 						<!-- <td style="text-align:right;"><?php echo $m['uom']; ?></td>  -->
 						<!-- <td><?php echo $m['colour']; ?></td> -->
 						<?php if($is_uom_visible==1){ ?>
-							<td style="text-align:right;"><?php echo $m['uom']; ?>&nbsp;&nbsp;</td> <?php } ?>
-						<td style="text-align:right;"><?php echo ($m['colour'] == null?"":$m['colour']); ?>&nbsp;&nbsp;</td>
-						<td style="text-align:right;"><?php echo ($m['finish'] == "null"?" ":$m['finish']); ?>&nbsp;&nbsp;</td>
-						<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?>&nbsp;&nbsp;</td>
-						<td style="text-align:right;">$<?php echo number_format(($m_amount>0?$m_amount:$m['ls_amount']),2); ?>&nbsp;&nbsp;</td>
+							<td style="border-collapse:collapse;font-size:9.8;text-align:center;"><?php echo $m['uom']; ?>&nbsp;&nbsp;</td> <?php } ?>
+						<td style="border-collapse:collapse;font-size:9.8;text-align:center;"><?php echo ($m['colour'] == null?"":$m['colour']); ?>&nbsp;&nbsp;</td>
+						<td style="border-collapse:collapse;font-size:9.8;text-align:center;"><?php echo ($m['finish'] == "null"?" ":$m['finish']); ?>&nbsp;&nbsp;</td>
+						
+						<td style="border-collapse:collapse;font-size:9.8;text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?>&nbsp;&nbsp;</td>
+						<td style="border-collapse:collapse;font-size:9.8;text-align:right;">$<?php echo number_format(($m_amount>0?$m_amount:$m['ls_amount']),2); ?>&nbsp;&nbsp;</td>
+						<?php  if($is_uom_visible!=1){ ?> 
+							<!-- <td> &nbsp; </td> <td> &nbsp; </td>   -->
+						<?php } ?>
 					</tr>  
 
 				<?php
@@ -881,7 +761,7 @@ CASE
 							<?php }else{
 
 							} ?>
-			  			<td colspan="7" rowspan="9" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;">
+			  			<td colspan="8" rowspan="9" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;">
 			  				<?php
 				  			if($m["photo"] !="") { 
 				  				echo " <img src='".JURI::base()."images/inventory/".$m['photo']."' class='' style='float:middle; margin:1px; height: 176px; max-width: 600px;'/>";
@@ -1176,18 +1056,19 @@ echo "</tr></tbody></table><br/> ";
 							<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?></td> 
 						</tr> -->
 
-<tr> 
-	<td colspan="2"><?php echo $m['raw_description']; ?></td>  
+<tr > 
+	<td style="border-collapse:collapse;font-size:9.8;" colspan="2">&nbsp;<?php echo $m['raw_description']; ?></td>  
 	<!-- <td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td> -->
 	<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['ts_qty']):number_format($m['ls_qty']))); ?></td> -->
-	<td style="text-align:right;"><?php echo number_format($m['ls_qty']); ?>&nbsp;&nbsp;</td> 
-	<td style="text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
-	<td style="text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?>&nbsp;&nbsp;</td> 
-	<td style="text-align:center;"> <?php echo $m['uom']; ?>&nbsp;&nbsp;</td> 
+	<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo number_format($m['ls_qty']); ?>&nbsp;&nbsp;</td> 
+	<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
+	<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : ''); ?>&nbsp;&nbsp;</td>
+	<!-- <td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; ?>&nbsp;&nbsp;</td>  -->
+	<td style="border-collapse:collapse;font-size:9.8;text-align:center;"> <?php echo $m['uom']; ?>&nbsp;&nbsp;</td> 
 	<td> &nbsp; </td>
 	<td> &nbsp; </td>
-	<td style="text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?>&nbsp;&nbsp;</td>
-	<td style="text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?>&nbsp;&nbsp;</td> 
+	<td style="border-collapse:collapse;font-size:9.8;text-align:right;">$<?php echo number_format($m['raw_cost'],2); ?>&nbsp;&nbsp;</td>
+	<td style="border-collapse:collapse;font-size:9.8;text-align:right;">$<?php echo number_format($m['ls_amount'],2); ?>&nbsp;&nbsp;</td> 
 </tr>
 					
 <tr>
