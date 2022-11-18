@@ -257,10 +257,7 @@ $supplier = mysql_fetch_array($qSupplier);
  
 <!-- <b>PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?> -->
 <!-- <br/><br/> -->
-<table class="" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:9pt; " width="100%">
-
-	<tr></tr>
-
+<table class="" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:9pt; " width="100%"> <tr></tr>
 
 	<?php
 $order_by = ""; 
@@ -713,7 +710,7 @@ CASE
 				 		?>
 
 					<tr style='page-break-before: auto !important;'> 
-						<td style="border-collapse:collapse;font-size:9.8;" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>  
+						<td style="border-collapse:collapse;font-size:9.8; height: 24" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>  
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td>  -->
 						<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?>&nbsp;&nbsp;</td> 
@@ -972,39 +969,39 @@ CASE
 							// $dimension_f_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
 
 					?>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; height:28px;">Girth A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; height:26.2px;">Girth A&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($girth_side_a_output); echo ($girth_side_a_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>						
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28px;">Girth B&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">Girth B&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($girth_side_b_output); echo ($girth_side_b_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td> 				
 					</tr>							
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28px;">A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">A&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_a_output); echo ($dimension_a_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28px;">B&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">B&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_b_output); echo ($dimension_b_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28px;">C&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">C&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_c_output); echo ($dimension_c_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28px;">D&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">D&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_d_output); echo ($dimension_d_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
 					</tr>
 					<tr > 
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28px;">E&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">E&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_e_output); echo ($dimension_e_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28px;">F&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">F&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_f_output); echo ($dimension_f_output == '&nbsp;&nbsp;' ? '' : '"'); ?></td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:28px;">P&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">P&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_p_output); echo ($dimension_p_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
 					</tr> 
 			  	<?php 
@@ -1057,7 +1054,7 @@ echo "</tr></tbody></table><br/> ";
 						</tr> -->
 
 <tr > 
-	<td style="border-collapse:collapse;font-size:9.8;" colspan="2">&nbsp;<?php echo $m['raw_description']; ?></td>  
+	<td style="border-collapse:collapse;font-size:9.8; height: 24" colspan="2">&nbsp;<?php echo $m['raw_description']; ?></td>  
 	<!-- <td style="text-align:right;"><?php echo number_format($m['s_qty']); ?></td> -->
 	<!-- <td style="text-align:right;"><?php echo ($section = "Guttering"? number_format($m['m_qty']):($section = "Flashings"?number_format($m['ts_qty']):number_format($m['ls_qty']))); ?></td> -->
 	<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo number_format($m['ls_qty']); ?>&nbsp;&nbsp;</td> 
