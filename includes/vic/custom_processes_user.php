@@ -110,7 +110,7 @@ $custom_configs_user = array(
         /* ===== ===== ===== ===== ===== */
         '29' => array(
             'client-folder-vic' => array(
-                'tab client details' => array('edit' => true), 
+                'tab client details' => array('edit' => false), 
                 'tab costing info' => array('add new costing' => false, 'view costing' => true, 'view contract' => true), 
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 
@@ -124,10 +124,10 @@ $custom_configs_user = array(
                 'tab photos' => array('save' => true, 'delete' => true), 
                 'tab drawings' => array('save' => true, 'delete' => true), 
                 'tab general' => array('save' => true, 'delete' => true), 
-                'record action' => array('save' => true, 'delete' => true)
+                'record action' => array('save' => false, 'delete' => false)
             ), 
             'builder-folder-vic' => array(
-                'tab client details' => array('edit' => true), 
+                'tab client details' => array('edit' => false), 
                 'tab costing info' => array('add new costing' => false, 'view costing' => true, 'view contract' => true), 
                 'tab follow up' => array(
                     'not interested' => false, 'costed' => false, 'quoted' => false, 'under consideration' => false, 

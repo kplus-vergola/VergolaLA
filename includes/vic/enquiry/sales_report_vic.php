@@ -1742,7 +1742,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
         }
     // echo $user_group;
-        if($is_operation_manager || $is_site_manager || $user_group=="sales_manager"){
+        if($is_operation_manager || $is_site_manager || $user_group=="sales_manager" || $is_account_user){
         // else if($is_operation_manager || $is_site_manager || $is_sales_manager){ //To do list for construction users
         // echo $user_group;
         $to_do_list_construction = ""; $i = 0;
@@ -1759,7 +1759,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
      WHERE c.deleted_at IS NULL AND (f.cf_id>5534 AND f.status='Won')"; //f.cf_id>5534 is the next number the new system generate a new quotations.
 
 
-    if($is_operation_manager || $is_site_manager || $user_group=="sales_manager"){
+    if($is_operation_manager || $is_site_manager || $user_group=="sales_manager"  || $is_account_user){
                 $sql = "SELECT
                             f.cf_id,
                             c.datelodged,
@@ -2095,54 +2095,62 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
 
 
-    }else if($is_top_admin){
+    }else if($is_top_admin || $is_account_user){
 
         echo "<div style='width:100%; margin:0;'>";
+            
+            // Show Follow-ups for Accounts user group
+            if($is_account_user){
+                echo $to_do_list_construction;
+                echo "<br/><br/><br/>";
+            // 
 
-            echo "<h3 style='margin:10px 0 10px 0; text-decoration:underline; '>Sales Target</h3>";
-            echo $sales_table;
-            echo $kpi_graph;
+            // Do not display dashboard on Accounts user groups
+            }else{
+                echo "<h3 style='margin:10px 0 10px 0; text-decoration:underline; '>Sales Target</h3>";
+                echo $sales_table;
+                echo $kpi_graph;
 
-            echo $kpi_table_last_yr;
-            echo $kpi_table_this_yr;
+                echo $kpi_table_last_yr;
+                echo $kpi_table_this_yr;
 
-            echo "<br/><br/><br/>";
-            echo $enquiry_chart;
-            echo $quote_chart;
-            echo $contract_chart;
+                echo "<br/><br/><br/>";
+                echo $enquiry_chart;
+                echo $quote_chart;
+                echo $contract_chart;
 
 
-            echo "<div style='width:100%;  margin:15px; 0;'>";
-            echo "<h3 style='margin:65px 0 10px 60px; text-decoration:underline; '>Sales Summary</h3>";
-            echo $sales_compare_table;
+                echo "<div style='width:100%;  margin:15px; 0;'>";
+                echo "<h3 style='margin:65px 0 10px 60px; text-decoration:underline; '>Sales Summary</h3>";
+                echo $sales_compare_table;
 
-            echo $sales_compare_graph;
+                echo $sales_compare_graph;
 
-            echo "<br/><br/><br/>";
-            echo $kpi_table_manager;
+                echo "<br/><br/><br/>";
+                echo $kpi_table_manager;
 
-            // echo "<br/><br/><br/>";
-            // echo $weekly_sales_compare_graph;
+                // echo "<br/><br/><br/>";
+                // echo $weekly_sales_compare_graph;
 
-            //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
-            echo $construction_kpi;
+                //echo "<br/><br/><br/><div style='display:inline-block; width:50%;'></div>";
+                echo $construction_kpi;
 
-            echo "<br/><br/><br/><br/>";
-            // echo $contracts_weekly_report_table;
+                echo "<br/><br/><br/><br/>";
+                // echo $contracts_weekly_report_table;
 
-            echo "<br/><br/><br/><br/>";
-            echo $installer_calendar;
+                echo "<br/><br/><br/><br/>";
+                echo $installer_calendar;
 
-            echo "<br/><br/><br/><br/>";
-            echo $advertising_table;
-            echo $advertising_chart;
+                echo "<br/><br/><br/><br/>";
+                echo $advertising_table;
+                echo $advertising_chart;
 
-            //echo "<br/><br/><br/>";
-            echo $suburb_lead_table;
-            echo $suburb_lead_chart;
+                //echo "<br/><br/><br/>";
+                echo $suburb_lead_table;
+                echo $suburb_lead_chart;
 
-            echo "<br/><br/><br/><br/>";
-
+                echo "<br/><br/><br/><br/>";
+            }
 
         echo "</div>  ";
 
