@@ -374,6 +374,8 @@ if(isset($_POST['save_dimension']))
   $dimension_d_inch = mysql_real_escape_string($_POST['dimension_d_inch']);
   $dimension_e_inch = mysql_real_escape_string($_POST['dimension_e_inch']);
   $dimension_f_inch = mysql_real_escape_string($_POST['dimension_f_inch']);
+  $dimension_g_inch = mysql_real_escape_string($_POST['dimension_g_inch']);
+  $dimension_h_inch = mysql_real_escape_string($_POST['dimension_h_inch']);
   $dimension_p_inch = mysql_real_escape_string($_POST['dimension_p_inch']);
 
   $dimension_a_fraction = mysql_real_escape_string($_POST['dimension_a_fraction']);
@@ -382,6 +384,8 @@ if(isset($_POST['save_dimension']))
   $dimension_d_fraction = mysql_real_escape_string($_POST['dimension_d_fraction']);
   $dimension_e_fraction = mysql_real_escape_string($_POST['dimension_e_fraction']);
   $dimension_f_fraction = mysql_real_escape_string($_POST['dimension_f_fraction']);
+  $dimension_g_fraction = mysql_real_escape_string($_POST['dimension_g_fraction']);
+  $dimension_h_fraction = mysql_real_escape_string($_POST['dimension_h_fraction']);
   $dimension_p_fraction = mysql_real_escape_string($_POST['dimension_p_fraction']);
 
   if (isset($_POST['id']) && strlen($_POST['id']) > 0) {
@@ -393,14 +397,18 @@ if(isset($_POST['save_dimension']))
       dimension_c_inch={$dimension_c_inch}, 
       dimension_d_inch={$dimension_d_inch}, 
       dimension_e_inch={$dimension_e_inch}, 
-      dimension_f_inch={$dimension_f_inch}, 
+      dimension_f_inch={$dimension_f_inch},
+      dimension_g_inch={$dimension_g_inch},
+      dimension_h_inch={$dimension_h_inch}, 
       dimension_p_inch={$dimension_p_inch}, 
       dimension_a_fraction='{$dimension_a_fraction}', 
       dimension_b_fraction='{$dimension_b_fraction}', 
       dimension_c_fraction='{$dimension_c_fraction}', 
       dimension_d_fraction='{$dimension_d_fraction}', 
       dimension_e_fraction='{$dimension_e_fraction}', 
-      dimension_f_fraction='{$dimension_f_fraction}', 
+      dimension_f_fraction='{$dimension_f_fraction}',
+      dimension_g_fraction='{$dimension_g_fraction}',
+      dimension_h_fraction='{$dimension_h_fraction}', 
       dimension_p_fraction='{$dimension_p_fraction}' 
       WHERE id={$id}
     ";
@@ -413,14 +421,18 @@ if(isset($_POST['save_dimension']))
       dimension_c_inch={$dimension_c_inch}, 
       dimension_d_inch={$dimension_d_inch}, 
       dimension_e_inch={$dimension_e_inch}, 
-      dimension_f_inch={$dimension_f_inch}, 
+      dimension_f_inch={$dimension_f_inch},
+      dimension_g_inch={$dimension_g_inch},
+      dimension_h_inch={$dimension_h_inch}, 
       dimension_p_inch={$dimension_p_inch}, 
       dimension_a_fraction='{$dimension_a_fraction}', 
       dimension_b_fraction='{$dimension_b_fraction}', 
       dimension_c_fraction='{$dimension_c_fraction}', 
       dimension_d_fraction='{$dimension_d_fraction}', 
       dimension_e_fraction='{$dimension_e_fraction}', 
-      dimension_f_fraction='{$dimension_f_fraction}', 
+      dimension_f_fraction='{$dimension_f_fraction}',
+      dimension_g_fraction='{$dimension_g_fraction}',
+      dimension_h_fraction='{$dimension_h_fraction}', 
       dimension_p_fraction='{$dimension_p_fraction}'
     ";
   }
@@ -836,7 +848,7 @@ echo '<tr>
 <form method="post" id="default_dimension_form" enctype="multipart/form-data">
 
   <table style="margin:5px 0 10px 0; width:760px" cellpadding="5" cellspacing="5">
-  <tr><th> </th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>P</th></tr>
+  <tr><th> </th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>P</th></tr>
   <tr>
       <td>
         <?php
@@ -854,6 +866,8 @@ echo '<tr>
                     <td><input type='text' name='dimension_d_inch' value='{$item["dimension_d_inch"]}' /></td>
                     <td><input type='text' name='dimension_e_inch' value='{$item["dimension_e_inch"]}' /></td>
                     <td><input type='text' name='dimension_f_inch' value='{$item["dimension_f_inch"]}' /></td>
+                    <td><input type='text' name='dimension_g_inch' value='{$item["dimension_g_inch"]}' /></td>
+                    <td><input type='text' name='dimension_h_inch' value='{$item["dimension_h_inch"]}' /></td>
                     <td><input type='text' name='dimension_p_inch' value='{$item["dimension_p_inch"]}' /></td>
                 ";
         ?>
@@ -868,6 +882,8 @@ echo '<tr>
                     <td>" . generateFractionHTMLSelectBox('dimension_d_fraction', $item["dimension_d_fraction"]) . "</td>
                     <td>" . generateFractionHTMLSelectBox('dimension_e_fraction', $item["dimension_e_fraction"]) . "</td>
                     <td>" . generateFractionHTMLSelectBox('dimension_f_fraction', $item["dimension_f_fraction"]) . "</td>
+                    <td>" . generateFractionHTMLSelectBox('dimension_g_fraction', $item["dimension_g_fraction"]) . "</td>
+                    <td>" . generateFractionHTMLSelectBox('dimension_h_fraction', $item["dimension_h_fraction"]) . "</td>
                     <td>" . generateFractionHTMLSelectBox('dimension_p_fraction', $item["dimension_p_fraction"]) . "</td>
                 ";
         ?>

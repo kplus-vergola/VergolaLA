@@ -139,6 +139,10 @@ p {margin: 0;}
     width: 190px;}
  
 .template_tbl {border:1px solid black;  min-width:800px;padding:0px; border-collapse:collapse;  }
+
+@media print {
+.pagebreak { page-break-before: always; }
+} 
  
 </style>
 </head>
@@ -181,12 +185,12 @@ $supplier = mysql_fetch_array($qSupplier);
 <div style="font-family:Arial, Helvetica, sans-serif; width:800px;  font-size: 10pt;">
 <table class="template_tbl" cellspacing="0" cellpadding="0" width="100%">
 	<tr>
-		<td  style="width:50%; text-align:left; " >
+		<td colspan="3" style="width:50%; text-align:left; " >
 		 	<img src="<?php echo JURI::base().'images/company_logo.png'; ?> " class="" style="float:left;padding:0px 0px 10px 0; width: 180px;"/>
 			 
 		
 		</td>
-		<td valign="top" style="padding-left: 5px; font-family:Arial, Helvetica, sans-serif;font-size:10pt;width:50%;text-align: right;">			
+		<td colspan="3" valign="top" style="padding-left: 5px; font-family:Arial, Helvetica, sans-serif;font-size:10pt;width:50%;text-align: right;">			
 			<b>Vergola LA Inc</b><br/>
 			13800 Crenshaw Boulevard<br/>
 			Gardena CA 90249<br/>
@@ -195,7 +199,7 @@ $supplier = mysql_fetch_array($qSupplier);
 		</td>
 	</tr>
 	<tr>
-		<td style="padding-left: 5px; border-collapse: collapse;vertical-align: top">
+		<td colspan="2" style="padding-left: 5px; border-collapse: collapse;vertical-align: top;width: 33.3%;">
 			 
 			<!-- <div><b>To:</b></div> -->
 			<div>				
@@ -212,7 +216,7 @@ $supplier = mysql_fetch_array($qSupplier);
 					  echo $supplier["phone"]; } ?> <br/>
 			</div>
 		</td>
-		<td style="padding-left: 5px; border-collapse: collapse; vertical-align: top">
+		<td colspan="2" style="padding-left: 5px; border-collapse: collapse; vertical-align: top;width: 33.3%;">
 			 
 			<!-- <div><b>Deliver To:</b></div> -->
 			<div>
@@ -244,10 +248,49 @@ $supplier = mysql_fetch_array($qSupplier);
 				} ?><br/>			
 			</div>
 		</td>
+		<td colspan="2" style="padding-left: 5px; border-collapse: collapse; vertical-align: top;width: 33.3%;">
+			 
+			<!-- <div><b>Deliver To:</b></div> -->
+			<div>
+				<b>Special Conditions:</b> &nbsp;&nbsp;<br/><br/>		
+				<table>
+				  <?php
+				  $sql = "SELECT cf_id, datenotes, username, content, date_created 
+					    FROM ver_chronoforms_data_special_condition_vic 
+					    WHERE clientid = '$ClientID' 
+					    ORDER by cf_id DESC";
+				$sql = "SELECT
+							* 
+						FROM
+							ver_chronoforms_data_contract_list_vic AS contract
+							JOIN ver_chronoforms_data_special_condition_vic AS sc ON sc.clientid = contract.quoteid 
+						WHERE
+							contract.projectid = '{$projectid}'
+							";
+				  // echo $sql;
+				  $resultnotes = mysql_query ($sql);
+				  $i=1;
+				  if (!$resultnotes) {
+				    echo 'Could not run query: ' . mysql_error();
+				    exit;
+				  }
+				  while($row = mysql_fetch_assoc($resultnotes))
+				  {
+				    echo "
+				    <tr><td class=\"\"><p>". $i++ .".&nbsp;{$row['content']}</p>
+				    <!-- <div class=\"layer-date\">Date: " .date(PHP_DFORMAT, strtotime ($row['date_created'])) . "</div>
+				    <div class=\"layer-whom\">By Whom: {$row['username']}</div> -->
+				    </td>
+				    </tr>";
+				  }
+				  ?>
+				</table>	
+			</div>
+		</td>
 	</tr>
-	<tr><td colspan="2"></td></tr>	
+	<tr><td colspan="6"></td></tr>	
 	<tr>	
-		<td colspan="2" style="padding-left: 5px;" height="30">
+		<td colspan="6" style="padding-left: 5px;" height="30">
 			<b>Date Ordered:</b> <?php print(Date(PHP_DFORMAT)); ?><br/>
 			<b>Date Required:</b> 
 		</td> 
@@ -547,81 +590,327 @@ CASE
 				$prev_inv_id = "";
 				$m_qty = 0; $m_amount = 0; $is_1st=1; $is_2nd = 0;  
 				$m_qty_IRV59 = 0; $m_amount_IRV59 = 0; $m_qty_IRV60 = 0; $m_amount_IRV60 = 0; // Just only for link bar and pivot strip
-				//Get the ungrouped amount,qty and length if section is Guttering or Flashings
 
+
+			$image_header_first = "";
+			$image_header_first .= "
+				 <tr>
+	 			 	<th height='23' width='350' colspan='4'>
+	 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='35'>
+	 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='60'>
+	 					 &nbsp;<b>Length</b> &nbsp;
+	 				</th>				 				
+	 				<th style='text-align:center;' width='65'>
+	 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='70'>
+	 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='55'>
+	 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='65' >
+	 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
+	 				</th>		 			 
+		 		</tr>";
+
+		 	
+			$image_header = "";
+			$image_header .= "
+				 <tr>
+	 			 	<th height='23' width='220' colspan='2'>
+	 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='35'>
+	 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='60'>
+	 					 &nbsp;<b>Length</b> &nbsp;
+	 				</th>				 				
+	 				<th style='text-align:center;' width='65'>
+	 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='70'>
+	 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='55'>
+	 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='65' >
+	 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th colspan='2' rowspan='2' style=\"text-align:center;vertical-align: middle; padding-top:10px;\" width='130';>&nbsp;&nbsp;<b>Dimensions</b> &nbsp;&nbsp;</th>			 			 
+		 		</tr>";
+
+	 		$list_header = "";
+	 		$list_header .= "
+				<tr>
+	 			 	<th height='23' width='240' colspan='2'>
+	 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='35'>
+	 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='60'>
+	 					 &nbsp;<b>Length</b> &nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='55'>
+	 					<b>Fraction</b>
+	 				</th>
+	 				<th style='text-align:center;' width=45>
+	 					<b>UOM</b> 
+	 				</th>
+	 				<th style='text-align:center;' width='65'>
+	 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='70'>
+	 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th style='text-align:center;' width='55'>
+	 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
+	 				</th>
+	 				<th  width='65' >
+	 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
+	 				</th>	 		 			 
+		 		</tr>";
 				 
-
-				 
-
+				$is_first_page = 0;
 				if ($section == "Guttering" || $section == "Flashings"){ 
 						// $m['ts_qty'] = $m['1_qty']; 
 						$m['ts_qty'] = $m['m_qty']; 
 						$m['s_length'] = $m['1_length']; 
 						$m['ls_amount'] = $m['1_amount'];
+						$is_first_page = 1;
 
 						$is_uom_visible = 0;
-						echo " <tr>
-				 			 	<th height='23' width='220' colspan='2'>
-				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='35'>
-				 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='60'>
-				 					 &nbsp;<b>Length</b> &nbsp;
-				 				</th>				 				
-				 				<th style='text-align:center;' width='65'>
-				 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='70'>
-				 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='55'>
-				 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='65' >
-				 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th colspan='2' rowspan='2' style='border:none;' width='130'>&nbsp;&nbsp; <b></b> &nbsp;&nbsp;</th>
-				 			 
-				 		</tr>";
 
-					}else
-					{
+					}else{
 						$is_uom_visible = 1;
-						echo " <tr>
-				 			 	<th height='23' width='240' colspan='2'>
-				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='35'>
-				 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='60'>
-				 					 &nbsp;<b>Length</b> &nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='55'>
-				 					<b>Fraction</b>
-				 				</th>
-				 				<th style='text-align:center;' width=45>
-				 					<b>UOM</b> 
-				 				</th>
-				 				<th style='text-align:center;' width='65'>
-				 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='70'>
-				 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='55'>
-				 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th  width='65' >
-				 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
-				 				</th>
-				 			 
-				 		</tr>";
+						echo $list_header;
 					}	
 				 		
+					/**/
+					if($is_first_page){
+						// echo "<div style='width:100%;  margin:15px; 0;'>";
+						    // echo "<h3 style='margin:65px 0 10px 0; text-decoration:underline; '>Sales Summary</h3>";
+						    // echo $sales_compare_table;
+						    // echo $sales_compare_graph;
+						    // echo "<table width=800>";
+						    echo $image_header_first;
+						    // echo '<br/><br/><br style="page-break-after: always !important;">';
+						// echo "</div>";
 
+						// echo "<div style='width:50%; display:inline-block '>";
+						    // echo "&nbsp;";
+						// echo "</div>";
+
+						// echo $image_header_first;
+						// echo $image_header;
+						// echo $summary_footer;
+
+						while ($m = mysql_fetch_assoc($item_result)){ //this is just to get get the sum of the link bar and pivot strip.
+							if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
+								  
+								$m_qty_IRV59 += $m['m_qty'];
+								$m_amount_IRV59 += $m['ls_amount'];
+
+							}else if(fnmatch("*Double Bay VR*",$contract['framework'])  && $section=="Vergola" && $m["inventoryid"]=="IRV60" ){ //IRV60 is a Link Bar
+
+								$m_qty_IRV60 += $m['m_qty'];
+								$m_amount_IRV60 += $m['ls_amount']; 
+
+							}
+						}	
+
+						mysql_data_seek($item_result, 0); 
+						$IRV59_1st=1; $IRV60_1st=1; 
+						$record_counter = 0;
+						while ($m = mysql_fetch_assoc($item_result)){
+								$m_qty = 0; $m_amount = 0; $is_group = 1;
+								if($m['id']==""){continue;} 
+								$totalRrp += $m['ls_amount']; 
+								$count++;
+								$record_counter++;
+
+								if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
+									  
+									$m_qty = $m_qty_IRV59;
+									$m_amount = $m_amount_IRV59;
+
+									if($IRV59_1st==1){
+										$IRV59_1st = 0;
+									}else{
+										continue;
+									}
+								}else if(fnmatch("*Double Bay VR*",$contract['framework'])  && $section=="Vergola" && $m["inventoryid"]=="IRV60" ){ //IRV60 is a Link Bar
+
+									$m_qty = $m_qty_IRV60;
+									$m_amount = $m_amount_IRV60;
+
+									if($IRV60_1st==1){ 
+										$IRV60_1st = 0;
+									}else{
+										continue;
+									} 
+
+									//error_log("INV: ".$m["inventoryid"]." m_qty:".$m_qty." m_amount:".$m_amount, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
+
+								}
+
+							
+							$total_records = mysql_num_rows($item_result);
+							if ($record_counter <= $total_records) {
+							// if($is_first_page){
+								// for ($record_counter = 0; $record_counter < $total_records; $record_counter++) {
+					 				// while ($record_counter < $total_records){
+					 				// 	$record_counter++;
+										// if ($record_counter == $total_records) {
+										// 	$is_first_page = 0;
+										//   	break;
+										// }
+								
+								$list_content = "";
+								$list_content .= '
+								<tr style="page-break-before: auto !important;"> 
+									<td style="border-collapse:collapse;font-size:9.8; height: 24" colspan="4" >&nbsp; '.$m['raw_description'].' </td>  
+									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.number_format(($m_qty>0?$m_qty:$m['m_qty'])).' &nbsp;&nbsp;</td> 				
+									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_lengtd']):($m['uom']=="Inches"?$m['1_length']:"")).' &nbsp;&nbsp;</td>
+									';
+									if($is_uom_visible==1){
+										$list_content .= '
+										<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.$config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : '').' &nbsp;&nbsp;</td>';
+									}
+									if($is_uom_visible==1){
+										$list_content .= '<td style="border-collapse:collapse;font-size:9.8;text-align:center;">'.$m['uom'].' &nbsp;&nbsp;</td>';
+									}
+								$list_content .= '
+									<td style="border-collapse:collapse;font-size:9.8;text-align:center;">'.($m['colour'] == null?"":$m['colour']).' &nbsp;&nbsp;</td>
+									<td style="border-collapse:collapse;font-size:9.8;text-align:center;">'.($m['finish'] == "null"?" ":$m['finish']).' &nbsp;&nbsp;</td>					
+									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">$'.number_format($m['raw_cost'],2).' &nbsp;&nbsp;</td>
+									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">$'.number_format(($m_amount>0?$m_amount:$m['ls_amount']),2).' &nbsp;&nbsp;</td>
+								</tr>';
+
+								echo $list_content;
+								// echo '<br/><br/><br style="page-break-after: always !important;">';
+
+
+									?>
+
+
+							<?php 
+							}else{ ?>
+								<?php //} //------------ bm END contract_bom_vic loop. 
+
+
+								/*
+								$gst = $totalRrp * 0.1;
+								$totalSum = $totalRrp + $gst;
+
+								// echo $summary_total;
+
+								$summary_total_first_ = "";
+								$summary_total_first_ .= '
+								 <tr><td height="18" colspan="10" style="border-style: ; border-bottom-color: #eee;"></td></tr> 
+								 <br/>
+								  	<tr >								 		 
+								 		<td  colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;" >
+								 			<span><b>Sub Total</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								 		</td> 
+								 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
+								 		 	$'.number_format($totalRrp,2).' &nbsp;&nbsp;
+								 		</td>
+								 	</tr>
+								 	<tr>
+								 		<td colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
+								 			<span ><b>GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								 		</td>								 		 	
+								 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
+								 		 	$'.number_format($gst,2).' &nbsp;&nbsp;
+								 		</td>								 		
+								 	</tr>
+								 	<tr >
+								 		<td colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
+								 			<span  ><b>Total Inclusive of GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								 		</td>								 	 			
+								 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
+								 		 	$'.number_format($totalSum,2).' &nbsp;&nbsp;
+								 		</td>								 		
+								 	</tr>  
+
+							 	<tr><td height="18" colspan="10" style="border-bottom-color: #eee;"></td></tr> 
+								 <tr style="vertical-align: bottom;border-style: ;border-top-color: #fff; page-break-after:always;">
+								 	<td colspan="10" style="padding: 5px 0px 0px 75px; vertical-align: bottom;border-top-color: #eee;">
+								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measurement Tolerance - 0m / + 1mm  <br/>
+								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOTE: 
+								 		&nbsp; All folds are 90&deg; unless otherwise stated. &nbsp; All breaks are 10&deg; unless otherwise stated.
+								 		</td>								 		
+								 </tr> ';
+
+								 echo $summary_total_first_;
+								 	// echo "</table>";								 
+									$gst = 0;
+									$totalSum = 0;
+									$totalRrp = 0;*/
+									$is_first_page = 0; break;
+
+
+							} 
+
+							$gst = $totalRrp * 0.1;
+							$totalSum = $totalRrp + $gst;
+
+								$summary_total_first_ = "";
+								$summary_total_first_ .= '
+								 <tr><td height="18" colspan="10" style="border-style: ; border-bottom-color: #eee;"></td></tr> 
+								 <br/>
+								  	<tr >								 		 
+								 		<td  colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;" >
+								 			<span><b>Sub Total</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								 		</td> 
+								 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
+								 		 	$'.number_format($totalRrp,2).' &nbsp;&nbsp;
+								 		</td>
+								 	</tr>
+								 	<tr>
+								 		<td colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
+								 			<span ><b>GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								 		</td>								 		 	
+								 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
+								 		 	$'.number_format($gst,2).' &nbsp;&nbsp;
+								 		</td>								 		
+								 	</tr>
+								 	<tr >
+								 		<td colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
+								 			<span  ><b>Total Inclusive of GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								 		</td>								 	 			
+								 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
+								 		 	$'.number_format($totalSum,2).' &nbsp;&nbsp;
+								 		</td>								 		
+								 	</tr>  
+
+							 	<tr><td height="18" colspan="10" style="border-bottom-color: #eee;"></td></tr> 
+								 <tr style="vertical-align: bottom;border-style: ;border-top-color: #fff; page-break-after:always;">
+								 	<td colspan="10" style="padding: 5px 0px 0px 75px; vertical-align: bottom;border-top-color: #eee;">
+								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measurement Tolerance - 0m / + 1mm  <br/>
+								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOTE: 
+								 		&nbsp; All folds are 90&deg; unless otherwise stated. &nbsp; All breaks are 10&deg; unless otherwise stated.
+								 		</td>								 		
+								 </tr> ';
+							}
+							 echo $summary_total_first_;
+							 	// echo "</table>";								 
+								$gst = 0;
+								$totalSum = 0;
+								$totalRrp = 0;
+
+						}	
+
+					/**/
+				
 				while ($m = mysql_fetch_assoc($item_result)){ //this is just to get get the sum of the link bar and pivot strip.
 					if(fnmatch("*Double Bay VR*",$contract['framework']) && $section=="Vergola" && $m["inventoryid"]=="IRV59" ){ //IRV59 is a Pivot strip
 						  
@@ -673,13 +962,10 @@ CASE
 					//error_log("HERE 2: ", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 					 // only 2nd of IRV59 and IRV60 will be displayed. 
 					//error_log("Double Bay VR:".$contract['framework']." section:".$section." inventoryid:".$m["inventoryid"], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
-					
-
- 
-				?>
-
-				 	<?php
+					echo "<table>";	
 				 	if($m["photo"] !="" && $count > 1 && $is_uom_visible == 0) { 
+				 		echo $image_header;
+				 		/*
 				 		echo " <tr>
 				 			 	<th height='23' width='220' colspan='2'>
 				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
@@ -706,6 +992,7 @@ CASE
 
 				 			 
 				 		</tr>";
+				 		*/
 				 		}else{} 
 				 		?>
 
@@ -754,11 +1041,11 @@ CASE
 		<tr style='page-break-inside: avoid !important;'>
 					<tr >
 						<?php if($is_uom_visible==1){ ?>
-							<td colspan="8" rowspan="9" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;"> 
+							<td colspan="8" rowspan="11" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;"> 
 							<?php }else{
 
 							} ?>
-			  			<td colspan="8" rowspan="9" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;">
+			  			<td colspan="8" rowspan="11" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;">
 			  				<?php
 				  			if($m["photo"] !="") { 
 				  				echo " <img src='".JURI::base()."images/inventory/".$m['photo']."' class='' style='float:middle; margin:1px; height: 176px; max-width: 600px;'/>";
@@ -807,14 +1094,16 @@ CASE
 					        		CONCAT( (FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_inch,'/',-2),2)+0))))), '&nbsp;&nbsp;', id.dimension_d_fraction ) AS dimension_d,
 					        		CONCAT( (FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_inch,'/',-2),2)+0))))), '&nbsp;&nbsp;', id.dimension_e_fraction ) AS dimension_e,
 					        		CONCAT( (FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_inch,'/',-2),2)+0))))), '&nbsp;&nbsp;', id.dimension_f_fraction ) AS dimension_f,
+					        		CONCAT( (FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_inch,'/',-2),2)+0))))), '&nbsp;&nbsp;', id.dimension_g_fraction ) AS dimension_g,
 					        		CONCAT( (FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_inch,'/',-2),2)+0))))), '&nbsp;&nbsp;', id.dimension_p_fraction ) AS dimension_p, 
-								(id.dimension_a_inch + id.dimension_c_inch + id.dimension_e_inch + id.dimension_f_inch + id.dimension_p_inch) AS girth_side_a_inch,		
+								(id.dimension_a_inch + id.dimension_c_inch + id.dimension_e_inch + id.dimension_f_inch + id.dimension_g_inch + id.dimension_p_inch) AS girth_side_a_inch,		
 								CASE									
 									WHEN 
 										(((FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))) 
 										 >= 1)
 								THEN
@@ -824,6 +1113,7 @@ CASE
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
 										) - 32),'/',32
 									) 
@@ -834,6 +1124,7 @@ CASE
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
 										)),'/',32
 									) 
@@ -842,22 +1133,25 @@ CASE
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) )) AS girth_side_a_fraction_total,
 								SUBSTRING_INDEX(
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_a_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_c_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
 								,'.',1)
 								AS girth_side_a_fraction_total_whole,	
-								(id.dimension_b_inch + id.dimension_d_inch + id.dimension_e_inch + id.dimension_f_inch + id.dimension_p_inch) AS girth_side_b_inch,								
+								(id.dimension_b_inch + id.dimension_d_inch + id.dimension_e_inch + id.dimension_f_inch + id.dimension_g_inch + id.dimension_p_inch) AS girth_side_b_inch,								
 								CASE									
 									WHEN 
 										(((FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))) 
 										 >= 1)
 								THEN
@@ -867,6 +1161,7 @@ CASE
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
 										) - 32),'/',32
 									) 
@@ -877,6 +1172,7 @@ CASE
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 										(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
 										)),'/',32
 									) 
@@ -885,12 +1181,14 @@ CASE
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) )) AS girth_side_b_fraction_total,
 								SUBSTRING_INDEX(
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_b_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_d_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_e_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_f_fraction,'/',2),2)+0)),0) )) +
+								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_g_fraction,'/',2),2)+0)),0) )) +
 								(FLOOR (1) * (COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',-2),2)+0) / (RIGHT (SUBSTRING_INDEX(id.dimension_p_fraction,'/',2),2)+0)),0) ))
 								,'.',1)
 								AS girth_side_b_fraction_total_whole,
@@ -900,6 +1198,8 @@ CASE
 								COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_d_inch,'/',-2),2)+0))) AS dimension_d_inch, id.dimension_d_fraction,
 								COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_e_inch,'/',-2),2)+0))) AS dimension_e_inch, id.dimension_e_fraction,
 								COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_f_inch,'/',-2),2)+0))) AS dimension_f_inch, id.dimension_f_fraction,
+								COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_g_inch,'/',-2),2)+0))) AS dimension_g_inch, id.dimension_g_fraction,
+								COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_h_inch,'/',-2),2)+0))) AS dimension_h_inch, id.dimension_h_fraction,
 								COALESCE (((LEFT (SUBSTRING_INDEX(id.dimension_p_inch,'/',-2),2)+0))) AS dimension_p_inch, id.dimension_p_fraction 
 								FROM 
 								ver_chronoforms_data_contract_bom_meterial_vic AS bm
@@ -930,7 +1230,8 @@ CASE
 						$dimension_d_output = "";
 						$dimension_e_output = "";
 						$dimension_f_output = "";
-						$dimension_f_output = "";
+						$dimension_g_output = "";
+						$dimension_h_output = "";
 						$dimension_p_output = "";
 						// if(!empty($item_dimension) || $section == "Guttering" || $section == "Flashings"){
 						if(!empty($item_dimension) || empty($item_dimension) || $section == "Guttering" || $section == "Flashings"){
@@ -956,6 +1257,8 @@ CASE
 							$dimension_d_output = ($item_dimension["dimension_d_inch"] > 0 ? $item_dimension["dimension_d_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_d_fraction"]];
 							$dimension_e_output = ($item_dimension["dimension_e_inch"] > 0 ? $item_dimension["dimension_e_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_e_fraction"]];
 							$dimension_f_output = ($item_dimension["dimension_f_inch"] > 0 ? $item_dimension["dimension_f_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_f_fraction"]];
+							$dimension_g_output = ($item_dimension["dimension_g_inch"] > 0 ? $item_dimension["dimension_g_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_g_fraction"]];
+							$dimension_h_output = ($item_dimension["dimension_h_inch"] > 0 ? $item_dimension["dimension_h_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_h_fraction"]];
 							$dimension_p_output = ($item_dimension["dimension_p_inch"] > 0 ? $item_dimension["dimension_p_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_p_fraction"]];
 
 							// $girth_side_a_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
@@ -969,40 +1272,48 @@ CASE
 							// $dimension_f_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
 
 					?>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; height:26.2px;">Girth A&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($girth_side_a_output); echo ($girth_side_a_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>						
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; height:21.48px;">Girth A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($girth_side_a_output); echo ($girth_side_a_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>						
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">Girth B&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($girth_side_b_output); echo ($girth_side_b_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td> 				
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">Girth B&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($girth_side_b_output); echo ($girth_side_b_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td> 				
 					</tr>							
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">A&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_a_output); echo ($dimension_a_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_a_output); echo ($dimension_a_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">B&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_b_output); echo ($dimension_b_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">B&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_b_output); echo ($dimension_b_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">C&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_c_output); echo ($dimension_c_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">C&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_c_output); echo ($dimension_c_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">D&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_d_output); echo ($dimension_d_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">D&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_d_output); echo ($dimension_d_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
 					</tr>
 					<tr > 
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">E&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_e_output); echo ($dimension_e_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">E&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_e_output); echo ($dimension_e_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">F&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_f_output); echo ($dimension_f_output == '&nbsp;&nbsp;' ? '' : '"'); ?></td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">F&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_f_output); echo ($dimension_f_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:26.2px;">P&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_p_output); echo ($dimension_p_output == '&nbsp;&nbsp;' ? '' : '"'); ?> </td>
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">G&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_g_output); echo ($dimension_g_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+					</tr>
+					<tr >
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">H&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_h_output); echo ($dimension_h_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+					</tr>
+					<tr >
+						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">P&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_p_output); echo ($dimension_p_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
 					</tr> 
 			  	<?php 
 			  		
@@ -1086,8 +1397,121 @@ echo "</tr></tbody></table><br/> ";
 		 ?>  	
 </table>
 
+
 <br/>
-<table width="600px"> 
+<?php
+
+
+	$summary_total = "";
+	$summary_total .= '	 
+	 	<tr>
+	 		<td width="250" colspan="2">
+				&nbsp;&nbsp; 
+			</td>
+			<td width="50">
+				&nbsp;&nbsp; 
+			</td>
+			<td width="50">
+				 &nbsp;&nbsp;
+			</td>
+			<td width="40">
+				 &nbsp;&nbsp;
+			</td> 
+			 
+			<td  colspan="2" style="text-align:right" width="120">
+				<span><b>Sub Total</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+			</td> 
+			<td style="text-align:right" width="90">
+			 	'.number_format($totalRrp,2).'
+			</td>
+		</tr>
+		<tr>
+			<td colspan="7" style="text-align:right"> 
+				<span ><b>GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+			</td>
+			 	
+			<td style="text-align:right">
+			 	'.number_format($gst,2).'
+			</td>
+		</tr>
+		<tr>
+			<td colspan="7" style="text-align:right"> 
+				<span  ><b>Total Inclusive of GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+			</td>
+		 			
+			<td style="text-align:right">
+			 	'.number_format($totalSum,2).'
+			</td>
+		</tr>';  
+
+
+	
+	$summary_footer = "";
+	$summary_footer .= '	
+	<br/><br/>
+	Measurement Tolerance - 0m / + 1mm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Length Tolerance - 0m / + 10mm <br/>
+	NOTE: all folds are 90&deg; unless otherwise stated';
+
+
+		$summary_total_first_ = "";
+		$summary_total_first_ .= '
+		 <tr><td height="18" colspan="10" style="border-style: ; border-bottom-color: #eee;"></td></tr> 
+		 <br/>
+		  	<tr >								 		 
+		 		<td  colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;" >
+		 			<span><b>Sub Total</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+		 		</td> 
+		 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
+		 		 	$'.number_format($totalRrp,2).' &nbsp;&nbsp;
+		 		</td>
+		 	</tr>
+		 	<tr>
+		 		<td colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
+		 			<span ><b>GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+		 		</td>								 		 	
+		 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
+		 		 	$'.number_format($gst,2).' &nbsp;&nbsp;
+		 		</td>								 		
+		 	</tr>
+		 	<tr >
+		 		<td colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
+		 			<span  ><b>Total Inclusive of GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+		 		</td>								 	 			
+		 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
+		 		 	$'.number_format($totalSum,2).' &nbsp;&nbsp;
+		 		</td>								 		
+		 	</tr>  
+
+	 	<tr><td height="18" colspan="10" style="border-bottom-color: #eee;"></td></tr> 
+		 <tr style="vertical-align: bottom;border-style: ;border-top-color: #fff; page-break-after:always;">
+		 	<td colspan="10" style="padding: 5px 0px 0px 75px; vertical-align: bottom;border-top-color: #eee;">
+		 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measurement Tolerance - 0m / + 1mm  <br/>
+		 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOTE: 
+		 		&nbsp; All folds are 90&deg; unless otherwise stated. &nbsp; All breaks are 10&deg; unless otherwise stated.
+		 		</td>								 		
+		 </tr> ';
+	
+	// echo '<table width="100%">';
+	// echo $summary_total;
+	// echo '</table>';
+	// echo $summary_footer;
+	// if($m["photo"] !="" && $count > 1 && $is_uom_visible == 0) { 
+	if($is_uom_visible == 1) { 
+		echo '<table width="100%">';
+		echo $summary_total_first_;
+		// echo $summary_total;
+		echo '</table>';
+		// echo $summary_footer;
+	}else{
+		// echo $summary_footer;
+	}
+
+	?>
+	<!-- echo $summary_footer; -->
+
+
+<!-- 
+<table width="100%"> 
  
  	<tr>
  		<td width="250" colspan="2">
@@ -1134,7 +1558,7 @@ echo "</tr></tbody></table><br/> ";
 <br/><br/>
 Measurement Tolerance - 0m / + 1mm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Length Tolerance - 0m / + 10mm <br/>
 NOTE: all folds are 90&deg; unless otherwise stated
-
+ -->
 
 
 </div> 
