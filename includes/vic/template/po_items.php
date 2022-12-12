@@ -291,8 +291,8 @@ $supplier = mysql_fetch_array($qSupplier);
 	<tr><td colspan="6"></td></tr>	
 	<tr>	
 		<td colspan="6" style="padding-left: 5px;" height="30">
-			<b>Date Ordered:</b> <?php print(Date(PHP_DFORMAT)); ?><br/>
-			<b>Date Required:</b> 
+			<b>Date Ordered:</b> &nbsp;&nbsp; <?php print(Date(PHP_DFORMAT)); ?><br/>
+			<b>Date Required:</b> &nbsp;&nbsp;
 		</td> 
 	</tr> 
 </table> 
@@ -614,7 +614,7 @@ CASE
 	 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
 	 				</th>
 	 				<th style='text-align:center;' width='65' >
-	 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
+	 					&nbsp;&nbsp;<b>Total</b> &nbsp;&nbsp;
 	 				</th>		 			 
 		 		</tr>";
 
@@ -641,7 +641,7 @@ CASE
 	 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
 	 				</th>
 	 				<th style='text-align:center;' width='65' >
-	 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
+	 					&nbsp;&nbsp;<b>Total</b> &nbsp;&nbsp;
 	 				</th>
 	 				<th colspan='2' rowspan='2' style=\"text-align:center;vertical-align: middle; padding-top:10px;\" width='130';>&nbsp;&nbsp;<b>Dimensions</b> &nbsp;&nbsp;</th>			 			 
 		 		</tr>";
@@ -673,8 +673,8 @@ CASE
 	 				<th style='text-align:center;' width='55'>
 	 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
 	 				</th>
-	 				<th  width='65' >
-	 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
+	 				<th  style='text-align:center;' width='65' >
+	 					&nbsp;&nbsp;<b>Total</b> &nbsp;&nbsp;
 	 				</th>	 		 			 
 		 		</tr>";
 				 
@@ -895,9 +895,14 @@ CASE
 							 	<tr><td height="18" colspan="10" style="border-bottom-color: #eee;"></td></tr> 
 								 <tr style="vertical-align: bottom;border-style: ;border-top-color: #fff; page-break-after:always;">
 								 	<td colspan="10" style="padding: 5px 0px 0px 75px; vertical-align: bottom;border-top-color: #eee;">
-								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measurement Tolerance - 0m / + 1mm  <br/>
 								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOTE: 
-								 		&nbsp; All folds are 90&deg; unless otherwise stated. &nbsp; All breaks are 10&deg; unless otherwise stated.
+								 		&nbsp; &nbsp; 1. &nbsp; All folds are 90&deg; unless otherwise stated.  <br/>
+								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. 
+								 		&nbsp; All breaks are 10&deg; unless otherwise stated.   <br/>
+								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. &nbsp; Measurement Tolerance - 0m / + 1mm  <br/>
+
 								 		</td>								 		
 								 </tr> ';
 							}
@@ -1485,9 +1490,14 @@ echo "</tr></tbody></table><br/> ";
 	 	<tr><td height="18" colspan="10" style="border-bottom-color: #eee;"></td></tr> 
 		 <tr style="vertical-align: bottom;border-style: ;border-top-color: #fff; page-break-after:always;">
 		 	<td colspan="10" style="padding: 5px 0px 0px 75px; vertical-align: bottom;border-top-color: #eee;">
-		 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measurement Tolerance - 0m / + 1mm  <br/>
 		 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOTE: 
-		 		&nbsp; All folds are 90&deg; unless otherwise stated. &nbsp; All breaks are 10&deg; unless otherwise stated.
+		 		&nbsp; &nbsp; 1. &nbsp; All folds are 90&deg; unless otherwise stated.  <br/>
+		 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. 
+		 		&nbsp; All breaks are 10&deg; unless otherwise stated.   <br/>
+		 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. &nbsp; Measurement Tolerance - 0m / + 1mm  <br/>
+
 		 		</td>								 		
 		 </tr> ';
 	
