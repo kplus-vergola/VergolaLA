@@ -2103,10 +2103,9 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
             if($is_account_user){
                 echo $to_do_list_construction;
                 echo "<br/><br/><br/>";
-            // 
-
+            }
             // Do not display dashboard on Accounts user groups
-            }else{
+            // else{
                 echo "<h3 style='margin:10px 0 10px 0; text-decoration:underline; '>Sales Target</h3>";
                 echo $sales_table;
                 echo $kpi_graph;
@@ -2150,7 +2149,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
                 echo $suburb_lead_chart;
 
                 echo "<br/><br/><br/><br/>";
-            }
+            // }
 
         echo "</div>  ";
 
