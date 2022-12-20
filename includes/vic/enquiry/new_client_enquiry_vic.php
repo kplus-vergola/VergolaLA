@@ -186,8 +186,8 @@ $sql = "UPDATE ver_chronoforms_data_clientpersonal_vic SET
                 client_title = '$ClientTitle', 
                 client_firstname = '$ClientFirstName', 
                 client_lastname = '$ClientLastName',
-                builder_name = '$builder_name', 
-                builder_contact = '$builder_contact',  
+                -- builder_name = '$builder_name', 
+                -- builder_contact = '$builder_contact',  
 
                 client_streetno = '$ClientStreetNo', 
                 client_streetname = '$ClientStreetName', 
@@ -335,8 +335,8 @@ if(HOST_SERVER=="Victoria"){
   $EmployeeID = $_POST['username'];
   $lastRepId = $_POST['lastRepId']; 
 
-  $builder_name = $_POST['builder_name'];
-  $builder_contact = $_POST['builder_contact']; 
+  $builder_name = mysql_escape_string($_POST['builder_name']);
+  $builder_contact = mysql_escape_string($_POST['builder_contact']); 
   $is_builder = $_POST['is_builder'];
       
 $sql = "INSERT INTO ver_chronoforms_data_clientpersonal_vic

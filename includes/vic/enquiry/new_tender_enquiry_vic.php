@@ -122,24 +122,24 @@ $gettenderid = 'TRV'.$next_increment;
 if(isset($_POST['save']) || isset($_POST['sendmail']))
 { 
     
-  $BuildName1 = $_POST['builder_name1'];
-  $BuildContact1 = $_POST['builder_contact1'];          
-  $BuildAddress11 = $_POST['baddress11'];
-  $BuildAddress21 = $_POST['baddress21'];
-  $BuildSuburb1 = $_POST['builder_suburb1'] ;
-  $BuildState1 = $_POST['builder_state1'];          
+  $BuildName1 = mysql_escape_string($_POST['builder_name1']);
+  $BuildContact1 = mysql_escape_string($_POST['builder_contact1']);          
+  $BuildAddress11 = mysql_escape_string($_POST['baddress11']);
+  $BuildAddress21 = mysql_escape_string($_POST['baddress21']);
+  $BuildSuburb1 = mysql_escape_string($_POST['builder_suburb1']) ;
+  $BuildState1 = mysql_escape_string($_POST['builder_state1']);          
   $BuildPostcode1 = $_POST['builder_postcode1'];
   $BuildWPhone1 = $_POST['bwphone1'];
   $BuildMobile1 = $_POST['bmobile1'];         
   $BuildFax1 = $_POST['bfax1'];
   $BuildEmail1 = $_POST['bemail1'];
     
-  $SiteProject = $_POST['sprojectname'];
-  $SiteAddress1 = $_POST['saddress1'];
-  $SiteAddress2 = $_POST['saddress2'];
+  $SiteProject = mysql_escape_string($_POST['sprojectname']);
+  $SiteAddress1 = mysql_escape_string($_POST['saddress1']);
+  $SiteAddress2 = mysql_escape_string($_POST['saddress2']);
   $SiteSuburbID = $_POST['ssuburbid'];
-  $SiteSuburb = $_POST['site_suburb'];
-  $SiteState = $_POST['site_state'];
+  $SiteSuburb = mysql_escape_string($_POST['site_suburb']);
+  $SiteState = mysql_escape_string($_POST['site_state']);
   $SitePostcode = $_POST['site_postcode'];
   $SiteWKPhone = $_POST['swkphone'];
   $SiteHMPhone = $_POST['shmphone'];
@@ -150,12 +150,12 @@ if(isset($_POST['save']) || isset($_POST['sendmail']))
 
 
    
-  $SiteProject = $_POST['sprojectname'];
-  $SiteAddress1 = $_POST['saddress1'];
-  $SiteAddress2 = $_POST['saddress2'];
+  $SiteProject = mysql_escape_string($_POST['sprojectname']);
+  $SiteAddress1 = mysql_escape_string($_POST['saddress1']);
+  $SiteAddress2 = mysql_escape_string($_POST['saddress2']);
   $SiteSuburbID = $_POST['ssuburbid'];
-  $SiteSuburb = $_POST['site_suburb'];
-  $SiteState = $_POST['site_state'];
+  $SiteSuburb = mysql_escape_string($_POST['site_suburb']);
+  $SiteState = mysql_escape_string($_POST['site_state']);
   $SitePostcode = $_POST['site_postcode'];
   $SiteWKPhone = $_POST['swkphone'];
   $SiteHMPhone = $_POST['shmphone'];
@@ -739,12 +739,12 @@ if(isset($_POST['save']) || isset($_POST['sendmail']))
 
   if(strlen($_POST['builder_name6'])){
       $getclientid = 'BRV'.$next_increment+1;
-      $BuildName1 = $_POST['builder_name6'];
-      $BuildContact1 = $_POST['builder_contact6'];          
-      $BuildAddress11 = $_POST['baddress16'];
-      $BuildAddress21 = $_POST['baddress26'];
-      $BuildSuburb1 = $_POST['builder_suburb6'] ;
-      $BuildState1 = $_POST['builder_state6'];          
+      $BuildName1 = mysql_escape_string($_POST['builder_name6']);
+      $BuildContact1 = mysql_escape_string($_POST['builder_contact6']);          
+      $BuildAddress11 = mysql_escape_string($_POST['baddress16']);
+      $BuildAddress21 = mysql_escape_string($_POST['baddress26']);
+      $BuildSuburb1 = mysql_escape_string($_POST['builder_suburb6']) ;
+      $BuildState1 = mysql_escape_string($_POST['builder_state6']);          
       $BuildPostcode1 = $_POST['builder_postcode6'];
       $BuildWPhone1 = $_POST['bwphone6'];
       $BuildMobile1 = $_POST['bmobile6'];         
