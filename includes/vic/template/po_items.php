@@ -1002,7 +1002,7 @@ CASE
 				 		?>
 
 					<tr style='page-break-before: auto !important;'> 
-						<td style="border-collapse:collapse;font-size:9.8; height: 24" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>  
+						<td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>  
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td>  -->
 						<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?>&nbsp;&nbsp;</td> 
