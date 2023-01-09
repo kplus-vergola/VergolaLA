@@ -778,11 +778,12 @@ CASE
 								<tr style="page-break-before: auto !important;"> 
 									<td style="border-collapse:collapse;font-size:9.8; height: 24" colspan="4" >&nbsp; '.$m['raw_description'].' </td>  
 									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.number_format(($m_qty>0?$m_qty:$m['m_qty'])).' &nbsp;&nbsp;</td> 				
-									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_lengtd']):($m['uom']=="Inches"?$m['1_length']:"")).' &nbsp;&nbsp;</td>
+									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")).' &nbsp;&nbsp;</td>
 									';
 									if($is_uom_visible==1){
 										$list_content .= '
 										<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.$config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : '').' &nbsp;&nbsp;</td>';
+										
 									}
 									if($is_uom_visible==1){
 										$list_content .= '<td style="border-collapse:collapse;font-size:9.8;text-align:center;">'.$m['uom'].' &nbsp;&nbsp;</td>';
@@ -1012,7 +1013,7 @@ CASE
 						<!-- <td style="text-align:right;"><?php echo ($is_group== 1?number_format($m['m_qty']):number_format($m['ts_qty'])); ?></td> -->
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:($is_group==1?$m['ts_qty']:$m['ls_qty']))); ?></td>  -->
 					
-						<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_lengtd']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
+						<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
 
 						<?php if($is_uom_visible==1){ ?>
 							<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : ''); ?>&nbsp;&nbsp;</td>  <?php } ?>
