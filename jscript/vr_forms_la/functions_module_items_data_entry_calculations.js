@@ -674,7 +674,11 @@
         function calculateBomFormGirthValues() {
             var girth_side_a_calculation_for_gutter_ref_ids = [
                 "item_dimension_f_inch", 
-                "item_dimension_f_fraction", 
+                "item_dimension_f_fraction",
+                "item_dimension_g_inch", 
+                "item_dimension_g_fraction",
+                "item_dimension_h_inch", 
+                "item_dimension_h_fraction",
                 "item_dimension_a_inch", 
                 "item_dimension_a_fraction", 
                 "item_dimension_p_inch", 
@@ -687,6 +691,10 @@
             var girth_side_b_calculation_for_gutter_ref_ids = [
                 "item_dimension_f_inch", 
                 "item_dimension_f_fraction", 
+                "item_dimension_g_inch", 
+                "item_dimension_g_fraction",
+                "item_dimension_h_inch", 
+                "item_dimension_h_fraction",
                 "item_dimension_b_inch", 
                 "item_dimension_b_fraction", 
                 "item_dimension_p_inch", 
@@ -699,20 +707,34 @@
             var girth_side_a_calculation_for_flashing_ref_ids = [
                 "item_dimension_a_inch", 
                 "item_dimension_a_fraction", 
-                "item_dimension_b_inch", 
-                "item_dimension_b_fraction", 
                 "item_dimension_c_inch", 
                 "item_dimension_c_fraction", 
+                "item_dimension_e_inch", 
+                "item_dimension_e_fraction", 
+                "item_dimension_f_inch", 
+                "item_dimension_f_fraction", 
+                "item_dimension_g_inch", 
+                "item_dimension_g_fraction",
+                "item_dimension_h_inch", 
+                "item_dimension_h_fraction",
+                "item_dimension_p_inch", 
+                "item_dimension_p_fraction"
+            ];
+            var girth_side_b_calculation_for_flashing_ref_ids = [
+                "item_dimension_b_inch", 
+                "item_dimension_b_fraction", 
                 "item_dimension_d_inch", 
                 "item_dimension_d_fraction", 
                 "item_dimension_e_inch", 
                 "item_dimension_e_fraction", 
                 "item_dimension_f_inch", 
                 "item_dimension_f_fraction", 
+                "item_dimension_g_inch", 
+                "item_dimension_g_fraction",
+                "item_dimension_h_inch", 
+                "item_dimension_h_fraction",
                 "item_dimension_p_inch", 
                 "item_dimension_p_fraction"
-            ];
-            var girth_side_b_calculation_for_flashing_ref_ids = [
             ];
             var target_vr_section_ref_name = vr_form_items_data_entry[bom_form_item_dimension_current_popup_index]['vr_section_ref_name'].toLowerCase();
             var result1 = {};

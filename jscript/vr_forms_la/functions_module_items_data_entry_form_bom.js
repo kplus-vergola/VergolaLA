@@ -67,15 +67,15 @@
                 document.getElementById('item_dimension_girth_side_a_info_form_bom_area').style.display = 'block';
                 document.getElementById('item_dimension_girth_side_b_info_form_bom_area').style.display = 'block';
 
-                document.getElementById('item_dimension_girth_side_a_sum_method_form_bom_area').innerHTML = '(F+A+P+C+E)';
-                document.getElementById('item_dimension_girth_side_b_sum_method_form_bom_area').innerHTML = '(F+B+P+D+E)';
+                document.getElementById('item_dimension_girth_side_a_sum_method_form_bom_area').innerHTML = '(A+C+E+F+G+H+P)';
+                document.getElementById('item_dimension_girth_side_b_sum_method_form_bom_area').innerHTML = '(B+D+E+F+G+H+P)';
             } else {
                 if (target_vr_section_ref_name.search('flashing') >= 0) {
                     document.getElementById('item_dimension_girth_side_a_info_form_bom_area').style.display = 'block';
-                    document.getElementById('item_dimension_girth_side_b_info_form_bom_area').style.display = 'none';
+                    document.getElementById('item_dimension_girth_side_b_info_form_bom_area').style.display = 'block';
 
-                    document.getElementById('item_dimension_girth_side_a_sum_method_form_bom_area').innerHTML = '(A+B+C+D+E+F+P)';
-                    document.getElementById('item_dimension_girth_side_b_sum_method_form_bom_area').innerHTML = '';
+                    document.getElementById('item_dimension_girth_side_a_sum_method_form_bom_area').innerHTML = '(A+C+E+F+G+H+P)';
+                    document.getElementById('item_dimension_girth_side_b_sum_method_form_bom_area').innerHTML = '(B+D+E+F+G+H+P)';
                 }
             }
 
@@ -127,7 +127,7 @@
 
         function initInputElementsFormBom() {
             var temp_select_box = '';
-            var dimension_types = ['a', 'b', 'c', 'd', 'e', 'f', 'p'];
+            var dimension_types = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'p'];
 
             temp_select_box = initHtmlSelectBox(
                 vr_fractions_list, 
