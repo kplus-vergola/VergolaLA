@@ -67,6 +67,39 @@ $config_vr_fractions_output_format = array(
     '31/32' => '31/32' 
 );
 
+$config_vr_decimal_output_format = array(
+	'1/32' => '0.03125',
+	'2/32' => '0.0625',
+	'3/32' => '0.09375',
+	'4/32' => '0.125',
+	'5/32' => '0.15625',
+	'6/32' => '0.1875',
+	'7/32' => '0.21875',
+	'8/32' => '0.25',
+	'9/32' => '0.28125',
+	'10/32' => '0.3125',
+	'11/32' => '0.34375',
+	'12/32' => '0.375',
+	'13/32' => '0.40625',
+	'14/32' => '0.4375',
+	'15/32' => '0.46875',
+	'16/32' => '0.5',
+	'17/32' => '0.53125',
+	'18/32' => '0.5625',
+	'19/32' => '0.59375',
+	'20/32' => '0.625',
+	'21/32' => '0.65625',
+	'22/32' => '0.6875',
+	'23/32' => '0.71875',
+	'24/32' => '0.75',
+	'25/32' => '0.78125',
+	'26/32' => '0.8125',
+	'27/32' => '0.84375',
+	'28/32' => '0.875',
+	'29/32' => '0.90625',
+	'30/32' => '0.9375',
+	'31/32' => '0.96875'
+);
 
 ?>
 
@@ -595,13 +628,13 @@ CASE
 			$image_header_first = "";
 			$image_header_first .= "
 				 <tr>
-	 			 	<th height='23' width='350' colspan='4'>
+	 			 	<th height='23' width='300' colspan='6'>
 	 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
 	 				</th>
 	 				<th style='text-align:center;' width='35'>
 	 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
 	 				</th>
-	 				<th style='text-align:center;' width='60'>
+	 				<th style='text-align:center;' width='110' colspan='1'>
 	 					 &nbsp;<b>Length</b> &nbsp;
 	 				</th>				 				
 	 				<th style='text-align:center;' width='65'>
@@ -610,10 +643,10 @@ CASE
 	 				<th style='text-align:center;' width='70'>
 	 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
 	 				</th>
-	 				<th style='text-align:center;' width='55'>
+	 				<th style='text-align:center;' width='55' colspan='1'>
 	 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
 	 				</th>
-	 				<th style='text-align:center;' width='65' >
+	 				<th style='text-align:center;' width='55' colspan='1'>
 	 					&nbsp;&nbsp;<b>Total</b> &nbsp;&nbsp;
 	 				</th>		 			 
 		 		</tr>";
@@ -622,13 +655,13 @@ CASE
 			$image_header = "";
 			$image_header .= "
 				 <tr>
-	 			 	<th height='23' width='220' colspan='2'>
+	 			 	<th height='23' width='200' colspan='3'>
 	 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
 	 				</th>
 	 				<th style='text-align:center;' width='35'>
 	 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
 	 				</th>
-	 				<th style='text-align:center;' width='60'>
+	 				<th style='text-align:center;' width='65' colspan='1'>
 	 					 &nbsp;<b>Length</b> &nbsp;
 	 				</th>				 				
 	 				<th style='text-align:center;' width='65'>
@@ -640,16 +673,16 @@ CASE
 	 				<th style='text-align:center;' width='55'>
 	 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
 	 				</th>
-	 				<th style='text-align:center;' width='65' >
+	 				<th style='text-align:center;' width='55' >
 	 					&nbsp;&nbsp;<b>Total</b> &nbsp;&nbsp;
 	 				</th>
-	 				<th colspan='2' rowspan='2' style=\"text-align:center;vertical-align: middle; padding-top:10px;\" width='130';>&nbsp;&nbsp;<b>Dimensions</b> &nbsp;&nbsp;</th>			 			 
+	 				<th colspan='3' rowspan='2' style=\"text-align:center;vertical-align: middle; padding-top:10px;\" width='145';>&nbsp;&nbsp;<b>Dimensions</b> &nbsp;&nbsp;</th>			 			 
 		 		</tr>";
 
 	 		$list_header = "";
 	 		$list_header .= "
 				<tr>
-	 			 	<th height='23' width='240' colspan='2'>
+	 			 	<th height='23' width='240' colspan='1'>
 	 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
 	 				</th>
 	 				<th style='text-align:center;' width='35'>
@@ -776,23 +809,19 @@ CASE
 								$list_content = "";
 								$list_content .= '
 								<tr style="page-break-before: auto !important;"> 
-									<td style="border-collapse:collapse;font-size:9.8; height: 24" colspan="4" >&nbsp; '.$m['raw_description'].' </td>  
-									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.number_format(($m_qty>0?$m_qty:$m['m_qty'])).' &nbsp;&nbsp;</td> 				
-									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")).' &nbsp;&nbsp;</td>
-									';
-									if($is_uom_visible==1){
-										$list_content .= '
-										<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.$config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : '').' &nbsp;&nbsp;</td>';
-										
-									}
+									<td style="border-collapse:collapse;font-size:9.8; height: 24" colspan="6" >&nbsp; '.$m['raw_description'].' </td>  
+									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.number_format(($m_qty>0?$m_qty:$m['m_qty'])).' &nbsp;&nbsp;</td>
+									<!-- <td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")).' &nbsp;&nbsp;&nbsp;&nbsp; '.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?feetInchesToMillimeters(get_feet_value($m['1_length'])):($m['uom']=="Inches"?$m['1_length']:"")).'mm&nbsp;&nbsp;</td> -->
+
+									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")).'&nbsp;&nbsp;<br>'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?feetInchesToMillimeters(get_feet_value($m['1_length'])):($m['uom']=="Inches"?$m['1_length']:"")).'mm&nbsp;&nbsp;</td> ';
 									if($is_uom_visible==1){
 										$list_content .= '<td style="border-collapse:collapse;font-size:9.8;text-align:center;">'.$m['uom'].' &nbsp;&nbsp;</td>';
 									}
 								$list_content .= '
 									<td style="border-collapse:collapse;font-size:9.8;text-align:center;">'.($m['colour'] == null?"":$m['colour']).' &nbsp;&nbsp;</td>
 									<td style="border-collapse:collapse;font-size:9.8;text-align:center;">'.($m['finish'] == "null"?" ":$m['finish']).' &nbsp;&nbsp;</td>					
-									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">$'.number_format($m['raw_cost'],2).' &nbsp;&nbsp;</td>
-									<td style="border-collapse:collapse;font-size:9.8;text-align:right;">$'.number_format(($m_amount>0?$m_amount:$m['ls_amount']),2).' &nbsp;&nbsp;</td>
+									<td style="border-collapse:collapse;font-size:9.8;text-align:right;" colspan="1">$'.number_format($m['raw_cost'],2).' &nbsp;&nbsp;</td>
+									<td style="border-collapse:collapse;font-size:9.8;text-align:right;" colspan="1">$'.number_format(($m_amount>0?$m_amount:$m['ls_amount']),2).' &nbsp;&nbsp;</td>
 								</tr>';
 
 								echo $list_content;
@@ -866,10 +895,10 @@ CASE
 
 								$summary_total_first_ = "";
 								$summary_total_first_ .= '
-								 <tr><td height="18" colspan="10" style="border-style: ; border-bottom-color: #eee;"></td></tr> 
+								 <tr><td height="18" colspan="12" style="border-style: ; border-bottom-color: #eee;"></td></tr> 
 								 <br/>
 								  	<tr >								 		 
-								 		<td  colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;" >
+								 		<td  colspan="10" style="text-align:right;border-style: ; border-bottom-color: #eee;" >
 								 			<span><b>Sub Total</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
 								 		</td> 
 								 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
@@ -877,7 +906,7 @@ CASE
 								 		</td>
 								 	</tr>
 								 	<tr>
-								 		<td colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
+								 		<td colspan="10" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
 								 			<span ><b>GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
 								 		</td>								 		 	
 								 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
@@ -885,7 +914,7 @@ CASE
 								 		</td>								 		
 								 	</tr>
 								 	<tr >
-								 		<td colspan="8" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
+								 		<td colspan="10" style="text-align:right;border-style: ; border-bottom-color: #eee;"> 
 								 			<span  ><b>Total Inclusive of GST</b></span>&nbsp;&nbsp;&nbsp;&nbsp;
 								 		</td>								 	 			
 								 		<td colspan="2" style="text-align:right;border-style: ; border-bottom-color: #eee;">
@@ -893,9 +922,9 @@ CASE
 								 		</td>								 		
 								 	</tr>  
 
-							 	<tr><td height="18" colspan="10" style="border-bottom-color: #eee;"></td></tr> 
+							 	<tr><td height="18" colspan="12" style="border-bottom-color: #eee;"></td></tr> 
 								 <tr style="vertical-align: bottom;border-style: ;border-top-color: #fff; page-break-after:always;">
-								 	<td colspan="10" style="padding: 5px 0px 0px 75px; vertical-align: bottom;border-top-color: #eee;">
+								 	<td colspan="12" style="padding: 5px 0px 0px 75px; vertical-align: bottom;border-top-color: #eee;">
 								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOTE: 
 								 		&nbsp; &nbsp; 1. &nbsp; All folds are 90&deg; unless otherwise stated.  <br/>
 								 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -1003,7 +1032,7 @@ CASE
 				 		?>
 
 					<tr style='page-break-before: auto !important;'> 
-						<td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>  
+						<td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="3" >&nbsp;<?php echo $m['raw_description']; ?></td>  
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td>  -->
 						<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?>&nbsp;&nbsp;</td> 
@@ -1013,8 +1042,15 @@ CASE
 						<!-- <td style="text-align:right;"><?php echo ($is_group== 1?number_format($m['m_qty']):number_format($m['ts_qty'])); ?></td> -->
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:($is_group==1?$m['ts_qty']:$m['ls_qty']))); ?></td>  -->
 					
-						<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
-
+						<!-- <td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td> -->
+						<?php if($is_uom_visible==1){ ?>
+							<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")); ?>&nbsp;&nbsp;</td>
+						<?php }else{ ?>							 
+						 	<td style="border-collapse:collapse;font-size:9.8;text-align:right;">
+						 		<?php 
+						 		echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):"");?>&nbsp;&nbsp;<br><?php 
+						 		echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?feetInchesToMillimeters(get_feet_value($m['1_length'])):($m['uom']=="Inches"?$m['1_length']:""));?>mm&nbsp;&nbsp;</td>					
+						<?php } ?>
 						<?php if($is_uom_visible==1){ ?>
 							<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : ''); ?>&nbsp;&nbsp;</td>  <?php } ?>
 						<?php 
@@ -1047,11 +1083,11 @@ CASE
 		<tr style='page-break-inside: avoid !important;'>
 					<tr >
 						<?php if($is_uom_visible==1){ ?>
-							<td colspan="8" rowspan="11" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;"> 
+							<td colspan="9" rowspan="11" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;"> 
 							<?php }else{
 
 							} ?>
-			  			<td colspan="8" rowspan="11" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;">
+			  			<td colspan="9" rowspan="11" valign="middle" align="center" style="border:none; page-break-inside:avoid !important; table-row-group;">
 			  				<?php
 				  			if($m["photo"] !="") { 
 				  				echo " <img src='".JURI::base()."images/inventory/".$m['photo']."' class='' style='float:middle; margin:1px; height: 176px; max-width: 600px;'/>";
@@ -1266,17 +1302,32 @@ CASE
 
 
 
-							$girth_side_a_output = ($item_dimension["girth_side_a_inch"] > 0 ? floor($item_dimension["girth_side_a_inch"]) :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["girth_side_a_fraction"]];
-							$girth_side_b_output = ($item_dimension["girth_side_b_inch"] > 0 ? floor($item_dimension["girth_side_b_inch"]) : "") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["girth_side_b_fraction"]];
-							$dimension_a_output = ($item_dimension["dimension_a_inch"] > 0 ? $item_dimension["dimension_a_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_a_fraction"]];
-							$dimension_b_output = ($item_dimension["dimension_b_inch"] > 0 ? $item_dimension["dimension_b_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_b_fraction"]];
-							$dimension_c_output = ($item_dimension["dimension_c_inch"] > 0 ? $item_dimension["dimension_c_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_c_fraction"]];
-							$dimension_d_output = ($item_dimension["dimension_d_inch"] > 0 ? $item_dimension["dimension_d_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_d_fraction"]];
-							$dimension_e_output = ($item_dimension["dimension_e_inch"] > 0 ? $item_dimension["dimension_e_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_e_fraction"]];
-							$dimension_f_output = ($item_dimension["dimension_f_inch"] > 0 ? $item_dimension["dimension_f_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_f_fraction"]];
-							$dimension_g_output = ($item_dimension["dimension_g_inch"] > 0 ? $item_dimension["dimension_g_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_g_fraction"]];
-							$dimension_h_output = ($item_dimension["dimension_h_inch"] > 0 ? $item_dimension["dimension_h_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_h_fraction"]];
-							$dimension_p_output = ($item_dimension["dimension_p_inch"] > 0 ? $item_dimension["dimension_p_inch"] :"") . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_p_fraction"]];
+							$girth_side_a_output = ($item_dimension["girth_side_a_inch"] > 0 ? floor($item_dimension["girth_side_a_inch"]) :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["girth_side_a_fraction"]];
+							$girth_side_b_output = ($item_dimension["girth_side_b_inch"] > 0 ? floor($item_dimension["girth_side_b_inch"]) : "") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["girth_side_b_fraction"]];
+							$dimension_a_output = ($item_dimension["dimension_a_inch"] > 0 ? $item_dimension["dimension_a_inch"] :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_a_fraction"]];
+							$dimension_b_output = ($item_dimension["dimension_b_inch"] > 0 ? $item_dimension["dimension_b_inch"] :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_b_fraction"]];
+							$dimension_c_output = ($item_dimension["dimension_c_inch"] > 0 ? $item_dimension["dimension_c_inch"] :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_c_fraction"]];
+							$dimension_d_output = ($item_dimension["dimension_d_inch"] > 0 ? $item_dimension["dimension_d_inch"] :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_d_fraction"]];
+							$dimension_e_output = ($item_dimension["dimension_e_inch"] > 0 ? $item_dimension["dimension_e_inch"] :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_e_fraction"]];
+							$dimension_f_output = ($item_dimension["dimension_f_inch"] > 0 ? $item_dimension["dimension_f_inch"] :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_f_fraction"]];
+							$dimension_g_output = ($item_dimension["dimension_g_inch"] > 0 ? $item_dimension["dimension_g_inch"] :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_g_fraction"]];
+							$dimension_h_output = ($item_dimension["dimension_h_inch"] > 0 ? $item_dimension["dimension_h_inch"] :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_h_fraction"]];
+							$dimension_p_output = ($item_dimension["dimension_p_inch"] > 0 ? $item_dimension["dimension_p_inch"] :"") . '&nbsp;' . $config_vr_fractions_output_format[$item_dimension["dimension_p_fraction"]];
+
+
+							$girth_side_a_output_decimal = ($item_dimension["girth_side_a_inch"] > -1 ? (get_mm_value(convertToDecimal($girth_side_a_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["girth_side_a_fraction"]])))).'<sup>mm</sup>' :"");
+							$girth_side_b_output_decimal = ($item_dimension["girth_side_b_inch"] > -1 ? (get_mm_value(convertToDecimal($girth_side_b_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["girth_side_b_fraction"]])))).'<sup>mm</sup>' :"");
+							$dimension_a_output_decimal = ($item_dimension["dimension_a_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_a_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_a_fraction"]])))).'<sup>mm</sup>' :"");
+							$dimension_b_output_decimal = ($item_dimension["dimension_b_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_b_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_b_fraction"]])))).'<sup>mm</sup>' :"");
+							$dimension_c_output_decimal = ($item_dimension["dimension_c_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_c_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_c_fraction"]])))).'<sup>mm</sup>' :"");
+							$dimension_d_output_decimal = ($item_dimension["dimension_d_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_d_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_d_fraction"]])))).'<sup>mm</sup>' :"");
+							$dimension_e_output_decimal = ($item_dimension["dimension_e_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_e_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_e_fraction"]])))).'<sup>mm</sup>' :"");
+							$dimension_f_output_decimal = ($item_dimension["dimension_f_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_f_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_f_fraction"]])))).'<sup>mm</sup>' :"");
+							$dimension_g_output_decimal = ($item_dimension["dimension_g_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_g_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_g_fraction"]])))).'<sup>mm</sup>' :"");
+							$dimension_h_output_decimal = ($item_dimension["dimension_h_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_h_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_h_fraction"]])))).'<sup>mm</sup>' :"");
+							$dimension_p_output_decimal = ($item_dimension["dimension_p_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_p_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_p_fraction"]])))).'<sup>mm</sup>' :"");
+
+
 
 							// $girth_side_a_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
 							// $girth_side_b_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
@@ -1289,48 +1340,59 @@ CASE
 							// $dimension_f_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
 
 					?>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; height:21.48px;">Girth A&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($girth_side_a_output); echo ($girth_side_a_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>						
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">Girth A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($girth_side_a_output); echo ($girth_side_a_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($girth_side_a_output_decimal); echo (($girth_side_a_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>					
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">Girth B&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($girth_side_b_output); echo ($girth_side_b_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td> 				
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">Girth B&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($girth_side_b_output); echo ($girth_side_b_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo (($girth_side_b_output_decimal)); echo (((($girth_side_b_output_decimal))) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>				
 					</tr>							
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">A&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_a_output); echo ($dimension_a_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_a_output); echo ($dimension_a_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_a_output_decimal); echo (($dimension_a_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	 
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">B&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_b_output); echo ($dimension_b_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">B&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_b_output); echo ($dimension_b_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_b_output_decimal); echo (($dimension_b_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">C&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_c_output); echo ($dimension_c_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">C&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_c_output); echo ($dimension_c_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_c_output_decimal); echo (($dimension_c_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">D&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_d_output); echo ($dimension_d_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">D&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_d_output); echo ($dimension_d_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_d_output_decimal); echo (($dimension_d_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr > 
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">E&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_e_output); echo ($dimension_e_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">E&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_e_output); echo ($dimension_e_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_e_output_decimal); echo (($dimension_e_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">F&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_f_output); echo ($dimension_f_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">F&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_f_output); echo ($dimension_f_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_f_output_decimal); echo (($dimension_f_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">G&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_g_output); echo ($dimension_g_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">G&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_g_output); echo ($dimension_g_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_g_output_decimal); echo (($dimension_g_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">H&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_h_output); echo ($dimension_h_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">H&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_h_output); echo ($dimension_h_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_h_output_decimal); echo (($dimension_h_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="right"  style="border:none; background-color:#cccccc; height:21.48px;">P&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="border:none; background-color:#cccccc; "><?php echo ($dimension_p_output); echo ($dimension_p_output == '&nbsp;&nbsp;' ? '' : '"'); ?> &nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">P&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_p_output); echo ($dimension_p_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_p_output_decimal); echo (($dimension_p_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr> 
 			  	<?php 
 			  		
@@ -1613,6 +1675,46 @@ function get_feet_whole($inches){
 function get_feet_inch($inches){
 	return floor($inches % 12);
      
+}
+
+function get_mm_value($inches){
+	// return floor($inches * 25.4);
+	$inches = $inches + ($feet * 12);
+	return round($inches / 0.0393700787,1);
+     
+}
+
+function feetInchesToMillimeters($feetinches,$precision = 2) {
+   list($feet,$inches) = explode("&rsquo;",$feetinches);
+   $inches = preg_replace('/[^0-9.]/','',$inches);
+   $inches = $inches + ($feet * 12);
+   return round($inches / 0.0393700787,$precision);
+   // return floor($inches / 0.0393700787,$precision);
+}
+
+/*function feetInchesToMillimetersDimension($feetinches,$precision = 2) {
+   list($feet,$inches) = explode("&nbsp;&nbsp;",$feetinches);
+   $inches = preg_replace('/[^0-9.]/','',$inches);
+   $inches = $inches + ($feet * 12);
+   return round($inches / 0.0393700787,$precision);
+   // return floor($inches / 0.0393700787,$precision);
+}*/
+
+/*function feetInchesToMillimetersDimension1($inchesfraction,$precision = 2) {
+   list($inches,$fraction) = explode(".",$inchesfraction);
+   $fraction = preg_replace('/[^0-9.]/','',$fraction);
+   $fraction = $fraction + ($inches * 1);
+   //$fraction = ($inches);
+   // $fraction = round(($fraction * .100),0);
+   // $fraction = ($fraction  / 10);
+   return round($fraction ,$precision);
+   // return floor($inches / 0.0393700787,$precision);
+}*/
+
+function convertToDecimal($fraction)
+{
+    $numbers=explode(".",$fraction);
+    return round($numbers[0]+($numbers[1]*1),6);
 }
  
 ?> 
