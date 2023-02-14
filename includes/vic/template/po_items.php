@@ -682,7 +682,7 @@ CASE
 	 		$list_header = "";
 	 		$list_header .= "
 				<tr>
-	 			 	<th height='23' width='240' colspan='1'>
+	 			 	<th height='23' width='240' colspan='2'>
 	 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
 	 				</th>
 	 				<th style='text-align:center;' width='35'>
@@ -1032,7 +1032,12 @@ CASE
 				 		?>
 
 					<tr style='page-break-before: auto !important;'> 
-						<td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="3" >&nbsp;<?php echo $m['raw_description']; ?></td>  
+						<?php if($is_uom_visible==1){ ?>
+							<td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td> 
+						<?php }else{ ?>							 
+						 	<td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="3" >&nbsp;<?php echo $m['raw_description']; ?></td> 			
+						<?php } ?>
+						<!-- <td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>   -->
 						
 						<!-- <td style="text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['ts_qty'])); ?></td>  -->
 						<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo number_format(($m_qty>0?$m_qty:$m['m_qty'])); ?>&nbsp;&nbsp;</td> 
@@ -1340,59 +1345,59 @@ CASE
 							// $dimension_f_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
 
 					?>
-						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">Girth A&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($girth_side_a_output); echo ($girth_side_a_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>	
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($girth_side_a_output_decimal); echo (($girth_side_a_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>					
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;width: 40.50;" align="center">Girth A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($girth_side_a_output); echo ($girth_side_a_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($girth_side_a_output_decimal); echo (($girth_side_a_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>					
 					</tr>
 					<tr >
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">Girth B&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($girth_side_b_output); echo ($girth_side_b_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo (($girth_side_b_output_decimal)); echo (((($girth_side_b_output_decimal))) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>				
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($girth_side_b_output); echo ($girth_side_b_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo (($girth_side_b_output_decimal)); echo (((($girth_side_b_output_decimal))) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>				
 					</tr>							
 					<tr >
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">A&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_a_output); echo ($dimension_a_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_a_output_decimal); echo (($dimension_a_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	 
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_a_output); echo ($dimension_a_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_a_output_decimal); echo (($dimension_a_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	 
 					</tr>
 					<tr >
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">B&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_b_output); echo ($dimension_b_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_b_output_decimal); echo (($dimension_b_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_b_output); echo ($dimension_b_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_b_output_decimal); echo (($dimension_b_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">C&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_c_output); echo ($dimension_c_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_c_output_decimal); echo (($dimension_c_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_c_output); echo ($dimension_c_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_c_output_decimal); echo (($dimension_c_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">D&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_d_output); echo ($dimension_d_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_d_output_decimal); echo (($dimension_d_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_d_output); echo ($dimension_d_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_d_output_decimal); echo (($dimension_d_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr > 
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">E&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_e_output); echo ($dimension_e_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_e_output_decimal); echo (($dimension_e_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_e_output); echo ($dimension_e_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_e_output_decimal); echo (($dimension_e_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">F&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_f_output); echo ($dimension_f_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_f_output_decimal); echo (($dimension_f_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_f_output); echo ($dimension_f_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_f_output_decimal); echo (($dimension_f_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">G&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_g_output); echo ($dimension_g_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_g_output_decimal); echo (($dimension_g_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_g_output); echo ($dimension_g_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_g_output_decimal); echo (($dimension_g_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">H&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_h_output); echo ($dimension_h_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_h_output_decimal); echo (($dimension_h_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_h_output); echo ($dimension_h_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_h_output_decimal); echo (($dimension_h_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr>
 					<tr >
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.48px;" align="center">P&nbsp;&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_p_output); echo ($dimension_p_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
-						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 49.5;"><?php echo ($dimension_p_output_decimal); echo (($dimension_p_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_p_output); echo ($dimension_p_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
+						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;"><?php echo ($dimension_p_output_decimal); echo (($dimension_p_output_decimal) == '&nbsp;&nbsp;' ? '' : ''); ?> &nbsp;</td>	
 					</tr> 
 			  	<?php 
 			  		
