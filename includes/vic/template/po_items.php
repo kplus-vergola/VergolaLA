@@ -464,6 +464,7 @@ CASE
 		bm.length_fraction,
 		b.colour 
 	ORDER BY
+		CASE WHEN inv.section = 'Guttering' OR inv.section = 'Flashings' THEN m.display_order END ASC,
 		m.cf_id ASC,
 		m.is_per_length DESC,
 		bm.length DESC,

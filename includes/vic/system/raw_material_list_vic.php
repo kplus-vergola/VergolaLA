@@ -6,9 +6,10 @@ if(isset($_POST['command']) && $_POST['command']=='update'){
 	$desc = mysql_real_escape_string($_POST['desc']);
 	$qty = mysql_real_escape_string($_POST['qty']);
 	$price = mysql_real_escape_string($_POST['price']);
+	$order = mysql_real_escape_string($_POST['order']);
 	$supplierid = mysql_real_escape_string($_POST['supplierid']);
 
-	$sql = "UPDATE ver_chronoforms_data_materials_vic SET raw_description='{$desc}', qty={$qty}, raw_cost={$price}, supplierid='{$supplierid}' WHERE cf_id={$id} ";
+	$sql = "UPDATE ver_chronoforms_data_materials_vic SET raw_description='{$desc}', qty={$qty}, raw_cost={$price}, display_order={$order}, supplierid='{$supplierid}' WHERE cf_id={$id} ";
 	//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
 	mysql_query($sql);
 
@@ -102,7 +103,7 @@ $loop = mysql_query($sql)
 	or die ('cannot run the query because: ' . mysql_error());
 	echo $cbo_suppliers;
 	echo "<table class='listing-table table-bordered'>";
-	echo "<thead> <th width='65%'>Description</th> <th width='5%'>Qty</th> <th width='7%'>Cost</th><th width='20%'>Supplier</th><th width='3%'>Action</th> </thead><tbody>";
+	echo "<thead> <th width='65%'>Description</th> <th width='5%'>Qty</th> <th width='7%'>Cost</th><th width='20%'>Supplier</th><th width='3%'>Order</th> <th width='3%'>Action</th> </thead><tbody>";
 	$i=0;
 	while ($record = mysql_fetch_assoc($loop)){
 	    // echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "raw-material-listing-vic/raw-material-updatelist-vic?cf_id={$record['cf_id']}' >";
@@ -118,6 +119,7 @@ $loop = mysql_query($sql)
 			<td class='td_supplier'> 
 				<input type='hidden' value='{$record['supplierid']}' /> <span style='display:inline;'>{$record['company_name']}</span> 
 			</td> 
+			<td class='td_order'><input type='text' value='{$record['display_order']}' style='display:none; padding:5px;'  /><span style='display:inline;'>{$record['display_order']}</span> </td>
 			<td class='td_id'>
 				<span class='btn_edit' style='color:#02628f; cursor:pointer;  '/>Edit</span> <input type='hidden' value='{$record['materialid']}' /> 
 			</td> 
@@ -148,6 +150,7 @@ echo "</div>";
  			var desc = $(this).parent().parent().children('.td_desc').children('input').val();
  			var qty = $(this).parent().parent().children('.td_qty').children('input').val();
  			var price = $(this).parent().parent().children('.td_price').children('input').val(); 
+ 			var order = $(this).parent().parent().children('.td_order').children('input').val(); 
  			var supplierid = $('#supplierid option:selected').val();
  			var supplier_name = $('#supplierid option:selected').text();
 
@@ -160,7 +163,7 @@ echo "</div>";
 				type: "POST",
 				url: url,
 				dataType: 'json', 	
-				data: {id:id, desc:desc, qty:qty, price:price, supplierid:supplierid, command:command},	
+				data: {id:id, desc:desc, qty:qty, price:price, order:order, supplierid:supplierid, command:command},	
 				success: function(data) {					
 					 if(data['result']=='1'){
 					  
@@ -174,6 +177,7 @@ echo "</div>";
 			$(this).parent().parent().children('.td_desc').children('span').html(desc);
 			$(this).parent().parent().children('.td_qty').children('span').html(qty);
 			$(this).parent().parent().children('.td_price').children('span').html(price);
+			$(this).parent().parent().children('.td_order').children('span').html(order);
 			$(this).parent().parent().children('.td_supplier').children('span').html(supplier_name);
 			$("#supplierid").remove();
 
@@ -189,11 +193,13 @@ echo "</div>";
 	 	$(this).parent().parent().children('.td_desc').children('input').toggle();
 	 	$(this).parent().parent().children('.td_qty').children('input').toggle();
 	 	$(this).parent().parent().children('.td_price').children('input').toggle();
+	 	$(this).parent().parent().children('.td_order').children('input').toggle();
 
 
 	 	$(this).parent().parent().children('.td_desc').children('span').toggle();
 	 	$(this).parent().parent().children('.td_qty').children('span').toggle();
 	 	$(this).parent().parent().children('.td_price').children('span').toggle();
+	 	$(this).parent().parent().children('.td_order').children('span').toggle();
 	 	$(this).parent().parent().children('.td_supplier').children('span').toggle();
 
 	 	
