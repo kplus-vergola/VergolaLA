@@ -3520,7 +3520,7 @@ if (!$resultimg) {
 <?php if($page_name=="maintenancefolder"){ ?>
     
 
-<?php }else if($is_system_admin || $is_operation_manager || $is_account_user){ ?>
+<?php }else if($is_system_admin || $is_operation_manager || $is_account_user || $is_sales_manager){ ?>
 <div id="tabs_wrapper" class="button-tab">
         <?php //process user_access_profiles
         if ($current_signed_in_user_access_profiles['record action']['cancel contract'] == true) {
