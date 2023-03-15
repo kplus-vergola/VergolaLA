@@ -216,6 +216,8 @@ if ($enable_update_contract_details == true) {
 $check_measurer = mysql_real_escape_string($_POST['checkmeasurer']); 
 $controller_sn = mysql_real_escape_string($_POST['controllersn']); 
 $controller_pw = mysql_real_escape_string($_POST['controllerpw']); 
+$drawing_followup_by = mysql_real_escape_string($_POST['drawingfollowupby']); 
+$client_notified_by = mysql_real_escape_string($_POST['clientnotifiedby']); 
 
 $check_measure_date = "NULL";
 if (strlen($_POST['checkdate']) && $_POST['checkdate'] != "0000-00-00 00:00:00"){
@@ -407,7 +409,9 @@ if ($enable_update_contract_vergola == true) {
     time_frame_letter = {$time_frame_letter},
     schedule_completion = {$schedule_completion},
     controller_sn = '{$controller_sn}',
-    controller_pw = '{$controller_pw}'
+    controller_pw = '{$controller_pw}',
+    drawing_followup_by = '{$drawing_followup_by}',
+    client_notified_by = '{$client_notified_by}'
     WHERE projectid = '$projectid'"; 
     mysql_query($sql) or die(mysql_error()); 
 }
@@ -1461,6 +1465,38 @@ $groups = $user->get('groups');
     if ($current_signed_in_user_access_profiles['tab vergola standard']['edit'] == true) {
         $disabled_div_class = '';
     }
+
+      $cbo_drawingfollowupby = "<select    name=\"drawingfollowupby\" id=\"drawingfollowupbyid\"  style='width:104%; padding:0px'><option value=''>Drawing Followup Person: </option>"; 
+      // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
+      $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28";
+      $resultsub = mysql_query($querysub);
+          if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
+
+      while ($data=mysql_fetch_assoc($resultsub)){  
+
+          if($data['name']==$contract_vergola['drawing_followup_by']){ 
+              $cbo_drawingfollowupby .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+          }else{
+              $cbo_drawingfollowupby .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
+          } 
+      }
+      $cbo_drawingfollowupby .= "</select>"; 
+
+      $cbo_clientnotifiedby = "<select    name=\"clientnotifiedby\" id=\"clientnotifiedbyid\"  style='width:104%; padding:0px'><option value=''>Client Notified By: </option>"; 
+      // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
+      $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28";
+      $resultsub = mysql_query($querysub);
+          if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
+
+      while ($data=mysql_fetch_assoc($resultsub)){  
+
+          if($data['name']==$contract_vergola['client_notified_by']){ 
+              $cbo_clientnotifiedby .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+          }else{
+              $cbo_clientnotifiedby .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
+          } 
+      }
+      $cbo_clientnotifiedby .= "</select>";       
     ?>
     <div id="standard" class="tab_content <?php echo $disabled_div_class; ?>">
     <!--
@@ -1498,8 +1534,14 @@ $groups = $user->get('groups');
 
     <div class="label-input-row">
         <label class="input drawingdate"><span class="visible">Drawing & Prep.: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_prepare_date']; ?>" name="drawing_prepare_date" class="date_entered" autocomplete="off"></label>
-        <label class="input drawingapprovedatefollowup"><span class="visible">Followup: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_prepare_date_followup']; ?>" name="drawing_prepare_date_followup" class="date_entered" autocomplete="off"></label>
+        <label class="input drawingapprovedatefollowup"><span class="visible">Followup: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_prepare_date_followup']; ?>" name="drawing_prepare_date_followup" class="date_entered" autocomplete="off"></label>        
+        <label class="input checkmeasure" > <?php echo $cbo_drawingfollowupby; ?> </label>
+    </div>
+
+    <div class="label-input-row">
         <label class="input drawingapprovedate"><span class="visible">Drawing Approve: </span><input type="text" value="<?php echo $contract_vergola['fdrawing_approve_date']; ?>" name="drawingapprovedate" class="date_entered" autocomplete="off"></label>
+        <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
+        <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
     </div>
     
   <!--   <div class="label-input-row">
@@ -1583,8 +1625,8 @@ $groups = $user->get('groups');
             </div>
     <div class="label-input-row">       
             <label class="input clientnotified"><span class="visible">Client Notified: </span><input type="text" value="<?php echo $contract_vergola['fclient_notified_date']; ?>" name="clientnotified" class="date_entered" autocomplete="off"></label>
+            <label class="input checkmeasure" > <?php echo $cbo_clientnotifiedby; ?> </label>
             <label class="input erectornotified"><span class="visible">Installer Notified: </span><input type="text" value="<?php echo $contract_vergola['ferector_notified_date']; ?>" name="erectornotified" class="date_entered" autocomplete="off"></label>
-            <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
           </div>  
           
           <div class="label-input-row"> 
@@ -1924,7 +1966,7 @@ $groups = $user->get('groups');
         <?php
           $cbo_citypermitfollowupby = "<select    name=\"citypermitfollowupbywhom\" id=\"citypermitfollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
           // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30";
+          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28";
           $resultsub = mysql_query($querysub);
               if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
@@ -1940,7 +1982,7 @@ $groups = $user->get('groups');
 
           $cbo_sitespecengfollowupby = "<select    name=\"sitespecengfollowupbywhom\" id=\"sitespecengfollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
           // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30";
+          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28";
           $resultsub = mysql_query($querysub);
               if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
@@ -1956,7 +1998,7 @@ $groups = $user->get('groups');
 
           $cbo_stratafollowupby = "<select    name=\"stratafollowupbywhom\" id=\"stratafollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
           // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30";
+          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28";
           $resultsub = mysql_query($querysub);
               if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
@@ -1972,7 +2014,7 @@ $groups = $user->get('groups');
 
           $cbo_coastalfollowupby = "<select    name=\"coastalfollowupbywhom\" id=\"coastalfollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
           // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30";
+          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28";
           $resultsub = mysql_query($querysub);
               if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
