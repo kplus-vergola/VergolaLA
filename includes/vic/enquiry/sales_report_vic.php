@@ -48,7 +48,7 @@ if(isset($user->groups['10'])){
     $user_group = "sales_manager";
 }else if( isset($user->groups['28'])){
     $is_reception = 1;
-    return;
+    // return;
 }else if( isset($user->groups['29'])){
     $is_account_user = 1;
     // return;
@@ -187,7 +187,7 @@ $qry_filter2 = "";
 $consultant_filter = ""; //version 2 of $qry_filter
 //$consultant_filter2 = ""; //version 2 of $qry_filter2
 $user =& JFactory::getUser();
-
+$qry_filter_rep_name = " '{$user->name}' ";
 if($is_user){
      $qry_filter = " rep_id='{$user->RepID}' AND ";
      $consultant_filter = " consultant_id='{$user->RepID}' AND ";
@@ -199,9 +199,9 @@ if($is_user){
     $sql="SELECT * FROM ver_users WHERE  (id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9 OR group_id=10 ".($is_top_admin?" OR group_id=27 ":"OR group_id=27")." ) || id={$user->id})  and block=0 ORDER BY name ASC";
 
     // if($is_top_admin){
-    // 	$sql = "SELECT RepID FROM ver_users WHERE block=0 "; //usertype='{$user->usertype}' and
+    //  $sql = "SELECT RepID FROM ver_users WHERE block=0 "; //usertype='{$user->usertype}' and
     // }else{
-    // 	$sql = "SELECT * FROM ver_users WHERE  (id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9 ) || id={$user->id})  and block=0 ORDER BY name ASC";
+    //  $sql = "SELECT * FROM ver_users WHERE  (id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9 ) || id={$user->id})  and block=0 ORDER BY name ASC";
     // }
     $qResult = mysql_query($sql);
     $i=0; $ar_rep_id=array();
@@ -294,8 +294,8 @@ $weekly_target1 = array();  // storage of weekly sales target
 $sql = "SELECT consultant_id, SUM(contract_value) as sales_amount, DATE_FORMAT(contract_date,'%Y-%m') as yearMonth FROM tblsaleskpi AS s WHERE  {$consultant_filter} contract_date BETWEEN '{$dFrom}' AND '{$dTo}' GROUP BY YEAR(s.contract_date), MONTH(s.contract_date)";
 //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log'); exit();
 // }else{
-// 	$qry_filter = " rep_id='{$user->RepID}' AND ";
-// 	$sql = "SELECT rep_id, SUM(total_rrp) as sales_amount, DATE_FORMAT(contractdate,'%Y-%m') as yearMonth FROM ver_chronoforms_data_contract_list_vic AS c WHERE {$qry_filter}  contractdate BETWEEN '{$dFrom}' AND '{$dTo}' GROUP BY YEAR(c.contractdate), MONTH(c.contractdate)";
+//  $qry_filter = " rep_id='{$user->RepID}' AND ";
+//  $sql = "SELECT rep_id, SUM(total_rrp) as sales_amount, DATE_FORMAT(contractdate,'%Y-%m') as yearMonth FROM ver_chronoforms_data_contract_list_vic AS c WHERE {$qry_filter}  contractdate BETWEEN '{$dFrom}' AND '{$dTo}' GROUP BY YEAR(c.contractdate), MONTH(c.contractdate)";
 // }
 
 //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
@@ -373,20 +373,20 @@ include('sales_summary/main.php');
  <!-- CURRENT KPI TABLE -->
 <?php
 
- 	$cbo_consultant = "";
+    $cbo_consultant = "";
     //$user->groups['10'] // is victoria  admin user
     //$user->groups['26'] //  is victoria construction manager
     //$user->groups['27'] //  is victoria sales manager
     //$user->groups['9'] //9 is consultants general user
     //top admin is Jit user $user->groups['10']
- 	if($is_user==0){ // only admin, manager, construction has cbo users filter.
+    if($is_user==0){ // only admin, manager, construction has cbo users filter.
 
         $querysub2="SELECT * FROM ver_users WHERE  (id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9 OR group_id=10 ".($is_top_admin?" OR group_id=27 ":"OR group_id=27")." ) || id={$user->id})  and block=0 ORDER BY name ASC";
 
 
         //$sql = "SELECT id, RepID, name  FROM ver_users WHERE id IN (SELECT user_id FROM ver_user_usergroup_map WHERE group_id=9)";
         //error_log($querysub2, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-      	$qResult = mysql_query($querysub2);
+        $qResult = mysql_query($querysub2);
 
         $cbo_consultant = "<select id='cbo_consultant' onchange='request_sel_consultant()' style='padding:3px 0;'> ";
          $cbo_consultant .= "<option value='all' selected>All consultants</option>";
@@ -404,7 +404,7 @@ include('sales_summary/main.php');
             </div>
         ";
     //error_log($kpi_table_last_yr, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
- 	}
+    }
 
     $sales_table .= "<table id='tblSalesTargetWider' class='update-table' style='width:50%; display:inline-block;vertical-align: top; font-size:12px; text-align:center; '>";
 
@@ -447,7 +447,7 @@ include('sales_summary/main.php');
 
     //echo $dTo;return;
     // if($is_manager){
-    // 	$sql = "SELECT rep_id, IF(cv.job_end_date IS NULL,SUM(total_cost),false)  as project_amount_ready, IF(job_end_date IS NOT NULL,SUM(total_cost),false) as project_amount_finish, IF(cv.job_end_date IS NULL,count(total_cost),false)  as project_count_ready, IF(job_end_date IS NOT NULL,count(total_cost),false) as project_count_finish, IF(job_end_date IS NOT NULL,SUM(total_cost),false) as sales_amount, DATE_FORMAT(c.contractdate,'%Y-%m') as yearMonth FROM ver_chronoforms_data_contract_list_vic AS c JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid=c.projectid WHERE c.contractdate BETWEEN '{$dFrom}' AND '{$dTo}' GROUP BY YEAR(c.contractdate), MONTH(c.contractdate)"; // rep_id='{$user->RepID}' AND
+    //  $sql = "SELECT rep_id, IF(cv.job_end_date IS NULL,SUM(total_cost),false)  as project_amount_ready, IF(job_end_date IS NOT NULL,SUM(total_cost),false) as project_amount_finish, IF(cv.job_end_date IS NULL,count(total_cost),false)  as project_count_ready, IF(job_end_date IS NOT NULL,count(total_cost),false) as project_count_finish, IF(job_end_date IS NOT NULL,SUM(total_cost),false) as sales_amount, DATE_FORMAT(c.contractdate,'%Y-%m') as yearMonth FROM ver_chronoforms_data_contract_list_vic AS c JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid=c.projectid WHERE c.contractdate BETWEEN '{$dFrom}' AND '{$dTo}' GROUP BY YEAR(c.contractdate), MONTH(c.contractdate)"; // rep_id='{$user->RepID}' AND
     // }else{}
 
         //$sql = "SELECT rep_id, SUM(total_cost) as sales_amount, DATE_FORMAT(contractdate,'%Y-%m') as yearMonth FROM ver_chronoforms_data_contract_list_vic AS c WHERE  {$qry_filter} contractdate BETWEEN '{$dFrom}' AND '{$dTo}' GROUP BY YEAR(c.contractdate), MONTH(c.contractdate)"; // rep_id='{$user->RepID}' AND
@@ -459,8 +459,8 @@ include('sales_summary/main.php');
 
     //$r = mysql_fetch_assoc($qSales);
     //error_log(print_r($r,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
- 	$i=0;$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0;
- 	mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return;
+    $i=0;$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0;
+    mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return;
 
     while ($r = mysql_fetch_assoc($qResult)) {
 
@@ -523,16 +523,16 @@ include('sales_summary/main.php');
         $runningDiffAmount += $diffAmount;
 
         // if($i==0 && $is_manager){
-        // 	$sales_table .= "<tr><th >Month</th><th width='100'>Jobs Ready to Build</th><th width='100'>Jobs Built</th><th>Target</th><th>Monthly Excess/Difference</th><th>YTD Excess/Difference</th></tr> ";
+        //  $sales_table .= "<tr><th >Month</th><th width='100'>Jobs Ready to Build</th><th width='100'>Jobs Built</th><th>Target</th><th>Monthly Excess/Difference</th><th>YTD Excess/Difference</th></tr> ";
         // }else
         if($i==0){
             $sales_table .= "<tr><th >Month</th> <th>Target</th> <th width='100'>Sales This Year</th><th>Monthly Excess/Difference</th><th>YTD Excess/Difference</th></tr> ";
         }
 
         // if($is_manager){
-        // 	$sales_table .= "<tr>";
-        // 	$sales_table .= "<td>{$mDate}</td><td>".($sales['project_count_ready']>0 ? "{$sales['project_count_ready']} / $". number_format($sales['project_amount_ready'],2)."":"-") ."</td><td>".($sales['project_count_finish']>0 ? "{$sales['project_count_finish']} / $".number_format($sales['project_amount_finish'],2)."":"-")."</td><td>$".number_format($r['target_amount'],2)."</td><td>$". ($sales['sales_amount']>0 ? number_format($diffAmount,2):0.00) ."</td><td>$". ($sales['sales_amount']>0 ? number_format($runningDiffAmount,2):0.00) ."</td>";
-        // 	$sales_table .= "</tr>";
+        //  $sales_table .= "<tr>";
+        //  $sales_table .= "<td>{$mDate}</td><td>".($sales['project_count_ready']>0 ? "{$sales['project_count_ready']} / $". number_format($sales['project_amount_ready'],2)."":"-") ."</td><td>".($sales['project_count_finish']>0 ? "{$sales['project_count_finish']} / $".number_format($sales['project_amount_finish'],2)."":"-")."</td><td>$".number_format($r['target_amount'],2)."</td><td>$". ($sales['sales_amount']>0 ? number_format($diffAmount,2):0.00) ."</td><td>$". ($sales['sales_amount']>0 ? number_format($runningDiffAmount,2):0.00) ."</td>";
+        //  $sales_table .= "</tr>";
         // }else{ }
 
         $sales_table .= "<tr>";
@@ -565,7 +565,7 @@ include('sales_summary/main.php');
         $sales_table .= "</tr>";
         $sales_table .= "</table>";
 
- 		//echo $sales_table;
+        //echo $sales_table;
         //error_log("this yr sales_amount: ".print_r($sales_amount,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
 
 
@@ -581,45 +581,45 @@ include('sales_summary/main.php');
     <?php
         $enquiry_chart = "<div style='display:inline-block; width:30%; margin-left: 1%;'>
             <h3 style='margin:0; text-decoration:underline;'>Enquiry</h3>
-         	<canvas id='enquiry_chart' width='450' height='280' style='margin:0 0 0 0px;'></canvas>
-         	<div id='enquiry_chart_placeholder'></div>
+            <canvas id='enquiry_chart' width='450' height='280' style='margin:0 0 0 0px;'></canvas>
+            <div id='enquiry_chart_placeholder'></div>
         </div>";
 
         $quote_chart = "<div style='display:inline-block; width:30%; margin: 0 2.5% 0 2.5%;'>
             <h3 style='margin:0; text-decoration:underline;'>Quote</h3>
-         	<canvas id='quote_chart' width='450' height='280' style='margin:0 0 0 0px;'></canvas>
-         	<div id='quote_chart_placeholder'></div>
+            <canvas id='quote_chart' width='450' height='280' style='margin:0 0 0 0px;'></canvas>
+            <div id='quote_chart_placeholder'></div>
         </div>";
 
         $contract_chart = "<div style='display:inline-block; width:30%; margin-left: 2%;'>
             <h3 style='margin:0; text-decoration:underline;'>Contract</h3>
-         	<canvas id='contract_chart' width='450' height='280' style='margin:0 0 0 0px;'></canvas>
-         	<div id='contract_chart_placeholder'></div>
+            <canvas id='contract_chart' width='450' height='280' style='margin:0 0 0 0px;'></canvas>
+            <div id='contract_chart_placeholder'></div>
         </div>";
 
         $advertising_chart = "<div style='display:inline-block; width:45%;'>
             <h3 style='margin:0; text-decoration:underline;'>Advertising of ".date('Y')."</h3>
-         	<canvas id='advertising_chart' width='700' height='400' style='margin:0 0 0 0px;'></canvas>
-         	<div id='advertising_chart_placeholder'></div>
+            <canvas id='advertising_chart' width='700' height='400' style='margin:0 0 0 0px;'></canvas>
+            <div id='advertising_chart_placeholder'></div>
         </div>";
 
         $suburb_lead_chart = "<div style='display:inline-block; width:45%;'>
             <h3 style='text-decoration:underline;'>Suburb Lead of ".date('Y')."</h3>
-         	<canvas id='suburb_lead_chart' width='700' height='400' style='margin:0 0 0 0px;'></canvas>
-         	<div id='suburb_lead_chart_placeholder'></div>
+            <canvas id='suburb_lead_chart' width='700' height='400' style='margin:0 0 0 0px;'></canvas>
+            <div id='suburb_lead_chart_placeholder'></div>
         </div>";
 
 
         $kpi_graph = "<div style='display:inline-block; width:45%; margin:-40px 0 0 0;'>
             <h3 style='margin:15px 0 10px 70px; text-decoration:underline;'>Current Sales Vs Target</h3>
-         	<canvas id='myChart' width='700' height='400' style='margin:0 0 0 0px;'></canvas>
-         	<div id='placeholder'></div>
+            <canvas id='myChart' width='700' height='400' style='margin:0 0 0 0px;'></canvas>
+            <div id='placeholder'></div>
         </div>";
 
         $sales_compare_graph = "<div style='display:inline-block; width:35%; margin:-40px 0 0 0;'>
             <h3 style='margin:15px 0 10px 70px; text-decoration:underline;'>Sales Summary</h3>
-         	<canvas id='sales_compare_graph' width='500' height='370' style='margin:0 0 0 0px;'></canvas>
-         	<div id='sales_compare_graph_placeholder'></div>
+            <canvas id='sales_compare_graph' width='500' height='370' style='margin:0 0 0 0px;'></canvas>
+            <div id='sales_compare_graph_placeholder'></div>
         </div>";
 
         // $weekly_sales_compare_graph = "<div style='display:inline-block; width:43%; margin:0px 0 0 0;'>
@@ -631,8 +631,8 @@ include('sales_summary/main.php');
         $construction_analysis_graph = "
         <div style='display:inline-block; margin:0 0 0 0; width:45%; '>
             <h3 style='margin:0px 0 10px 70px; text-decoration:underline;'>Construction Analysis of ".date('Y')." </h3>
-         	<canvas id='construction_analysis_chart' width='700' height='400' style='margin:0 0 0 0px;'></canvas>
-         	<div id='construction_analysis_chart_placeholder'></div>
+            <canvas id='construction_analysis_chart' width='700' height='400' style='margin:0 0 0 0px;'></canvas>
+            <div id='construction_analysis_chart_placeholder'></div>
         </div>";
 
         $installer_calendar = "<div id='installer_calendar_holder' style='height:690px; overflow-y:auto;' >
@@ -676,10 +676,10 @@ include('sales_summary/main.php');
     $qResult = mysql_query($sql);
     //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log'); //exit();
     // if($qResult==false){
-    // 	$year = $year-1;
-    // 	$sql = "SELECT *, DATE_FORMAT(target_date,'%Y-%m') as yearMonth FROM ver_rep_sales_target WHERE rep_id='".$user->RepID."' AND year={$year}";
-    // 	//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-    // 	$qResult = mysql_query($sql);
+    //  $year = $year-1;
+    //  $sql = "SELECT *, DATE_FORMAT(target_date,'%Y-%m') as yearMonth FROM ver_rep_sales_target WHERE rep_id='".$user->RepID."' AND year={$year}";
+    //  //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+    //  $qResult = mysql_query($sql);
     // }
 
     if(mysql_num_rows($qResult)<1){
@@ -712,25 +712,25 @@ include('sales_summary/main.php');
     }
 
 
- 	$i=0; $j=0;
- 	mysql_data_seek($qResult, 0);
- 	$tot_enquiry=0; $tot_quote=0; $tot_contract_won=0; $av_lead=0; $av_quote=0; $av_enquiry_w=0;
- 	$sum_lead=0; $sum_quote=0; $sum_enquiry_w=0;
- 	$enquiry_qty_list_prevyr = array();
- 	$quote_qty_list_prevyr = array();
- 	$contract_qty_list_prevyr = array();
+    $i=0; $j=0;
+    mysql_data_seek($qResult, 0);
+    $tot_enquiry=0; $tot_quote=0; $tot_contract_won=0; $av_lead=0; $av_quote=0; $av_enquiry_w=0;
+    $sum_lead=0; $sum_quote=0; $sum_enquiry_w=0;
+    $enquiry_qty_list_prevyr = array();
+    $quote_qty_list_prevyr = array();
+    $contract_qty_list_prevyr = array();
 
     while ($r = mysql_fetch_assoc($qResult)) {
 
         $mDate = date_format(date_create($r["target_date"]),"F");
 
- 		//Count Enquiry new client added
-      	// $sql = "SELECT SUM(num_enquiries) AS num_enquiries FROM (
-      	// 			SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_clientpersonal_vic where {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}'
-      	// 			UNION ALL
-      	// 			SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_builderpersonal_vic where  {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}' ) AS t1 ";
-      	//$sql = "SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_clientpersonal_vic where deleted_at IS NULL AND {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}'  ";
-      	$sql = "SELECT count(id) as num_enquiries FROM tblsaleskpi where {$consultant_filter} DATE_FORMAT(enquiry_date,'%Y-%m') = '{$r["yearMonth"]}'  ";
+        //Count Enquiry new client added
+        // $sql = "SELECT SUM(num_enquiries) AS num_enquiries FROM (
+        //          SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_clientpersonal_vic where {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}'
+        //          UNION ALL
+        //          SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_builderpersonal_vic where  {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}' ) AS t1 ";
+        //$sql = "SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_clientpersonal_vic where deleted_at IS NULL AND {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}'  ";
+        $sql = "SELECT count(id) as num_enquiries FROM tblsaleskpi where {$consultant_filter} DATE_FORMAT(enquiry_date,'%Y-%m') = '{$r["yearMonth"]}'  ";
         //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');  exit();
         $qEnquiries = mysql_query($sql);
         //$rEnquiries = mysql_fetch_assoc($qEnquiries);
@@ -740,7 +740,7 @@ include('sales_summary/main.php');
         }
 
             //Quotes Created
-        //	$_qry_filter = $qry_filter." quotedate>= '{$tFrom}' AND ";
+        //  $_qry_filter = $qry_filter." quotedate>= '{$tFrom}' AND ";
         // $sql = " SELECT count(quoteid) AS num_quotes FROM ( SELECT  quoteid, quotedate  FROM ver_chronoforms_data_followup_vic WHERE {$_qry_filter} 1=1 GROUP BY quoteid ORDER BY cf_id DESC, sales_rep) AS t WHERE DATE_FORMAT(quotedate,'%Y-%m') = '{$r["yearMonth"]}'      ";
         //$sql = "  SELECT count(quoteid) AS num_quotes  FROM ( SELECT  quoteid, quotedate  FROM ver_chronoforms_data_followup_vic WHERE UPPER(status)='QUOTED' GROUP BY quoteid) AS t JOIN (SELECT ClientID FROM ver_chronoforms_data_clientpersonal_vic WHERE deleted_at IS NULL AND {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}' ) AS c ON c.ClientID=t.quoteid  ";
         $sql = "SELECT count(distinct(client_id)) AS num_quotes  FROM tblsaleskpi where  project_id IS NOT NULL AND  {$consultant_filter} DATE_FORMAT(quote_date,'%Y-%m') = '{$r["yearMonth"]}'  ";
@@ -788,7 +788,7 @@ include('sales_summary/main.php');
 
 
         // $tot_enquiry+=$rEnquiries["num_enquiries"]; $tot_quote+=$rQuotes["num_quotes"]; $tot_contract_won+=$rContracts["num_contracts"];
-    // 		$sum_lead+=$kpi_prev[$j]['lead_conversion']; $sum_quote+=$kpi_prev[$j]['quotes_conversion']; $sum_enquiry_w+=$kpi_prev[$j]['enquiry_contracts'];
+    //      $sum_lead+=$kpi_prev[$j]['lead_conversion']; $sum_quote+=$kpi_prev[$j]['quotes_conversion']; $sum_enquiry_w+=$kpi_prev[$j]['enquiry_contracts'];
             $tot_enquiry+=$rEnquiries["num_enquiries"]; $tot_quote+=$rQuotes["num_quotes"]; $tot_contract_won+=$rContracts["num_contracts"];
             $sum_lead+=$leadP; $sum_quote+=$quotesP; $sum_enquiry_w+=$contractP;
 
@@ -831,10 +831,10 @@ include('sales_summary/main.php');
     $qResult = mysql_query($sql);
     //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');// exit();
     // if($qResult==false){
-    // 	 $year = $year-1;
-    // 	 $sql = "SELECT *, DATE_FORMAT(target_date,'%Y-%m') as yearMonth FROM ver_rep_sales_target WHERE rep_id='".$user->RepID."' AND year={$year}";
+    //   $year = $year-1;
+    //   $sql = "SELECT *, DATE_FORMAT(target_date,'%Y-%m') as yearMonth FROM ver_rep_sales_target WHERE rep_id='".$user->RepID."' AND year={$year}";
     //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-    // 	 $qResult = mysql_query($sql);
+    //   $qResult = mysql_query($sql);
     //}
 
     if(mysql_num_rows($qResult)<1){
@@ -865,24 +865,24 @@ include('sales_summary/main.php');
     }
 
 
- 	$i=0; $j=0;
- 	mysql_data_seek($qResult, 0);
- 	$tot_enquiry=0; $tot_quote=0; $tot_contract_won=0; $av_lead=0; $av_quote=0; $av_enquiry_w=0;
- 	$sum_lead=0; $sum_quote=0; $sum_enquiry_w=0;
- 	$enquiry_qty_list = array();
- 	$quote_qty_list = array();
- 	$contract_qty_list = array();
+    $i=0; $j=0;
+    mysql_data_seek($qResult, 0);
+    $tot_enquiry=0; $tot_quote=0; $tot_contract_won=0; $av_lead=0; $av_quote=0; $av_enquiry_w=0;
+    $sum_lead=0; $sum_quote=0; $sum_enquiry_w=0;
+    $enquiry_qty_list = array();
+    $quote_qty_list = array();
+    $contract_qty_list = array();
 
     while ($r = mysql_fetch_assoc($qResult)) {
 
         $mDate = date_format(date_create($r["target_date"]),"F");
 
- 		//Count Enquiry new client added
-      	// $sql = "SELECT SUM(num_enquiries) AS num_enquiries FROM (
-      	// 			SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_clientpersonal_vic where {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}'
-      	// 			UNION ALL
-      	// 			SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_builderpersonal_vic where  {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}' ) AS t1 ";
-      	$sql = "SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_clientpersonal_vic where deleted_at IS NULL AND {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}'  ";
+        //Count Enquiry new client added
+        // $sql = "SELECT SUM(num_enquiries) AS num_enquiries FROM (
+        //          SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_clientpersonal_vic where {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}'
+        //          UNION ALL
+        //          SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_builderpersonal_vic where  {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}' ) AS t1 ";
+        $sql = "SELECT count(pid) as num_enquiries FROM ver_chronoforms_data_clientpersonal_vic where deleted_at IS NULL AND {$qry_filter2} DATE_FORMAT(datelodged,'%Y-%m') = '{$r["yearMonth"]}'  ";
         //error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');  exit();
         $qEnquiries = mysql_query($sql);
         //$rEnquiries = mysql_fetch_assoc($qEnquiries);
@@ -1012,9 +1012,9 @@ include('sales_summary/main.php');
 
     //$r = mysql_fetch_assoc($qSales);
     //error_log(print_r($r,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
- 	$i=0;$sales_amount_total=0;$sales_amount_last_yr_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0;
- 	//mysql_data_seek($sales_period2, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return;
- 	//error_log("sales_period2 B: ".print_r($sales_period2,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+    $i=0;$sales_amount_total=0;$sales_amount_last_yr_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0;
+    //mysql_data_seek($sales_period2, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return;
+    //error_log("sales_period2 B: ".print_r($sales_period2,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
 
     for($i=0;$m=$sales_period2[$i];$i++) {
 
@@ -1042,22 +1042,22 @@ include('sales_summary/main.php');
 <!------------- END OF SALES SUMMARY This Year Vs. Last Year ---------------------- -->
 
 <?php
- 	if($is_operation_manager || $is_top_admin || $is_manager || $is_site_manager){
- 		//error_log(" interval: here", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
- 		//----------------CONTRUCTION SUMMARY TABLE -----------------
- 		$kpi_table_manager = "";
+    if($is_operation_manager || $is_top_admin || $is_manager || $is_site_manager){
+        //error_log(" interval: here", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+        //----------------CONTRUCTION SUMMARY TABLE -----------------
+        $kpi_table_manager = "";
         $kpi_table_manager .= "
         <h3 style='margin:10px 0 0 0; text-decoration:underline; '><span></span>
-		<span style='float:right; margin-right:47%; text-decoration: underline;'>Construction KPI</span></h3> <br/>
+        <span style='float:right; margin-right:47%; text-decoration: underline;'>Construction KPI</span></h3> <br/>
         <ul  class='list-table kpi-table'  style='margin:0 0% 0 0; width:43%; display:inline-block;vertical-align: top; font-size:12px; '>
         ";
 
 
-     	$sql = "SELECT DATE_FORMAT(target_month,'%Y-%m-%d') AS target_month  FROM tblcontractsummary ORDER BY id desc LIMIT 1";
-     	$qContracts = mysql_query($sql);
-     	$_target_month = "";
-     	if(mysql_num_rows($qContracts)){
-     		//error_log(" here 1", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+        $sql = "SELECT DATE_FORMAT(target_month,'%Y-%m-%d') AS target_month  FROM tblcontractsummary ORDER BY id desc LIMIT 1";
+        $qContracts = mysql_query($sql);
+        $_target_month = "";
+        if(mysql_num_rows($qContracts)){
+            //error_log(" here 1", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
             $rContracts = mysql_fetch_assoc($qContracts);
             $_target_month = $rContracts['target_month'];
         }else{
@@ -1076,27 +1076,27 @@ include('sales_summary/main.php');
         // if($rContracts['target_month'] != date('F Y')){
         if($interval->format('%m')>1){ //
             //error_log(" target_month1: ".$rContracts['target_month']." date1: ".date('F Y'), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-     		//for($k=11;$k>=1;$k--){ //Run this script only for 1st time to fill up the tblcontractsummary.
+            //for($k=11;$k>=1;$k--){ //Run this script only for 1st time to fill up the tblcontractsummary.
 
 //START (Moved Insert function to scheduler)
 
-			// for($k=0;$k>=0;$k--){
-         		// $cdate = new DateTime('first day of previous month');
-         		// //$_target_month = date("Y-m-01", strtotime("-1 months"));
+            // for($k=0;$k>=0;$k--){
+                // $cdate = new DateTime('first day of previous month');
+                // //$_target_month = date("Y-m-01", strtotime("-1 months"));
                 // date_sub($cdate, date_interval_create_from_date_string($k.' months'));
                 // $target_date = date_format($cdate, 'Y-m-d');
                 // $mDate = date_format($cdate, 'F Y');
-				// //$mDate = date_format($cdate, 'F');
+                // //$mDate = date_format($cdate, 'F');
 
-         		// $sql_insert = "INSERT tblcontractsummary (target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete)
+                // $sql_insert = "INSERT tblcontractsummary (target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete)
                         // SELECT
                         // '{$target_date}' as target_month,
-                    	// (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$target_date}') AND LAST_DAY('{$target_date}')) AS no_contract,
-						// COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
-                    	// COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
+                        // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$target_date}') AND LAST_DAY('{$target_date}')) AS no_contract,
+                        // COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
+                        // COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
                         // COUNT(IFNULL(drawing_approve_date, 1))-IF(drawing_approve_date = NULL,false,COUNT(drawing_approve_date)) as no_drawing_approve,
                         // COUNT(IFNULL(da_date, 1))-IF(da_date = NULL,false,COUNT(da_date)) as no_dev_approve,
-                    	// COUNT(IFNULL(fw_complete, 1))-IF(fw_complete = NULL,false,COUNT(fw_complete)) as no_fw_complete_not_done,
+                        // COUNT(IFNULL(fw_complete, 1))-IF(fw_complete = NULL,false,COUNT(fw_complete)) as no_fw_complete_not_done,
                         // IF(fw_complete IS NOT NULL,false,COUNT(fw_complete)) AS no_fw_complete_done,
                         // IF(install_date IS NOT NULL,false,COUNT(install_date)) AS no_job_sched,
                         // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 30 MONTH) AND LAST_DAY('{$target_date}') AND job_end_date IS NOT NULL ) AS no_job_complete
@@ -1111,8 +1111,8 @@ include('sales_summary/main.php');
 
                 // //error_log(" sql_insert: ".$sql_insert, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
                 // //echo ($sql_insert);
-				// $qContracts = mysql_query($sql_insert);
-				// echo $qContracts;
+                // $qContracts = mysql_query($sql_insert);
+                // echo $qContracts;
 
             // }
 
@@ -1120,9 +1120,9 @@ include('sales_summary/main.php');
 
         }
 
-					 // COUNT(cf_id) as no_contract,
-					 // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$current_month}') AND LAST_DAY('{$current_month}')) AS no_contract,
-					 // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$cdate}') AND LAST_DAY('{$target_date}')) AS no_contract,
+                     // COUNT(cf_id) as no_contract,
+                     // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$current_month}') AND LAST_DAY('{$current_month}')) AS no_contract,
+                     // (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN ('{$cdate}') AND LAST_DAY('{$target_date}')) AS no_contract,
 
         $cdate = new DateTime('first day of this month');
         date_sub($cdate, date_interval_create_from_date_string($k.' months'));
@@ -1130,19 +1130,19 @@ include('sales_summary/main.php');
         $mDate = date_format($cdate, 'F Y');
 
 
-		//alert($target_date);
+        //alert($target_date);
 
         $sql = "SELECT
                     '{$target_date}' as target_month,
-					-- (SELECT COUNT(cf_id)) AS no_contract,
-					(SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 1 MONTH) AND LAST_DAY('{$target_date}')) AS no_contract,
+                    -- (SELECT COUNT(cf_id)) AS no_contract,
+                    (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 1 MONTH) AND LAST_DAY('{$target_date}')) AS no_contract,
 
-					COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
-                	COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
+                    COUNT(IFNULL(check_measure_date, 1))-IF(check_measure_date = NULL,false,COUNT(check_measure_date)) as no_check_measure,
+                    COUNT(IFNULL(drawing_prepare_date, 1))-IF(drawing_prepare_date = NULL,false,COUNT(drawing_prepare_date)) as no_drawing_prep,
                     COUNT(IFNULL(drawing_approve_date, 1))-IF(drawing_approve_date = NULL,false,COUNT(drawing_approve_date)) as no_drawing_approve,
                     -- COUNT(IFNULL(da_date, 1))-IF(da_date = NULL,false,COUNT(da_date)) as no_dev_approve,
-					COUNT(IFNULL(permit_approved_date, 1))-IF(permit_approved_date = NULL,false,COUNT(permit_approved_date)) as no_dev_approve,
-                	COUNT(IFNULL(fw_complete, 1))-IF(fw_complete = NULL,false,COUNT(fw_complete)) as no_fw_complete_not_done,
+                    COUNT(IFNULL(permit_approved_date, 1))-IF(permit_approved_date = NULL,false,COUNT(permit_approved_date)) as no_dev_approve,
+                    COUNT(IFNULL(fw_complete, 1))-IF(fw_complete = NULL,false,COUNT(fw_complete)) as no_fw_complete_not_done,
                     IF(fw_complete IS NOT NULL,false,COUNT(fw_complete)) AS no_fw_complete_done,
                     IF(install_date IS NOT NULL,false,COUNT(install_date)) AS no_job_sched,
                     (SELECT COUNT(cf_id) FROM ver_chronoforms_data_contract_vergola_vic WHERE contractdate BETWEEN DATE_SUB('{$target_date}', INTERVAL 30 MONTH) AND LAST_DAY('{$target_date}') AND job_end_date IS NOT NULL ) AS no_job_complete
@@ -1159,7 +1159,7 @@ include('sales_summary/main.php');
 
 
         $sql = "SELECT DATE_FORMAT(target_month,'%M %Y') AS target_month, no_contract, no_check_measure, no_drawing_prep, no_drawing_approve, no_dev_approve, no_fw_complete_not_done, no_fw_complete_done, no_job_sched, no_job_complete
-					FROM tblcontractsummary ORDER BY id desc LIMIT 10";
+                    FROM tblcontractsummary ORDER BY id desc LIMIT 10";
 
         $qContracts = mysql_query($sql);
 
@@ -1310,7 +1310,7 @@ include('sales_summary/main.php');
             $construction_kpi .= "<span style='width:10%;'> <a href='".JURI::base()."contract-listing-vic/contract-folder-vic?projectid={$rContracts['project_id']}' class='plain'>".$rContracts["project_id"]."</a> </span><span style='width:15%;'>".$rContracts["customer_name"]." </span><span style='width:10%;'>".$rContracts["fcontract_date"]." </span><span style='width:7%;'> <label style='width:40px; border: 1px solid #222; border-radius: 10px;  background:".get_cons_kpi_color_sign($rContracts['n_check_measure_date'],-7)."' > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>  </span><span style='width:7%;'><label style='width:40px; border: 1px solid #222; border-radius: 10px;  background:".get_cons_kpi_color_sign($rContracts['n_drawing_approve_date'],-14)."' > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>  </span><span style='width:7%;'><label style='width:40px; border: 1px solid #222; border-radius: 10px;  background:".get_cons_kpi_color_sign($rContracts['n_planning_approve'],-70)."' > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label></span><span style='width:7%;'><label style='width:40px; border: 1px solid #222; border-radius: 10px;  background:".get_cons_kpi_color_sign($rContracts['n_bldg_rules_approval'],-77)."' > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label></span><span style='width:7%;'><label style='width:40px; border: 1px solid #222; border-radius: 10px;  background:".get_cons_kpi_color_sign($rContracts['n_fw_complete'],-10)."' > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label></span><span style='width:7%;'><label style='width:40px; border: 1px solid #222; border-radius: 10px;  background:".get_cons_kpi_color_sign($rContracts['n_job_start_date'],-20)."' > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label></span><span style='width:7%;'><label style='width:40px; border: 1px solid #222; border-radius: 10px;  background:".get_cons_kpi_color_sign($rContracts['n_handover_date'],$rContracts['n_target_complete'])."' > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label></span> ";
             $construction_kpi .= "</li>";
             //---- END of Table ------
- 			$i++;
+            $i++;
         }
 
 
@@ -1318,7 +1318,7 @@ include('sales_summary/main.php');
         //error_log(" construction_kpi :  ".$construction_kpi, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
         //---------------- END of CONTRUCTION KPI TABLE -----------------
 
- 	}
+    }
 
 function get_cons_kpi_color_sign($n=0,$n_warning=0){
     //error_log(" N:".$n." n_warning:".$n_warning, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
@@ -1376,8 +1376,8 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
         //$r = mysql_fetch_assoc($qSales);
         //error_log(print_r($r,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-     	$i=0; //$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0;
-     	//mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return;
+        $i=0; //$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0;
+        //mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return;
         while ($r = mysql_fetch_assoc($qResult)) {
             //error_log(print_r($r["yearMonth"],true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
             $advertising_prev_yr = array();
@@ -1402,14 +1402,14 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
             $advertising_table .= "<td>{$r['leadname']}</td><td>{$r['count']}</td><td>{$advertising_prev_yr['count']}</td>";
             $advertising_table .= "</tr>";
 
- 			array_push($advertising_list,$r['leadname']);
+            array_push($advertising_list,$r['leadname']);
             array_push($advertising_number_list,$r['count']);
             $i++;
         }
 
         $advertising_table .= "</table>";
 
- 	//error_log("advertising_table=".$advertising_table, 3,'C:\\xampp\htdocs\\vergola_contract_system_v3\\my-error.log');
+    //error_log("advertising_table=".$advertising_table, 3,'C:\\xampp\htdocs\\vergola_contract_system_v3\\my-error.log');
 
      //------------- END OF Advertising Table -->
 
@@ -1444,8 +1444,8 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
         $suburb_number_list = array();
         //$r = mysql_fetch_assoc($qSales);
 
-     	$i=0; $j=0; //$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0;
-     	//mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return;
+        $i=0; $j=0; //$sales_amount_total=0;$target_amount_total=0; $diffAmountTotal = 0; $runningDiffAmount = 0; $prevYearMonthSalesTotal = 0;
+        //mysql_data_seek($qResult, 0);   //$r = mysql_fetch_assoc($qResult); print_r($r);return;
         while ($r = mysql_fetch_assoc($qResult)) {
 
             if(empty($r)) break;
@@ -1554,9 +1554,9 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
         }
         //------------ End of contruction analysis
 
- 	}
+    }
 
- 	//print_r($construction_record_list);
+    //print_r($construction_record_list);
 
         //------------- CONTRACT WEEKLY SUMMARY REPORT ---------------------- -->
 
@@ -1742,7 +1742,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
         }
     // echo $user_group;
-        if($is_operation_manager || $is_site_manager || $user_group=="sales_manager" || $is_account_user){
+        if($is_operation_manager || $is_site_manager || $user_group=="sales_manager" || $is_account_user || $is_reception){
         // else if($is_operation_manager || $is_site_manager || $is_sales_manager){ //To do list for construction users
         // echo $user_group;
         $to_do_list_construction = ""; $i = 0;
@@ -1757,9 +1757,24 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
      FROM ver_chronoforms_data_followup_vic AS f JOIN  ver_chronoforms_data_clientpersonal_vic  AS c ON c.clientid=f.quoteid
      LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_notes_vic ORDER BY cf_id desc) as t GROUP BY clientid  ) as n ON n.clientid=c.clientid
      WHERE c.deleted_at IS NULL AND (f.cf_id>5534 AND f.status='Won')"; //f.cf_id>5534 is the next number the new system generate a new quotations.
-
-
-    if($is_operation_manager || $is_site_manager || $user_group=="sales_manager"  || $is_account_user){
+// echo $user->RepID;
+// $qry_filter = " rep_id='{$user->RepID}' AND ";
+// $qry_filter = " rep_id='{$user->RepID}' AND ";
+// ".($is_top_admin?" OR group_id=27 ":"OR group_id=27")."
+// ".($qry_filter="'rep_id='''"?" rep_id='".$user->RepID."' AND ":$qry_filter)."
+// rep_id='".$user->RepID."' AND
+// rep_id=''
+// $qry_filter_1 = $qry_filter;
+    if($qry_filter == " rep_id='' AND "){
+        $qry_filter_1 = "rep_id='".$user->RepID."' AND";
+        // echo "rep_id=''";
+    }else{
+        $qry_filter_1 = $qry_filter;
+        // echo "RepID";
+        // $qry_filter_1 = "rep_id='".$user->RepID."' AND";
+    }
+    // echo $qry_filter_1;
+    if($is_operation_manager || $is_site_manager || $user_group=="sales_manager"  || $is_account_user || $is_reception){
                 $sql = "SELECT
                             f.cf_id,
                             c.datelodged,
@@ -1778,13 +1793,16 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
                             n.content
                         FROM
                             ver_chronoforms_data_followup_vic AS f
-                            JOIN ver_chronoforms_data_clientpersonal_vic AS c ON c.clientid = f.quoteid
-                            LEFT JOIN ( SELECT * FROM ( SELECT * FROM ver_chronoforms_data_notes_vic GROUP BY cf_id DESC ORDER BY cf_id DESC, date_created DESC ) AS t GROUP BY clientid) AS n ON n.clientid = c.clientid
+                            JOIN ver_chronoforms_data_clientpersonal_vic AS c ON c.clientid = f.quoteid                            
+                            JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid = f.projectid
+                            JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid = f.projectid 
+                            LEFT JOIN ( SELECT * FROM ( SELECT clientid, content FROM ver_chronoforms_data_notes_vic GROUP BY cf_id DESC ORDER BY cf_id DESC, date_created DESC ) AS t GROUP BY clientid) AS n ON n.clientid = c.clientid
                         WHERE
-                            c.deleted_at IS NULL 
-                            -- AND ( f.cf_id > 5534 
-                            ";
+                            LOCATE('{$user->name}',CONCAT_WS(' ',cv.drawing_followup_by,cv.client_notified_by,cs.citypermit_followup_bywhom,cs.site_spec_followup_bywhom,cs.hoa_followup_bywhom,cs.coastal_followup_bywhom))> 0 OR (cv.drawing_followup_by) IS NULL AND 
 
+                            c.deleted_at IS NULL 
+                            ";
+                            
                         if($is_site_manager){$sql .= " AND (f.STATUS = 'Under Consideration' OR f.STATUS = 'Quoted' OR f.STATUS = 'Costed')"; 
                         }else if($user_group=="sales_manager"){ $sql .= "AND (f.STATUS = 'Won')"; }
                         
@@ -1797,6 +1815,10 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
                 $total_records1 = mysql_num_rows($fResult);
      $sql .= " ORDER BY date_won DESC, f.date_contract_signed DESC LIMIT {$start}, ".NUMBER_PER_PAGE." ";
     // echo $sql;
+    // echo $qry_filter_rep_name;
+    // echo '123';
+    
+
                 $fResult = mysql_query($sql);
 
                 $i=0; $is_contract_generated = 0;
@@ -1804,27 +1826,38 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
                     //error_log(print_r($l,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
                     if($i==0){
                         $to_do_list_construction .= "<li class='li-header'>";
-                        if($user_group=="sales_manager"){
-                        $to_do_list_construction .= "<span class='col-date'>Date</span>";}
+                        // if($user_group=="sales_manager"){
+                        // $to_do_list_construction .= "<span class='col-date'>Date</span>";}
                         
-                        $to_do_list_construction .= "<span class='col-client-id'>Project ID</span>
-                        <span class='col-name'> Client Name </span> 
-                        <span class='col-note'>Last notes</span>
-                        <span class='col-name'>Follow-up</span> </li>  ";
+                        $to_do_list_construction .= "
+                            <span class='col-client-id'>Project ID</span>
+                            <span class='col-name'> Client Name </span> 
+                            <span class='col-note'>Last notes</span>
+                            <span class='col-name'>Follow-up</span>
+                            <span class='col-date'>Date</span> </li>  ";
                     }
 
                     $c = null;
                     if(!empty($l['date_contract_system_created'])){
 
-                        $sql = "SELECT cv.drawing_prepare_date, cv.drawing_prepare_date_followup, cv.drawing_approve_date, cv.drawing_approve_date_followup, cv.job_start_date, cv.job_start_date_followup, cs.stat_req_easement_waterboard_approval_date, cs.stat_req_easement_waterboard_followup, cs.stat_req_easement_council_approval_date, cs.stat_req_easement_council_followup, cs.m_o_d_followup
-     FROM  ver_chronoforms_data_contract_list_vic AS cl   JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid=cl.projectid
-     JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=cl.projectid
-     WHERE cl.projectid='{$l['projectid']}' AND ((drawing_prepare_date IS NULL OR DATE(cv.drawing_prepare_date_followup)<=DATE(NOW()) )
-     OR (cv.drawing_approve_date IS NULL AND DATE(cv.drawing_approve_date_followup)<=DATE(NOW()) )
-     OR (cv.job_start_date IS NULL AND DATE(cv.job_start_date_followup)<=DATE(NOW()) )
-     OR (cs.stat_req_easement_waterboard_approval_date IS NULL AND DATE(cs.stat_req_easement_waterboard_followup)<=DATE(NOW()) )
-     OR (cs.stat_req_easement_council_approval_date IS NULL AND DATE(cs.stat_req_easement_council_followup)<=DATE(NOW()) )
-     OR (cs.m_o_d IS NULL AND DATE(cs.m_o_d_followup)<=DATE(NOW())))";
+                                           $sql = "SELECT cv.drawing_prepare_date, cv.drawing_prepare_date_followup, cv.drawing_approve_date, cv.drawing_approve_date_followup, cv.job_start_date, cv.job_start_date_followup, cs.stat_req_easement_waterboard_approval_date, cs.stat_req_easement_waterboard_followup, cs.stat_req_easement_council_approval_date, cs.stat_req_easement_council_followup, cs.m_o_d_followup, cs.coastal_followup_date, cs.hoa_followup_date, cs.citypermit_followup_date, cs.site_spec_followup_date, cv.drawing_followup_by, cv.client_notified_by, cs.citypermit_followup_bywhom, cs.site_spec_followup_bywhom, cs.hoa_followup_bywhom, cs.coastal_followup_bywhom, cs.citypermit_application_approved_date, cs.sitespec_engr_approved_date,cs.site_spec_engineering_approval_date,cs.strata_approved_date,cs.coastal_approval_date,cs.coastal_approved_date
+                        FROM  ver_chronoforms_data_contract_list_vic AS cl JOIN ver_chronoforms_data_contract_vergola_vic AS cv ON cv.projectid=cl.projectid
+                        JOIN ver_chronoforms_data_contract_statutory_vic AS cs ON cs.projectid=cl.projectid
+                        WHERE 
+                            cl.projectid='{$l['projectid']}' AND ((drawing_prepare_date IS NULL OR DATE(cv.drawing_prepare_date_followup)<=DATE(NOW()) )
+                        OR (cv.drawing_approve_date IS NULL AND DATE(cv.drawing_approve_date_followup)<=DATE(NOW()) )
+                        OR (cv.job_start_date IS NULL AND DATE(cv.job_start_date_followup)<=DATE(NOW()) )
+                        OR (cs.stat_req_easement_waterboard_approval_date IS NULL AND DATE(cs.stat_req_easement_waterboard_followup)<=DATE(NOW()) )
+                        OR (cs.stat_req_easement_council_approval_date IS NULL AND DATE(cs.stat_req_easement_council_followup)<=DATE(NOW()) )
+                        OR (cs.m_o_d IS NULL AND DATE(cs.m_o_d_followup)<=DATE(NOW()) )
+                        OR (cs.citypermit_application_approved_date IS NULL AND DATE(cs.citypermit_followup_date) <= DATE(NOW()) )
+                        OR (cs.site_spec_engineering_approval_date IS NULL AND DATE(cs.site_spec_followup_date) <= DATE(NOW()) )
+                        OR (cs.coastal_approval_date IS NULL AND DATE(cs.coastal_followup_date) <= DATE(NOW()))
+                        OR (cs.strata_approved_date IS NULL AND DATE(cs.hoa_followup_date) <= DATE(NOW())))";
+
+
+                    // echo $sql;
+
 
                         $fResult1 = mysql_query($sql);
                         $c = mysql_fetch_assoc($fResult1);
@@ -1837,6 +1870,8 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
                     $is_overdue = false;
                     $status = "";
                     $date = "";
+                    $updated_by = "";
+                    $counter = 0;
                     //error_log( " i: ".$i, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
                     //if($l['projectid']=="PRV11282")
                     //  error_log(print_r($l,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
@@ -1844,101 +1879,205 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
                     //  $status = "Contract for delivery";
                     //  $phpdate = strtotime( $l['date_won'] );
                     //  $date = date( PHP_DFORMAT, $phpdate );
-                    $status="";$status1="";$status2="";$status3="";$status4="";$status5="";$status6="";$status7="";$status8="";
+                    $status="";$status1="";$status2="";$status3="";$status4="";$status5="";$status6="";$status7="";$status8="";$status9="";$status10="";$status11="";$status12="";
+                    $date="";$date1="";$date2="";$date3="";$date4="";$date5="";$date6="";$date7="";$date8="";$date9="";$date10="";$date11="";$date12="";
+                    $updated_by="";$updated_by1="";$updated_by2="";$updated_by3="";$updated_by4="";$updated_by5="";$updated_by6="";$updated_by7="";$updated_by8="";$updated_by9="";$updated_by10="";$updated_by11="";$updated_by12="";
+
+// $qry_filter_rep_name = " '{$user->name}' ";
+// echo " '{$c['citypermit_followup_bywhom']}' ";
+// echo $qry_filter_rep_name;
 
 
-                    if(!empty($l['date_contract_signed']) || !empty($l['date_contract_system_created']) ){
+                    if(empty($c['drawing_approve_date'])){
+                        if(!empty($l['date_contract_signed']) || !empty($l['date_contract_system_created'])  && empty($c['drawing_prepare_date_followup']) && empty($c['drawing_followup_by'])){
 
-                        //error_log("inside 1:".$l['date_contract_signed'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
-                        $status1 = "Ready for Contract";
-                        $status .= $status1;
-                        if(!empty($l['date_contract_signed'])){
-                            $phpdate = strtotime( $l['date_contract_signed'] );
-                        }else{
-                            $phpdate = strtotime( $l['date_contract_system_created'] );
+                            //error_log("inside 1:".$l['date_contract_signed'], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                            
+                            if(!empty($l['date_contract_signed'])){
+                                $phpdate = strtotime( $l['date_contract_signed'] );
+                            }else{
+                                $phpdate = strtotime( $l['date_contract_system_created'] );
+                            }
+                            // $phpdate = strtotime( $c['drawing_prepare_date_followup'] );
+                            // $date = date( PHP_DFORMAT, $phpdate );
+                            if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                                $status1 = "Ready for Contract";
+                                $status .= $status1;
+                                $date1 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                                $date .= $date1;
+                            }
+                        }else 
+                        if($is_contract_generated && !empty($c['drawing_prepare_date_followup']) && (" '{$c['drawing_followup_by']}' ") == $qry_filter_rep_name){
+                            $phpdate = (!empty($l['date_contract_signed'])?strtotime( $l['date_contract_signed'] ):strtotime( $l['date_contract_system_created'] ));
+                            // $status1 = "Ready for Contract Assinged";
+                            // $phpdate = strtotime( $c['drawing_prepare_date_followup'] );
+                            // $date = date( PHP_DFORMAT, $phpdate );
+                            $status1 = (!empty($status)?"<br/>":"")."Ready for Contract";
+                            $status .= $status1;
+                            $date1 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                            $date .= $date1;
                         }
+                    } 
+                                       
 
-                        $date = date( PHP_DFORMAT, $phpdate );
-                    }
+                   
+                    if(empty($c['drawing_approve_date'])){
+                        if($is_contract_generated && !empty($c['drawing_prepare_date_followup']) && (" '{$c['drawing_followup_by']}' ") == $qry_filter_rep_name){
 
-                    if($is_contract_generated && empty($c['drawing_approve_date']) && !empty($c['drawing_prepare_date_followup'])){
-
-                        $phpdate = strtotime( $c['drawing_prepare_date_followup'] );
-                        $date = date( PHP_DFORMAT, $phpdate );
-                        if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
-                            $status2 = (!empty($status)?"<br/>":"")."Drawing & Prepare";
-                            $status .= $status2;
+                            $phpdate = strtotime( $c['drawing_prepare_date_followup'] );
+                            // $date = date( PHP_DFORMAT, $phpdate );
+                            if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                                $status2 = (!empty($status)?"<br/>":"")."Drawing & Prepare";
+                                $status .= $status2;
+                                $date2 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                                $date .= $date2;
+                            }
                         }
-
                     }
 
                     if($is_contract_generated && empty($c['drawing_approve_date']) && !empty($c['drawing_approve_date_followup'])){
 
                         $phpdate = strtotime( $c['drawing_approve_date_followup'] );
-                        $date = date( PHP_DFORMAT, $phpdate );
+                        // $date = date( PHP_DFORMAT, $phpdate );
 
                         if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
                             $status3 = (!empty($status)?"<br/>":"")."Drawing Approval";
                             $status .= $status3;
+                            $date3 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                            $date .= $date3;
                         }
                     }
 
                     if($is_contract_generated && empty($c['job_start_date']) && !empty($c['job_start_date_followup'])){
 
                         $phpdate = strtotime( $c['job_start_date_followup'] );
-                        $date = date( PHP_DFORMAT, $phpdate );
+                        // $date = date( PHP_DFORMAT, $phpdate );
 
                         if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
                             $status4 = (!empty($status)?"<br/>":"")."Job Start";
                             $status .= $status4;
+                            $date4 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                            $date .= $date4;
                         }
                     }
 
                     if($is_contract_generated && empty($c['stat_req_easement_waterboard_approval_date']) && !empty($c['stat_req_easement_waterboard_followup'])){
                         $phpdate = strtotime( $c['stat_req_easement_waterboard_followup'] );
-                        $date = date( PHP_DFORMAT, $phpdate );
+                        // $date = date( PHP_DFORMAT, $phpdate );
 
                         if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
                             $status5 = (!empty($status)?"<br/>":"")."Waterboard Approval";
                             $status .= $status5;
+                            $date5 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                            $date .= $date5;
                         }
                     }
 
                     if($is_contract_generated && empty($c['stat_req_easement_council_approval_date']) && !empty($c['stat_req_easement_council_followup'])){
 
                         $phpdate = strtotime( $c['stat_req_easement_council_followup'] );
-                        $date = date( PHP_DFORMAT, $phpdate );
+                        // $date = date( PHP_DFORMAT, $phpdate );
 
                         if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
                             $status6 = (!empty($status)?"<br/>":"")."Council Approval";
                             $status .= $status6;
+                            $date6 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                            $date .= $date6;
                         }
                     }
 
 
                     if($is_contract_generated && !empty($c['m_o_d']) && !empty($c['m_o_d_followup'])){
                         $phpdate = strtotime( $c['m_o_d_followup'] );
-                        $date = date( PHP_DFORMAT, $phpdate );
+                        // $date = date( PHP_DFORMAT, $phpdate );
 
                         if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
                             $status7 = (!empty($status)?"<br/>":"")."Modifications";
                             $status .= $status7;
+                            $date7 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                            $date .= $date7;
                         }
                     }
 
                     if($is_contract_generated && empty($c['engineering_approved_date']) && !empty($c['engineering_approved_date_followup'])){
 
                         $phpdate = strtotime( $c['engineering_approved_date_followup'] );
-                        $date = date( PHP_DFORMAT, $phpdate );
+                        // $date = date( PHP_DFORMAT, $phpdate );
 
                         if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
-                            $status8 = (!empty($status)?"<br/>":"")."Engineering Epproval";
+                            $status8 = (!empty($status)?"<br/>":"")."Engineering Approval";
                             $status .= $status8;
+                            $date8 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                            $date .= $date8;
                         }
                     }
 
-                    if(empty($status)){
+             
+                    if(empty($c['citypermit_application_approved_date'])){                                            
+                        if($is_contract_generated && !empty($c['citypermit_followup_date']) && (" '{$c['citypermit_followup_bywhom']}' ") == $qry_filter_rep_name){
+
+                            $phpdate = strtotime( $c['citypermit_followup_date'] );
+                            // $date = date( PHP_DFORMAT, $phpdate );
+
+                            if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                                $status9 = (!empty($status)?"<br/>":"")."City Permit Approval";
+                                $status .= $status9;
+                                $date9 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                                $date .= $date9;
+                            }
+                        }
+                    }
+
+
+                    if(empty($c['sitespec_engr_approved_date'])){                                            
+                            if($is_contract_generated && empty($c['sitespec_engr_approved_date']) && !empty($c['site_spec_followup_date']) && (" '{$c['site_spec_followup_bywhom']}' ") == $qry_filter_rep_name){
+
+                            $phpdate = strtotime( $c['site_spec_followup_date'] );
+                            // $date = date( PHP_DFORMAT, $phpdate );
+
+                            if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                                $status10 = (!empty($status)?"<br/>":"")."Site Spec Engineering Approval";
+                                $status .= $status10;
+                                $date10 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                                $date .= $date10;
+                            }
+                        }
+                    }
+
+                    if(empty($c['coastal_approved_date'])){                                            
+                            if($is_contract_generated && empty($c['coastal_approved_date']) && !empty($c['coastal_followup_date']) && (" '{$c['coastal_followup_bywhom']}' ") == $qry_filter_rep_name){
+
+                            $phpdate = strtotime( $c['coastal_followup_date'] );
+                            // $date = date( PHP_DFORMAT, $phpdate );
+
+                            if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                                $status11 = (!empty($status)?"<br/>":"")."Costal Approval";
+                                $status .= $status11;
+                                $date11 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                                $date .= $date11;
+                            }
+                        }
+                    }
+
+                    if(empty($c['strata_approved_date'])){                                            
+                            if($is_contract_generated && empty($c['strata_approved_date']) && !empty($c['hoa_followup_date']) && (" '{$c['hoa_followup_bywhom']}' ") == $qry_filter_rep_name){
+
+                            $phpdate = strtotime( $c['hoa_followup_date'] );
+                            // $date = date( PHP_DFORMAT, $phpdate );
+
+                            if(date( 'Y-m-d', $phpdate )<=date('Y-m-d')){
+                                $status12 = (!empty($status)?"<br/>":"")."HoA Approval";
+                                $status .= $status12;
+                                $date12 = (!empty($date)?"<br/>":""). date( PHP_DFORMAT, $phpdate );
+                                $date .= $date12;
+                            }
+                        }
+                    }
+                    // End
+
+                    if(empty($status) || empty($date)){
                         //error_log("status".$status, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+                        echo $status1;
                         $i++;
                         continue;
 
@@ -1965,20 +2104,22 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
                         $link_client = "<a  class='' href='".JURI::base()."contract-listing-vic/contract-folder-vic?projectid={$l['projectid']}&ref=/'
                     >{$l['projectid']}</a>";
                     }
-
                     $to_do_list_construction .= "<li class=\"li-row ".($is_overdue?'highligh-red':'')." \">".
                                     "<input type='hidden'  class='cf_id' value='' /> ".
                                     "<input type='hidden'  class='pid' value='{$l['pid']}' /> ";
-                    if($user_group=="sales_manager"){
-                    $to_do_list_construction .= "<span class='col-date'> {$date} </span>";}
+
+                    // if($user_group=="sales_manager" || $user_group=="reception"){}
                     $to_do_list_construction .= "<span  class='col-client-id'>  {$link_client} </span>".
                                     "<span class='col-name'> ". ($l['is_builder']==1 ? $l['builder_name'] : $l['client_firstname'].' '.$l['client_lastname'])."</span>".
                                     "<span class='col-note'> " .$l['content']. "  </span>".
-                                    "<span class='col-status'> {$status1}{$status2}{$status3}{$status4}{$status5}{$status6}{$status7}{$status8} </span>";
+                                    "<span class='col-status'> {$status1}{$status2}{$status3}{$status4}{$status5}{$status6}{$status7}{$status8}{$status9}{$status10}{$status11}{$status12} </span>".
+                                    "<span class='col-date'> {$date1}{$date2}{$date3}{$date4}{$date5}{$date6}{$date7}{$date8}{$date9}{$date10}{$date11}{$date12} </span>";
                     $to_do_list_construction .= "</li>";
                     $i++;
 
                 }
+
+
 
 
             $to_do_list_construction .= "</ul>";
@@ -2069,7 +2210,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
 
 
-    }else if($is_operation_manager || $is_site_manager || $is_site_manager || $is_sales_manager){
+    }else if($is_operation_manager || $is_site_manager || $is_reception || $is_sales_manager){
 
         echo "<div style='width:100%; margin:0;'>";
 
@@ -2206,7 +2347,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
         //Init Graph legend type
         var options = {
 
-         	//Boolean - Show a backdrop to the scale label
+            //Boolean - Show a backdrop to the scale label
             scaleShowLabelBackdrop : true,
 
             //String - The colour of the label backdrop
@@ -2304,7 +2445,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
         if($is_top_admin || $is_manager || $is_user){
 
     ?>
- 	<?php
+    <?php
     $sales_amount = $graph_data_sales_summary_sales_amount_this_year;
     $sales_target = $graph_data_sales_summary_target_sales_amount_this_year;
     ?>
@@ -2316,7 +2457,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
     var data = {
         labels: [<?php echo "'".implode("','", $sales_period)."'"; ?>],
         datasets: [
-        	 {
+             {
                 label: "Target Sales",
                 fillColor: "rgba(31, 105, 165,0.9)",
                 strokeColor: "rgba(31, 105, 165,1)",
@@ -2364,7 +2505,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
     var data = {
         labels: [<?php echo "'".implode("','", $sales_period)."'"; ?>],
         datasets: [
-        	 {
+             {
                 label: "Last Year",
                 fillColor: "rgba(31, 105, 165,0.9)",
                 strokeColor: "rgba(31, 105, 165,1)",
@@ -2416,7 +2557,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
     var data = {
         labels: [<?php echo "'".implode("','", $sales_period)."'"; ?>],
         datasets: [
-        	 {
+             {
                 label: "Last Year",
                 fillColor: "rgba(41,154,11,1)",
                 strokeColor: "rgba(41,154,11,1)",
@@ -2464,7 +2605,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
     var data = {
         labels: [<?php echo "'".implode("','", $sales_period)."'"; ?>],
         datasets: [
-        	 {
+             {
                 label: "Last Year",
                 fillColor: "rgba(41,154,11,1)",
                 strokeColor: "rgba(41,154,11,1)",
@@ -2510,7 +2651,7 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
     var data = {
         labels: [<?php echo "'".implode("','", $sales_period)."'"; ?>],
         datasets: [
-        	 {
+             {
                 label: "Last Year",
                 fillColor: "rgba(41,154,11,1)",
                 strokeColor: "rgba(41,154,11,1)",
@@ -2945,9 +3086,9 @@ $current_erector_index = -1;
 var installer_list_prevmon = [
 <?php
 
- 	$sql = "SELECT c.cf_id, cp.clientid, CONCAT(coalesce(cp.client_firstname,''),' ',coalesce(cp.client_lastname,''),' ',coalesce(cp.builder_name,'')) as customer_name, cp.client_suburb, cv.erectors_name, cv.erectors_name2, c.projectid, cv.install_date, cv.schedule_completion, c.contractdate, c.total_cost,  DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate FROM ver_chronoforms_data_contract_vergola_vic as cv JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid WHERE cv.install_date BETWEEN DATE_FORMAT(DATE_SUB(CURRENT_DATE(), INTERVAL 2 MONTH),'%Y-%m-01') AND NOW() AND   cv.erectors_name != '' AND cv.schedule_completion IS NOT NULL  ";
- 	//error_log(" sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
- 	$qResult = mysql_query($sql);
+    $sql = "SELECT c.cf_id, cp.clientid, CONCAT(coalesce(cp.client_firstname,''),' ',coalesce(cp.client_lastname,''),' ',coalesce(cp.builder_name,'')) as customer_name, cp.client_suburb, cv.erectors_name, cv.erectors_name2, c.projectid, cv.install_date, cv.schedule_completion, c.contractdate, c.total_cost,  DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate FROM ver_chronoforms_data_contract_vergola_vic as cv JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid WHERE cv.install_date BETWEEN DATE_FORMAT(DATE_SUB(CURRENT_DATE(), INTERVAL 2 MONTH),'%Y-%m-01') AND NOW() AND   cv.erectors_name != '' AND cv.schedule_completion IS NOT NULL  ";
+    //error_log(" sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+    $qResult = mysql_query($sql);
     $obj = ""; $j=1;
     while ($r = mysql_fetch_assoc($qResult)) {
         $current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
@@ -3013,7 +3154,7 @@ var installer_list_curmon = [
         ORDER BY cv.install_date
     ";
 
- 	$qResult = mysql_query($sql);
+    $qResult = mysql_query($sql);
     $obj = ""; $j--;// subtract 1 value to make tha last month same event color in the next month
     while ($r = mysql_fetch_assoc($qResult)) {
         $current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
@@ -3046,7 +3187,7 @@ var installer_list_curmon = [
 
 var installer_list_nextmon = [
 <?php
- 	$sql = "
+    $sql = "
         SELECT
             c.cf_id,
             cp.clientid,
@@ -3078,7 +3219,7 @@ var installer_list_nextmon = [
         ORDER BY cv.install_date
     ";
 
- 	$qResult = mysql_query($sql);
+    $qResult = mysql_query($sql);
     $obj = ""; $j=1;
     while ($r = mysql_fetch_assoc($qResult)) {
         $current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
@@ -3109,7 +3250,7 @@ var installer_list_nextmon = [
 ];
 
 
- 	// $('#installer_calendar').fullCalendar({
+    // $('#installer_calendar').fullCalendar({
   //      events:installer_list_prevmon,
   //      timeFormat: 'H(:mm)',
   //      eventClick: function(event) {
@@ -3119,7 +3260,7 @@ var installer_list_nextmon = [
   //           return false;
   //       }
 
-  //   	}
+  //    }
   //   });
 
   //   $('#installer_calendar').fullCalendar('prev');
@@ -3133,10 +3274,10 @@ var installer_list_nextmon = [
      //            window.open(event.url);
      //            return false;
      //        }
-  //   	}
+  //    }
   //   });
 
- 	$('#installer_calendar').fullCalendar({
+    $('#installer_calendar').fullCalendar({
        events:installer_list_curmon,
        timeFormat: 'H(:mm)',
        eventClick: function(event) {
@@ -3144,7 +3285,7 @@ var installer_list_nextmon = [
                 window.open(event.url);
                 return false;
             }
-    	}
+        }
     });
 
     $('#installer_calendar2').fullCalendar({
@@ -3155,7 +3296,7 @@ var installer_list_nextmon = [
                 window.open(event.url);
                 return false;
             }
-    	}
+        }
     });
     $('#installer_calendar2').fullCalendar('next');
 
@@ -3189,16 +3330,16 @@ var installer_list_nextmon = [
     });
 
 
- 	function request_sel_consultant(){
- 		var sel_consultant = $("#cbo_consultant").children("option:selected").val();
- 		//alert(sel_consultant);
- 		//console.log("sel_consultant "+sel_consultant);
+    function request_sel_consultant(){
+        var sel_consultant = $("#cbo_consultant").children("option:selected").val();
+        //alert(sel_consultant);
+        //console.log("sel_consultant "+sel_consultant);
 
- 		window.location.assign("<?php echo JURI::base().'?consultant_id='; ?>"+sel_consultant);
+        window.location.assign("<?php echo JURI::base().'?consultant_id='; ?>"+sel_consultant);
 
- 	}
+    }
 
- 	function save_status(event,o){
+    function save_status(event,o){
 
             var action = "";
             var status = "";
@@ -3214,12 +3355,12 @@ var installer_list_nextmon = [
 
             //var data = { command: 'save_status', cf_id : cf_id, status: status, followup_date: followup_date }
 
-         	$("#cf_id").val(cf_id);
-         	$("#command ").val('save_status');
-         	$("#followup_date").val(followup_date);
-         	$("#status").val(status);
+            $("#cf_id").val(cf_id);
+            $("#command ").val('save_status');
+            $("#followup_date").val(followup_date);
+            $("#status").val(status);
 
-         	$("#send_update_to_do_list_form").click();
+            $("#send_update_to_do_list_form").click();
             //location.reload();
         }
 
