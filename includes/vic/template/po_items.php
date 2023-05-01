@@ -333,7 +333,7 @@ $supplier = mysql_fetch_array($qSupplier);
  
 <!-- <b>PO Order No.: <?php echo $contract["cf_id"]  ?></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ordered On:</b> <?php print(Date(PHP_DFORMAT)); ?> -->
 <!-- <br/><br/> -->
-<table class="" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:9pt; " width="100%"> <tr></tr>
+<table class="template_tbl" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:9pt; " width="100%"> <tr></tr>
 
 	<?php
 $order_by = ""; 

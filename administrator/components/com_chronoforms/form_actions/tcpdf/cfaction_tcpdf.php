@@ -74,7 +74,8 @@ class CfactionTcpdfHelper{
 		$pdf->SetAutoPageBreak(TRUE, 15);
 
 		//set image scale factor
-		$pdf->setImageScale(1.20);
+		// $pdf->setImageScale(1.20);
+		$pdf->setImageScale(1.25);
 		//$pdf->setImageScale(100);
 
 		//set some language-dependent strings
