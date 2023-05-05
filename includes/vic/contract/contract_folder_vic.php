@@ -1468,7 +1468,7 @@ $groups = $user->get('groups');
 
       $cbo_drawingfollowupby = "<select    name=\"drawingfollowupby\" id=\"drawingfollowupbyid\"  style='width:104%; padding:0px'><option value=''>Drawing Followup Person: </option>"; 
       // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-      $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 AND u.block = 0";
+      $querysub="SELECT u.block,u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE (g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 OR g.group_id=27 OR g.group_id=9) AND u.block=0";
       $resultsub = mysql_query($querysub);
           if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
@@ -1484,7 +1484,7 @@ $groups = $user->get('groups');
 
       $cbo_clientnotifiedby = "<select    name=\"clientnotifiedby\" id=\"clientnotifiedbyid\"  style='width:104%; padding:0px'><option value=''>Client Notified By: </option>"; 
       // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-      $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 AND u.block = 0";
+      $querysub="SELECT u.block,u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE (g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 OR g.group_id=27 OR g.group_id=9) AND u.block=0";
       $resultsub = mysql_query($querysub);
           if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
@@ -1966,7 +1966,7 @@ $groups = $user->get('groups');
         <?php
           $cbo_citypermitfollowupby = "<select    name=\"citypermitfollowupbywhom\" id=\"citypermitfollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
           // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 AND u.block = 0";
+          $querysub="SELECT u.block,u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE (g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 OR g.group_id=27 OR g.group_id=9) AND u.block=0";
           $resultsub = mysql_query($querysub);
               if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
@@ -1982,7 +1982,7 @@ $groups = $user->get('groups');
 
           $cbo_sitespecengfollowupby = "<select    name=\"sitespecengfollowupbywhom\" id=\"sitespecengfollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
           // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 AND u.block = 0";
+          $querysub="SELECT u.block,u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE (g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 OR g.group_id=27 OR g.group_id=9) AND u.block=0";
           $resultsub = mysql_query($querysub);
               if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
@@ -1998,7 +1998,7 @@ $groups = $user->get('groups');
 
           $cbo_stratafollowupby = "<select    name=\"stratafollowupbywhom\" id=\"stratafollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
           // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 AND u.block = 0";
+          $querysub="SELECT u.block,u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE (g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 OR g.group_id=27 OR g.group_id=9) AND u.block=0";
           $resultsub = mysql_query($querysub);
               if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
@@ -2014,7 +2014,7 @@ $groups = $user->get('groups');
 
           $cbo_coastalfollowupby = "<select    name=\"coastalfollowupbywhom\" id=\"coastalfollowupbywhomid\"  style=''><option value=''>Follow-up by: </option>"; 
           // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
-          $querysub="SELECT u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 AND u.block = 0";
+          $querysub="SELECT u.block,u.`name`,g.group_id FROM ver_users AS u JOIN ver_user_usergroup_map AS g ON u.id=g.user_id WHERE (g.group_id=26 OR g.group_id=30 OR g.group_id=29 OR g.group_id=28 OR g.group_id=27 OR g.group_id=9) AND u.block=0";
           $resultsub = mysql_query($querysub);
               if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
 
