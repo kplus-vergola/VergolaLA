@@ -1,7 +1,24 @@
 <?php
 //error_log(print_r($_POST,true), 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log'); 
 
+if(isset($_POST['command']) && $_POST['command']=='update')
+{	 
+	$id = mysql_real_escape_string($_POST['id']);
+	$desc = mysql_real_escape_string($_POST['desc']) ?: 'N/A';
+	$qty = mysql_real_escape_string($_POST['qty']) ?: 0;
+	$price = mysql_real_escape_string($_POST['price']) ?: 0;
+	$supplierid = mysql_real_escape_string($_POST['supplierid']);
+	$order = mysql_real_escape_string($_POST['order']) ?: 0;
+	
+	$sql = "UPDATE ver_chronoforms_data_materials_vic SET raw_description='{$desc}', qty={$qty}, raw_cost={$price}, display_order={$order}, supplierid='{$supplierid}' WHERE cf_id={$id} ";
+	//error_log($sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_us\\my-error.log');
+	mysql_query($sql); 
+	header('Location:'.JURI::base().'system-management-vic/raw-material-listing-vic/raw-material-updatelist-vic?cf_id='.$id); 
+}
+
+/*
 if(isset($_POST['command']) && $_POST['command']=='update'){
+if(isset($_POST['command'])){
 	$id = mysql_real_escape_string($_POST['id']);
 	$desc = mysql_real_escape_string($_POST['desc']);
 	$qty = mysql_real_escape_string($_POST['qty']);
@@ -18,10 +35,10 @@ if(isset($_POST['command']) && $_POST['command']=='update'){
   
     echo json_encode($arr);
     exit();
-
 }
+*/
 
- 
+
 //our pagination function is now in this file
 function pagination($current_page_number, $total_records_found, $query_string = null)
 {
@@ -48,7 +65,9 @@ $instance =& JURI::getInstance();
 $url = JURI::getInstance()->toString();
  
 
+// echo $url;
 //display the search form
+// echo "<div id='reponse'></div>";
 echo "<div class='search-listing'>
 <form action='" . JRoute::_($url) . "' method='post' style='float:none; width:90%;'>
 	<label>Search:</label> <input type='text' name='search_string' /> <input type='submit' name='submit' value='Search' class='search-btn' style='width:217px;' />
@@ -86,6 +105,8 @@ $sql .= " ORDER BY raw_description ASC  LIMIT $start, " . NUMBER_PER_PAGE;
 * to page the query will pull up the correct results
 **/
 //echo "<center><h1 class='search-records'>" . number_format($total_records) . " Records Found</h1></center>";
+
+
 echo "<div class='pagination-layer'>";
 pagination($page, $total_records, "");
 echo "</div>";
@@ -102,14 +123,14 @@ $cbo_suppliers .="</select>";
 $loop = mysql_query($sql)
 	or die ('cannot run the query because: ' . mysql_error());
 	echo $cbo_suppliers;
-	echo "<table class='listing-table table-bordered'>";
+	echo "<table class='listing-table table-bordered' id='data_table'>";
 	echo "<thead> <th width='65%'>Description</th> <th width='5%'>Qty</th> <th width='7%'>Cost</th><th width='20%'>Supplier</th><th width='3%'>Order</th> <th width='3%'>Action</th> </thead><tbody>";
 	$i=0;
 	while ($record = mysql_fetch_assoc($loop)){
 	    // echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "raw-material-listing-vic/raw-material-updatelist-vic?cf_id={$record['cf_id']}' >";
     
-		echo "<tr>
-			<td class='td_desc'>
+		echo "<tr>		
+			<td class='td_desc' data-td_desc='{$record['materialid']}'>
 				<input type='text' value='{$record['raw_description']}' style='display:none; padding:5px; width:80%;'/>  <span style='display:inline; cursor:pointer;' onclick='location.href = \"".JURI::base()."system-management-vic/raw-material-listing-vic/raw-material?cf_id={$record["materialid"]}\"' >{$record['raw_description']}</span></a> 
 			</td> 
 			<td class='td_qty'>
@@ -120,18 +141,20 @@ $loop = mysql_query($sql)
 				<input type='hidden' value='{$record['supplierid']}' /> <span style='display:inline;'>{$record['company_name']}</span> 
 			</td> 
 			<td class='td_order'><input type='text' value='{$record['display_order']}' style='display:none; padding:5px;'  /><span style='display:inline;'>{$record['display_order']}</span> </td>
-			<td class='td_id'>
-				<span class='btn_edit' style='color:#02628f; cursor:pointer;  '/>Edit</span> <input type='hidden' value='{$record['materialid']}' /> 
+			<td class='td_id' >
+				<span class='btn_edit' id='btn_edit' name='btn_edit' style='color:#02628f; cursor:pointer;' onclick='this.form.submit();'/>Edit</span> <input type='hidden' value='{$record['materialid']}' /> 
 			</td> 
 			</tr>"; 
 
 		$i++;
 	}
+
 	    echo "</tbody></table>"; 
     
 echo "<div class='pagination-layer'>";
 pagination($page, $total_records, " ");
 echo "</div>";
+
 
 ?>
 
@@ -140,9 +163,9 @@ echo "</div>";
 
  <script>
  $(document).ready(function(){  
+
+	const url_="<?php echo $url; ?>";
  	$(".btn_edit").click(function(){
- 		//alert($(this).html());  
- 		//alert($(this).parent().parent().children('.td_desc').children('span').html());
  		if($(this).html()=='Update'){ 
  			$(this).html('Edit');	
  			var url = "";
@@ -153,11 +176,18 @@ echo "</div>";
  			var order = $(this).parent().parent().children('.td_order').children('input').val(); 
  			var supplierid = $('#supplierid option:selected').val();
  			var supplier_name = $('#supplierid option:selected').text();
-
  			var command = 'update';
+ 			
+ 			$.post(url,
+ 			{ 				
+ 			 	// command:command,
+ 			 	command:"update"
+ 			},
+ 			function(data,status){
+ 			  // alert("Data: " + data + "\nStatus: " + status);
+ 			  // alert($(this).parent().parent().children('.td_desc').children('span').html(desc));
 
- 			//alert(id);
-
+ 			});
 
  			$.ajax({
 				type: "POST",
@@ -166,7 +196,8 @@ echo "</div>";
 				data: {id:id, desc:desc, qty:qty, price:price, order:order, supplierid:supplierid, command:command},	
 				success: function(data) {					
 					 if(data['result']=='1'){
-					  
+					 	$("#"+categoryPOCreate).click();
+
 					 }else{
 					 	alert('Error.. Something went wrong.'); 
 					 }
