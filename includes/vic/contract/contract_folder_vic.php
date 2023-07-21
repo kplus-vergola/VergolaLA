@@ -1617,7 +1617,7 @@ $groups = $user->get('groups');
                 <!-- <input type="text" value="<?php echo $contract_vergola['erectors_name']; ?>" id="erectors" name="erectors_name" style=" ">  -->
                 <?php echo $cbo_installer1; ?>
             </label>
-            <label class="input checkmeasure" style="visibility:hidden">
+            <label class="input checkmeasure">
                 <!-- <input type="text" value="<?php echo $contract_vergola['erectors_name2']; ?>" id="erectors2" name="erectors_name2" style=" ">  -->
                 <?php echo $cbo_installer2; ?>
             </label>
