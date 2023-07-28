@@ -232,7 +232,7 @@ echo "<div id='advance-search' style='display:".($advance_search==1?'block':'non
 <!-- Start of Rep List --->
 <label class='input' ". (isset($user->groups["9"]) ? "style='display:none;'":"") ."> ". (isset($user->groups["9"])==false && $rep_id==""? "<span>Consultant</span>":"") ." <select class=\"rep-list\" id=\"replist\" name=\"replist\"><option value=''></option>";
             $usergroup = 'Victoria Users';
-            $queryrep="SELECT * FROM ver_users WHERE usertype = 'Victoria Users' AND block=0 ORDER BY name ASC";
+            $queryrep="SELECT * FROM ver_users WHERE usertype = 'Victoria Users' ORDER BY name ASC";
             $resultrep = mysql_query($queryrep);
             if(!$resultrep){die ("Could not query the database: <br />" . mysql_error());
 			}
