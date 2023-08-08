@@ -376,11 +376,13 @@ if (strlen($_POST['schedule_completion']) && $_POST['schedule_completion'] != "0
 $sched_install_date_fix2_visible = "No";
 if (strlen($_POST['sched_install_date_fix2_visible'])){
   $sched_install_date_fix2_visible = "'".mysql_real_escape_string($_POST['sched_install_date_fix2_visible'])."'";
+  // $job_date_fix2_visible = "'".mysql_real_escape_string($_POST['sched_install_date_fix2_visible'])."'";
 }
 
 $sched_install_date_fix3_visible = "No";
 if (strlen($_POST['sched_install_date_fix3_visible'])){
   $sched_install_date_fix3_visible = "'".mysql_real_escape_string($_POST['sched_install_date_fix3_visible'])."'";
+  // $job_date_fix3_visible = "'".mysql_real_escape_string($_POST['sched_install_date_fix3_visible'])."'";
 }
 
 $sched_install_date_fix2_start = "NULL";
@@ -404,13 +406,13 @@ if (strlen($_POST['sched_install_date_fix3_end']) && $_POST['sched_install_date_
 }
 
 $job_date_fix2_visible = "No";
-if (strlen($_POST['job_date_fix2_visible'])){
-  $job_date_fix2_visible = "'".mysql_real_escape_string($_POST['job_date_fix2_visible'])."'";
+if (strlen($_POST['sched_install_date_fix2_visible'])){
+  $job_date_fix2_visible = "'".mysql_real_escape_string($_POST['sched_install_date_fix2_visible'])."'";
 }
 
 $job_date_fix3_visible = "No";
-if (strlen($_POST['job_date_fix3_visible'])){
-  $job_date_fix3_visible = "'".mysql_real_escape_string($_POST['job_date_fix3_visible'])."'";
+if (strlen($_POST['sched_install_date_fix3_visible'])){
+  $job_date_fix3_visible = "'".mysql_real_escape_string($_POST['sched_install_date_fix3_visible'])."'";
 }
 
 $job_date_fix2_start = "NULL";
@@ -1671,7 +1673,7 @@ $groups = $user->get('groups');
         <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label> -->
     </div> 
 
-    <div class="label-input-row" name="sched_install_date_fix2" id="sched_install_date_fix2">  
+    <div class="label-input-row" name="sched_install_date_fix2 box" id="sched_install_date_fix2">  
         <label class="input checkmeasure">
             <span class="visible">Sched. Fix2 Install Date: </span>
             <input type="text" value="<?php echo $contract_vergola['fsched_install_date_fix2_start']; ?>" name="sched_install_date_fix2_start" class="date_entered" autocomplete="off">
@@ -1765,8 +1767,8 @@ $groups = $user->get('groups');
             <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffooting_inspection_date']; ?>" name="footing_inspection_date" class="date_entered" autocomplete="off" ></label> 
           </div>
 
-          <div class="label-input-row" name="sched_install_date_fix2" id="sched_install_date_fix2">
-          <!-- <div class="label-input-row" name="job_date_fix2" id="job_date_fix2">   -->
+          <!-- <div class="label-input-row" name="sched_install_date_fix2" id="sched_install_date_fix2"> -->
+          <div class="label-input-row" name="job_date_fix2" id="job_date_fix2">  
               <label class="input checkmeasure">
                   <span class="visible">Job Fix2 Start: </span>
                   <input type="text" value="<?php echo $contract_vergola['fjob_date_fix2_start']; ?>" name="job_date_fix2_start" class="date_entered" autocomplete="off">
@@ -1775,18 +1777,18 @@ $groups = $user->get('groups');
                   <span class="visible">Job Fix2 Complete: </span>
                   <input type="text" value="<?php echo $contract_vergola['fjob_date_fix2_end']; ?>" name="job_date_fix2_end" class="date_entered" autocomplete="off">
               </label>
-              <label class="input checkmeasure" style="visibility:hidden">
+              <label class="input checkmeasure" style="visibility: hidden;">
                   <span class="visible">Add job fix date: </span>
-                    <select class="visible" style="width:104%; padding:0 0 0 175px;" name="job_date_fix3_visible" id="job_date_fix3_visible" value="" class="" onchange="showDiv('job_date_fix3', this)">
-                        <option value="<?php echo $contract_vergola['fjob_date_fix3_visible']; ?>" selected="selected"><?php echo $contract_vergola['fjob_date_fix3_visible']; ?></option>
+                    <select class="visible" style="width:104%; padding:0 0 0 175px;" name="job_date_fix2_visible" id="job_date_fix2_visible" class="" onchange="showDiv('job_date_fix2', this)">
+                        <option value="<?php echo $contract_vergola['fjob_date_fix2_visible']; ?>" selected="selected"><?php echo $contract_vergola['fjob_date_fix2_visible']; ?></option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
-              </label>  
+              </label> 
           </div> 
 
-          <div class="label-input-row" name="sched_install_date_fix3" id="sched_install_date_fix3">
-          <!-- <div class="label-input-row" name="job_date_fix3" id="job_date_fix3"> -->
+          <!-- <div class="label-input-row" name="sched_install_date_fix3" id="sched_install_date_fix3"> -->
+          <div class="label-input-row" name="job_date_fix3" id="job_date_fix3">
               <label class="input checkmeasure">
                   <span class="visible">Job Fix3 Start: </span>
                   <input type="text" value="<?php echo $contract_vergola['fjob_date_fix3_start']; ?>" name="job_date_fix3_start" class="date_entered" autocomplete="off">
@@ -1795,14 +1797,14 @@ $groups = $user->get('groups');
                   <span class="visible">Job Fix3 Complete: </span>
                   <input type="text" value="<?php echo $contract_vergola['fjob_date_fix3_end']; ?>" name="job_date_fix3_end" class="date_entered" autocomplete="off">
               </label>
-              <label class="input checkmeasure" style="visibility:hidden">
+              <label class="input checkmeasure" style="visibility: hidden;">
                   <span class="visible">Add job fix date: </span>
-                    <select class="visible" style="width:104%; padding:0 0 0 175px;" name="job_date_fix2_visible" id="job_date_fix2_visible" class="" onchange="showDiv('job_date_fix2', this)">
-                        <option value="<?php echo $contract_vergola['fjob_date_fix2_visible']; ?>" selected="selected"><?php echo $contract_vergola['fjob_date_fix2_visible']; ?></option>
+                    <select class="visible" style="width:104%; padding:0 0 0 175px;" name="job_date_fix3_visible" id="job_date_fix3_visible" value="" class="" onchange="showDiv('job_date_fix3', this)">
+                        <option value="<?php echo $contract_vergola['fjob_date_fix3_visible']; ?>" selected="selected"><?php echo $contract_vergola['fjob_date_fix3_visible']; ?></option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
-              </label> 
+              </label>  
           </div> 
           <div class="label-input-row">      
             <label class="input jobend"><span class="visible">Final Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffinal_inspection_date']; ?>" name="final_inspection_date" class="date_entered" autocomplete="off" style=" " ></label> 
@@ -4035,6 +4037,14 @@ $(document).ready(function(){
 
 function showDiv(divId, element) {
    document.getElementById(divId).style.display = element.value == 'Yes' ? 'block' : 'none';
+   if((divId) == "sched_install_date_fix2"){
+    document.getElementById('sched_install_date_fix2').style.display = element.value == 'Yes' ? 'block' : 'none';
+    document.getElementById('job_date_fix2').style.display = element.value == 'Yes' ? 'block' : 'none';
+    }
+    else if((divId) == "sched_install_date_fix3"){
+     document.getElementById('sched_install_date_fix3').style.display = element.value == 'Yes' ? 'block' : 'none';
+     document.getElementById('job_date_fix3').style.display = element.value == 'Yes' ? 'block' : 'none';
+     }        
 }
 
 function delete_pdf_letter(event,o){
