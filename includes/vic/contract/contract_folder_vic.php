@@ -219,6 +219,7 @@ $controller_pw = mysql_real_escape_string($_POST['controllerpw']);
 $drawing_followup_by = mysql_real_escape_string($_POST['drawingfollowupby']); 
 $client_notified_by = mysql_real_escape_string($_POST['clientnotifiedby']); 
 
+
 $check_measure_date = "NULL";
 if (strlen($_POST['checkdate']) && $_POST['checkdate'] != "0000-00-00 00:00:00"){
   $check_measure_date = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['checkdate'])))."'";
@@ -372,6 +373,67 @@ if (strlen($_POST['schedule_completion']) && $_POST['schedule_completion'] != "0
   $schedule_completion = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['schedule_completion'])))."'";
 } 
 
+$sched_install_date_fix2_visible = "No";
+if (strlen($_POST['sched_install_date_fix2_visible'])){
+  $sched_install_date_fix2_visible = "'".mysql_real_escape_string($_POST['sched_install_date_fix2_visible'])."'";
+}
+
+$sched_install_date_fix3_visible = "No";
+if (strlen($_POST['sched_install_date_fix3_visible'])){
+  $sched_install_date_fix3_visible = "'".mysql_real_escape_string($_POST['sched_install_date_fix3_visible'])."'";
+}
+
+$sched_install_date_fix2_start = "NULL";
+if (strlen($_POST['sched_install_date_fix2_start']) && $_POST['sched_install_date_fix2_start'] != "0000-00-00 00:00:00"){
+  $sched_install_date_fix2_start = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sched_install_date_fix2_start'])))."'";
+}
+
+$sched_install_date_fix2_end = "NULL";
+if (strlen($_POST['sched_install_date_fix2_end']) && $_POST['sched_install_date_fix2_end'] != "0000-00-00 00:00:00"){
+  $sched_install_date_fix2_end = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sched_install_date_fix2_end'])))."'";
+}
+
+$sched_install_date_fix3_start = "NULL";
+if (strlen($_POST['sched_install_date_fix3_start']) && $_POST['sched_install_date_fix3_start'] != "0000-00-00 00:00:00"){
+  $sched_install_date_fix3_start = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sched_install_date_fix3_start'])))."'";
+} 
+
+$sched_install_date_fix3_end = "NULL";
+if (strlen($_POST['sched_install_date_fix3_end']) && $_POST['sched_install_date_fix3_end'] != "0000-00-00 00:00:00"){
+  $sched_install_date_fix3_end = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['sched_install_date_fix3_end'])))."'";
+}
+
+$job_date_fix2_visible = "No";
+if (strlen($_POST['job_date_fix2_visible'])){
+  $job_date_fix2_visible = "'".mysql_real_escape_string($_POST['job_date_fix2_visible'])."'";
+}
+
+$job_date_fix3_visible = "No";
+if (strlen($_POST['job_date_fix3_visible'])){
+  $job_date_fix3_visible = "'".mysql_real_escape_string($_POST['job_date_fix3_visible'])."'";
+}
+
+$job_date_fix2_start = "NULL";
+if (strlen($_POST['job_date_fix2_start']) && $_POST['job_date_fix2_start'] != "0000-00-00 00:00:00"){
+  $job_date_fix2_start = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['job_date_fix2_start'])))."'";
+}
+
+$job_date_fix2_end = "NULL";
+if (strlen($_POST['job_date_fix2_end']) && $_POST['job_date_fix2_end'] != "0000-00-00 00:00:00"){
+  $job_date_fix2_end = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['job_date_fix2_end'])))."'";
+}
+
+$job_date_fix3_start = "NULL";
+if (strlen($_POST['job_date_fix3_start']) && $_POST['job_date_fix3_start'] != "0000-00-00 00:00:00"){
+  $job_date_fix3_start = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['job_date_fix3_start'])))."'";
+} 
+
+$job_date_fix3_end = "NULL";
+if (strlen($_POST['job_date_fix3_end']) && $_POST['job_date_fix3_end'] != "0000-00-00 00:00:00"){
+  $job_date_fix3_end = "'".date('Y-m-d H:i:s', strtotime(mysql_real_escape_string($_POST['job_date_fix3_end'])))."'";
+}
+
+
 $enable_update_contract_vergola = false;
 if (isset($_POST['checkdate'])) {
     $enable_update_contract_vergola = true;
@@ -411,7 +473,19 @@ if ($enable_update_contract_vergola == true) {
     controller_sn = '{$controller_sn}',
     controller_pw = '{$controller_pw}',
     drawing_followup_by = '{$drawing_followup_by}',
-    client_notified_by = '{$client_notified_by}'
+    client_notified_by = '{$client_notified_by}',
+    job_date_fix2_start = {$job_date_fix2_start},
+    job_date_fix2_end = {$job_date_fix2_end},
+    job_date_fix3_start = {$job_date_fix3_start},
+    job_date_fix3_end = {$job_date_fix3_end},
+    sched_install_date_fix2_start = {$sched_install_date_fix2_start},
+    sched_install_date_fix2_end = {$sched_install_date_fix2_end},
+    sched_install_date_fix3_start = {$sched_install_date_fix3_start},
+    sched_install_date_fix3_end = {$sched_install_date_fix3_end},
+    job_date_fix2_visible = {$job_date_fix2_visible},
+    job_date_fix3_visible = {$job_date_fix3_visible},
+    sched_install_date_fix2_visible = {$sched_install_date_fix2_visible},
+    sched_install_date_fix3_visible = {$sched_install_date_fix3_visible}
     WHERE projectid = '$projectid'"; 
     mysql_query($sql) or die(mysql_error()); 
 }
@@ -1326,6 +1400,7 @@ $groups = $user->get('groups');
       <li><a href="#" rel="tracker" class="selected">Enquiry Tracker</a></li>
       <li><a href="#" rel="standard">Vergola Standard</a></li>
       <li><a href="#" rel="statutory">Statutory Approval</a></li>
+      <li><a href="#" rel="accounts">Vergola Accounts</a></li>
     <li><a href="#" rel="contract-cancellation">Contract Cancellation</a></li>
     </ul>
   </div>
@@ -1402,7 +1477,19 @@ $groups = $user->get('groups');
             DATE_FORMAT( cancellation_date, '".SQL_DATE_FORMAT_01."' ) fcancellation_date,
             DATE_FORMAT( cancellation_fee_amount, '".SQL_DATE_FORMAT_01."' ) fcancellation_fee_amount,
             DATE_FORMAT( balanceowning_amount, '".SQL_DATE_FORMAT_01."' ) fbalanceowning_amount,
-            DATE_FORMAT( cancellationpaid_date, '".SQL_DATE_FORMAT_01."' ) fcancellationpaid_date
+            DATE_FORMAT( cancellationpaid_date, '".SQL_DATE_FORMAT_01."' ) fcancellationpaid_date,
+            DATE_FORMAT( job_date_fix2_start, '".SQL_DATE_FORMAT_01."' ) fjob_date_fix2_start,
+            DATE_FORMAT( job_date_fix2_end, '".SQL_DATE_FORMAT_01."' ) fjob_date_fix2_end,
+            DATE_FORMAT( job_date_fix3_start, '".SQL_DATE_FORMAT_01."' ) fjob_date_fix3_start,
+            DATE_FORMAT( job_date_fix3_end, '".SQL_DATE_FORMAT_01."' ) fjob_date_fix3_end,
+            DATE_FORMAT( sched_install_date_fix2_start, '".SQL_DATE_FORMAT_01."' ) fsched_install_date_fix2_start,
+            DATE_FORMAT( sched_install_date_fix2_end, '".SQL_DATE_FORMAT_01."' ) fsched_install_date_fix2_end,
+            DATE_FORMAT( sched_install_date_fix3_start, '".SQL_DATE_FORMAT_01."' ) fsched_install_date_fix3_start,
+            DATE_FORMAT( sched_install_date_fix3_end, '".SQL_DATE_FORMAT_01."' ) fsched_install_date_fix3_end,
+            job_date_fix2_visible AS fjob_date_fix2_visible,
+            job_date_fix3_visible AS fjob_date_fix3_visible,
+            sched_install_date_fix2_visible AS fsched_install_date_fix2_visible,
+            sched_install_date_fix3_visible AS fsched_install_date_fix3_visible
             FROM ver_chronoforms_data_contract_vergola_vic 
             WHERE quoteid = '$cust_id' 
             AND projectid = '$ListProjectID'
@@ -1496,13 +1583,13 @@ $groups = $user->get('groups');
               $cbo_clientnotifiedby .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
           } 
       }
-      $cbo_clientnotifiedby .= "</select>";       
+      $cbo_clientnotifiedby .= "</select>";     
     ?>
     <div id="standard" class="tab_content <?php echo $disabled_div_class; ?>">
     <!--
     <div id="standard" class="tab_content <?php echo ($is_operation_manager || $is_system_admin || $is_account_user ? "":"disabled-div"); ?>">
     -->
-      <span class="vs-label"><label>Deposit Paid:</label> 
+<!--       <span class="vs-label"><label>Deposit Paid:</label> 
         <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="depositdate" name="deposit_paid_amount" class="" value="<?php echo $PaymentDepositValue; ?>" /> </td>
         <td><input style="text-align: right;" type="text" id="depositdate" name="deposit_paid" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['deposit_paid']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['deposit_paid'])); } else {echo "";} ?>"/></td></span>
       
@@ -1517,7 +1604,7 @@ $groups = $user->get('groups');
       <span class="vs-label"><label>Variation:</label>
         <td>&#36; <input style="text-align: right;" type="text" id="variationdate" name="variation_amount" class="" value="<?php echo $PaymentVariationValue; ?>" /></td> 
         <td><input style="text-align: right;" type="text" id="variationdate" name="variation_date" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['variation_date']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['variation_date'])); } else {echo "";} ?>"/></td>
-      </span>
+      </span> -->
 
      
      <div class="label-input-row">
@@ -1571,13 +1658,56 @@ $groups = $user->get('groups');
             <span class="visible">Sched. Install Completion: </span>
             <input type="text" value="<?php echo $contract_vergola['fschedule_completion']; ?>" name="schedule_completion" class="date_entered" autocomplete="off">
         </label>
-        <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
-        <!-- <label class="input checkmeasure">
-            <span class="visible">Installer: </span>
-            <input type="text" value="<?php echo $contract_vergola['erectors_name']; ?>" id="erectors" name="erectors_name" style=" "> 
-        </label> 
+        <!-- <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label> -->
+        <label class="input checkmeasure">
+            <span class="visible">Add another fix date: </span>
+              <select class="visible" style="width:104%; padding:0 0 0 175px;" name="sched_install_date_fix2_visible" id="sched_install_date_fix2_visible" class="" onchange="showDiv('sched_install_date_fix2', this)">
+                  <option value="<?php echo $contract_vergola['fsched_install_date_fix2_visible']; ?>" selected="selected"><?php echo $contract_vergola['fsched_install_date_fix2_visible']; ?></option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+              </select>
+        </label>  
+        <!-- </label> 
         <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label> -->
     </div> 
+
+    <div class="label-input-row" name="sched_install_date_fix2" id="sched_install_date_fix2">  
+        <label class="input checkmeasure">
+            <span class="visible">Fix 2 Install Date: </span>
+            <input type="text" value="<?php echo $contract_vergola['fsched_install_date_fix2_start']; ?>" name="sched_install_date_fix2_start" class="date_entered" autocomplete="off">
+        </label>
+        <label class="input checkmeasure">
+            <span class="visible">Fix 1 Install Completion: </span>
+            <input type="text" value="<?php echo $contract_vergola['fsched_install_date_fix2_end']; ?>" name="sched_install_date_fix2_end" class="date_entered" autocomplete="off">
+        </label>
+        <label class="input checkmeasure">
+            <span class="visible">Add another fix date: </span>
+              <select class="visible" style="width:104%; padding:0 0 0 175px;" name="sched_install_date_fix3_visible" id="sched_install_date_fix3_visible" value="" class="" onchange="showDiv('sched_install_date_fix3', this)">
+                  <option value="<?php echo $contract_vergola['fsched_install_date_fix3_visible']; ?>" selected="selected"><?php echo $contract_vergola['fsched_install_date_fix3_visible']; ?></option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+              </select>
+        </label>  
+    </div> 
+
+    <div class="label-input-row" name="sched_install_date_fix3" id="sched_install_date_fix3">
+        <label class="input checkmeasure">
+            <span class="visible">Fix 3 Install Date: </span>
+            <input type="text" value="<?php echo $contract_vergola['fsched_install_date_fix3_start']; ?>" name="sched_install_date_fix3_start" class="date_entered" autocomplete="off">
+        </label>
+        <label class="input checkmeasure">
+            <span class="visible">Fix 3 Install Completion: </span>
+            <input type="text" value="<?php echo $contract_vergola['fsched_install_date_fix3_end']; ?>" name="sched_install_date_fix3_end" class="date_entered" autocomplete="off">
+        </label>
+        <label class="input checkmeasure" style="visibility:hidden;">
+            <span class="visible">Add another fix date: </span>
+              <select class="visible" style="width:104%; padding:0 0 0 175px;" name="" id="" class="" onchange="showDiv('hidden_div', this)">
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+              </select>
+        </label>  
+    </div> 
+
     <!-- For the Installer DropDown -->
     <?php
             $cbo_installer1 = "<select    name=\"erectors_name\" style='width:103%; padding:0px'><option value=''>Select Installer 1</option>"; 
@@ -1621,21 +1751,64 @@ $groups = $user->get('groups');
                 <!-- <input type="text" value="<?php echo $contract_vergola['erectors_name2']; ?>" id="erectors2" name="erectors_name2" style=" ">  -->
                 <?php echo $cbo_installer2; ?>
             </label>
-            <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
+            
+            <label class="input erectornotified"><span class="visible">Installer Notified: </span><input type="text" value="<?php echo $contract_vergola['ferector_notified_date']; ?>" name="erectornotified" class="date_entered" autocomplete="off"></label>
             </div>
     <div class="label-input-row">       
             <label class="input clientnotified"><span class="visible">Client Notified: </span><input type="text" value="<?php echo $contract_vergola['fclient_notified_date']; ?>" name="clientnotified" class="date_entered" autocomplete="off"></label>
             <label class="input checkmeasure" > <?php echo $cbo_clientnotifiedby; ?> </label>
-            <label class="input erectornotified"><span class="visible">Installer Notified: </span><input type="text" value="<?php echo $contract_vergola['ferector_notified_date']; ?>" name="erectornotified" class="date_entered" autocomplete="off"></label>
+            <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffooting_inspection_date']; ?>" name="footing_inspection_date" class="date_entered" autocomplete="off"></label> 
           </div>  
           
           <div class="label-input-row"> 
-            <label class="input jobstart"><span class="visible">Job Start: </span><input type="text" value="<?php echo $contract_vergola['fjob_start_date']; ?>" name="jobstart" class="date_entered" autocomplete="off"></label> 
-            <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffooting_inspection_date']; ?>" name="footing_inspection_date" class="date_entered" autocomplete="off"></label> 
+            <label class="input jobstart"><span class="visible">Job Start: </span><input type="text" value="<?php echo $contract_vergola['fjob_start_date']; ?>" name="jobstart" class="date_entered" autocomplete="off"></label>            
             <label class="input jobend"><span class="visible">Job Complete: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered" autocomplete="off"></label>
-            <!--<label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>-->
+            <label class="input checkmeasure">
+                <span class="visible">Add job fix date: </span>
+                  <select class="visible" style="width:104%; padding:0 0 0 175px;" name="job_date_fix2_visible" id="job_date_fix2_visible" class="" onchange="showDiv('job_date_fix2', this)">
+                      <option value="<?php echo $contract_vergola['fjob_date_fix2_visible']; ?>" selected="selected"><?php echo $contract_vergola['fjob_date_fix2_visible']; ?></option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                  </select>
+            </label>
           </div>
 
+          <div class="label-input-row" name="job_date_fix2" id="job_date_fix2">  
+              <label class="input checkmeasure">
+                  <span class="visible">Job 2 Start: </span>
+                  <input type="text" value="<?php echo $contract_vergola['fjob_date_fix2_start']; ?>" name="job_date_fix2_start" class="date_entered" autocomplete="off">
+              </label>
+              <label class="input checkmeasure">
+                  <span class="visible">Job 2 Complete: </span>
+                  <input type="text" value="<?php echo $contract_vergola['fjob_date_fix2_end']; ?>" name="job_date_fix2_end" class="date_entered" autocomplete="off">
+              </label>
+              <label class="input checkmeasure">
+                  <span class="visible">Add job fix date: </span>
+                    <select class="visible" style="width:104%; padding:0 0 0 175px;" name="job_date_fix3_visible" id="job_date_fix3_visible" value="" class="" onchange="showDiv('job_date_fix3', this)">
+                        <option value="<?php echo $contract_vergola['fjob_date_fix3_visible']; ?>" selected="selected"><?php echo $contract_vergola['fjob_date_fix3_visible']; ?></option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+              </label>  
+          </div> 
+
+          <div class="label-input-row" name="job_date_fix3" id="job_date_fix3">
+              <label class="input checkmeasure">
+                  <span class="visible">Job 3 Start: </span>
+                  <input type="text" value="<?php echo $contract_vergola['fjob_date_fix3_start']; ?>" name="job_date_fix3_start" class="date_entered" autocomplete="off">
+              </label>
+              <label class="input checkmeasure">
+                  <span class="visible">Job 3 Complete: </span>
+                  <input type="text" value="<?php echo $contract_vergola['fjob_date_fix3_end']; ?>" name="job_date_fix3_end" class="date_entered" autocomplete="off">
+              </label>
+              <label class="input checkmeasure" style="visibility:hidden;">
+                  <span class="visible">Add another fix date: </span>
+                    <select class="visible" style="width:104%; padding:0 0 0 175px;" name="" id="" class="" onchange="showDiv('hidden_div', this)">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+              </label>  
+          </div> 
           <div class="label-input-row">      
             <label class="input jobend"><span class="visible">Final Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffinal_inspection_date']; ?>" name="final_inspection_date" class="date_entered" autocomplete="off" style=" " ></label> 
 
@@ -1651,7 +1824,35 @@ $groups = $user->get('groups');
           </div>      
     </div>
     <!-- End of Vergola Standard --->
-    
+
+    <!--- Start of Accounts -->
+    <?php
+      $disabled_div_class = 'disabled-div';
+      //process user_access_profiles
+      if ($current_signed_in_user_access_profiles['tab vergola accounts']['edit'] == true) {
+          $disabled_div_class = '';
+      }
+      ?>
+      <div id="accounts" class="tab_content <?php echo $disabled_div_class; ?>">
+        <span class="vs-label"><label>Deposit Paid:</label> 
+          <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="depositdate" name="deposit_paid_amount" class="" value="<?php echo $PaymentDepositValue; ?>" /> </td>
+          <td><input style="text-align: right;" type="text" id="depositdate" name="deposit_paid" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['deposit_paid']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['deposit_paid'])); } else {echo "";} ?>"/></td></span>
+        
+        <span class="vs-label"><label>Progress Claim:</label>
+          <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="progressclaim" name="progress_claim_amount" class="" value="<?php echo $PaymentProgressValue; ?>" /> </td>
+          <td><input style="text-align: right;" type="text"  id="progressclaim" name="progress_claim" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['progress_claim']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['progress_claim'])); } else {echo "";} ?>"/></td></span>
+
+        <span class="vs-label"><label>Final Payment:</label>
+          <td>&#36; <input style="text-align: right;" type="text" disabled="disabled" id="finalpayment" name="final_payment_amount" class="" value="<?php echo $PaymentFinalValue; ?>" /> </td>
+          <td><input style="text-align: right;" type="text" id="finalpayment" name="final_payment" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['final_payment']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['final_payment'])); } else {echo "";} ?>"/></td></span>
+
+        <span class="vs-label"><label>Variation:</label>
+          <td>&#36; <input style="text-align: right;" type="text" id="variationdate" name="variation_amount" class="" value="<?php echo $PaymentVariationValue; ?>" /></td> 
+          <td><input style="text-align: right;" type="text" id="variationdate" name="variation_date" class="date_entered" autocomplete="off" value="<?php if ($contract_detail['variation_date']!="") {echo date(PHP_DFORMAT,strtotime($contract_detail['variation_date'])); } else {echo "";} ?>"/></td>
+        </span>
+      </div>
+    <!--- End of Accounts -->
+
     <!--- Start of Statutory Approval -->
     <?php
     $disabled_div_class = 'disabled-div';
@@ -3818,12 +4019,28 @@ if ($('#engractive option:selected').val() == 'No') {
   }
 });
 
-                
-                           
-                        
-   
-   
+$(document).ready(function(){
+    document.getElementById('sched_install_date_fix2').style.display = $('#sched_install_date_fix2_visible option:selected').val() == 'Yes' ? 'block' : 'none';
+    document.getElementById('sched_install_date_fix3').style.display = $('#sched_install_date_fix3_visible option:selected').val() == 'Yes' ? 'block' : 'none';
+    document.getElementById('job_date_fix2').style.display = $('#job_date_fix2_visible option:selected').val() == 'Yes' ? 'block' : 'none';
+    document.getElementById('job_date_fix3').style.display = $('#job_date_fix3_visible option:selected').val() == 'Yes' ? 'block' : 'none';
 
+    $("select").change(function(){
+        $(this).find("option:selected").each(function(){
+            var optionValue = $(this).attr("value");
+            if(optionValue){
+                $(".box").not("." + optionValue).hide();
+                $("." + optionValue).show();
+            } else{
+                $(".box").hide();
+            }
+        });
+    }).change();
+});
+
+function showDiv(divId, element) {
+   document.getElementById(divId).style.display = element.value == 'Yes' ? 'block' : 'none';
+}
 
 function delete_pdf_letter(event,o){
   if(confirm('Are you sure you want to delete document?')){
