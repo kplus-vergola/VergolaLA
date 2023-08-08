@@ -1673,11 +1673,11 @@ $groups = $user->get('groups');
 
     <div class="label-input-row" name="sched_install_date_fix2" id="sched_install_date_fix2">  
         <label class="input checkmeasure">
-            <span class="visible">Fix 2 Install Date: </span>
+            <span class="visible">Sched. Fix2 Install Date: </span>
             <input type="text" value="<?php echo $contract_vergola['fsched_install_date_fix2_start']; ?>" name="sched_install_date_fix2_start" class="date_entered" autocomplete="off">
         </label>
         <label class="input checkmeasure">
-            <span class="visible">Fix 1 Install Completion: </span>
+            <span class="visible">Sched. Fix2 Install Completion: </span>
             <input type="text" value="<?php echo $contract_vergola['fsched_install_date_fix2_end']; ?>" name="sched_install_date_fix2_end" class="date_entered" autocomplete="off">
         </label>
         <label class="input checkmeasure">
@@ -1692,11 +1692,11 @@ $groups = $user->get('groups');
 
     <div class="label-input-row" name="sched_install_date_fix3" id="sched_install_date_fix3">
         <label class="input checkmeasure">
-            <span class="visible">Fix 3 Install Date: </span>
+            <span class="visible">Sched. Fix3 Install Date: </span>
             <input type="text" value="<?php echo $contract_vergola['fsched_install_date_fix3_start']; ?>" name="sched_install_date_fix3_start" class="date_entered" autocomplete="off">
         </label>
         <label class="input checkmeasure">
-            <span class="visible">Fix 3 Install Completion: </span>
+            <span class="visible">Sched. Fix3 Install Completion: </span>
             <input type="text" value="<?php echo $contract_vergola['fsched_install_date_fix3_end']; ?>" name="sched_install_date_fix3_end" class="date_entered" autocomplete="off">
         </label>
         <label class="input checkmeasure" style="visibility:hidden;">
@@ -1751,38 +1751,31 @@ $groups = $user->get('groups');
                 <!-- <input type="text" value="<?php echo $contract_vergola['erectors_name2']; ?>" id="erectors2" name="erectors_name2" style=" ">  -->
                 <?php echo $cbo_installer2; ?>
             </label>
-            
-            <label class="input erectornotified"><span class="visible">Installer Notified: </span><input type="text" value="<?php echo $contract_vergola['ferector_notified_date']; ?>" name="erectornotified" class="date_entered" autocomplete="off"></label>
-            </div>
-    <div class="label-input-row">       
+            <label class="input " style="visibility:hidden"><span class="visible">&nbsp; </span><input type="text" value="" name=" " class=" "></label>
+          </div>
+          <div class="label-input-row">       
             <label class="input clientnotified"><span class="visible">Client Notified: </span><input type="text" value="<?php echo $contract_vergola['fclient_notified_date']; ?>" name="clientnotified" class="date_entered" autocomplete="off"></label>
             <label class="input checkmeasure" > <?php echo $cbo_clientnotifiedby; ?> </label>
-            <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffooting_inspection_date']; ?>" name="footing_inspection_date" class="date_entered" autocomplete="off"></label> 
+            <label class="input erectornotified"><span class="visible">Installer Notified: </span><input type="text" value="<?php echo $contract_vergola['ferector_notified_date']; ?>" name="erectornotified" class="date_entered" autocomplete="off"></label>            
           </div>  
           
           <div class="label-input-row"> 
             <label class="input jobstart"><span class="visible">Job Start: </span><input type="text" value="<?php echo $contract_vergola['fjob_start_date']; ?>" name="jobstart" class="date_entered" autocomplete="off"></label>            
             <label class="input jobend"><span class="visible">Job Complete: </span><input type="text" value="<?php echo $contract_vergola['fjob_end_date']; ?>" name="jobend" class="date_entered" autocomplete="off"></label>
-            <label class="input checkmeasure">
-                <span class="visible">Add job fix date: </span>
-                  <select class="visible" style="width:104%; padding:0 0 0 175px;" name="job_date_fix2_visible" id="job_date_fix2_visible" class="" onchange="showDiv('job_date_fix2', this)">
-                      <option value="<?php echo $contract_vergola['fjob_date_fix2_visible']; ?>" selected="selected"><?php echo $contract_vergola['fjob_date_fix2_visible']; ?></option>
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                  </select>
-            </label>
+            <label class="input jobend"><span class="visible">Footing Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffooting_inspection_date']; ?>" name="footing_inspection_date" class="date_entered" autocomplete="off" ></label> 
           </div>
 
-          <div class="label-input-row" name="job_date_fix2" id="job_date_fix2">  
+          <div class="label-input-row" name="sched_install_date_fix2" id="sched_install_date_fix2">
+          <!-- <div class="label-input-row" name="job_date_fix2" id="job_date_fix2">   -->
               <label class="input checkmeasure">
-                  <span class="visible">Job 2 Start: </span>
+                  <span class="visible">Job Fix2 Start: </span>
                   <input type="text" value="<?php echo $contract_vergola['fjob_date_fix2_start']; ?>" name="job_date_fix2_start" class="date_entered" autocomplete="off">
               </label>
               <label class="input checkmeasure">
-                  <span class="visible">Job 2 Complete: </span>
+                  <span class="visible">Job Fix2 Complete: </span>
                   <input type="text" value="<?php echo $contract_vergola['fjob_date_fix2_end']; ?>" name="job_date_fix2_end" class="date_entered" autocomplete="off">
               </label>
-              <label class="input checkmeasure">
+              <label class="input checkmeasure" style="visibility:hidden">
                   <span class="visible">Add job fix date: </span>
                     <select class="visible" style="width:104%; padding:0 0 0 175px;" name="job_date_fix3_visible" id="job_date_fix3_visible" value="" class="" onchange="showDiv('job_date_fix3', this)">
                         <option value="<?php echo $contract_vergola['fjob_date_fix3_visible']; ?>" selected="selected"><?php echo $contract_vergola['fjob_date_fix3_visible']; ?></option>
@@ -1792,22 +1785,24 @@ $groups = $user->get('groups');
               </label>  
           </div> 
 
-          <div class="label-input-row" name="job_date_fix3" id="job_date_fix3">
+          <div class="label-input-row" name="sched_install_date_fix3" id="sched_install_date_fix3">
+          <!-- <div class="label-input-row" name="job_date_fix3" id="job_date_fix3"> -->
               <label class="input checkmeasure">
-                  <span class="visible">Job 3 Start: </span>
+                  <span class="visible">Job Fix3 Start: </span>
                   <input type="text" value="<?php echo $contract_vergola['fjob_date_fix3_start']; ?>" name="job_date_fix3_start" class="date_entered" autocomplete="off">
               </label>
               <label class="input checkmeasure">
-                  <span class="visible">Job 3 Complete: </span>
+                  <span class="visible">Job Fix3 Complete: </span>
                   <input type="text" value="<?php echo $contract_vergola['fjob_date_fix3_end']; ?>" name="job_date_fix3_end" class="date_entered" autocomplete="off">
               </label>
-              <label class="input checkmeasure" style="visibility:hidden;">
-                  <span class="visible">Add another fix date: </span>
-                    <select class="visible" style="width:104%; padding:0 0 0 175px;" name="" id="" class="" onchange="showDiv('hidden_div', this)">
+              <label class="input checkmeasure" style="visibility:hidden">
+                  <span class="visible">Add job fix date: </span>
+                    <select class="visible" style="width:104%; padding:0 0 0 175px;" name="job_date_fix2_visible" id="job_date_fix2_visible" class="" onchange="showDiv('job_date_fix2', this)">
+                        <option value="<?php echo $contract_vergola['fjob_date_fix2_visible']; ?>" selected="selected"><?php echo $contract_vergola['fjob_date_fix2_visible']; ?></option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
-              </label>  
+              </label> 
           </div> 
           <div class="label-input-row">      
             <label class="input jobend"><span class="visible">Final Inspection: </span><input type="text" value="<?php echo $contract_vergola['ffinal_inspection_date']; ?>" name="final_inspection_date" class="date_entered" autocomplete="off" style=" " ></label> 
