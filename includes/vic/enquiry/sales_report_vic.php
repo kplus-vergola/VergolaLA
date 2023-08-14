@@ -3129,10 +3129,20 @@ var installer_list_curmon = [
             CONCAT(coalesce(cp.client_firstname,''), ' ', coalesce(cp.client_lastname,''), ' ', coalesce(cp.builder_name,'')) as customer_name,
             cp.client_suburb,
             cv.erectors_name,
-            cv.erectors_name2,
+            cv.erectors_name2,            
             c.projectid,
             cv.install_date,
             cv.schedule_completion,
+            cv.job_date_fix2_start,
+            cv.job_date_fix2_end,
+            cv.job_date_fix3_start,
+            cv.job_date_fix3_end,
+            cv.sched_install_date_fix2_start,
+            cv.sched_install_date_fix2_end,
+            cv.sched_install_date_fix3_start,
+            cv.sched_install_date_fix3_end,
+            cv.sched_install_date_fix2_visible,
+            cv.sched_install_date_fix3_visible,
             c.contractdate,
             c.total_cost,
             DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate
@@ -3149,6 +3159,29 @@ var installer_list_curmon = [
                 CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), '01')
                 AND
                 CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW()))) )
+
+            OR
+            (cv.sched_install_date_fix2_start BETWEEN
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
+                AND
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 3 MONTH)))) )
+            OR
+            (cv.sched_install_date_fix2_start BETWEEN
+                CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), '01')
+                AND
+                CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW()))) )
+
+            OR
+            (cv.sched_install_date_fix3_start BETWEEN
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-'), '01')
+                AND
+                CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 MONTH),'%Y-%m-'), DAY(LAST_DAY(DATE_ADD(NOW(), INTERVAL 3 MONTH)))) )
+            OR
+            (cv.sched_install_date_fix3_start BETWEEN
+                CONCAT(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 2 MONTH),'%Y-%m-'), '01')
+                AND
+                CONCAT(DATE_FORMAT(NOW(),'%Y-%m-'), DAY(LAST_DAY(NOW()))) )
+
         AND cv.erectors_name != ''
         AND cv.schedule_completion IS NOT NULL
         ORDER BY cv.install_date
@@ -3156,6 +3189,7 @@ var installer_list_curmon = [
 
     $qResult = mysql_query($sql);
     $obj = ""; $j--;// subtract 1 value to make tha last month same event color in the next month
+    $if_fix = '';
     while ($r = mysql_fetch_assoc($qResult)) {
         $current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
         if (! in_array($current_erector_text, $erectors_list)) {
@@ -3165,7 +3199,33 @@ var installer_list_curmon = [
         if ($current_erector_index === false) {
             $current_erector_index = 0;
         }
-
+        if ($r["sched_install_date_fix2_visible"] == 'Yes'){
+            $if_fix = '(Fix 2)';
+            $obj .= "{";
+                $obj .= "title:'".addslashes($r["erectors_name"])." ".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
+                $obj .= "start:'{$r['sched_install_date_fix2_start']}',";
+                $obj .= "end:'{$r['sched_install_date_fix2_end']} 20:00:00',";
+                // $obj .= "color:color_list[{$j}],";
+                $obj .= "color:color_list[{$current_erector_index}],";
+                $obj .= "allDay:false,";
+                $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
+            $obj .= "},";
+            $j++;
+        }
+        if ($r["sched_install_date_fix3_visible"] == 'Yes'){
+            $if_fix = '(Fix 3)';
+            $obj .= "{";
+                $obj .= "title:'".addslashes($r["erectors_name"])." ".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
+                $obj .= "start:'{$r['sched_install_date_fix3_start']}',";
+                $obj .= "end:'{$r['sched_install_date_fix3_end']} 20:00:00',";
+                // $obj .= "color:color_list[{$j}],";
+                $obj .= "color:color_list[{$current_erector_index}],";
+                $obj .= "allDay:false,";
+                $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
+            $obj .= "},";
+            $j++;
+        }
+        // else{
         $obj .= "{";
             $obj .= "title:'".addslashes($r["erectors_name"])." ".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")."',";
             $obj .= "start:'{$r['install_date']}',";
@@ -3184,6 +3244,7 @@ var installer_list_curmon = [
 
 ?>
 ];
+console.log(installer_list_curmon);
 
 var installer_list_nextmon = [
 <?php
