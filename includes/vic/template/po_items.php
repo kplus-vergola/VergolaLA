@@ -1038,7 +1038,7 @@ CASE
 						<?php if($is_uom_visible==1){ ?>
 							<td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td> 
 						<?php }else{ ?>							 
-						 	<td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="3" >&nbsp;<?php echo $m['raw_description']; ?></td> 			
+						 	<td style="border-collapse:collapse;font-size:9.8; height: 45.7" colspan="3" >&nbsp;<?php echo $m['raw_description']; ?></td> 			
 						<?php } ?>
 						<!-- <td style="border-collapse:collapse;font-size:9.8; height: 24.7" colspan="2" >&nbsp;<?php echo $m['raw_description']; ?></td>   -->
 						
@@ -1348,12 +1348,12 @@ CASE
 							// $dimension_f_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
 
 					?>
-						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.10px;width: 40.50;" align="center">Girth A&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.10px;width: 40.50;" align="center">GirthA&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;" align="center"><?php echo ($girth_side_a_output); echo ($girth_side_a_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>	
 						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;" align="center"><?php echo ($girth_side_a_output_decimal); echo (($girth_side_a_output_decimal) == '&nbsp;' ? '' : ''); ?> &nbsp;</td>					
 					</tr>
 					<tr >
-						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.10px;" align="center">Girth B&nbsp;&nbsp;</td>
+						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.10px;" align="center">GirthB&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;" align="center"><?php echo ($girth_side_b_output); echo ($girth_side_b_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;" align="center"><?php echo (($girth_side_b_output_decimal)); echo (((($girth_side_b_output_decimal))) == '&nbsp;' ? '' : ''); ?> &nbsp;</td>				
 					</tr>							
