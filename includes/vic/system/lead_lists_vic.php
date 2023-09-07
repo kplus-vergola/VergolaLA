@@ -53,7 +53,7 @@ echo "<div class='search-listing'>
 echo "<div class='search-listing'>
 <form action='" . JRoute::_($url) . "' method='post' style='float:none; width:90%;'>
 	<label>Search:</label> <input type='text' name='search_string' /> <input type='submit' name='submit' value='Search' class='search-btn' style='width:217px;' />
-	<input type='button' class='add-btn' onclick=location.href='" . JURI::base() . "system-management-vic/lead-listing-vic/lead-vic' value='Add New'>
+	<input type='button' class='add-btn' onclick=location.href='" . JURI::base() . "system-management-vic/lead-listing-vic/lead-updatelist-vic' value='Add New'>
 </form>
 
 </div>";
