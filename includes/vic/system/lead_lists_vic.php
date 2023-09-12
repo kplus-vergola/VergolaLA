@@ -1,4 +1,5 @@
 <?php 
+$category = "";
 $marketing_source = "";
 $notes = "";
 $lead = "";
@@ -39,11 +40,14 @@ echo "<div class='search-listing'>
 <form id='filter_form'  method='post' method='post' style='float:none; width:90%;'>
 	<label>Marketing Source:</label> 
 	<select name='marketing_source' id='select_marketing_source' style='font-size:14px; padding:4px; min-width:100px;' onchange='document.getElementById(\"filter_form\").submit();'>
-		<option value=\"\"  >Select All</option>
-		<option value='Print' ".($marketing_source=="Print" ? "selected":"") .">Print</option>  
-		<option value='Digital' ".($marketing_source=="Digital" ? "selected":"") .">Digital</option>
-		<option value='Misc.' ".($marketing_source=="Misc." ? "selected":"") .">Misc.</option>  
-	</select> 
+		<option value=\"\"  >Select All</option>"; ?>
+		<?php
+		 $sql = "SELECT * FROM ver_chronoforms_data_lead_vic WHERE marketing_source != '' GROUP BY marketing_source ORDER BY marketing_source ASC";
+		 $sql_result = mysql_query ($sql) or die ('request "Could not execute SQL query" '.$sql);
+		    while ($src = mysql_fetch_assoc($sql_result)) { 
+		      echo "<option value='".$src["marketing_source"]."'".($src["marketing_source"]==$selected_source ? " selected='selected'" : "").">".$src["marketing_source"]."</option>"; } ?>
+<?php
+echo "	</select> 
 	<input type='submit' name='filter_item' id='filter_item' value='Filter' class='search-btn' onclick='document.getElementById(\"filter_form\").submit();'  />
 </form>
 
@@ -67,11 +71,11 @@ $start = ($page-1) * NUMBER_PER_PAGE;
 * variables passed in the URL because someone clicked on a page number
 **/
 $search = (isset($_POST['search_string'])?$_POST['search_string']:"");
-$sql = "SELECT marketing_source, lead, notes, cf_id FROM ver_chronoforms_data_lead_vic WHERE 1=1 ";
+$sql = "SELECT category,marketing_source, lead, notes, cf_id FROM ver_chronoforms_data_lead_vic WHERE 1=1 ";
 $result = mysql_query($sql) or die(mysql_error());
 
 if ($search){
-	$sql .= " AND marketing_source LIKE '%"  . $search .  "%'" . " OR lead LIKE '%"  . $search .  "%'" . " OR notes LIKE '%"  . $search .  "%'" ;
+	$sql .= " AND marketing_source LIKE '%"  . $search .  "%'" . " OR lead LIKE '%"  . $search .  "%'" . " OR category LIKE '%"  . $search .  "%'" ;
 }
 //$sql .= " AND marketing_source='{$marketing_source}' ";
 if(strlen($marketing_source)>0){
@@ -93,22 +97,22 @@ $sql .= " ORDER BY marketing_source ASC, lead ASC LIMIT $start, " . NUMBER_PER_P
 **/
 //echo "<center><h1 class='search-records'>" . number_format($total_records) . " Records Found</h1></center>";
 echo "<div class='pagination-layer'>";
-pagination($page, $total_records, "marketing_source=$marketing_source&lead=$lead&notes=$notes");
+pagination($page, $total_records, "category=$category&marketing_source=$marketing_source&lead=$lead&notes=$notes");
 echo "</div>";
 
 $loop = mysql_query($sql)
 	or die ('cannot run the query because: ' . mysql_error());
 	// echo "<table class='listing-table table-bordered'><thead><th style='width: 20%;'>Marketing Source</th><th>Lead Source</th><th>Notes</th></thead><tbody>";
-	echo "<table class='listing-table table-bordered'><thead><th style='width: 20%;'>Marketing Source</th><th>Lead Source</th></thead><tbody>";
+	echo "<table class='listing-table table-bordered'><thead><th style='width: 20%;'>Category</th><th style='width: 20%;'>Marketing Source</th><th>Lead Source</th></thead><tbody>";
 while ($record = mysql_fetch_assoc($loop)){
     echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "lead-listing-vic/lead-updatelist-vic?cf_id={$record['cf_id']}' >";
 		// echo "<td>{$record['marketing_source']}</td> " . "<td>{$record['lead']}</td>" . "<td>{$record['notes']} </td>";
-    echo "<td>{$record['marketing_source']}</td> " . "<td>{$record['lead']}</td>";
+    echo "<td>{$record['category']}</td> " . "<td>{$record['marketing_source']}</td>" . "<td>{$record['lead']}</td>";
 	echo "</tr>";
 	echo "<tr></tr>";
 }		
     echo "</tbody></table>"; 
     
 echo "<div class='pagination-layer'>";
-pagination($page, $total_records, "marketing_source=$marketing_source&lead=$lead&notes=$notes");
+pagination($page, $total_records, "category=$category&marketing_source=$marketing_source&lead=$lead&notes=$notes");
 echo "</div>";
