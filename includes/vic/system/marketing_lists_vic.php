@@ -32,7 +32,7 @@ if(isset($_POST['year']))
 			GROUP BY
 				m.marketing_date 
 			ORDER BY
-				''";
+				m.marketing_date DESC";
 }
 //our pagination function is now in this file
 function pagination($current_page_number, $total_records_found, $query_string = null)
@@ -119,8 +119,8 @@ $sql = "
 			m.target_amount,
 			m.target_contract,
 			m.marketing_date,
-			MONTH( m.marketing_date ) AS month,
-			CONCAT( MONTHNAME( m.marketing_date ), '-', m.`year` ) AS MonthYear,
+			MONTH( m.marketing_date ) AS month,			
+			CONCAT( MONTHNAME( m.marketing_date ), '-', YEAR(m.marketing_date) ) AS MonthYear,
 			m.dateFromTo,
 			m.`year` 
 		FROM
@@ -146,7 +146,8 @@ if(strlen($year)>0){
 $total_records = mysql_num_rows(mysql_query($sql));
 
 //now we limit our query to the number of results we want per page
-$sql .= " GROUP BY m.marketing_date ORDER BY '' LIMIT $start, " . NUMBER_PER_PAGE;
+// $sql .= " GROUP BY m.marketing_date ORDER BY m.marketing_date DESC LIMIT $start, " . NUMBER_PER_PAGE;
+$sql .= " GROUP BY m.marketing_date ORDER BY YEAR(m.marketing_date) DESC, MONTH(m.marketing_date) DESC LIMIT $start, " . NUMBER_PER_PAGE;
 
 // echo $sql;
 /**

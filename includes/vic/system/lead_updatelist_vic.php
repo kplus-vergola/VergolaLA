@@ -551,15 +551,9 @@ $(document).ready(function() {
 
     $("#cbo_category > #category_source").on('change', function(e) {    
       let category = this.value;
-      // var category = $("#category option:selected").val();
-      // var category = $("#cbo_category > #category").val();
-      // var _category = $("#cbo_category > #category").val();
-      // var cf_id = $("#cf_id").val();
       var category_cf_id = $("#category_cf_id").val();
       var is_addCategory = $("#is_addCategory").val();
       var src_param = "";
-      // var category1 = document.getElementById("input_category").val();
-      // $("#_category").val(category);
       if(category_cf_id.length>0){
         src_param = "&cf_id="+category_cf_id;
       }
@@ -570,27 +564,15 @@ $(document).ready(function() {
       $("#input_category").val(category);
       $("#Category").val(category);       
       $("#category").val(category);
-      // if(is_addcategory.value>0){
-      //   console.log("Inpud");
-      // }else{
-      //   console.log("combo");
-      // }
-      // alert(document.getElementById("input_marketing_category").val());
       console.log(category);
       // location.href = "<?php echo JURI::base(); ?>system-management-vic/lead-listing-vic/lead-updatelist-vic?source="+source+src_param;
     });
 
     $("#cbo_marketing_source > #marketing_source").on('change', function(e) {    
       let source = this.value;
-      // var source = $("#marketing_source option:selected").val();
-      // var source = $("#cbo_marketing_source > #marketing_source").val();
-      // var _source = $("#cbo_marketing_source > #marketing_source").val();
-      // var cf_id = $("#cf_id").val();
       var source_cf_id = $("#source_cf_id").val();
       var is_addSource = $("#is_addSource").val();
       var src_param = "";
-      // var source1 = document.getElementById("input_marketing_source").val();
-      // $("#_source").val(source);
       if(source_cf_id.length>0){
         src_param = "&cf_id="+source_cf_id;
       }
@@ -601,37 +583,20 @@ $(document).ready(function() {
       $("#input_marketing_source").val(source);
       $("#Marketing_Source").val(source);       
       $("#source").val(source);
-      // if(is_addSource.value>0){
-      //   console.log("Inpud");
-      // }else{
-      //   console.log("combo");
-      // }
-      // alert(document.getElementById("input_marketing_source").val());
       console.log(source);
       // location.href = "<?php echo JURI::base(); ?>system-management-vic/lead-listing-vic/lead-updatelist-vic?source="+source+src_param;
     });
 
     $("#cbo_lead_source > #lead_source").on('change', function(e) {  
     let lead = this.value;  
-      // var lead = $("#lead_source option:selected").val();
-      // var lead = $("#cbo_lead_source > #lead_source").val();
-      // var _lead = $("#cbo_lead_source > #lead_source").val();
       var lead_cf_id = $("#lead_cf_id").val();
       var is_addLead = $("#is_addLead").val();
       var src_param = "";
-      // var source1 = document.getElementById("input_lead_source").val();
-      // $("#_source").val(source);
       if(lead_cf_id.length>0){
         src_param = "&cf_id="+lead_cf_id;
       }
       $("#_lead").val(lead);
       $("#l_source").val(lead);
-      // if(is_addSource.value>0){
-      //   console.log("Inpud");
-      // }else{
-      //   console.log("combo");
-      // }
-      // alert(document.getElementById("input_lead_source").val());
       console.log(lead);
       // location.href = "<?php echo JURI::base(); ?>system-management-vic/lead-listing-vic/lead-updatelist-vic?lead="+lead+src_param;
     });
