@@ -16,6 +16,7 @@ if(isset($_REQUEST['year'])){
 }
 
 if(isset($_REQUEST['month'])){
+  $selected_month = $_REQUEST['month'];
   $month = $_REQUEST['month'];
   $monthName = $_REQUEST['month'];
 }
@@ -539,7 +540,8 @@ $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error
 
     $("#cbo_category > #category_source").on('change', function(e) {    
       let category = this.value;
-      var month = $("#month").val();
+      var month1 = $("#month").val();
+      var month = $("#monthName").val();
       var selected_month = $("#selected_month").val();
       var year = $("#cbo_year > #year").val();
       var monthyear = month +'-'+ year;
@@ -572,7 +574,7 @@ $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error
     $("#cbo_marketing_source > #marketing_source").on('change', function(e) {          
       let source = this.value;
       var category = $("#cbo_category > #category_source").val();
-      var month = $("#month").val();
+      var month = $("#monthName").val();
       var year = $("#cbo_year > #year").val();
       var monthyear = month +'-'+ year;
       if (year != null || year != ''){        
