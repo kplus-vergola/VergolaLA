@@ -233,6 +233,8 @@ if (!$result)
 <input type='hidden' name='is_addSource' id='is_addSource' value='<?php echo $is_addSource; ?>' />
 <input type='hidden' name='_source' id='_source' value='<?php echo $_source; ?>' />
 <input type='hidden' name='m_source' id='m_source' value='<?php echo $m_source; ?>' />
+<input type='hidden' name='Marketing_Source' id='Marketing_Source' value='<?php echo $Marketing_Source; ?>' />
+<input type='hidden' name='Category' id='Category' value='<?php echo $Category; ?>' />
 <input type='hidden' name='l_source' id='l_source' value='<?php echo $l_source; ?>' />
 <input type='hidden' name='marketing_source' id='marketing_source' value='<?php echo $l_source; ?>' />
 <input type='hidden' name='category' id='category' value='<?php echo $l_source; ?>' />
