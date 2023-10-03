@@ -37,12 +37,13 @@ $url = JURI::getInstance()->toString();
 
 echo "<div class='search-listing'>
 
-<form id='filter_form'  method='post' method='post' style='float:none; width:90%;'>
+<form id='filter_form'  method='post' method='post' style='float:none; width:90%; visibility: hidden;'>
 	<label>Marketing Source:</label> 
 	<select name='marketing_source' id='select_marketing_source' style='font-size:14px; padding:4px; min-width:100px;' onchange='document.getElementById(\"filter_form\").submit();'>
 		<option value=\"\"  >Select All</option>"; ?>
 		<?php
 		 $sql = "SELECT * FROM ver_chronoforms_data_lead_vic WHERE marketing_source != '' GROUP BY marketing_source ORDER BY marketing_source ASC";
+		 // $sql = "SELECT l.lead,mc.section as category,mc.category as marketing_source,l.cf_id,l.marketing_id FROM ver_chronoforms_data_lead_vic AS l LEFT JOIN ver_chronoforms_data_marketing_category_vic AS mc ON mc.cf_id=l.marketing_id
 		 $sql_result = mysql_query ($sql) or die ('request "Could not execute SQL query" '.$sql);
 		    while ($src = mysql_fetch_assoc($sql_result)) { 
 		      echo "<option value='".$src["marketing_source"]."'".($src["marketing_source"]==$selected_source ? " selected='selected'" : "").">".$src["marketing_source"]."</option>"; } ?>
@@ -71,15 +72,16 @@ $start = ($page-1) * NUMBER_PER_PAGE;
 * variables passed in the URL because someone clicked on a page number
 **/
 $search = (isset($_POST['search_string'])?$_POST['search_string']:"");
-$sql = "SELECT category,marketing_source, lead, notes, cf_id FROM ver_chronoforms_data_lead_vic WHERE 1=1 ";
+// $sql = "SELECT category,marketing_source, lead, notes, cf_id FROM ver_chronoforms_data_lead_vic WHERE 1=1 ";
+$sql = "SELECT l.lead,mc.section as category,mc.category as marketing_source,l.cf_id,l.marketing_id FROM ver_chronoforms_data_lead_vic AS l LEFT JOIN ver_chronoforms_data_marketing_category_vic AS mc ON mc.cf_id=l.marketing_id WHERE 1=1 ";
 $result = mysql_query($sql) or die(mysql_error());
 
 if ($search){
-	$sql .= " AND marketing_source LIKE '%"  . $search .  "%'" . " OR lead LIKE '%"  . $search .  "%'" . " OR category LIKE '%"  . $search .  "%'" ;
+	$sql .= " AND mc.section LIKE '%"  . $search .  "%'" . " OR lead LIKE '%"  . $search .  "%'" . " OR mc.category LIKE '%"  . $search .  "%'" ;
 }
 //$sql .= " AND marketing_source='{$marketing_source}' ";
 if(strlen($marketing_source)>0){
-	$sql .= " AND marketing_source='{$marketing_source}' "; 
+	$sql .= " AND mc.category='{$marketing_source}' "; 
 }
 
 
@@ -87,7 +89,7 @@ if(strlen($marketing_source)>0){
 $total_records = mysql_num_rows(mysql_query($sql));
 
 //now we limit our query to the number of results we want per page
-$sql .= " ORDER BY marketing_source ASC, lead ASC LIMIT $start, " . NUMBER_PER_PAGE;
+$sql .= " ORDER BY mc.category ASC, l.lead ASC LIMIT $start, " . NUMBER_PER_PAGE;
 
 /**
 * Next we display our pagination at the top of our search results
