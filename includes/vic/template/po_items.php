@@ -29,7 +29,8 @@ if(isset($_POST['add']))
     //echo('<script language="Javascript">alert(opener.window.location.href);</script>');
     //var url = opener.window.location.href+'&section=frame';
     $titleID=$_POST['title'] ;
-	echo('<script language="Javascript">window.opener.parent.location.href = opener.window.location.href + "&titleID='.$titleID.'"; window.close();</script>');
+	echo('<script language="Javascript">window.opener.parent.location.href = opener.window.location.href + "&titleID='.$titleID.'"; </script>');
+	// echo('<script language="Javascript">window.opener.parent.location.href = opener.window.location.href + "&titleID='.$titleID.'"; window.close();</script>');
 	 
 }
 
