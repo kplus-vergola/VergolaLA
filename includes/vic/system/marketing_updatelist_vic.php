@@ -29,6 +29,11 @@ if(isset($_REQUEST['source'])){
   $selected_source = $_REQUEST['source'];
 }
 
+if(isset($_REQUEST['mid'])){
+  $selected_source_cf_id = $_REQUEST['mid'];
+  $mid = $_REQUEST['mid'];
+}
+
 $is_edit = 0;
 if(isset($_REQUEST['view']) && $_REQUEST['view']=="add"){
 }else{
@@ -44,8 +49,11 @@ $year = mysql_real_escape_string($_REQUEST['year']);
 if(isset($_POST['category_source'])){
   $selected_category = $_REQUEST['category_source'];}
 
-  if(isset($_POST['marketing_source'])){
-    $selected_source = $_REQUEST['marketing_source'];} 
+if(isset($_POST['marketing_source'])){
+  $selected_source = $_REQUEST['marketing_source'];} 
+
+if(isset($_POST['lead_source'])){
+  $selected_lead = $_REQUEST['lead_source'];} 
 
 if(isset($_POST['marketing_date'])){
   $_monthname = date("F", strtotime($marketing_month));
@@ -69,7 +77,7 @@ if(isset($_POST['save']) || isset($_POST['save_new']))
   $category_source = mysql_escape_string($_POST['category_source']);
   $marketing_source = mysql_escape_string($_POST['marketing_source']);
   $lead_source = mysql_escape_string($_POST['lead_source']);
-  $lead = mysql_escape_string($_POST['lead']);
+  $lead = mysql_escape_string($_POST['lead_source']);
   $marketing_amount = mysql_escape_string($_POST['marketing_amount']);
   $marketing_month = $marketing_month + 1;
   $nmonth = date("n", strtotime($marketing_month));   
@@ -124,20 +132,39 @@ if (isset($_REQUEST['cf_id']) && strlen($_REQUEST['cf_id']) > 0) {
     $m_id = mysql_real_escape_string($_REQUEST['cf_id']);
     
     $sql = "SELECT l.*,m.*,m.id AS cf_id,Sum(m.marketing_amount) AS marketing_amount_total,MONTH (m.marketing_date) AS monthNumber,MONTHNAME(m.marketing_date) AS monthName,CONCAT(MONTHNAME(m.marketing_date),'-',YEAR(m.marketing_date)) AS MonthYear, YEAR(m.marketing_date) AS year FROM ver_lead_marketing_spend AS m INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id=m.lead_id WHERE 1=1 AND m.id='{$cf_id}' GROUP BY m.lead_id ORDER BY l.lead ASC;";
-    $result = mysql_query($sql);
 
+    $sql = "
+      SELECT
+        l.*,m.*, mc.*,
+        mc.section AS category, mc.category AS marketing_source,
+        m.marketing_amount,
+        Sum( m.marketing_amount ) AS marketing_amount_total,
+        MONTH ( m.marketing_date ) AS monthNumber,
+        MONTHNAME( m.marketing_date ) AS monthName,
+        CONCAT( MONTHNAME( m.marketing_date ), '-', YEAR ( m.marketing_date ) ) AS MonthYear,
+        YEAR ( m.marketing_date ) AS YEAR 
+      FROM
+        ver_lead_marketing_spend AS m
+        INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id = m.lead_id
+        LEFT JOIN ver_chronoforms_data_marketing_category_vic AS mc ON l.marketing_id = mc.cf_id
+      WHERE
+        1 = 1 
+        AND m.id = '{$cf_id}'
+      GROUP BY m.lead_id 
+      ORDER BY
+        l.lead ASC;";   
+    $result = mysql_query($sql);
 
     $retrieve = mysql_fetch_array($result);
     if (!$result) {
       die("Error: Data not found..");
-    }else{
-
-    
+    }else{    
     $monthyear = $retrieve['MonthYear'];
     $category_source = $retrieve['category'];
     $marketing_source = $retrieve['marketing_source'];
     $lead_source = $retrieve['lead'];
     $lead = $retrieve['lead'];
+    $lead_id = $retrieve['lead_id'];
     $marketing_amount = $retrieve['marketing_amount'];
     $monthNumber = $retrieve['monthNumber'];
     $monthName = $retrieve['monthName'];
@@ -147,41 +174,13 @@ if (isset($_REQUEST['cf_id']) && strlen($_REQUEST['cf_id']) > 0) {
     $selected_year = $retrieve['year'];
     $selected_category = $retrieve['category'];
     $selected_source = $retrieve['marketing_source'];
+    $selected_lead = $retrieve['lead'];
 }
   }else if (!empty($id)) {
     $is_adding = 0;
-  } else {
-
+  }else{
     $is_adding = 1;
-    // if (isset($_REQUEST['cf_id']) && strlen($_REQUEST['cf_id']) > 0) {
-      // if ($year > 0 ) {
-      // } else {
-      //   $year = $_REQUEST['year'];
-      // }
-
-      // if ($month > 0 ) {
-      // } else {
-      //   $month = $_REQUEST['month'];
-      // }
-    // if(isset($_REQUEST['monthyear'])){      
-        // $selected_year = $_REQUEST['year'];
-        // $year = $_REQUEST['year'];
-        // $month = $_REQUEST['month'];
-        // $monthName = $_REQUEST['month'];
-        // echo "<script type='text/javascript'>alert('{$year}');</script>";
-
-        // header('Location:' . JURI::base() . 'marketing-listing-vic/marketing-updatelist-vic?monthyear=' . $monthyear);
-      
-      // header('Location:' . JURI::base() . 'marketing-listing-vic/marketing-updatelist-vic?monthyear=' . $monthyear);
-      
-      // $selected_year = $_REQUEST['year'];
-      // $year = $_REQUEST['year'];
-      // $month = $_REQUEST['month'];
-      // $monthName = $_REQUEST['month'];
-      // echo "<script type='text/javascript'>alert('{$year}');</script>";
-    }
-  // }
-
+  }
 }
 if (!empty($id) && $is_adding == 0) {
   if ($cf_id > 0 || $id > 0 || $m_id > 0 ) {
@@ -200,19 +199,8 @@ if (!empty($id) && $is_adding == 0) {
     $month = $_REQUEST['month'];
   }
   if(isset($_REQUEST['monthyear'])){
-    // $selected_year = $_REQUEST['year'];
-    // $year = $_REQUEST['year'];
-    // $month = $_REQUEST['month'];
-    // $monthName = $_REQUEST['month'];
-    // echo "<script type='text/javascript'>alert('{$year}');</script>";
-
-    // header('Location:' . JURI::base() . 'marketing-listing-vic/marketing-updatelist-vic?monthyear=' . $monthyear);
   }
-
-
-
 } else {
-
 }
 
 // echo $monthyear;
@@ -222,18 +210,14 @@ if (!empty($id) && $is_adding == 0) {
 $selected_year = substr($monthyear, -4);
 $monthName = strtok($monthyear, '-');
 
-// $id = mysql_real_escape_string($_REQUEST['cf_id']);
-
-if(isset($_POST['delbtn']))
-{ 
+if(isset($_POST['delbtn'])){ 
   $cf_id = mysql_real_escape_string($_POST['cf_id']);
   $sql = "DELETE from ver_lead_marketing_spend WHERE id = '$cf_id'";
   mysql_query($sql) or die(mysql_error()); $notification = "Item has been deleted.";
   header('Location:' . JURI::base() . 'marketing-listing-vic/marketing-updatelist-vic?monthyear=' . $monthyear);  
 }
 
-if(isset($_POST['cancel']))
-{ 
+if(isset($_POST['cancel'])){ 
   header('Location:'.JURI::base().'marketing-listing-vic');     
 }
 
@@ -244,7 +228,6 @@ if(isset($_POST['cancel']))
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base().'jscript/system-maintenance.css'; ?>" />
 
 <div>
-  <!-- <h2><?php if(!$is_adding) echo "Add";  ?> Marketing Expenditures [<?php echo $monthyear; ?>] </h2> -->
   <h2><?php if(!$is_adding) echo "Edit"; else echo "Add";  ?> Marketing Expenditures [<?php echo $monthyear; ?>] </h2>
   <?php if(strlen($notification)>0){echo "<div class='notification_result'>{$notification}</div>";} ?>
   <div id="notification" class="notification_box hide"  ></div>
@@ -268,6 +251,8 @@ if(isset($_POST['cancel']))
   <input type='hidden' name='lead_source' id='lead_source' value='<?php echo $lead_source; ?>' />
   <input type='hidden' name='selected_category' id='selected_category' value='<?php echo $selected_category; ?>' />
   <input type='hidden' name='lead' id='lead' value='<?php echo $lead; ?>' />
+  <input type='hidden' name='selected_source_cf_id' id='selected_source_cf_id' value='<?php echo $selected_source_cf_id; ?>' />
+  
   
   <table class="inventory-table">
     <tr>
@@ -315,51 +300,46 @@ if(isset($_POST['cancel']))
     </tr>
     <tr>
       <td class="row2">        
-        <div id="cbo_category">
-          <select class="suburb-list" name="category_source" id="category_source" >
-            <option value="Select Category"></option>
-            <?php
-             $sql = "SELECT * FROM ver_chronoforms_data_lead_vic WHERE category != '' GROUP BY category ORDER BY category ASC";
-             $sql_result = mysql_query ($sql) or die ('request "Could not execute SQL query" '.$sql);
-                while ($src = mysql_fetch_assoc($sql_result)) { 
-                  echo "<option value='".$src["category"]."'".($src["category"]==$selected_category ? " selected='selected'" : "").">".$src["category"]."</option>"; } ?>
-          </select>          
-        </div>
-      </td>
-      <td>
-        <div id="cbo_marketing_source">
-          <select class="suburb-list" name="marketing_source" id="marketing_source" >
-            <option value="Select Source"></option>
-            <?php
-             if ($selected_category == "Select Category"){              
-              $sql = "SELECT * FROM ver_chronoforms_data_lead_vic WHERE marketing_source != '' GROUP BY marketing_source ORDER BY marketing_source ASC";
-             }else{
-              $sql = "SELECT * FROM ver_chronoforms_data_lead_vic WHERE marketing_source != '' AND category = '{$selected_category}' GROUP BY marketing_source ORDER BY marketing_source ASC";
-             }
-             echo $sql;
-             $sql_result = mysql_query ($sql) or die ('request "Could not execute SQL query" '.$sql);
-                while ($src = mysql_fetch_assoc($sql_result)) { 
-                  echo "<option value='".$src["marketing_source"]."'".($src["marketing_source"]==$selected_source ? " selected='selected'" : "").">".$src["marketing_source"]."</option>"; } ?>
-          </select> 
-        </div>
-      </td>
-      <td class="cat">
-          <select name="lead" id="lead">  
-            <option value='<?php echo $lead; ?>'></option>
-            <?php
-            if ($selected_source == "Select Source"){
-             $sql = "SELECT * FROM `ver_chronoforms_data_lead_vic` ORDER BY lead ASC ";
-           }else{
-            $sql = "SELECT * FROM `ver_chronoforms_data_lead_vic` WHERE marketing_source = '{$selected_source}' ORDER BY lead ASC ";
-           }
-
-             $sql_result = mysql_query ($sql) or die ('request "Could not execute SQL query" '.$sql);
-                while ($market = mysql_fetch_assoc($sql_result)) {
-            
-                  echo "<option value='".$market["cf_id"]."'".($market["lead"]==$lead ? " selected='selected'" : "").">".$market["lead"]."</option>"; } ?>        
-          </select>
-      </td> 
-      
+          <div id="cbo_category">
+            <select class="suburb-list" name="category_source" id="category_source" >
+              <option value=""></option>
+              <?php
+                $sql = "SELECT distinct section as category, sectionid FROM ver_chronoforms_data_marketing_category_vic WHERE 1=1 ORDER BY section ASC";
+                $sql_result = mysql_query ($sql) or die ('request "Could not execute SQL query" '.$sql);
+                  while ($src = mysql_fetch_assoc($sql_result)) { 
+                    echo "<option value='".$src["category"]."'".($src["category"]==$selected_category ? " selected='selected'" : "").">".$src["category"]."</option>"; } ?>
+            </select>          
+          </div>
+        </td>
+        <td>
+          <div id="cbo_marketing_source">        
+            <select class="suburb-list" name="marketing_source" id="marketing_source" >
+              <option value=""></option>
+              <?php             
+                $sql = "SELECT distinct category as marketing_source, sectionid FROM ver_chronoforms_data_marketing_category_vic WHERE 1=1 ORDER BY section ASC";
+                if (!empty($selected_category) || $selected_category != '') {              
+                  $sql = "SELECT distinct category as marketing_source, sectionid, cf_id AS source_cf_id FROM ver_chronoforms_data_marketing_category_vic WHERE section = '$selected_category' AND 1=1 ORDER BY section ASC"; }
+                  $sql_result = mysql_query ($sql) or die ('request "Could not execute SQL query" '.$sql);
+                  while ($src = mysql_fetch_assoc($sql_result)) { 
+                    echo "<option id='".$selected_source_cf_id=$src["source_cf_id"]."' value='".$src["marketing_source"]."'".($src["marketing_source"]==$selected_source ? " selected='selected'" : "").">".$src["marketing_source"]." </option>"; } ?>
+            </select>          
+          </div>
+        </td>
+        <td>
+          <div id="cbo_lead_source" >
+            <select class="suburb-list" name="lead_source" id="lead_source">
+            <option value=""></option>
+              <?php 
+                $sql = "SELECT * FROM ver_chronoforms_data_lead_vic WHERE 1=1 ORDER BY lead ASC";
+                if (!empty($mid) && $mid > 0) {
+                  $sql = "SELECT * FROM ver_chronoforms_data_lead_vic WHERE marketing_id = '$mid' AND 1=1 ORDER BY lead ASC";
+                }
+                $sql_result = mysql_query ($sql) or die ('request "Could not execute SQL query" '.$sql);
+                  while ($_lead = mysql_fetch_assoc($sql_result)) { 
+                    echo "<option value='".$_lead["cf_id"]."'".($_lead["lead"]==$lead ? " selected='selected'" : "").">".$_lead["lead"]."</option>"; } ?>        
+            </select>
+          </div>
+        </td> 
       <td class="rrp"><input type="text" id="marketing_amount" name="marketing_amount" value='<?php echo $marketing_amount; ?>'></td>
     </tr>
   </table>
@@ -413,8 +393,7 @@ if (isset($_REQUEST['cf_id']) && strlen($_REQUEST['cf_id']) > 0) {
 $sql = "
       SELECT
         l.lead,
-        l.category,
-        l.marketing_source,
+        mc.section AS category, mc.category AS marketing_source,
         m.id AS cf_id,
         m.lead_id,
         m.marketing_amount,
@@ -430,6 +409,7 @@ $sql = "
       FROM
         ver_lead_marketing_spend AS m
         INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id = m.lead_id 
+        LEFT JOIN ver_chronoforms_data_marketing_category_vic AS mc ON l.marketing_id = mc.cf_id
       WHERE
         1 = 1 
         AND CONCAT(MONTHNAME(m.marketing_date),'-',YEAR(m.marketing_date)) = '{$monthyear}'
@@ -450,23 +430,15 @@ $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error
         </tr>
     </thead>
     <tbody>"; 
-    // setlocale(LC_MONETARY, "en_US");
-    // echo money_format("output: %(n", $num);
-    // $m_amount = 0;
     $amount_ = (number_format($record["marketing_amount"], 2));
     while ($record = mysql_fetch_assoc($loop))
-      // $m_amount = number_format($record["marketing_amount"], 2); 
-      // echo $m_amount;
-      // 
-      
-      // echo money_format('%(n', $record['marketing_amount']);
     echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "marketing-updatelist-vic?cf_id={$record['cf_id']}'>
             <td>{$record['MonthYear']}</td>
             <td>{$record['category']}</td>
             <td>{$record['marketing_source']}</td>
             <td>{$record['lead']}</td>
             <td>{$record['_amount']}</td>
-            <td><input type='submit' value='Delete' style='margin:0 0 0 5px;' id='delbtn' name='delbtn' class='update-btn' onclick='return confirm('Are you sure you want to delete this expenditure item?'');'/></td>            
+            <td><input type='submit' value='Delete' style='margin:0 0 0 5px;' id='delbtn' name='delbtn' class='update-btn' onclick=\"document.getElementById('cf_id').value='{$record['cf_id']}';\"/></td>
             </td></tr>"; 
     echo "</tbody></table>"; ?>
       
@@ -477,7 +449,6 @@ $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error
       </div>
     </form>
     </div>
-
 
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base() . 'jscript/lightbox.css'; ?>" />
 <link rel="stylesheet" type="text/css" media="screen,projection" href="<?php echo JURI::base() . 'jscript/jquery-ui-1.11.4/jquery-ui.css'; ?>" />
@@ -573,6 +544,7 @@ $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error
      
     $("#cbo_marketing_source > #marketing_source").on('change', function(e) {          
       let source = this.value;
+      var selected_source_cf_id = $('#cbo_marketing_source > #marketing_source').find('option[value="' + source + '"]').attr('id');
       var category = $("#cbo_category > #category_source").val();
       var month = $("#monthName").val();
       var year = $("#cbo_year > #year").val();
@@ -584,19 +556,21 @@ $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error
           monthyear_param = "&monthyear="+monthyear;
         }
       }
-
       if (category != null || category != ''){        
         category_param = "&category="+category;
       }
+      if (selected_source_cf_id != null || selected_source_cf_id != ''){        
+        mid_param = "&mid="+selected_source_cf_id;
+      }
       $("#_source").val(source);
       $("#m_source").val(source);
-
+      $("#selected_source_cf_id").val(selected_source_cf_id);
       $("#selected_source").val(source);
       $("#input_marketing_source").val(source);
       $("#Marketing_Source").val(source);       
       $("#source").val(source);
       console.log(source);
-      location.href = "<?php echo JURI::base(); ?>marketing-listing-vic/marketing-updatelist-vic?source="+source+category_param+monthyear_param+year_param+month_param;
+      location.href = "<?php echo JURI::base(); ?>marketing-listing-vic/marketing-updatelist-vic?source="+source+category_param+monthyear_param+year_param+month_param+mid_param;
     });
 
     $("#cbo_lead_source > #lead_source").on('change', function(e) {  
