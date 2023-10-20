@@ -116,7 +116,7 @@ if(isset($_POST['save']) || isset($_POST['save_new']))
   $month = $_REQUEST['month'];
   $monthName = $_REQUEST['month'];
 
-  $sql = "SELECT l.*,m.*,m.id AS cf_id,Sum(m.marketing_amount) AS marketing_amount_total,MONTH (m.marketing_date) AS monthNumber,MONTHNAME(m.marketing_date) AS monthName,CONCAT(MONTHNAME(m.marketing_date),'-',YEAR(m.marketing_date)) AS MonthYear ,YEAR(m.marketing_date) AS year FROM ver_lead_marketing_spend AS m INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id=m.lead_id WHERE 1=1 AND m.id='{$cf_id}' GROUP BY m.lead_id ORDER BY l.lead ASC;";
+  $sql = "SELECT l.*,m.*,m.id AS cf_id,Sum(m.marketing_amount) AS marketing_amount_total,MONTH (m.marketing_date) AS monthNumber,MONTHNAME(m.marketing_date) AS monthName,CONCAT(MONTHNAME(m.marketing_date),'-',YEAR(m.marketing_date)) AS MonthYear ,YEAR(m.marketing_date) AS year FROM ver_lead_marketing_spend AS m INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id=m.lead_id WHERE 1=1 AND m.active = 1 AND m.id='{$cf_id}' GROUP BY m.lead_id ORDER BY l.lead ASC;";
   $result = mysql_query($sql);
 
   $retrieve = mysql_fetch_array($result);
@@ -131,7 +131,7 @@ if (isset($_REQUEST['cf_id']) && strlen($_REQUEST['cf_id']) > 0) {
     $id = mysql_real_escape_string($_REQUEST['cf_id']);
     $m_id = mysql_real_escape_string($_REQUEST['cf_id']);
     
-    $sql = "SELECT l.*,m.*,m.id AS cf_id,Sum(m.marketing_amount) AS marketing_amount_total,MONTH (m.marketing_date) AS monthNumber,MONTHNAME(m.marketing_date) AS monthName,CONCAT(MONTHNAME(m.marketing_date),'-',YEAR(m.marketing_date)) AS MonthYear, YEAR(m.marketing_date) AS year FROM ver_lead_marketing_spend AS m INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id=m.lead_id WHERE 1=1 AND m.id='{$cf_id}' GROUP BY m.lead_id ORDER BY l.lead ASC;";
+    $sql = "SELECT l.*,m.*,m.id AS cf_id,Sum(m.marketing_amount) AS marketing_amount_total,MONTH (m.marketing_date) AS monthNumber,MONTHNAME(m.marketing_date) AS monthName,CONCAT(MONTHNAME(m.marketing_date),'-',YEAR(m.marketing_date)) AS MonthYear, YEAR(m.marketing_date) AS year FROM ver_lead_marketing_spend AS m INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id=m.lead_id WHERE 1=1 AND m.active = 1 AND m.id='{$cf_id}' GROUP BY m.lead_id ORDER BY l.lead ASC;";
 
     $sql = "
       SELECT
@@ -212,7 +212,8 @@ $monthName = strtok($monthyear, '-');
 
 if(isset($_POST['delbtn'])){ 
   $cf_id = mysql_real_escape_string($_POST['cf_id']);
-  $sql = "DELETE from ver_lead_marketing_spend WHERE id = '$cf_id'";
+  // $sql = "DELETE from ver_lead_marketing_spend WHERE id = '$cf_id'";
+  $sql = "UPDATE ver_lead_marketing_spend SET active = 0 WHERE id = '$cf_id'";
   mysql_query($sql) or die(mysql_error()); $notification = "Item has been deleted.";
   header('Location:' . JURI::base() . 'marketing-listing-vic/marketing-updatelist-vic?monthyear=' . $monthyear);  
 }
@@ -370,7 +371,7 @@ if (isset($_REQUEST['cf_id']) && strlen($_REQUEST['cf_id']) > 0) {
           ver_lead_marketing_spend AS m
           INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id = m.lead_id 
         WHERE
-          1 = 1 
+          1 = 1 AND m.active = 1
           AND m.id  = '{$cf_id}'
         GROUP BY
           m.lead_id
@@ -411,7 +412,7 @@ $sql = "
         INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id = m.lead_id 
         LEFT JOIN ver_chronoforms_data_marketing_category_vic AS mc ON l.marketing_id = mc.cf_id
       WHERE
-        1 = 1 
+        1 = 1 AND m.active = 1
         AND CONCAT(MONTHNAME(m.marketing_date),'-',YEAR(m.marketing_date)) = '{$monthyear}'
       GROUP BY
         m.lead_id
@@ -461,6 +462,7 @@ $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error
 <SCRIPT language="javascript">
 
   $(document).ready(function() {
+    // $("#cbo_year > #year").focus();
     const months = {
       '0': 'January',
       '1': 'February',
@@ -480,6 +482,7 @@ $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error
       let year = this.value;  
       if (year != null || year != ''){        
         year_param = "&year="+year;
+        $("#cbo_month > #marketing_date").focus();
       }
       console.log(year);
     });
@@ -500,6 +503,7 @@ $loop = mysql_query($sql) or die ('cannot run the query because: ' . mysql_error
         month_param = "&month="+_month;
         monthyear_param = "monthyear="+monthyear;
         location.href = "<?php echo JURI::base(); ?>marketing-listing-vic/marketing-updatelist-vic?"+monthyear_param+year_param+month_param;
+        $("#cbo_category > #category_source").focus();
       }
 
       $("#monthyear").val(monthyear);

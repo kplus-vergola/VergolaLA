@@ -28,7 +28,7 @@ if(isset($_POST['year']))
 				ver_lead_marketing_spend AS m
 				INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id = m.lead_id 
 			WHERE
-				1 = 1 
+				1 = 1 AND m.active = 1
 			GROUP BY
 				m.marketing_date 
 			ORDER BY
@@ -127,7 +127,7 @@ $sql = "
 			ver_lead_marketing_spend AS m
 			INNER JOIN ver_chronoforms_data_lead_vic AS l ON l.cf_id = m.lead_id 
 		WHERE
-			1 = 1 ";
+			1=1 AND m.active = 1  ";
 $result = mysql_query($sql) or die(mysql_error());
 $arrayResult = mysql_fetch_array($result);
 $num_rows = mysql_num_rows($result);
