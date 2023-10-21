@@ -43,11 +43,11 @@ $start = ($page-1) * NUMBER_PER_PAGE;
 * variables passed in the URL because someone clicked on a page number
 **/
 $search = $_POST['search_string'];
-$sql = "SELECT distinct section, sectionid FROM ver_chronoforms_data_marketing_category_vic WHERE 1=1";
+$sql = "SELECT distinct section, sectionid FROM ver_chronoforms_data_marketing_category_vic WHERE 1=1 AND active = 1";
 $result = mysql_query($sql) or die(mysql_error());
 
 if ($search)
-	$sql .= " AND section LIKE '%"  . $search .  "%'" . " OR category LIKE '%"  . $search .  "%'";
+	$sql .= " AND (section LIKE '%"  . $search .  "%'" . " OR category LIKE '%"  . $search .  "%')";
 	
 //this return the total number of records returned by our query
 $total_records = mysql_num_rows(mysql_query($sql));
@@ -74,7 +74,7 @@ $SectionID = $record['sectionid'];
     echo "<tr class='pointer' onclick=location.href='" . $this->baseurl . "marketing-category-listing-vic/marketing-category-updatelist-vic?sectionid={$record['sectionid']}' ><td>{$record['section']}</td> <td>";
 	
 	//Getting Categories
-	$resultcat = mysql_query("SELECT category FROM ver_chronoforms_data_marketing_category_vic WHERE sectionid = '$SectionID' ORDER BY category ASC");
+	$resultcat = mysql_query("SELECT category FROM ver_chronoforms_data_marketing_category_vic WHERE active = 1 AND sectionid = '$SectionID' ORDER BY category ASC");
 	while ($recordcat = mysql_fetch_row($resultcat)) {
 		echo $recordcat[0]."<br/>";
 	}

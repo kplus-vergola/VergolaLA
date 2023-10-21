@@ -3,7 +3,7 @@ $db = JFactory::getDbo();
 $section_id =$_REQUEST['sectionid'];
 $is_edit_category = 0;
 
-$result = mysql_query("SELECT * FROM ver_chronoforms_data_marketing_category_vic WHERE sectionid  = '$section_id'");
+$result = mysql_query("SELECT * FROM ver_chronoforms_data_marketing_category_vic WHERE active = 1 AND sectionid  = '$section_id'");
 $retrieve = mysql_fetch_array($result);
 if (!$result) 
 		{
@@ -49,11 +49,17 @@ if ($cnt > 0 && $category!='') {
 if(isset($_POST['delete']))
 {	
     $category_id = $_POST['category_id'];
-	mysql_query("DELETE from ver_chronoforms_data_marketing_category_vic WHERE cf_id = '$category_id'")
+	mysql_query("UPDATE ver_chronoforms_data_marketing_category_vic SET active = 0 WHERE cf_id = '$category_id'")
 				or die(mysql_error()); 
-	echo "Deleted";
-	
-			
+	echo "Deleted";			
+}
+
+if(isset($_POST['delete_category']))
+{   
+    // $cat_id = $_POST['category_id'];
+    mysql_query("UPDATE ver_chronoforms_data_marketing_category_vic SET active = 0 WHERE cf_id = '$id'")
+                or die(mysql_error()); 
+    header('Location:'.JURI::base().'system-management-vic/marketing-category-listing-vic');    
 }
 
 if(isset($_POST['cancel']))
@@ -170,6 +176,7 @@ if(isset($_POST['update']))
 <input type='hidden' name='section_id' id='section_id' value='<?php echo $section_id; ?>' />
 <input type='hidden' name='SectionID' id='SectionID' value='<?php echo $SectionID; ?>' />
 <input type='hidden' name='Section' id='Section' value='<?php echo $Section; ?>' />
+<input type='hidden' name='id' id='id' value='<?php echo $id; ?>' />
 <input type='hidden' name='is_edit_category' id='is_edit_category' value='<?php echo $is_edit_category; ?>' />
 
 <div class="left-section">
@@ -182,7 +189,9 @@ if(isset($_POST['update']))
 		
 	<tr>
 		<td class="row2"><div class="btnclass">
-<input type="submit" name="add" value="Save" class="update-btn" /> <input type="button" name="cancel" value="Cancel" class="update-btn" onclick=location.href='<?php echo JURI::base(); ?>system-management-vic/marketing-category-listing-vic' />
+        <input type="submit" name="add" value="Save" class="update-btn" /> 
+        <input type="button" name="cancel" value="Cancel" class="update-btn" onclick=location.href='<?php echo JURI::base(); ?>system-management-vic/marketing-category-listing-vic' />
+        <input type="submit" style="width: 41%;" class="del-category" name="delete_category" value="Delete Marketing Category"  />
 </div></td>
 	</tr>
 </table>
@@ -200,7 +209,7 @@ if(isset($_POST['update']))
   
        <?php 
 		   //Getting Categories
-	$resultcat = mysql_query("SELECT category, cf_id FROM ver_chronoforms_data_marketing_category_vic WHERE sectionid = '$SectionID' ORDER BY category ASC");
+	$resultcat = mysql_query("SELECT category, cf_id FROM ver_chronoforms_data_marketing_category_vic WHERE active=1 AND sectionid = '$SectionID' ORDER BY category ASC");
 	$j=0; $k=0;
 	while ($recordcat = mysql_fetch_row($resultcat)) {
 		
