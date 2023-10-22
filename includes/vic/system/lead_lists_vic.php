@@ -73,7 +73,7 @@ $start = ($page-1) * NUMBER_PER_PAGE;
 **/
 $search = (isset($_POST['search_string'])?$_POST['search_string']:"");
 // $sql = "SELECT category,marketing_source, lead, notes, cf_id FROM ver_chronoforms_data_lead_vic WHERE 1=1 ";
-$sql = "SELECT l.lead,mc.section as category,mc.category as marketing_source,l.cf_id,l.marketing_id FROM ver_chronoforms_data_lead_vic AS l LEFT JOIN ver_chronoforms_data_marketing_category_vic AS mc ON mc.cf_id=l.marketing_id WHERE 1=1 AND active = 1";
+$sql = "SELECT l.lead,mc.section as category,mc.category as marketing_source,l.cf_id,l.marketing_id FROM ver_chronoforms_data_lead_vic AS l LEFT JOIN ver_chronoforms_data_marketing_category_vic AS mc ON mc.cf_id=l.marketing_id WHERE 1=1 AND l.active = 1";
 $result = mysql_query($sql) or die(mysql_error());
 
 if ($search){
