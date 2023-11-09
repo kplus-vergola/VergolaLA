@@ -3125,6 +3125,8 @@ var installer_list_curmon = [
     $sql = "
         SELECT
             c.cf_id,
+            -- CONCAT('#b',HEX(c.cf_id * 9/18 * 9/16 + 55)) AS hex_color,
+            CONCAT('#',HEX(c.cf_id * 15/16 + 15)) AS hex_color,
             cp.clientid,
             CONCAT(coalesce(cp.client_firstname,''), ' ', coalesce(cp.client_lastname,''), ' ', coalesce(cp.builder_name,'')) as customer_name,
             cp.client_suburb,
@@ -3192,9 +3194,13 @@ var installer_list_curmon = [
     ";
 
     $qResult = mysql_query($sql);
-    $obj = ""; $j--;// subtract 1 value to make tha last month same event color in the next month
+    $obj = ""; 
+    $j--;// subtract 1 value to make tha last month same event color in the next month
+    // $j = $j - 3;
     $if_fix = '';
+    $hex_color = '';
     while ($r = mysql_fetch_assoc($qResult)) {
+        $hex_color = addslashes($r["hex_color"]);
         $current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
         $current_erector_fix2_text = addslashes($r["fix2_start_erectors_name"]) . " " . (strlen($r['fix2_end_erectors_name']) > 0 ? ' & ' . addslashes($r["fix2_end_erectors_name"]) : '');
         $current_erector_fix3_text = addslashes($r["fix3_start_erectors_name"]) . " " . (strlen($r['fix3_end_erectors_name']) > 0 ? ' & ' . addslashes($r["fix3_end_erectors_name"]) : '');
@@ -3206,60 +3212,69 @@ var installer_list_curmon = [
         if ($current_erector_index === false) {
             $current_erector_index = 0;
         }
-
-        if (! in_array($current_erector_fix2_text, $erectors_list)) {
-            $erectors_list[] = $current_erector_fix2_text;
-        }
-        $current_erector_fix2_index = array_search($current_erector_fix2_text, $erectors_list);
-        if ($current_erector_index === false) {
-            $current_erector_index = 0;
-        }
-
-        if (! in_array($current_erector_fix3_text, $erectors_list)) {
-            $erectors_list[] = $current_erector_fix3_text;
-        }
-        $current_erector_fix3_index = array_search($current_erector_fix3_text, $erectors_list);
-        if ($current_erector_index === false) {
-            $current_erector_index = 0;
-        }
-
-        if ($r["sched_install_date_fix2_visible"] == 'Yes'){
-            $if_fix = '(Fix 2)';
-            $obj .= "{";
-                $obj .= "title:'".addslashes($r["fix2_start_erectors_name"])." ".(strlen($r['fix2_end_erectors_name'])>0?' & '.addslashes($r["fix2_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
-                $obj .= "start:'{$r['sched_install_date_fix2_start']}',";
-                $obj .= "end:'{$r['sched_install_date_fix2_end']} 20:00:00',";
-                // $obj .= "color:color_list[{$j}],";
-                $obj .= "color:color_list[{$current_erector_index}],";
-                $obj .= "allDay:false,";
-                $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
-            $obj .= "},";
-            $j++;
-        }
-        if ($r["sched_install_date_fix3_visible"] == 'Yes'){
-            $if_fix = '(Fix 3)';
-            $obj .= "{";
-                $obj .= "title:'".addslashes($r["fix3_start_erectors_name"])." ".(strlen($r['fix3_end_erectors_name'])>0?' & '.addslashes($r["fix3_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
-                $obj .= "start:'{$r['sched_install_date_fix3_start']}',";
-                $obj .= "end:'{$r['sched_install_date_fix3_end']} 20:00:00',";
-                // $obj .= "color:color_list[{$j}],";
-                $obj .= "color:color_list[{$current_erector_index}],";
-                $obj .= "allDay:false,";
-                $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
-            $obj .= "},";
-            $j++;
-        }
-        // else{
+        
         $obj .= "{";
             $obj .= "title:'".addslashes($r["erectors_name"])." ".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")."',";
             $obj .= "start:'{$r['install_date']}',";
             $obj .= "end:'{$r['schedule_completion']} 20:00:00',";
             // $obj .= "color:color_list[{$j}],";
-            $obj .= "color:color_list[{$current_erector_index}],";
+            // $obj .= "color:color_list[{$current_erector_index}],";            
+            $obj .= "color: '$hex_color',";   
+            // $obj .= "color: '#14c',";
             $obj .= "allDay:false,";
             $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
         $obj .= "},";
         $j++;
+        
+
+        if ($r["sched_install_date_fix2_visible"] == 'Yes'){
+            $if_fix = '(Fix 2)';
+
+            if (! in_array($current_erector_fix2_text, $erectors_list)) {
+                $erectors_list[] = $current_erector_fix2_text;
+            }
+            $current_erector_fix2_index = array_search($current_erector_fix2_text, $erectors_list);
+            if ($current_erector_index === false) {
+                $current_erector_index = 0;
+            }
+            
+            $obj .= "{";
+                $obj .= "title:'".addslashes($r["fix2_start_erectors_name"])." ".(strlen($r['fix2_end_erectors_name'])>0?' & '.addslashes($r["fix2_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
+                $obj .= "start:'{$r['sched_install_date_fix2_start']}',";
+                $obj .= "end:'{$r['sched_install_date_fix2_end']} 20:00:00',";
+                // $obj .= "color:color_list[{$j}],";
+                // $obj .= "color:color_list[{$current_erector_index}],";
+                $obj .= "color: '$hex_color',";   
+                $obj .= "allDay:false,";
+                $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
+            $obj .= "},";
+            $j++;
+            // $j = $j + 3;
+        }
+        if ($r["sched_install_date_fix3_visible"] == 'Yes'){
+            $if_fix = '(Fix 3)';
+
+            if (! in_array($current_erector_fix3_text, $erectors_list)) {
+                $erectors_list[] = $current_erector_fix3_text;
+            }
+            $current_erector_fix3_index = array_search($current_erector_fix3_text, $erectors_list);
+            if ($current_erector_index === false) {
+                $current_erector_index = 0;
+            }
+
+            $obj .= "{";
+                $obj .= "title:'".addslashes($r["fix3_start_erectors_name"])." ".(strlen($r['fix3_end_erectors_name'])>0?' & '.addslashes($r["fix3_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
+                $obj .= "start:'{$r['sched_install_date_fix3_start']}',";
+                $obj .= "end:'{$r['sched_install_date_fix3_end']} 20:00:00',";
+                // $obj .= "color:color_list[{$j}],";
+                // $obj .= "color:color_list[{$current_erector_index}],";
+                $obj .= "color: '$hex_color',";   
+                $obj .= "allDay:false,";
+                $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
+            $obj .= "},";
+            $j++;
+            // $j = $j + 3;
+        }
     }
 
     $obj = substr($obj, 0, -1);
@@ -3275,6 +3290,7 @@ var installer_list_nextmon = [
     $sql = "
         SELECT
             c.cf_id,
+            CONCAT('#',HEX(c.cf_id * 15/16 + 15)) AS hex_color,
             cp.clientid,
             CONCAT(coalesce(cp.client_firstname,''), ' ', coalesce(cp.client_lastname,''), ' ', coalesce(cp.builder_name,'')) as customer_name,
             cp.client_suburb,
@@ -3320,7 +3336,9 @@ var installer_list_nextmon = [
 
     $qResult = mysql_query($sql);
     $obj = ""; $j=1;
+    $hex_color = '';
     while ($r = mysql_fetch_assoc($qResult)) {
+        $hex_color = addslashes($r["hex_color"]);
         $current_erector_text = addslashes($r["erectors_name"]) . " " . (strlen($r['erectors_name2']) > 0 ? ' & ' . addslashes($r["erectors_name2"]) : '');
         $current_erector_fix2_text = addslashes($r["fix2_start_erectors_name"]) . " " . (strlen($r['fix2_end_erectors_name']) > 0 ? ' & ' . addslashes($r["fix2_end_erectors_name"]) : '');
         $current_erector_fix3_text = addslashes($r["fix3_start_erectors_name"]) . " " . (strlen($r['fix3_end_erectors_name']) > 0 ? ' & ' . addslashes($r["fix3_end_erectors_name"]) : '');
@@ -3356,7 +3374,8 @@ var installer_list_nextmon = [
                 $obj .= "start:'{$r['sched_install_date_fix2_start']}',";
                 $obj .= "end:'{$r['sched_install_date_fix2_end']} 20:00:00',";
                 // $obj .= "color:color_list[{$j}],";
-                $obj .= "color:color_list[{$current_erector_index}],";
+                // $obj .= "color:color_list[{$current_erector_index}],";
+                $obj .= "color: '$hex_color',"; 
                 $obj .= "allDay:false,";
                 $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
             $obj .= "},";
@@ -3369,7 +3388,8 @@ var installer_list_nextmon = [
                 $obj .= "start:'{$r['sched_install_date_fix3_start']}',";
                 $obj .= "end:'{$r['sched_install_date_fix3_end']} 20:00:00',";
                 // $obj .= "color:color_list[{$j}],";
-                $obj .= "color:color_list[{$current_erector_index}],";
+                // $obj .= "color:color_list[{$current_erector_index}],";
+                $obj .= "color: '$hex_color',"; 
                 $obj .= "allDay:false,";
                 $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
             $obj .= "},";
@@ -3381,7 +3401,8 @@ var installer_list_nextmon = [
             $obj .= "start:'{$r['install_date']}',";
             $obj .= "end:'{$r['schedule_completion']} 20:00:00',";
             // $obj .= "color:color_list[{$j}],";
-            $obj .= "color:color_list[{$current_erector_index}],";
+            // $obj .= "color:color_list[{$current_erector_index}],";
+            $obj .= "color: '$hex_color',"; 
             $obj .= "allDay:false,";
             $obj .= "url:'".JURI::base()."contract-listing-vic/contract-folder-vic?projectid=".$r["projectid"]."'";
         $obj .= "},";

@@ -1668,35 +1668,35 @@ $groups = $user->get('groups');
 
     <!-- For the Installer DropDown -->
     <?php
-            $cbo_installer1 = "<select    name=\"erectors_name\" style='width:103%; padding:0px'><option value=''>Select Installer 1</option>"; 
-            $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
+            // $cbo_installer1_ = "<select    name=\"erectors_name\" style='width:103%; padding:0px'><option value=''>Select Installer 1</option>"; 
+            // $querysub="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
 
-                        $resultsub = mysql_query($querysub);
-                            if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
+            //             $resultsub = mysql_query($querysub);
+            //                 if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
                         
-                        while ($data=mysql_fetch_assoc($resultsub)){  
+            //             while ($data=mysql_fetch_assoc($resultsub)){  
 
-                            if($data['name']==$contract_vergola['erectors_name']){ 
-                                $cbo_installer1 .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
-                            }else{
-                                $cbo_installer1 .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
-                            } 
-                        }
-            $cbo_installer1 .= "</select>"; 
+            //                 if($data['name']==$contract_vergola['erectors_name']){ 
+            //                     $cbo_installer1_ .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+            //                 }else{
+            //                     $cbo_installer1_ .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
+            //                 } 
+            //             }
+            // $cbo_installer1_ .= "</select>"; 
 
 
-            $cbo_installer2 = "<select name=\"erectors_name2\" style='width:107%;'><option value=''>Select Installer 2</option>";  
-                        mysql_data_seek($resultsub, 0);   
+            // $cbo_installer2 = "<select name=\"erectors_name2\" style='width:107%;'><option value=''>Select Installer 2</option>";  
+            //             mysql_data_seek($resultsub, 0);   
                           
-                        while ($data=mysql_fetch_assoc($resultsub)){  
+            //             while ($data=mysql_fetch_assoc($resultsub)){  
 
-                            if($data['name']==$contract_vergola['erectors_name2']){ 
-                                $cbo_installer2 .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
-                            }else{
-                                $cbo_installer2 .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
-                            } 
-                        }
-            $cbo_installer2 .= "</select>"; 
+            //                 if($data['name']==$contract_vergola['erectors_name2']){ 
+            //                     $cbo_installer2 .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+            //                 }else{
+            //                     $cbo_installer2 .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>";
+            //                 } 
+            //             }
+            // $cbo_installer2 .= "</select>"; 
 
           ?> 
 
@@ -1708,6 +1708,34 @@ $groups = $user->get('groups');
 
     <?php
       $querysub_str="SELECT * FROM ver_chronoforms_data_installer_vic Where block=0 ORDER BY name ASC";
+
+      // Begin construct object for Sched Install  
+      $cbo_installer1 = "<select    name=\"erectors_name\" id=\"erectors_nameid\"  style='width:104%; padding:0px'><option value=''>Select Installer 1: </option>"; 
+      $querysub= $querysub_str;
+      $resultsub = mysql_query($querysub);
+          if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
+
+      while ($data=mysql_fetch_assoc($resultsub)){  
+          if($data['name']==$contract_vergola['erectors_name']){ 
+              $cbo_installer1 .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+          }else{
+              $cbo_installer1 .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>"; } 
+      }       
+      $cbo_installer1 .= "</select>"; 
+
+      $cbo_installer2 = "<select    name=\"erectors_name2\" id=\"erectors_name2id\"  style='width:104%; padding:0px'><option value=''>Select Installer 2: </option>"; 
+      $querysub= $querysub_str;
+      $resultsub = mysql_query($querysub);
+          if(!$resultsub){die ("Could not query the database: <br />" . mysql_error()); }
+
+      while ($data=mysql_fetch_assoc($resultsub)){  
+          if($data['name']==$contract_vergola['erectors_name2']){ 
+              $cbo_installer2 .= "<option value = \"".addslashes($data['name'])."\" selected>{$data['name']}</option>";
+          }else{
+              $cbo_installer2 .= "<option value = \"".addslashes($data['name'])."\">{$data['name']}</option>"; } 
+      }       
+      $cbo_installer2 .= "</select>";     
+
       // Begin construct object for Sched Install fix2 
       $cbo_fix2_start_erectors_name = "<select    name=\"fix2start_erectorsname\" id=\"fix2start_erectorsnameid\"  style='width:104%; padding:0px'><option value=''>Select Installer Fix Start 2: </option>"; 
       $querysub= $querysub_str;
