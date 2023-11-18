@@ -801,23 +801,13 @@ CASE
 							
 							$total_records = mysql_num_rows($item_result);
 							if ($record_counter <= $total_records) {
-							// if($is_first_page){
-								// for ($record_counter = 0; $record_counter < $total_records; $record_counter++) {
-					 				// while ($record_counter < $total_records){
-					 				// 	$record_counter++;
-										// if ($record_counter == $total_records) {
-										// 	$is_first_page = 0;
-										//   	break;
-										// }
-								
+								$length_fraction = ((get_mm_value($config_vr_decimal_output_format[$m['length_fraction']])));
 								$list_content = "";
 								$list_content .= '
 								<tr style="page-break-before: auto !important;"> 
 									<td style="border-collapse:collapse;font-size:9.8; height: 24" colspan="6" >&nbsp; '.$m['raw_description'].' </td>  
 									<td style="border-collapse:collapse;font-size:9.8;text-align:'.$align_number.';">'.number_format(($m_qty>0?$m_qty:$m['m_qty'])).' &nbsp;&nbsp;</td>
-									<!-- <td style="border-collapse:collapse;font-size:9.8;text-align:right;">'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")).' &nbsp;&nbsp;&nbsp;&nbsp; '.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?feetInchesToMillimeters(get_feet_value($m['1_length'])):($m['uom']=="Inches"?$m['1_length']:"")).'mm&nbsp;&nbsp;</td> -->
-
-									<td style="border-collapse:collapse;font-size:9.8;text-align:'.$align_number.';">'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")).'&nbsp;&nbsp;<br>'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?feetInchesToMillimeters(get_feet_value($m['1_length'])):($m['uom']=="Inches"?$m['1_length']:"")).'mm&nbsp;&nbsp;</td> ';
+									<td style="border-collapse:collapse;font-size:9.8;text-align:'.$align_number.';">'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):($m['uom']=="Inches"?$m['1_length']:"")).'&nbsp;&nbsp;<br>'.($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?(feetInchesToMillimeters(get_feet_value($m['1_length'])) + $length_fraction):($m['uom']=="Inches"?$m['1_length']:"")).'mm&nbsp;&nbsp;</td> ';
 									if($is_uom_visible==1){
 										$list_content .= '<td style="border-collapse:collapse;font-size:9.8;text-align:center;">'.$m['uom'].' &nbsp;&nbsp;</td>';
 									}
@@ -1003,35 +993,9 @@ CASE
 					//error_log("Double Bay VR:".$contract['framework']." section:".$section." inventoryid:".$m["inventoryid"], 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 					echo "<table>";	
 				 	if($m["photo"] !="" && $count > 1 && $is_uom_visible == 0) { 
-				 		echo $image_header;
-				 		/*
-				 		echo " <tr>
-				 			 	<th height='23' width='220' colspan='2'>
-				 					&nbsp;&nbsp;<b>Description</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='35'>
-				 					&nbsp;&nbsp;<b>Qty</b>&nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='60'>
-				 					 &nbsp;<b>Length</b> &nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='66'>
-				 					&nbsp;&nbsp;<b>Color</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='70'>
-				 					&nbsp;&nbsp;<b>Finish</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='55'>
-				 					&nbsp;&nbsp;<b>Price</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th style='text-align:center;' width='65' >
-				 					&nbsp;&nbsp;<b>Amount</b> &nbsp;&nbsp;
-				 				</th>
-				 				<th colspan='2' rowspan='2' style='border:none;' width='130'>&nbsp;&nbsp; <b></b> &nbsp;&nbsp;</th>
-
-				 			 
-				 		</tr>";
-				 		*/
+				 		$length_fraction = ((get_mm_value($config_vr_decimal_output_format[$m['length_fraction']])));
+				 		// $length_fraction = ($config_vr_decimal_output_format[$m['length_fraction']]);
+				 		echo $image_header;				 		
 				 		}else{} 
 				 		?>
 
@@ -1058,7 +1022,7 @@ CASE
 						 	<td style="border-collapse:collapse;font-size:9.8;text-align:<?php echo $align_number; ?>;">
 						 		<?php 
 						 		echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?get_feet_value($m['1_length']):"");?>&nbsp;&nbsp;<br><?php 
-						 		echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?feetInchesToMillimeters(get_feet_value($m['1_length'])):($m['uom']=="Inches"?$m['1_length']:""));?>mm&nbsp;&nbsp;</td>					
+						 		echo ($m['uom']=="Inches" && METRIC_SYSTEM == "inch"?(feetInchesToMillimeters(get_feet_value($m['1_length'])) + $length_fraction):($m['uom']=="Inches"?$m['1_length']:""));?>mm&nbsp;&nbsp;</td>					
 						<?php } ?>
 						<?php if($is_uom_visible==1){ ?>
 							<td style="border-collapse:collapse;font-size:9.8;text-align:right;"><?php echo $config_vr_fractions_output_format[$m['length_fraction']]; echo ($config_vr_fractions_output_format[$m['length_fraction']] > 0 ? '"' : ''); ?>&nbsp;&nbsp;</td>  <?php } ?>
