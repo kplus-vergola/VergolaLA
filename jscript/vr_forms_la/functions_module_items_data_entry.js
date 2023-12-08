@@ -662,7 +662,7 @@
                    {"field_name": "vr_section_display_name", "field_value": vr_section_display_name}
                 ], 
                 "input_type_info": "Select Box", 
-                "qty_info": "0"
+                "qty_info": "1"
             };
             vr_form_item_config = getVrFormItemConfigByAdhocCriteria(adhoc_criteria1);
             vr_section_last_vr_form_item_index = getVrSectionLastVrFormItemIndex(vr_section_display_name);
