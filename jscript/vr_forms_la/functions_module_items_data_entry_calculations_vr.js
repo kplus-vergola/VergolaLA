@@ -30,8 +30,8 @@
                 vr_lengths_in_value_for_display[vr_lengths_in_value_for_display.length] = revertValueForCalculation(current_vr_length_in_value_for_calculation);
 
                 temp_array = vr_lengths_in_value_for_display[vr_lengths_in_value_for_display.length - 1].split('\'');
-                vr_lengths_feet_in_value_for_display[vr_lengths_feet_in_value_for_display.length] = temp_array[0];
-                vr_lengths_inch_in_value_for_display[vr_lengths_inch_in_value_for_display.length] = temp_array[1];
+                vr_lengths_feet_in_value_for_display[vr_lengths_feet_in_value_for_display.length] = formatNumberWithoutComma(temp_array[0]);
+                vr_lengths_inch_in_value_for_display[vr_lengths_inch_in_value_for_display.length] = formatNumberWithoutComma(temp_array[1]);
             }
             total_vr_length_in_value_for_display = revertValueForCalculation(total_vr_length_in_value_for_calculation);
             temp_array = total_vr_length_in_value_for_display.split('\'');
@@ -90,8 +90,8 @@
             vr_width_in_value_for_display = revertValueForCalculation(vr_width_in_value_for_calculation);
 
             temp_array = vr_width_in_value_for_display.split('\'');
-            vr_width_feet_in_value_for_display = temp_array[0];
-            vr_width_inch_in_value_for_display = temp_array[1];
+            vr_width_feet_in_value_for_display = formatNumberWithoutComma(temp_array[0]);
+            vr_width_inch_in_value_for_display = formatNumberWithoutComma(temp_array[1]);
 
             results = {
                 "vr_width_in_value_for_calculation": vr_width_in_value_for_calculation, 
@@ -262,8 +262,8 @@
             temp_array = total_vr_length_in_value_for_display.split('\'');
             total_gutter_lining_length_feet = temp_array[0];
             total_gutter_lining_length_inch = temp_array[1];
-            total_gutter_lining_length_feet = formatOutputValue('float', total_gutter_lining_length_feet);
-            total_gutter_lining_length_inch = formatOutputValue('float', total_gutter_lining_length_inch);
+            total_gutter_lining_length_feet = formatNumberWithoutComma(temp_array[0]);
+            total_gutter_lining_length_inch = formatNumberWithoutComma(temp_array[1]);
 
             // setVrFormItemDataEntryRowValuesByInternalRefName(
             //     'gutter_lining', 

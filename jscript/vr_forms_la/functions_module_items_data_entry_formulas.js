@@ -69,8 +69,22 @@
                 inch_value3 = inch_value2;
             }
 
-            feet_value_final = parseFloat(feet_value1_1) + parseFloat(feet_value2_1);
-            inch_value_final = parseFloat(inch_value3);
+            var is_show = 1;
+            if (feet_value1_1 > 1040 && is_show == 1){
+                
+                var inch_feet = parseFloat(inch_value / 12);
+                var inch_feet_value_1000_in_string = '' + inch_feet; 
+                temp_results = separateWholeAndFractionalNumbersFromInputValue(inch_feet_value_1000_in_string, ".");
+                feet_value2_1 = temp_results['whole_number'];
+                feet_value2_2 = temp_results['fractional_number'];
+
+                feet_value_final = parseFloat(feet_value2_1);
+                inch_value_final = Math.round(parseFloat('0.' + (feet_value2_2)) * 12);
+            }else{
+                feet_value_final = parseFloat(feet_value1_1) + parseFloat(feet_value2_1);
+                inch_value_final = inch_value3;
+            }
+
             feet_and_inch_in_string = "" + formatOutputValue('number', feet_value_final)  + "'" + formatOutputValue('number', inch_value_final);
 
             return feet_and_inch_in_string;
@@ -82,7 +96,8 @@
             var meter_per_inch = 0.0254;
             var meter_value = feet_value * meter_per_feet;
             var inch_value = meter_value / meter_per_inch;
-            return inch_value;
+            return Math.round(parseFloat(inch_value));
+            // return inch_value;
         }
 
 
