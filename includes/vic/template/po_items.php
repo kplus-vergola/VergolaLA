@@ -68,6 +68,143 @@ $config_vr_fractions_output_format = array(
     '31/32' => '31/32' 
 );
 
+$config_vr_decimal_to_fraction_output_format_ = array(
+	0.03125 => '1/32', 
+	0.0625  => '2/32', 
+	0.09375 => '3/32', 
+	0.125	  => '4/32', 
+	0.15625 => '5/32', 
+	0.1875  => '6/32', 
+	0.21875 => '7/32', 
+	0.25	  => '8/32', 
+	0.28125 => '9/32', 
+	0.3125  => '10/32', 
+	0.34375 => '11/32', 
+	0.375	  => '12/32', 
+	0.40625 => '13/32', 
+	0.4375  => '14/32', 
+	0.46875 => '15/32', 
+	0.5	  => '16/32', 
+	0.53125 => '17/32', 
+	0.5625  => '18/32', 
+	0.59375 => '19/32', 
+	0.625	  => '20/32', 
+	0.65625 => '21/32', 
+	0.6875  => '22/32', 
+	0.71875 => '23/32', 
+	'0.75' => '24/32', 
+	0.78125 => '25/32', 
+	0.8125  => '26/32', 
+	0.84375 => '27/32', 
+	0.875	  => '28/32', 
+	0.90625 => '29/32', 
+	0.9375  => '30/32', 
+	0.96875 => '31/32' 
+);
+
+$config_vr_decimal_to_fraction_output_format = array(
+	0.03125   =>  '1/32', 
+	0.0625    =>  '1/16', 
+	0.09375   =>  '3/32', 
+	0.125     =>  '1/8', 
+	0.15625   =>  '5/32', 
+	0.1875    =>  '6/32', 
+	0.21875   =>  '7/32', 
+	0.25      =>  '1/4', 
+	0.28125   =>  '9/32', 
+	0.3125    =>  '10/32', 
+	0.34375   =>  '11/32', 
+	0.375     =>  '3/8', 
+	0.40625   =>  '13/32', 
+	0.4375    =>  '14/32', 
+	0.46875   =>  '15/32', 
+	0.5       =>  '1/2', 
+	0.53125   =>  '17/32', 
+	0.5625    =>  '18/32', 
+	0.59375   =>  '19/32', 
+	0.625     =>  '5/8', 
+	0.65625   =>  '21/32', 
+	0.6875    =>  '22/32', 
+	0.71875   =>  '23/32', 
+	0.75      =>  '3/4', 
+	0.78125   =>  '25/32', 
+	0.8125    =>  '26/32', 
+	0.84375   =>  '27/32', 
+	0.875     =>  '7/8', 
+	0.90625   =>  '29/32', 
+	0.9375    =>  '30/32', 
+	0.96875   =>  '31/32' 
+);
+
+$config_vr_decimal_to_fraction_output_format0 = array(
+	0.03125   =>  '1/32', 
+	0.0625    =>  '1/16', 
+	0.09375   =>  '3/32', 
+	0.125     =>  '1/8', 
+	0.15625   =>  '5/32', 
+	0.1875    =>  '6/32', 
+	0.21875   =>  '7/32', 
+	0.25      =>  '1/4', 
+	0.28125   =>  '9/32', 
+	0.3125    =>  '10/32', 
+	0.34375   =>  '11/32', 
+	0.375     =>  '3/8', 
+	0.40625   =>  '13/32', 
+	0.4375    =>  '14/32', 
+	0.46875   =>  '15/32', 
+	0.5       =>  '1/2', 
+	0.53125   =>  '17/32', 
+	0.5625    =>  '18/32', 
+	0.59375   =>  '19/32', 
+	0.625     =>  '5/8', 
+	0.65625   =>  '21/32', 
+	0.6875    =>  '22/32', 
+	0.71875   =>  '23/32', 
+	0.75      =>  '3/4', 
+	0.78125   =>  '25/32', 
+	0.8125    =>  '26/32', 
+	0.84375   =>  '27/32', 
+	0.875     =>  '7/8', 
+	0.90625   =>  '29/32', 
+	0.9375    =>  '30/32', 
+	0.96875   =>  '31/32' 
+);
+
+
+$config_vr_decimal_to_fraction_output_format00 = array(
+	'0.03125' => '1/32', 
+	'0.0625' => '1/16', 
+	'0.09375' => '3/32', 
+	'0.125' => '1/8', 
+	'0.15625' => '5/32', 
+	'0.1875' => '6/32', 
+	'0.21875' => '7/32', 
+	'0.25' => '1/4', 
+	'0.28125' => '9/32', 
+	'0.3125' => '10/32', 
+	'0.34375' => '11/32', 
+	'0.375' => '3/8', 
+	'0.40625' => '13/32', 
+	'0.4375' => '14/32', 
+	'0.46875' => '15/32', 
+	'0.5'  => '1/2', 
+	'0.53125' => '17/32', 
+	'0.5625' => '18/32', 
+	'0.59375' => '19/32', 
+	'0.625' => '5/8', 
+	'0.65625' => '21/32', 
+	'0.6875' => '22/32', 
+	'0.71875' => '23/32', 
+	'0.75' => '3/4', 
+	'0.78125' => '25/32', 
+	'0.8125' => '26/32', 
+	'0.84375' => '27/32', 
+	'0.875' => '7/8', 
+	'0.90625' => '29/32', 
+	'0.9375' => '30/32', 
+	'0.96875' => '31/32' 
+);
+
 $config_vr_decimal_output_format = array(
 	'1/32' => '0.03125',
 	'2/32' => '0.0625',
@@ -1239,7 +1376,8 @@ CASE
 								WHERE 
 									id.projectid = '{$projectid}' AND id.inventoryid='{$m['inventoryid']}' 
 									AND id.cf_id = '{$m['contract_item_cf_id']}'
-								LIMIT 1; -- End of query ";
+								LIMIT 1; 
+								-- End of query ";
 						//error_log("sql G: ". $sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_sa\\my-error.log');
 						 // echo $sql;
 						$r_item_dimension = mysql_query ($sql);
@@ -1268,8 +1406,59 @@ CASE
 						$dimension_g_output = "";
 						$dimension_h_output = "";
 						$dimension_p_output = "";
+
+						$default_girth_side_a_whole = 0;
+						$default_girth_side_a_frac  = 0;
+						$default_girth_side_b_whole = 0; 
+						$default_girth_side_b_frac  = 0; 
+						$default_girth_side_ = 0;
+						$default_girth_side_a = 0;
+						$default_girth_side_b = 0;
 						// if(!empty($item_dimension) || $section == "Guttering" || $section == "Flashings"){
 						if(!empty($item_dimension) || empty($item_dimension) || $section == "Guttering" || $section == "Flashings"){
+							if(empty($item_dimension) || $item_dimension == ''){
+								$sql = "SELECT * FROM ver_chronoforms_data_contract_items_default_deminsions WHERE inventoryid='{$m['inventoryid']}' LIMIT 1 ";
+								$default_item_dimension = mysql_query ($sql);
+								$item_dimension = mysql_fetch_assoc($default_item_dimension);
+
+								$default_girth_side_ = 	$item_dimension["dimension_e_inch"] + ($config_vr_decimal_output_format[$item_dimension["dimension_e_fraction"]]) +
+														$item_dimension["dimension_f_inch"] + ($config_vr_decimal_output_format[$item_dimension["dimension_f_fraction"]]) +
+														$item_dimension["dimension_g_inch"] + ($config_vr_decimal_output_format[$item_dimension["dimension_g_fraction"]]) +
+														$item_dimension["dimension_h_inch"] + ($config_vr_decimal_output_format[$item_dimension["dimension_h_fraction"]]) +
+														$item_dimension["dimension_p_inch"] + ($config_vr_decimal_output_format[$item_dimension["dimension_p_fraction"]]);
+
+								$default_girth_side_a = ($item_dimension["dimension_a_inch"] + ($config_vr_decimal_output_format[$item_dimension["dimension_a_fraction"]])) + 
+														($item_dimension["dimension_c_inch"] + ($config_vr_decimal_output_format[$item_dimension["dimension_c_fraction"]])) + $default_girth_side_;
+								$default_girth_side_b = ($item_dimension["dimension_b_inch"] + ($config_vr_decimal_output_format[$item_dimension["dimension_b_fraction"]])) + 
+														($item_dimension["dimension_d_inch"] + ($config_vr_decimal_output_format[$item_dimension["dimension_d_fraction"]])) + $default_girth_side_;														
+								
+								$default_girth_side_a_whole = floor($default_girth_side_a);  // 5
+								$default_girth_side_a_frac  = ($default_girth_side_a - $default_girth_side_a_whole);  // .7
+								$default_girth_side_b_whole = floor($default_girth_side_b);  // 5
+								$default_girth_side_b_frac  = ($default_girth_side_b - $default_girth_side_b_whole);  // .7
+
+								$item_dimension["girth_side_a_inch"] = $default_girth_side_a_whole;
+								$item_dimension["girth_side_b_inch"] = $default_girth_side_b_whole;
+								$item_dimension["girth_side_a_fraction"] = $config_vr_decimal_to_fraction_output_format[(floor($default_girth_side_a) - $default_girth_side_a_whole)];
+								$item_dimension["girth_side_b_fraction"] = $config_vr_fractions_output_format[$config_vr_decimal_to_fraction_output_format[$default_girth_side_b_frac]];
+								// $item_dimension["girth_side_b_fraction"] = $config_vr_fractions_output_format[$item_dimension["girth_side_b_fraction"]];
+
+
+						}
+
+
+						// $default_girth_side_a_0 = dec2frac($default_girth_side_a);
+						if($item_dimension["girth_side_a_fraction_total"] >= 1){
+							// $item_dimension["girth_side_a_inch"] += $item_dimension["girth_side_a_fraction_total_whole"];
+							// $item_dimension["girth_side_a_fraction_numerator"] -= 32;
+						}
+
+						if($item_dimension["girth_side_b_fraction_total"] >= 1){
+							// $item_dimension["girth_side_b_inch"] = $item_dimension["girth_side_b_inch"] + $item_dimension["girth_side_b_fraction_total_whole"];
+							// $item_dimension["girth_side_b_inch"] += $item_dimension["girth_side_b_fraction_total_whole"];
+							// $item_dimension["girth_side_b_fraction_numerator"] -= 32;
+						}
+
 							$is_dimension = "9";
 							/*
 							$girth_side_a_output = $item_dimension["girth_side_a_inch"] . '&nbsp;&nbsp;' . $config_vr_fractions_output_format[$item_dimension["girth_side_a_fraction"]] . '"';
@@ -1320,6 +1509,15 @@ CASE
 							// $dimension_e_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
 							// $dimension_f_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
 							// $dimension_f_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
+
+						if(($default_girth_side_a > 0 || $default_girth_side_a != '') || ($default_girth_side_b > 0 || $default_girth_side_b != '')){
+							// $item_dimension["girth_side_a_fraction"] = $config_vr_decimal_to_fraction_output_format[$default_girth_side_a_frac];
+							// $item_dimension["girth_side_a_fraction"] = $default_girth_side_a_frac;
+							// $t1 = $config_vr_decimal_to_fraction_output_format[$default_girth_side_a_frac];	
+							$girth_side_a_output = 	dec2frac1($default_girth_side_a);					
+							$girth_side_b_output = 	dec2frac1($default_girth_side_b);
+							$default_inventoryid = $item_dimension["inventoryid"];
+						}
 
 					?>
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.10px;width: 40.50;" align="center">GirthA&nbsp;&nbsp;</td>
@@ -1697,6 +1895,47 @@ function convertToDecimal($fraction)
 {
     $numbers=explode(".",$fraction);
     return round($numbers[0]+($numbers[1]*1),6);
+}
+
+
+function dec2frac1($f) {
+  $base = floor($f);
+  if ($base) {
+    $out = $base . ' ';
+    $f = $f - $base;
+  }
+  if ($f != 0) {
+    $d = 1;
+    while (fmod($f, 1) != 0.0) {
+      $f *= 2;
+      $d *= 2;
+    }
+    $n = sprintf('%.0f', $f);
+    $d = sprintf('%.0f', $d);
+    $out .= $n . '/' . $d;
+  }
+  return $out;
+}
+
+function decToFraction($float) {
+    // 1/2, 1/4, 1/8, 1/16, 1/3 ,2/3, 3/4, 3/8, 5/8, 7/8, 3/16, 5/16, 7/16,
+    // 9/16, 11/16, 13/16, 15/16
+    $whole = floor ( $float );
+    $decimal = $float - $whole;
+    $leastCommonDenom = 48; // 16 * 3;
+    $denominators = array (2, 3, 4, 8, 16, 24, 48 );
+    $roundedDecimal = round ( $decimal * $leastCommonDenom ) / $leastCommonDenom;
+    if ($roundedDecimal == 0)
+        return $whole;
+    if ($roundedDecimal == 1)
+        return $whole + 1;
+    foreach ( $denominators as $d ) {
+        if ($roundedDecimal * $d == floor ( $roundedDecimal * $d )) {
+            $denom = $d;
+            break;
+        }
+    }
+    return ($whole == 0 ? '' : $whole) . " " . ($roundedDecimal * $denom) . "/" . $denom;
 }
  
 ?> 
