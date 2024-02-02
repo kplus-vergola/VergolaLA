@@ -131,7 +131,8 @@ if(isset($_REQUEST['submit']) || isset($_REQUEST['search'])){
 	if(isset($_REQUEST['default_18mon'])){ $default_18mon = $_REQUEST['default_18mon']; }
 	if(isset($_REQUEST['todate'])){ $todate = $_REQUEST['todate']; }
 
-	if(isset($_REQUEST['rep_id'])){ $rep_id = $_REQUEST['rep_id']; }
+	// if(isset($_REQUEST['rep_id'])){ $rep_id = $_REQUEST['rep_id']; }
+	if(isset($_POST['replist'])){ $rep_id = $_POST['replist']; }
 
 	if(isset($_REQUEST['advance_search'])){ $advance_search = $_REQUEST['advance_search']; }
 
@@ -789,7 +790,12 @@ if (isset($_POST['download_pdf']) == true) {
  		
 		}
 
-	
+	 
+	// error_log(print_r($_GET,true), 3,'C:\\xampp\htdocs\\VergolaLA\\my-error.log');
+	// error_log("page: ".$page, 3,'C:\\xampp\htdocs\\VergolaLA\\my-error.log');
+
+	// error_log("start: ".$search_add, 3,'C:\\xampp\htdocs\\VergolaLA\\my-error.log');
+	// error_log("search: ".$html_pdf." END", 3,'C:\\xampp\htdocs\\VergolaLA\\my-error.log');
 	
 		$title = $user->id."-".mt_rand();
 		
