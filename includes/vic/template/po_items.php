@@ -587,7 +587,7 @@ WHERE
 	AND s.supplierid = '{$supplierid}' 	
 	
 	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
-	AND is_main_item = 1 
+	-- AND is_main_item = 1 
 	
 GROUP BY
 CASE
@@ -1607,6 +1607,7 @@ echo "</tr></tbody></table><br/> ";
 					while ($m = mysql_fetch_assoc($item_result2)){ 
 						$totalRrp += $m['ls_amount']; 
 						if($m['id']==""){continue;} 
+						if ($m['uom'] == 1 && $m['is_main_item'] == 0){
 					?>  
 						<!-- <tr> 
 							<td colspan="2"><?php echo $m['raw_description']; ?></td>  
@@ -1642,6 +1643,7 @@ echo "</tr></tbody></table><br/> ";
 
 </tr>
 			  	<?php
+			  }
 
 				
 			} // end of loop of m	
