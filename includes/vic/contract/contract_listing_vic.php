@@ -304,9 +304,9 @@ if($is_admin ){
 }
 else{ 
 	// $rep_filter .= " AND c.repident='{$user->RepID}' ";
-	// $rep_filter2 = " AND c.rep_id='{$user->RepID}' ";  
+	$rep_filter2 = " AND c.rep_id='{$user->RepID}' ";  
 	$rep_filter .= " AND c.repname='{$user->RepID}' ";
-	$rep_filter2 = " AND c.sales_rep='{$user->RepID}' ";  
+	// $rep_filter2 = " AND c.sales_rep='{$user->RepID}' ";  
 }	
  
 $suburb_filter = "";
