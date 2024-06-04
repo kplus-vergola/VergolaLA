@@ -529,7 +529,8 @@ if(isset($_FILES['signed_doc'])){  //Upload file from Files tab
   }
   if(isset($_POST['delete']))
   {   
-  mysql_query("DELETE from ver_chronoforms_data_clientpersonal_vic WHERE pid = '$id'")
+  // mysql_query("DELETE from ver_chronoforms_data_clientpersonal_vic WHERE pid = '$id'")
+    mysql_query("UPDATE ver_chronoforms_data_clientpersonal_vic SET status = 'deleted', deleted_at = NOW() WHERE pid = '$id'")
         or die(mysql_error()); 
   echo "Deleted";
    if($is_builder){ 
