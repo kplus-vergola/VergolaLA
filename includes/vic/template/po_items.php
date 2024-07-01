@@ -587,7 +587,6 @@ WHERE
 	AND s.supplierid = '{$supplierid}' 	
 	
 	".($is_reorder==" 1 "?" AND b.inventoryid = '{$inventoryid}' ":" AND inv.section = '{$section}' ")." 
-	-- AND is_main_item = 1 
 	
 GROUP BY
 CASE
@@ -1394,6 +1393,7 @@ CASE
 							$item_dimension["girth_side_b_inch"] += $item_dimension["girth_side_b_fraction_total_whole"];
 							// $item_dimension["girth_side_b_fraction_numerator"] -= 32;
 						}
+
 						$is_dimension = "";
 						$girth_side_a_output = "";
 						$girth_side_b_output = "";
@@ -1441,12 +1441,11 @@ CASE
 								$item_dimension["girth_side_b_inch"] = $default_girth_side_b_whole;
 								$item_dimension["girth_side_a_fraction"] = $config_vr_decimal_to_fraction_output_format[(floor($default_girth_side_a) - $default_girth_side_a_whole)];
 								$item_dimension["girth_side_b_fraction"] = $config_vr_fractions_output_format[$config_vr_decimal_to_fraction_output_format[$default_girth_side_b_frac]];
-								// $item_dimension["girth_side_b_fraction"] = $config_vr_fractions_output_format[$item_dimension["girth_side_b_fraction"]];
 
 
 						}
 
-
+						/*
 						// $default_girth_side_a_0 = dec2frac($default_girth_side_a);
 						if($item_dimension["girth_side_a_fraction_total"] >= 1){
 							// $item_dimension["girth_side_a_inch"] += $item_dimension["girth_side_a_fraction_total_whole"];
@@ -1457,7 +1456,7 @@ CASE
 							// $item_dimension["girth_side_b_inch"] = $item_dimension["girth_side_b_inch"] + $item_dimension["girth_side_b_fraction_total_whole"];
 							// $item_dimension["girth_side_b_inch"] += $item_dimension["girth_side_b_fraction_total_whole"];
 							// $item_dimension["girth_side_b_fraction_numerator"] -= 32;
-						}
+						}*/
 
 							$is_dimension = "9";
 							/*
@@ -1499,27 +1498,65 @@ CASE
 							$dimension_p_output_decimal = ($item_dimension["dimension_p_inch"] > -1 ? (get_mm_value(convertToDecimal($dimension_p_output)) + ((get_mm_value($config_vr_decimal_output_format[$item_dimension["dimension_p_fraction"]])))).'<sup>mm</sup>' :"");
 
 
-
-							// $girth_side_a_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
-							// $girth_side_b_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
-							// $dimension_a_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
-							// $dimension_b_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
-							// $dimension_c_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
-							// $dimension_d_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
-							// $dimension_e_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
-							// $dimension_f_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
-							// $dimension_f_output != empty($girth_side_a_output) ? $girth_side_a_output . '"' : "";
-
 						if(($default_girth_side_a > 0 || $default_girth_side_a != '') || ($default_girth_side_b > 0 || $default_girth_side_b != '')){
-							// $item_dimension["girth_side_a_fraction"] = $config_vr_decimal_to_fraction_output_format[$default_girth_side_a_frac];
-							// $item_dimension["girth_side_a_fraction"] = $default_girth_side_a_frac;
-							// $t1 = $config_vr_decimal_to_fraction_output_format[$default_girth_side_a_frac];	
 							$girth_side_a_output = 	dec2frac1($default_girth_side_a);					
 							$girth_side_b_output = 	dec2frac1($default_girth_side_b);
 							$default_inventoryid = $item_dimension["inventoryid"];
 						}
 
+						$dec_a = ($item_dimension["dimension_a_inch"]) + ($config_vr_decimal_output_format[$item_dimension["dimension_a_fraction"]]);
+						$dec_b = ($item_dimension["dimension_b_inch"]) + ($config_vr_decimal_output_format[$item_dimension["dimension_b_fraction"]]);
+						$dec_c = ($item_dimension["dimension_c_inch"]) + ($config_vr_decimal_output_format[$item_dimension["dimension_c_fraction"]]);
+						$dec_d = ($item_dimension["dimension_d_inch"]) + ($config_vr_decimal_output_format[$item_dimension["dimension_d_fraction"]]);
+						$dec_e = ($item_dimension["dimension_e_inch"]) + ($config_vr_decimal_output_format[$item_dimension["dimension_e_fraction"]]);
+						$dec_f = ($item_dimension["dimension_f_inch"]) + ($config_vr_decimal_output_format[$item_dimension["dimension_f_fraction"]]);
+						$dec_g = ($item_dimension["dimension_g_inch"]) + ($config_vr_decimal_output_format[$item_dimension["dimension_g_fraction"]]);
+						$dec_h = ($item_dimension["dimension_h_inch"]) + ($config_vr_decimal_output_format[$item_dimension["dimension_h_fraction"]]);
+						$dec_p = ($item_dimension["dimension_p_inch"]) + ($config_vr_decimal_output_format[$item_dimension["dimension_p_fraction"]]);
+
+						$dec_girth_a_total =  $dec_a + $dec_c + $dec_e + $dec_f + $dec_g + $dec_h + $dec_p;
+						$dec_girth_b_total =  $dec_b + $dec_d + $dec_e + $dec_f + $dec_g + $dec_h + $dec_p;
+
+						$dec_girth_a =  $dec_girth_a_total - floor($dec_girth_a_total);
+						$dec_girth_a0 =  dec2frac1($dec_girth_a_total - floor($dec_girth_a_total));
+						$dec_girth_a00 =  $config_vr_decimal_to_fraction_output_format_[$config_vr_decimal_output_format[($dec_girth_a_total - floor($dec_girth_a_total))]];
+						$dec_girth_a11 =  $config_vr_decimal_to_fraction_output_format_[($dec_girth_a_total - floor($dec_girth_a_total))];
+						$dec_girth_a_ =  $config_vr_fractions_output_format[$dec_girth_a];
+
+
+						// $girth_a_dec2frac_convert = dec2frac1($dec_girth_b_total - floor($dec_girth_b_total));
+						$girth_a_dec2frac_convert = dec2frac1($dec_girth_a_total - floor($dec_girth_a_total));
+						$girth_b_dec2frac_convert = dec2frac1($dec_girth_b_total - floor($dec_girth_b_total));
+
+						// $girth_b_dec2frac_convert = dec2frac1($dec_girth_b_total - floor($dec_girth_b_total)) == 0 ? '' : $girth_b_dec2frac_convert;
+						
+						
+						$girth_a_dec2frac_convert = $girth_a_dec2frac_convert != 0 ? $girth_a_dec2frac_convert : '';
+						$girth_b_dec2frac_convert = $girth_b_dec2frac_convert != 0 ? $girth_b_dec2frac_convert : '';
+
+						$girth_side_a_output = floor($dec_girth_a_total). ' ' . $girth_a_dec2frac_convert;
+						$girth_side_b_output = floor($dec_girth_b_total). ' ' . $girth_b_dec2frac_convert;
+						
+
+						// $girth_side_a_output = floor($dec_girth_a_total). ' ' . $girth_a_dec2frac_convert != 0 ? $girth_a_dec2frac_convert : '';
+						// $girth_side_b_output = floor($dec_girth_b_total). ' ' . $girth_b_dec2frac_convert != 0 ? $girth_b_dec2frac_convert : '';
+						// $girth_side_b_output = floor($dec_girth_b_total). ' ' . $girth_b_dec2frac_convert;
+
+						// $girth_side_a_output = floor($dec_girth_a_total). ' ' . dec2frac1($dec_girth_a_total - floor($dec_girth_a_total));
+						// $girth_side_b_output = floor($dec_girth_b_total). ' ' . dec2frac1($dec_girth_b_total - floor($dec_girth_b_total));
+
+						
+						/*
+						$girth_a1__ = $config_vr_fractions_output_format[$config_vr_decimal_to_fraction_output_format[(floor($default_girth_side_a_frac) + .75)]];
+						$girth_a10 = ($config_vr_fractions_output_format[$default_girth_side_a_frac]);
+						// $girth_a1_ = ($default_girth_side_a - $default_girth_side_a_whole);
+						// $girth_a1_1 = ($item_dimension["girth_side_a_fraction_total"] .    "     "   . ($default_girth_side_a - $default_girth_side_a_whole));
+						$girth_b1 = $config_vr_fractions_output_format[$config_vr_decimal_to_fraction_output_format[$default_girth_side_b_frac]];
+						$girth_a1_1_ = $default_girth_side_ + $default_girth_side_a + 100;
+						$girth_a1_1 = dec2frac1((floor($default_girth_side_a)) + 0.135);
+						*/
 					?>
+
 						<td colspan="1" valign="middle" align="left" style="background-color:#cccccc; height:21.10px;width: 40.50;" align="center">GirthA&nbsp;&nbsp;</td>
 						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;" align="center"><?php echo ($girth_side_a_output); echo ($girth_side_a_output == '&nbsp;' ? '' : '"'); ?>&nbsp;</td>	
 						<td colspan="1" valign="middle" align="right" style="background-color:#cccccc; width: 52.50;" align="center"><?php echo ($girth_side_a_output_decimal); echo (($girth_side_a_output_decimal) == '&nbsp;' ? '' : ''); ?> &nbsp;</td>					
@@ -1900,7 +1937,7 @@ function convertToDecimal($fraction)
 }
 
 
-function dec2frac1($f) {
+function dec2frac1_($f) {
   $base = floor($f);
   if ($base) {
     $out = $base . ' ';
@@ -1919,13 +1956,14 @@ function dec2frac1($f) {
   return $out;
 }
 
-function decToFraction($float) {
+// function decToFraction($float) {
+function dec2frac1($float) {	
     // 1/2, 1/4, 1/8, 1/16, 1/3 ,2/3, 3/4, 3/8, 5/8, 7/8, 3/16, 5/16, 7/16,
     // 9/16, 11/16, 13/16, 15/16
     $whole = floor ( $float );
     $decimal = $float - $whole;
-    $leastCommonDenom = 48; // 16 * 3;
-    $denominators = array (2, 3, 4, 8, 16, 24, 48 );
+    $leastCommonDenom = 32; // 16 * 3;
+    $denominators = array (2, 3, 4, 8, 16, 32);
     $roundedDecimal = round ( $decimal * $leastCommonDenom ) / $leastCommonDenom;
     if ($roundedDecimal == 0)
         return $whole;
