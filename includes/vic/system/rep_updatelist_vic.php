@@ -467,37 +467,27 @@ function createMonthFields(){
     $("#tblSalesTarget tr:not(:first)").remove();
     var dFrom = new Date($("#dFrom").val());
     var dTo = new Date($("#dTo").val());
+    var dFrom_tz = dFrom.getTimezoneOffset();
+    var dTo_tz = dTo.getTimezoneOffset();
+    dFrom = dFrom.setMinutes( dFrom.getMinutes() + dFrom_tz );
+    dTo = dTo.setMinutes( dTo.getMinutes() + dTo_tz );
+    var dFrom_server = new Date($.format.date(dFrom, "yyyy-MM-dd") +"T08:00:00.000Z");
+    var dTo_server = new Date($.format.date(dTo, "yyyy-MM-dd") +"T08:00:00.000Z");
 
-    //alert(dFrom);alert(dTo);
-    // console.log(dFrom+" "+dTo); return;
-
-    //var date = new Date("October 13, 2014");
-    //var endDate = new Date("January 13, 2015");
-    //var monthNameList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    //var tr = "<tr><td></td><td></td></tr>";
-    var	tr = "<tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><th>Month</th><th style='text-align:left;'>Sales Target</th><th style='text-align:left;'>Target Contract</th></tr> ";
+    var tr = "<tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><th>Month</th><th style='text-align:left;'>Sales Target</th><th style='text-align:left;'>Target Contract</th></tr> ";
     //while (dFrom <= dTo)
-    for (d=dFrom; dFrom <= dTo; d.setMonth(d.getMonth() + 1))
+    for (d=dFrom_server; dFrom_server <= dTo_server; d.setMonth(d.getMonth() + 1))
     {
-        //console.log(dFrom.setMonth(dFrom.getMonth() + 1));
-
         tr += "<tr>";
         tr += "<td>"+$.format.date(d, "MMMM")+"</td><td><input type='hidden' name='target_date[]' value='"+$.format.date(d, "yyyy-MM-dd")+"'><input type='text' name='target_amount[]' ></td><td><input type='text' name='target_contract[]' ></td>";
         tr += "</tr>";
-
-        //console.log($.format.date(dFrom.setMonth(dFrom.getMonth()+1), "MMMM"));
     }
-
-
     tr += "<tr>";
     tr += "<td> &nbsp; </td><td><input type='submit' value='Save' style='width:100px; padding:3px;' name='save_sales_target' /></td>";
     tr += "</tr>";
 
     $("#tblSalesTarget").append(tr);
-
 }
-
-
 </script>
 
 
