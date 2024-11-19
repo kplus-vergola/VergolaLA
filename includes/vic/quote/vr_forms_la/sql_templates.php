@@ -532,7 +532,7 @@ $sql_template_retrieve_data_quote = "
         iv.section, 
         iv.category, 
         iv.photo
-        ,iv.hide_from_costing AS 'vr_item_hide_costing' 
+        ,iv.hide_from_costing AS 'hide_costing' 
     FROM ver_chronoforms_data_quote_vic dq 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
             ON dq.inventoryid = iv.inventoryid 
@@ -620,7 +620,7 @@ $sql_template_retrieve_data_contract_items = "
         iv.section, 
         iv.category, 
         iv.photo
-        ,iv.hide_from_costing AS 'vr_item_hide_costing' 
+        ,iv.hide_from_costing AS 'hide_costing' 
     FROM ver_chronoforms_data_section_vic ds 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
             ON ds.section = iv.section AND ds.category = iv.category 
