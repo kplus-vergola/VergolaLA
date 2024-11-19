@@ -82,6 +82,7 @@ if(isset($_POST['save']) || isset($_POST['save_new']))
     $name_save=$_POST['name']; 
     $uom_save = $_POST['uom'];
     $rrp_save = $_POST['rrp'];
+    $hidefromcosting_save = $_POST['hide_from_costing'];
     $cost_save = $_POST['totalcost'] + array_sum($total_cost);
     $pic_save=($_FILES['photo']['size'] > 0?$_FILES['photo']['name']:'');
 
@@ -97,6 +98,7 @@ if(isset($_POST['save']) || isset($_POST['save_new']))
           photo ='$pic_save', 
           uom ='$uom_save',
           rrp ='$rrp_save', 
+          hide_from_costing ='$hidefromcosting_save',
           cost ='$cost_save'
            
           WHERE inventoryid = '$id'";
@@ -112,7 +114,9 @@ if(isset($_POST['save']) || isset($_POST['save_new']))
 			 -- photo ='$pic_save',  
 			 uom ='$uom_save',
 			 rrp ='$rrp_save', 
-			 cost ='$cost_save'         
+       hide_from_costing ='$hidefromcosting_save', 
+			 cost ='$cost_save'   
+
 			 WHERE inventoryid = '$id'";
 
 			 mysql_query($sql) or die(mysql_error()); //echo "Saved! #a"; 
@@ -129,7 +133,7 @@ if(isset($_POST['save']) || isset($_POST['save_new']))
       $getinventoryid = 'IRV'.$next_increment;
 
       $section_save = $_POST['section'];
-      $sql = "INSERT INTO `ver_chronoforms_data_inventory_vic`(inventoryid, section, category, description, photo, uom, rrp) VALUES('{$getinventoryid}', '{$section_save}', '{$category_save}', '{$name_save}', '{$pic_save}', '{$uom_save}', '{$rrp_save}')";
+      $sql = "INSERT INTO `ver_chronoforms_data_inventory_vic`(inventoryid, section, category, description, photo, uom, rrp, hide_from_costing) VALUES('{$getinventoryid}', '{$section_save}', '{$category_save}', '{$name_save}', '{$pic_save}', '{$uom_save}', '{$rrp_save}', '{$hidefromcosting_save}')";
       
       mysql_query($sql) or die(mysql_error()); //echo "Saved! #0"; 
       
@@ -290,6 +294,7 @@ if (!$result)
   $Description = $retrieve['description'];          
   $UOM = $retrieve['uom'] ;
   $RRP = $retrieve['rrp'] ; 
+  $HIDEFROMCOSTING = $retrieve['hide_from_costing'] ;
   $Cost = $retrieve['cost'] ;
   $Photo = $retrieve['photo'];
 
@@ -309,13 +314,14 @@ if(isset($_POST['duplicate']))
     $name=$_POST['name']; 
     $uom = $_POST['uom'];
     $rrp = $_POST['rrp'];
+    $hidefromcosting = $_POST['hide_from_costing'];
     $cost = $_POST['totalcost'] + array_sum($total_cost);
     $pic=$Photo; 
      
     //Writes the information to the database 
     if($supplier_id !=$SupplierID) {
 
-    mysql_query("INSERT INTO `ver_chronoforms_data_inventory_vic` (cf_id, inventoryid, section, category, description, photo, uom, rrp, cost) VALUES (NULL, '$id', '$section', '$category', '$name', '$pic', '$uom', '$rrp', '$cost')") ; 
+    mysql_query("INSERT INTO `ver_chronoforms_data_inventory_vic` (cf_id, inventoryid, section, category, description, photo, uom, rrp, hide_from_costing, cost) VALUES (NULL, '$id', '$section', '$category', '$name', '$pic', '$uom', '$rrp', '$hidefromcosting' , '$cost')") ;
 
     $rawdesc_ret = implode(", ", $_POST['rawdesc_ret']);
     $cnt_ret = count($_POST['rawcost_ret']);
@@ -604,6 +610,7 @@ function showdrop()
       <th>Description</th>
       <th>UOM</th>
       <th width="100">RRP Price</th>
+      <th width="11%">Hide from Costing</th>
       <th></th>
     </tr>
     <tr>
@@ -630,6 +637,7 @@ function showdrop()
       <!-- <td class="uom"><select name="uom"> <option value="Ea" <?php echo ($UOM=="Ea"?"selected":""); ?> >Ea</option><option value="Mtrs" <?php echo ($UOM=="Mtrs"?"selected":""); ?>>Mtrs</option></select> </td> -->
       <td class="uom"><select name="uom"> <option value="Ea" <?php echo ($UOM=="Ea"?"selected":""); ?> >Ea</option><option value="Inches" <?php echo ($UOM=="Inches"?"selected":""); ?>>Inches</option></select> </td>
       <td class="rrp"><input type="text" id="rrp" name="rrp" value="<?php echo $RRP; ?>"></td>
+      <td class="rrp"><input type="checkbox" style="margin-left: 15px;" name="hide_from_costing" value="1" <?php echo ($HIDEFROMCOSTING=="1"?"checked":""); ?> ></td>
     </tr>
   </table>
   <div id="matcontainer">

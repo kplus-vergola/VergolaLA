@@ -327,6 +327,41 @@ $sql_template_retrieve_item_list = "
 
 
 /*
+----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+----- retrieve item list hide costing-----
+----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+*/
+$sql_template_retrieve_item_list_hide_costing = "
+    SELECT 
+        ver_chronoforms_data_section_vic.section AS 'section_ref_name', 
+        ver_chronoforms_data_section_vic.section_display_name, 
+        ver_chronoforms_data_section_vic.section_display_order, 
+        ver_chronoforms_data_section_vic.category AS 'subsection_ref_name', 
+        ver_chronoforms_data_section_vic.category AS 'subsection_display_name', 
+        ver_chronoforms_data_section_vic.subsection_display_order, 
+        ver_chronoforms_data_inventory_vic.inventoryid AS 'item_ref_name', 
+        ver_chronoforms_data_inventory_vic.description AS 'item_display_name', 
+        ver_chronoforms_data_inventory_vic.cf_id AS 'item_display_order', 
+        ver_chronoforms_data_inventory_vic.uom AS 'item_uom', 
+        ver_chronoforms_data_inventory_vic.rrp AS 'item_unit_price', 
+        ver_chronoforms_data_inventory_vic.photo AS 'item_image', 
+        IFNULL(ver_chronoforms_data_inventory_vic.customisation_options, '') AS 'item_customisation_options' 
+        ,ver_chronoforms_data_inventory_vic.hide_from_costing AS 'item_hide_costing'
+    FROM ver_chronoforms_data_section_vic 
+        LEFT JOIN ver_chronoforms_data_inventory_vic 
+            ON ver_chronoforms_data_section_vic.section = ver_chronoforms_data_inventory_vic.section 
+            AND ver_chronoforms_data_section_vic.category = ver_chronoforms_data_inventory_vic.category 
+    WHERE
+        ver_chronoforms_data_inventory_vic.hide_from_costing <> 1
+    ORDER BY 
+        ver_chronoforms_data_section_vic.section_display_order, 
+        ver_chronoforms_data_section_vic.subsection_display_order, 
+        ver_chronoforms_data_inventory_vic.cf_id 
+    LIMIT 1000;
+";
+
+
+/*
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ----- retrieve vr form items config list -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -367,7 +402,8 @@ $sql_template_retrieve_vr_form_items_config_list = "
         ic.vr_item_config_internal_ref_name, 
         ic.vr_item_adhoc, 
         ic.vr_record_index, 
-        ic.status 
+        ic.status
+        ,iv.hide_from_costing AS 'vr_item_hide_costing' 
     FROM tblvrformitemsconfig ic 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
             ON ic.vr_item_ref_name = iv.inventoryid COLLATE utf8_unicode_ci 
@@ -495,7 +531,8 @@ $sql_template_retrieve_data_quote = "
         dq.is_additional, 
         iv.section, 
         iv.category, 
-        iv.photo 
+        iv.photo
+        ,iv.hide_from_costing AS 'vr_item_hide_costing' 
     FROM ver_chronoforms_data_quote_vic dq 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
             ON dq.inventoryid = iv.inventoryid 
@@ -582,7 +619,8 @@ $sql_template_retrieve_data_contract_items = "
         dci.is_additional, 
         iv.section, 
         iv.category, 
-        iv.photo 
+        iv.photo
+        ,iv.hide_from_costing AS 'vr_item_hide_costing' 
     FROM ver_chronoforms_data_section_vic ds 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
             ON ds.section = iv.section AND ds.category = iv.category 

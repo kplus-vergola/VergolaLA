@@ -728,6 +728,60 @@
                     }
                 }
             }
+/*
+            if (vr_form_system_info['access_mode'] == 'contract_bom_edit' || 
+                vr_form_system_info['access_mode'] == 'quote_view' ||
+                vr_form_system_info['access_mode'] == 'quote_add' || 
+                vr_form_system_info['access_mode'] == 'quote_edit') {                
+                adhoc_criteria2 = {
+                    "target_vr_item_sections_info":[
+                        {
+                            "vr_section_ref_name":"Guttering", 
+                            "vr_subsection_ref_name":"Gutters Standard", 
+                            "related_vr_items": [
+                                {
+                                    "search_info":{
+                                        "vr_section_ref_name":"Guttering", "vr_subsection_ref_name":"Gutters Standard", "vr_item_display_name":"Vergola Gutter Lining Std 250mm"
+                                    },
+                                    "input_type_info":"Data Value", 
+                                    "qty_info": "0"
+                                }
+                            ]
+                        }
+                    ]
+                };
+                for (c1 = 0; c1 < adhoc_criteria2['target_vr_item_sections_info'].length; c1++) {
+                    current_vr_section_ref_name = adhoc_criteria2['target_vr_item_sections_info'][c1]['vr_section_ref_name'];
+                    current_vr_subsection_ref_name = adhoc_criteria2['target_vr_item_sections_info'][c1]['vr_subsection_ref_name'];
+                    current_related_vr_items = adhoc_criteria2['target_vr_item_sections_info'][c1]['related_vr_items'];
+                    if (current_vr_section_ref_name.toLowerCase() == vr_form_item_config['vr_section_ref_name'].toLowerCase() && 
+                        current_vr_subsection_ref_name.toLowerCase() == vr_form_item_config['vr_subsection_ref_name'].toLowerCase()) {
+                        for (c2 = 0; c2 < current_related_vr_items.length; c2++) {
+                            adhoc_criteria1 = {
+                                "search_info": [], 
+                                "input_type_info": "", 
+                                "qty_info": ""
+                            };
+                            for (i1 in current_related_vr_items[c2]['search_info']) {
+                                adhoc_criteria1['search_info'][adhoc_criteria1['search_info'].length] = {
+                                    "field_name": i1, 
+                                    "field_value": current_related_vr_items[c2]['search_info'][i1]
+                                };
+                            }
+                            adhoc_criteria1['input_type_info'] = current_related_vr_items[c2]['input_type_info'];
+                            adhoc_criteria1['qty_info'] = current_related_vr_items[c2]['qty_info'];
+
+                            vr_form_item_config = getVrFormItemConfigByAdhocCriteria(adhoc_criteria1);
+                            vr_section_last_vr_form_item_index = getVrSectionLastVrFormItemIndex(vr_form_item_config['vr_section_display_name']);
+                            if (vr_section_last_vr_form_item_index != null) {
+                                insertVrSectionFirstVrFormItemConfig((vr_section_last_vr_form_item_index + 1), vr_form_item_config);
+                                generateVrFormItemsDataEntry('form');
+                            }
+                        }
+                    }
+                }
+            }
+*/
 
             calculateVrFormItemsDataEntryValues(2);
         }
@@ -1055,6 +1109,14 @@
                                 vr_item_report_output_value_area['action'] = '';
 
                                 /* --- begin column description --- */
+                                if (vr_form_item_table_mode == 'quote') {
+                                    if (vr_form_system_info['access_mode'] == 'quote_add') {                                        
+                                        vr_items_list = vr_items_list_hide_costing;
+                                    }else{                                        
+                                        vr_items_list = vr_items_list;
+                                    }
+                                }
+                                console.log(vr_items_list);
                                 temp_text = '';
                                 if (vr_form_items_data_entry[c12]['vr_item_display_name_input_type'] == 'Select Box') {
                                     if (vr_form_items_data_entry[c12]['vr_item_adhoc'] == 'yes') {
@@ -1551,7 +1613,15 @@
                                 /* --- end column action --- */
 
                                 /* --- begin apply column data to table row --- */
-                                items_list_text_data_entry += '<tr>';
+                                is_hide_costing_item = '';
+                                if (vr_form_item_table_mode == 'quote') {
+                                    if (vr_form_system_info['access_mode'] == 'quote_add') {
+                                        is_hide_costing_item = (vr_form_items_data_entry[c12]['vr_item_hide_costing']) == 1 ? 'hidden' : '';
+                                    }else{
+                                        is_hide_costing_item = (vr_form_items_data_entry[c12]['vr_item_hide_costing']);
+                                    }
+                                }
+                                items_list_text_data_entry += '<tr ' + is_hide_costing_item + '>';
                                 items_list_text_report_output += '<tr>';
                                 total_column_apply = (total_column_vr_form_item_table - 1); 
                                 if (vr_form_item_table_mode == 'report') {

@@ -422,6 +422,9 @@
 
 
         var vr_items_list = <?php echo getResultsetInJson($sql_template_retrieve_item_list); ?>;
+        
+
+        var vr_items_list_hide_costing = <?php echo getResultsetInJson($sql_template_retrieve_item_list_hide_costing); ?>;
 
 
         <?php

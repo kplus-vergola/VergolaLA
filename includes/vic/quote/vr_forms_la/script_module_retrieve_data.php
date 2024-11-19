@@ -117,6 +117,7 @@ if ($enable_retrieve[$target_data_source] == true) {
             $vr_form_items_data_entry[$current_item_index]['vr_item_length_fraction'] = $r1['length_fraction'];
             $vr_form_items_data_entry[$current_item_index]['vr_item_rrp'] = $r1['rrp'];
             $vr_form_items_data_entry[$current_item_index]['vr_item_adhoc'] = ($r1['is_additional'] == 1) ? 'yes' : '';
+            $vr_form_items_data_entry[$current_item_index]['vr_item_hide_costing'] = ($r1['hide_costing'] == 1) ? 'hidden' : '';
 
             $current_vr_type_ref_name = $vr_type_reverse_map[$r1['framework']];
             $current_vr_item_ref_name = $r1['inventoryid'];

@@ -301,6 +301,76 @@
         }
 
 
+        function calculateTotalGutterLining_() {
+
+            // var adhoc_criteria1 = {};
+            // var vr_form_item_info1 = [];
+            // var adhoc_criteria2 = {};
+            // var vr_form_item_info2 = [];
+            // var c1 = 0;
+            // var current_vr_length_in_string = '';
+            // var current_vr_length_in_value_for_calculation = 0.0;
+            // var total_vr_length_in_value_for_calculation = 0.0;
+            // var total_vr_length_in_value_for_display = '';
+            // var temp_array = [];
+            // var total_gutter_lining_length_feet = '';
+            // var total_gutter_lining_length_inch = '';
+            
+            // var total_gutter_lining_length_meter = '';
+
+            // var current_item_length = 0.0;
+            // var current_item_length_in_value_for_calculation = 0.0;
+            // var current_item_length_meter = 0.0;
+            // var current_item_length_meter_in_value_for_calculation = 0.0;
+            // var current_item_unit_price = 0.0;
+            // var current_item_qty = 0.0;
+            // var current_item_rrp = 0.0;
+
+
+            // // generateVrFormItemsDataEntry('form');
+            // for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
+            //     // current_vr_length_in_string = vr_form_items_data_entry[c1]['vr_item_length_meter'];
+            //     current_vr_length_in_string = vr_form_items_data_entry[c1]['vr_item_length_feet'] + '\'' + vr_form_items_data_entry[c1]['vr_item_length_inch'];                
+            //     current_vr_length_in_value_for_calculation = convertValueForCalculation(current_vr_length_in_string);
+            //     total_vr_length_in_value_for_calculation += parseFloat(vr_form_items_data_entry[c1]['vr_item_qty']) * current_vr_length_in_value_for_calculation;
+
+            //     if (vr_form_items_data_entry[c1]['vr_section_ref_name'] == 'Guttering') {
+            //         if (document.getElementById('vr_type_data_entry_ref_name_' + (c1-1))) {
+            //             if ((document.getElementById('vr_item_data_entry_ref_name_' + (c1)).value) == 'IRV31') {
+            //                 // c1 = c1 + 1;
+            //                 // console.log("calculateTotalGutterLining => " + document.getElementById('vr_item_data_entry_ref_name_' + (c1 + 1)).value);
+            //                 // current_item_length_meter = vr_form_items_data_entry[(c1-1)]['vr_item_length_meter'];
+            //                 current_item_length_meter = vr_form_items_data_entry[c1]['vr_item_length_feet'] + '\'' + vr_form_items_data_entry[c1]['vr_item_length_inch'];                            
+            //                 current_item_length_meter = (current_item_length_meter.length == 0 || isNaN(current_item_length_meter)) ? 0 : current_item_length_meter;
+            //                 current_item_length = convertValueForCalculation(current_item_length_meter);
+            //                 current_item_length_in_value_for_calculation = convertValueForCalculation(current_item_length);
+
+            //                 current_item_qty = vr_form_items_data_entry[(c1-1)]['vr_item_qty']; /*parseInt(vr_form_items_data_entry[c1]['vr_item_qty'])*/
+            //                 current_item_qty = (current_item_qty.length == 0 || isNaN(current_item_qty)) ? 0 : current_item_qty;
+
+            //                 current_item_rrp = vr_form_items_data_entry[(c1)]['vr_item_rrp'];
+            //                 current_item_rrp = (current_item_rrp.length == 0 || isNaN(current_item_rrp)) ? 0 : current_item_rrp;
+
+            //                 document.getElementById('vr_item_data_entry_qty_' + (c1)).value = current_item_qty;
+            //                 document.getElementById('vr_item_data_entry_length_meter_' + (c1)).value = current_item_length_in_value_for_calculation;
+
+            //                 vr_form_items_data_entry[c1]['vr_item_qty'] = document.getElementById('vr_item_data_entry_qty_' + c1).value;
+            //                 vr_form_items_data_entry[c1]['vr_item_qty_input_type'] = document.getElementById('vr_item_data_entry_qty_input_type_' + c1).value;
+
+            //                 vr_form_items_data_entry[c1]['vr_item_length_meter'] = document.getElementById('vr_item_data_entry_length_meter_' + c1).value;
+            //                 vr_form_items_data_entry[c1]['vr_item_length_meter_input_type'] = document.getElementById('vr_item_data_entry_length_meter_input_type_' + c1).value;
+
+            //                 vr_form_items_data_entry[c1]['vr_item_rrp'] = formatInputValue('float', document.getElementById('vr_item_data_entry_rrp_' + c1).value);
+            //                 vr_form_items_data_entry[c1]['vr_item_rrp_input_type'] = document.getElementById('vr_item_data_entry_rrp_input_type_' + c1).value;
+
+            //             }
+            //         }
+
+
+            //     }
+            // }
+        }
+
         function calculateLouvreRelatedInfo() {
             var adhoc_criteria1 = {};
             var vr_form_item_info1 = [];
