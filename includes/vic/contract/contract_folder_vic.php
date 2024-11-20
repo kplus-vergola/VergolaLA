@@ -1489,7 +1489,7 @@ $groups = $user->get('groups');
             DATE_FORMAT(louvers_ordered,'" . SQL_DATE_FORMAT_01 . "') flouvers_ordered, 
             DATE_FORMAT(install_date,'" . SQL_DATE_FORMAT_01 . "') finstall_date,
             DATE_FORMAT(schedule_completion,'" . SQL_DATE_FORMAT_01 . "') fschedule_completion,
-            DATE_FORMAT(time_frame_letter,'" . SQL_DATE_FORMAT_01 . "') ,
+            DATE_FORMAT(time_frame_letter,'" . SQL_DATE_FORMAT_01 . "') ftime_frame_letter,
             DATE_FORMAT( cancellation_date, '".SQL_DATE_FORMAT_01."' ) fcancellation_date,
             DATE_FORMAT( cancellation_fee_amount, '".SQL_DATE_FORMAT_01."' ) fcancellation_fee_amount,
             DATE_FORMAT( balanceowning_amount, '".SQL_DATE_FORMAT_01."' ) fbalanceowning_amount,
