@@ -3448,7 +3448,7 @@ var installer_list_nextmon = [
        timeFormat: 'H(:mm)',
        eventClick: function(event) {
             if (event.url) {
-                window.open(event.url);
+                window.location.href = event.url; // Use the current tab
                 return false;
             }
         }
@@ -3459,7 +3459,7 @@ var installer_list_nextmon = [
         timeFormat: 'H(:mm)',
         eventClick: function(event) {
             if (event.url) {
-                window.open(event.url);
+                window.location.href = event.url; // Use the current tab
                 return false;
             }
         }
