@@ -42,7 +42,7 @@ if ($cnt > 0 && $category!='') {
 if(isset($_POST['delete']))
 {	
     $category_id = $_POST['category_id'];
-	mysql_query("DELETE from ver_chronoforms_data_section_vic WHERE cf_id = '$category_id'")
+	mysql_query("UPDATE ver_chronoforms_data_section_vic SET status = 'deleted' WHERE cf_id = '$category_id'")
 				or die(mysql_error()); 
 	echo "Deleted";
 	
@@ -179,7 +179,7 @@ if(isset($_POST['update']))
   
        <?php 
 		   //Getting Categories
-	$resultcat = mysql_query("SELECT category, cf_id FROM ver_chronoforms_data_section_vic WHERE sectionid = '$SectionID' ORDER BY category ASC");
+	$resultcat = mysql_query("SELECT category, cf_id FROM ver_chronoforms_data_section_vic WHERE sectionid = '$SectionID' AND status !='deleted' ORDER BY category ASC");
 	$j=0; $k=0;
 	while ($recordcat = mysql_fetch_row($resultcat)) {
 		
