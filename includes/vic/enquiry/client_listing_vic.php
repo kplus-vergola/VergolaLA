@@ -164,7 +164,9 @@ if($search_string){
 
 if($rep_id){
 	$paging_url .= "&rep_id=".$rep_id; 
-}	
+}else {
+	$rep_id = $_GET['rep_id'];
+}
 
 if ($frdate && $todate){
 	$paging_url .= "&frdate=".$frdate."&todate=".$todate;
@@ -194,10 +196,6 @@ if($advance_search){
 if($is_builder){
 	$paging_url .= "&client_type=b";
 }
-
-if($rep_id){
-	$paging_url .= "&rep_id=".$rep_id;
-} 
 
 if($search_ID){
 	$paging_url .= "&search_ID=".$search_ID;
