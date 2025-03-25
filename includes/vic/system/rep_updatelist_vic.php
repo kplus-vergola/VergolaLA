@@ -447,7 +447,8 @@ $(document).ready(function(){
      //console.log($.format.date("2009-12-18 10:54:50.546", "Test: dd/MM/yyyy"));
       	var dFormat = "dd-M-yy";
         <?php if(HOST_SERVER=="LA"){ ?>
-            dFormat = "M-dd-yy";
+            // dFormat = "M-dd-yy";
+            dFormat = "dd-M-yy";
         <?php }else{ ?>
             dFormat = "dd-M-yy";
         <?php } ?>
