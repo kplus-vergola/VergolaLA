@@ -205,9 +205,7 @@ $sql_template_insert_data_contract_item_dimensions = "
         dimension_c_inch,               dimension_c_fraction, 
         dimension_d_inch,               dimension_d_fraction, 
         dimension_e_inch,               dimension_e_fraction, 
-        dimension_f_inch,               dimension_f_fraction,
-        dimension_g_inch,               dimension_g_fraction,         
-        dimension_h_inch,               dimension_h_fraction,
+        dimension_f_inch,               dimension_f_fraction, 
         dimension_p_inch,               dimension_p_fraction, 
         girth_side_a_inch,              girth_side_a_fraction, 
         girth_side_b_inch,              girth_side_b_fraction, 
@@ -224,8 +222,6 @@ $sql_template_insert_data_contract_item_dimensions = "
         '[DIMENSION_D_INCH]',           '[DIMENSION_D_FRACTION]', 
         '[DIMENSION_E_INCH]',           '[DIMENSION_E_FRACTION]', 
         '[DIMENSION_F_INCH]',           '[DIMENSION_F_FRACTION]', 
-        '[DIMENSION_G_INCH]',           '[DIMENSION_G_FRACTION]',
-        '[DIMENSION_H_INCH]',           '[DIMENSION_H_FRACTION]',
         '[DIMENSION_P_INCH]',           '[DIMENSION_P_FRACTION]', 
         '[GIRTH_SIDE_A_INCH]',           '[GIRTH_SIDE_A_FRACTION]', 
         '[GIRTH_SIDE_B_INCH]',           '[GIRTH_SIDE_B_FRACTION]', 
@@ -327,107 +323,55 @@ $sql_template_retrieve_item_list = "
 
 
 /*
------ ----- ----- ----- ----- ----- ----- ----- ----- ----- 
------ retrieve item list hide costing-----
------ ----- ----- ----- ----- ----- ----- ----- ----- -----
-*/
-$sql_template_retrieve_item_list_hide_costing = "
-    SELECT 
-        ver_chronoforms_data_section_vic.section AS 'section_ref_name', 
-        ver_chronoforms_data_section_vic.section_display_name, 
-        ver_chronoforms_data_section_vic.section_display_order, 
-        ver_chronoforms_data_section_vic.category AS 'subsection_ref_name', 
-        ver_chronoforms_data_section_vic.category AS 'subsection_display_name', 
-        ver_chronoforms_data_section_vic.subsection_display_order, 
-        ver_chronoforms_data_inventory_vic.inventoryid AS 'item_ref_name', 
-        ver_chronoforms_data_inventory_vic.description AS 'item_display_name', 
-        ver_chronoforms_data_inventory_vic.cf_id AS 'item_display_order', 
-        ver_chronoforms_data_inventory_vic.uom AS 'item_uom', 
-        ver_chronoforms_data_inventory_vic.rrp AS 'item_unit_price', 
-        ver_chronoforms_data_inventory_vic.photo AS 'item_image', 
-        IFNULL(ver_chronoforms_data_inventory_vic.customisation_options, '') AS 'item_customisation_options' 
-        ,ver_chronoforms_data_inventory_vic.hide_from_costing AS 'item_hide_costing'
-    FROM ver_chronoforms_data_section_vic 
-        LEFT JOIN ver_chronoforms_data_inventory_vic 
-            ON ver_chronoforms_data_section_vic.section = ver_chronoforms_data_inventory_vic.section 
-            AND ver_chronoforms_data_section_vic.category = ver_chronoforms_data_inventory_vic.category 
-    WHERE
-        ver_chronoforms_data_inventory_vic.hide_from_costing <> 1
-    ORDER BY 
-        ver_chronoforms_data_section_vic.section_display_order, 
-        ver_chronoforms_data_section_vic.subsection_display_order, 
-        ver_chronoforms_data_inventory_vic.cf_id 
-    LIMIT 1000;
-";
-
-
-/*
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ----- retrieve vr form items config list -----
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
 $sql_template_retrieve_vr_form_items_config_list = "
- SELECT
-    ic.id,
-    ic.vr_type_ref_name,
-    ic.vr_type_display_name,
-    ic.vr_section_ref_name,
-    ic.vr_section_display_name,
-    ic.vr_subsection_ref_name,
-    ic.vr_subsection_display_name,
-    ic.vr_item_ref_name,
-    iv.description AS 'vr_item_display_name',
-    ic.vr_item_display_name_input_type,
-    ic.vr_item_webbing,
-    ic.vr_item_webbing_input_type,
-    ic.vr_item_colour,
-    ic.vr_item_colour_input_type,
-    ic.vr_item_finish,
-    ic.vr_item_finish_input_type,
-    iv.uom AS 'vr_item_uom',
-    ic.vr_item_uom_input_type,
-    iv.rrp AS 'vr_item_unit_price',
-    ic.vr_item_unit_price_input_type,
-    ic.vr_item_qty,
-    ic.vr_item_qty_input_type,
-    ic.vr_item_length_feet,
-    ic.vr_item_length_feet_input_type,
-    ic.vr_item_length_inch,
-    ic.vr_item_length_inch_input_type,
-    ic.vr_item_length_fraction,
-    ic.vr_item_length_fraction_input_type,
-    ic.vr_item_rrp,
-    ic.vr_item_rrp_input_type,
-    iv.photo AS 'vr_item_image',
-    ic.vr_item_image_input_type,
-    ic.vr_item_config_internal_ref_name,
-    ic.vr_item_adhoc,
-    ic.vr_record_index,
-    ic.STATUS,
-    iv.hide_from_costing AS 'vr_item_hide_costing' 
- FROM
-    
-    tblvrformitemsconfig ic
-    LEFT JOIN ver_chronoforms_data_inventory_vic iv ON ic.vr_item_ref_name = iv.inventoryid COLLATE utf8_unicode_ci 
- WHERE
-    ic.vr_type_ref_name = '[VR_TYPE_REF_NAME]' 
-
-    AND ic.STATUS IN ( 'active', 'hidden' ) 
- --     AND vr_section_ref_name = 'Guttering' 
-    AND vr_item_config_internal_ref_name != 'gutter_lining' 
- ORDER BY
-    FIELD (ic.vr_section_display_name, 'Framework', 'Fittings', 'Gutters', 'Flashing', 'Downpipe', 'Vergola System', 'Misc Items', 'Extras', 'Disbursements'),
---    vr_item_config_internal_ref_name,
-     (CASE WHEN ic.vr_section_ref_name ='Guttering' THEN ic.vr_item_config_internal_ref_name ELSE ic.display_order END) ASC,
-CASE   
-   WHEN vr_item_display_name = 'Vergola Gutter Lining' THEN
-   1 ELSE 0 
-   END
-   -- , id ASC 
---   END WHILE,
---   ic.display_order
- LIMIT 1000;
-  ";
+    SELECT 
+        ic.vr_type_ref_name, 
+        ic.vr_type_display_name, 
+        ic.vr_section_ref_name, 
+        ic.vr_section_display_name, 
+        ic.vr_subsection_ref_name, 
+        ic.vr_subsection_display_name, 
+        ic.vr_item_ref_name, 
+        iv.description AS 'vr_item_display_name', 
+        ic.vr_item_display_name_input_type, 
+        ic.vr_item_webbing, 
+        ic.vr_item_webbing_input_type, 
+        ic.vr_item_colour, 
+        ic.vr_item_colour_input_type, 
+        ic.vr_item_finish, 
+        ic.vr_item_finish_input_type, 
+        iv.uom AS 'vr_item_uom', 
+        ic.vr_item_uom_input_type, 
+        iv.rrp AS 'vr_item_unit_price', 
+        ic.vr_item_unit_price_input_type, 
+        ic.vr_item_qty, 
+        ic.vr_item_qty_input_type, 
+        ic.vr_item_length_feet, 
+        ic.vr_item_length_feet_input_type, 
+        ic.vr_item_length_inch, 
+        ic.vr_item_length_inch_input_type, 
+        ic.vr_item_length_fraction, 
+        ic.vr_item_length_fraction_input_type, 
+        ic.vr_item_rrp, 
+        ic.vr_item_rrp_input_type, 
+        iv.photo AS 'vr_item_image', 
+        ic.vr_item_image_input_type, 
+        ic.vr_item_config_internal_ref_name, 
+        ic.vr_item_adhoc, 
+        ic.vr_record_index, 
+        ic.status 
+    FROM tblvrformitemsconfig ic 
+        LEFT JOIN ver_chronoforms_data_inventory_vic iv 
+            ON ic.vr_item_ref_name = iv.inventoryid COLLATE utf8_unicode_ci 
+    WHERE ic.vr_type_ref_name = '[VR_TYPE_REF_NAME]' 
+    AND ic.status IN ('active', 'hidden') 
+    ORDER BY ic.display_order 
+    LIMIT 1000;
+";
 
 
 /*
@@ -547,8 +491,7 @@ $sql_template_retrieve_data_quote = "
         dq.is_additional, 
         iv.section, 
         iv.category, 
-        iv.photo
-        ,iv.hide_from_costing AS 'hide_costing' 
+        iv.photo 
     FROM ver_chronoforms_data_quote_vic dq 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
             ON dq.inventoryid = iv.inventoryid 
@@ -635,8 +578,7 @@ $sql_template_retrieve_data_contract_items = "
         dci.is_additional, 
         iv.section, 
         iv.category, 
-        iv.photo
-        ,iv.hide_from_costing AS 'hide_costing' 
+        iv.photo 
     FROM ver_chronoforms_data_section_vic ds 
         LEFT JOIN ver_chronoforms_data_inventory_vic iv 
             ON ds.section = iv.section AND ds.category = iv.category 
@@ -798,9 +740,7 @@ $sql_template_update_data_contract_item_dimensions = "
         dimension_c_fraction = '[DIMENSION_C_FRACTION]', dimension_d_inch = '[DIMENSION_D_INCH]', 
         dimension_d_fraction = '[DIMENSION_D_FRACTION]', dimension_e_inch = '[DIMENSION_E_INCH]', 
         dimension_e_fraction = '[DIMENSION_E_FRACTION]', dimension_f_inch = '[DIMENSION_F_INCH]', 
-        dimension_f_fraction = '[DIMENSION_F_FRACTION]', dimension_g_inch = '[DIMENSION_G_INCH]', 
-        dimension_g_fraction = '[DIMENSION_G_FRACTION]', dimension_h_inch = '[DIMENSION_H_INCH]',
-        dimension_h_fraction = '[DIMENSION_H_FRACTION]', dimension_p_inch = '[DIMENSION_P_INCH]',
+        dimension_f_fraction = '[DIMENSION_F_FRACTION]', dimension_p_inch = '[DIMENSION_P_INCH]', 
         dimension_p_fraction = '[DIMENSION_P_FRACTION]', girth_side_a_inch = '[GIRTH_SIDE_A_INCH]', 
         girth_side_a_fraction = '[GIRTH_SIDE_A_FRACTION]', girth_side_b_inch = '[GIRTH_SIDE_B_INCH]', 
         girth_side_b_fraction = '[GIRTH_SIDE_B_FRACTION]', 

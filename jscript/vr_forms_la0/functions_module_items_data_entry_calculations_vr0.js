@@ -30,8 +30,8 @@
                 vr_lengths_in_value_for_display[vr_lengths_in_value_for_display.length] = revertValueForCalculation(current_vr_length_in_value_for_calculation);
 
                 temp_array = vr_lengths_in_value_for_display[vr_lengths_in_value_for_display.length - 1].split('\'');
-                vr_lengths_feet_in_value_for_display[vr_lengths_feet_in_value_for_display.length] = formatNumberWithoutComma(temp_array[0]);
-                vr_lengths_inch_in_value_for_display[vr_lengths_inch_in_value_for_display.length] = formatNumberWithoutComma(temp_array[1]);
+                vr_lengths_feet_in_value_for_display[vr_lengths_feet_in_value_for_display.length] = temp_array[0];
+                vr_lengths_inch_in_value_for_display[vr_lengths_inch_in_value_for_display.length] = temp_array[1];
             }
             total_vr_length_in_value_for_display = revertValueForCalculation(total_vr_length_in_value_for_calculation);
             temp_array = total_vr_length_in_value_for_display.split('\'');
@@ -66,32 +66,17 @@
             var vr_width_inch_in_string = '';
             var vr_width_inch_in_value_for_display = '';
             var temp_array = [];
-            var temp_float = 0.0;            
-            if (document.getElementById('vr_width_feet_form_query')) {
-                if (document.getElementById('vr_width_feet_form_query').value.length == 0 || 
-                    isNaN(document.getElementById('vr_width_feet_form_query').value)) {
-                    vr_width_feet_in_string = '0';
-                }else{
-                    vr_width_feet_in_string = document.getElementById('vr_width_feet_form_query').value;
-                }
-            }
-            if (document.getElementById('vr_width_inch_form_query')) {
-                if (document.getElementById('vr_width_inch_form_query').value.length == 0 || 
-                    isNaN(document.getElementById('vr_width_inch_form_query').value)) {
-                    vr_width_inch_in_string = '0';
-                }else{
-                    vr_width_inch_in_string = document.getElementById('vr_width_inch_form_query').value;
-                }
-            }
-            // vr_width_feet_in_string = document.getElementById('vr_width_feet_form_query').value;
-            // vr_width_inch_in_string = document.getElementById('vr_width_inch_form_query').value;
+            var temp_float = 0.0;
+
+            vr_width_feet_in_string = document.getElementById('vr_width_feet_form_query').value;
+            vr_width_inch_in_string = document.getElementById('vr_width_inch_form_query').value;
             vr_width_in_string = vr_width_feet_in_string + '\'' + vr_width_inch_in_string;
             vr_width_in_value_for_calculation = convertValueForCalculation(vr_width_in_string);
             vr_width_in_value_for_display = revertValueForCalculation(vr_width_in_value_for_calculation);
 
             temp_array = vr_width_in_value_for_display.split('\'');
-            vr_width_feet_in_value_for_display = formatNumberWithoutComma(temp_array[0]);
-            vr_width_inch_in_value_for_display = formatNumberWithoutComma(temp_array[1]);
+            vr_width_feet_in_value_for_display = temp_array[0];
+            vr_width_inch_in_value_for_display = temp_array[1];
 
             results = {
                 "vr_width_in_value_for_calculation": vr_width_in_value_for_calculation, 
@@ -262,8 +247,8 @@
             temp_array = total_vr_length_in_value_for_display.split('\'');
             total_gutter_lining_length_feet = temp_array[0];
             total_gutter_lining_length_inch = temp_array[1];
-            total_gutter_lining_length_feet = formatNumberWithoutComma(temp_array[0]);
-            total_gutter_lining_length_inch = formatNumberWithoutComma(temp_array[1]);
+            total_gutter_lining_length_feet = formatOutputValue('float', total_gutter_lining_length_feet);
+            total_gutter_lining_length_inch = formatOutputValue('float', total_gutter_lining_length_inch);
 
             // setVrFormItemDataEntryRowValuesByInternalRefName(
             //     'gutter_lining', 
@@ -300,105 +285,6 @@
             }
         }
 
-        function calculateTotalGutterLining() {
-
-            var adhoc_criteria1 = {};
-            var vr_form_item_info1 = [];
-            var adhoc_criteria2 = {};
-            var vr_form_item_info2 = [];
-            var c1 = 0;
-            var current_vr_length_in_string = '';
-            var current_vr_length_in_value_for_calculation = 0.0;
-            var total_vr_length_in_value_for_calculation = 0.0;
-            var total_vr_length_in_value_for_display = '';
-            var temp_array = [];
-            
-            var total_gutter_lining_length_meter = '';
-            var total_gutter_lining_length_feet = '';
-            var total_gutter_lining_length_inch = '';
-
-            var current_item_length = 0.0;
-            var current_item_length_in_value_for_calculation = 0.0;
-            var current_item_length_meter = 0.0;
-            var current_item_length_meter_in_value_for_calculation = 0.0;
-            var current_item_unit_price = 0.0;
-            var current_item_qty = 0.0;
-            var current_item_rrp = 0.0;
-
-            var current_item_length_feet = 0.0;
-            var current_item_length_feet_in_value_for_calculation = 0.0;
-
-            var current_item_length_inch = 0.0;
-            var current_item_length_inch_in_value_for_calculation = 0.0;
-
-            
-            generateVrFormItemsDataEntry('form');
-            
-            for (c1 = 0; c1 < vr_form_items_data_entry.length; c1++) {
-                current_vr_length_in_string = vr_form_items_data_entry[c1]['vr_item_length_feet'] + '\'' + vr_form_items_data_entry[c1]['vr_item_length_inch'];
-                current_vr_length_in_value_for_calculation = convertValueForCalculation(current_vr_length_in_string);                
-                total_vr_length_in_value_for_calculation += parseFloat(vr_form_items_data_entry[c1]['vr_item_qty']) * current_vr_length_in_value_for_calculation;
-                total_vr_length_in_value_for_display = revertValueForCalculation(total_vr_length_in_value_for_calculation);
-                temp_array = total_vr_length_in_value_for_display.split('\'');
-                total_gutter_lining_length_feet = temp_array[0];
-                total_gutter_lining_length_inch = temp_array[1];
-                total_gutter_lining_length_feet = formatNumberWithoutComma(temp_array[0]);
-                total_gutter_lining_length_inch = formatNumberWithoutComma(temp_array[1]);
-                if (vr_form_items_data_entry[c1]['vr_section_ref_name'] == 'Guttering') {
-                    if (document.getElementById('vr_type_data_entry_ref_name_' + (c1-1))) {
-                        if ((document.getElementById('vr_item_data_entry_ref_name_' + (c1)).value) == 'IRV31') {
-                            current_vr_length_in_string = vr_form_items_data_entry[(c1-1)]['vr_item_length_feet'] + '\'' + vr_form_items_data_entry[(c1-1)]['vr_item_length_inch'];
-                            current_vr_length_in_value_for_calculation = convertValueForCalculation(current_vr_length_in_string);                
-                            total_vr_length_in_value_for_calculation += parseFloat(vr_form_items_data_entry[c1]['vr_item_qty']) * current_vr_length_in_value_for_calculation;
-                            total_vr_length_in_value_for_display = revertValueForCalculation(total_vr_length_in_value_for_calculation);
-                            temp_array = total_vr_length_in_value_for_display.split('\'');
-                            total_gutter_lining_length_feet = temp_array[0];
-                            total_gutter_lining_length_inch = temp_array[1];
-                            total_gutter_lining_length_feet = formatNumberWithoutComma(temp_array[0]);
-                            total_gutter_lining_length_inch = formatNumberWithoutComma(temp_array[1]);
-
-                            current_item_length_feet = vr_form_items_data_entry[(c1-1)]['vr_item_length_feet'];
-                            current_item_length_feet = (current_item_length_feet.length == 0 || isNaN(current_item_length_feet)) ? 0 : current_item_length_feet;
-                            
-                            current_item_length_inch = vr_form_items_data_entry[(c1-1)]['vr_item_length_inch'];
-                            current_item_length_inch = (current_item_length_inch.length == 0 || isNaN(current_item_length_inch)) ? 0 : current_item_length_inch;
-
-                            current_item_qty = vr_form_items_data_entry[(c1-1)]['vr_item_qty']; /*parseInt(vr_form_items_data_entry[c1]['vr_item_qty'])*/
-                            current_item_qty = (current_item_qty.length == 0 || isNaN(current_item_qty)) ? 0 : current_item_qty;
-
-                            current_item_rrp = vr_form_items_data_entry[(c1)]['vr_item_rrp'];
-                            current_item_rrp = (current_item_rrp.length == 0 || isNaN(current_item_rrp)) ? 0 : current_item_rrp;
-
-                            document.getElementById('vr_item_data_entry_qty_' + (c1)).value = current_item_qty;
-                            document.getElementById('vr_item_data_entry_length_feet_' + (c1)).value = current_item_length_feet;
-                            document.getElementById('vr_item_data_entry_length_inch_' + (c1)).value = current_item_length_inch;
-
-                            vr_form_items_data_entry[c1]['vr_item_qty'] = document.getElementById('vr_item_data_entry_qty_' + c1).value;
-                            vr_form_items_data_entry[c1]['vr_item_qty_input_type'] = document.getElementById('vr_item_data_entry_qty_input_type_' + c1).value;
-
-                            vr_form_items_data_entry[c1]['vr_item_length_feet'] = document.getElementById('vr_item_data_entry_length_feet_' + c1).value;
-                            vr_form_items_data_entry[c1]['vr_item_length_feet_input_type'] = document.getElementById('vr_item_data_entry_length_feet_input_type_' + c1).value;
-
-                            vr_form_items_data_entry[c1]['vr_item_length_inch'] = document.getElementById('vr_item_data_entry_length_inch_' + c1).value;
-                            vr_form_items_data_entry[c1]['vr_item_length_inch_input_type'] = document.getElementById('vr_item_data_entry_length_inch_input_type_' + c1).value;
-
-                            vr_form_items_data_entry[c1]['vr_item_rrp'] = formatInputValue('float', document.getElementById('vr_item_data_entry_rrp_' + c1).value);
-                            vr_form_items_data_entry[c1]['vr_item_rrp_input_type'] = document.getElementById('vr_item_data_entry_rrp_input_type_' + c1).value;
-
-
-                            // console.log("vr_form_items_data_entry    =>"    + vr_form_items_data_entry[c1].value);
-                            // current_item_length_in_value_for_calculation = convertValueForCalculation(current_vr_length_in_string);
-                            // console.log("Non Gutter Lining Item   =>"    + current_vr_length_in_string+  "      |   ID   =>"    + vr_form_items_data_entry[c1]['vr_item_display_name'] +      "     |   " +vr_form_items_data_entry[c1]['vr_item_config_internal_ref_name']);
-                             // = vr_form_items_data_entry[(c1-1)]['vr_item_length_feet'] + '\'' + vr_form_items_data_entry[(c1-1)]['vr_item_length_inch'];
-                            
-
-                        }
-                    }
-
-
-                }
-            }
-        }
 
         function calculateLouvreRelatedInfo() {
             var adhoc_criteria1 = {};
