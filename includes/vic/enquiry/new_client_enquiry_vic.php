@@ -582,7 +582,7 @@ function send_email(){
   // Email to the Sales Rep
   $message = "<table cellpadding=\"0\" cellspacing=\"0\" style=\"border-top: 1px solid #999;width:550px; font-family:calibri; font-size:13px;\">
   <tr>
-    <td style=\"width:120px;border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\"><img src='".JURI::base().'images/vergola-email-logo.png'."'></td>
+    <td style=\"width:120px;border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\"><img src='".JURI::base().'images/vergola_logo.png'."'></td>
     <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Enquiry Date: " .$_POST['idate']. "</td>
   </tr>
   <tr>
@@ -598,7 +598,7 @@ function send_email(){
     <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['firstname'] . " " . $_POST['lastname']. "</td>
   </tr>
   <tr>
-    <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Address</td>
+    <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Site Address</td>
     <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['ssitename'] . " " . $_POST['sstreetno'] . " " . $_POST['sstreetname'] . " " . $_POST['saddress1'] . " " . $_POST['saddress2'] . ", " . $_POST['site_suburb'] . " " . $_POST['site_state'] . " " . $_POST['site_postcode'] . "</td>
   </tr>
   <tr>
@@ -612,6 +612,10 @@ function send_email(){
   <tr>
     <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Email</td>
     <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['cemail'] . "</td>
+  </tr>
+  <tr>
+    <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Appointment</td>
+    <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['iappointment'] . "</td>
   </tr>
   <tr>
     <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Drawing</td>
@@ -658,6 +662,10 @@ function send_email(){
     <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Email: </td>
     <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['cemail'] . "</td>
   </tr>
+  <tr>
+    <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Appointment</td>
+    <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['iappointment'] . "</td>
+  </tr>
  <tr>
     <td style=\"border-bottom: 1px solid #999;border-left: 1px solid #999;padding:5px;\">Drawing</td>
     <td style=\"border-bottom: 1px solid #999;border-right: 1px solid #999;border-left: 1px solid #999;padding:5px;\">" . $_POST['checkfile'] . "</td>
@@ -668,7 +676,8 @@ function send_email(){
   </tr>
 </table>";
 
-    $headers = "From:" . $from. "\r\n";
+    $headers = "From: salesleads@vergola.com\r\n";
+    //$headers = "From:" . $from. "\r\n";
   $headers .= "MIME-Version: 1.0\r\n";
   $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
    // $headers2 = "From:" . $to. "\r\n";
@@ -905,36 +914,109 @@ $('#ibtn').click(function(){
     $(document).ready(function() {
         var client_config = {
             source: function(request, response) {
+                // Show loading indicator directly in the dropdown
+                response([{ label: "Loading...", value: "" }]);
+                
                 $.ajax({
                     url: "includes/vic/suburb_vic.php", 
                     dataType: "json", 
                     cache: false, 
                     type: "get", 
-                    data: {term: request.term}
-                }).done(function(data) {
-                    response(data);
+                    data: {term: request.term},
+                    success: function(data) {
+                        // Check if data is empty or only contains the error placeholder
+                        if (!data.length || (data.length === 1 && data[0].suburb === 'Error')) {
+                            response([{ label: "No matches found", value: "" }]);
+                        } else {
+                            response(data);
+                        }
+                    },
+                    error: function() {
+                        // Show error message in dropdown
+                        response([{ label: "Error loading data", value: "" }]);
+                    }
                 });
             }, 
             select: function(event, ui) {
-                $("#csuburb").val(ui.item.suburb);
-                $("#csuburbstate").val(ui.item.suburb_state);
-                $("#csuburbpostcode").val(ui.item.suburb_postcode);
-                $("#csuburb_id").val(ui.item.cf_id);
+                // Don't set values if it's one of the special message items
+                if (ui.item.suburb) {
+                    $("#csuburb").val(ui.item.suburb);
+                    $("#csuburbstate").val(ui.item.suburb_state);
+                    $("#csuburbpostcode").val(ui.item.suburb_postcode);
+                    $("#csuburb_id").val(ui.item.cf_id);
+                    return true;
+                } else {
+                    // Prevent selecting the special message items
+                    return false;
+                }
             },
-            minLength:2
+            minLength: 2,
+            open: function() {
+                // Add event handler after the menu is created
+                var autocomplete = $(this).data("autocomplete") || $(this).data("ui-autocomplete");
+                if (autocomplete && autocomplete.menu && autocomplete.menu.element) {
+                    // Add scroll handling for keyboard navigation
+                    autocomplete.menu.element.on("menufocus", function(event, ui) {
+                        var focused = ui.item;
+                        if (focused && focused.length) {
+                            var menuElement = autocomplete.menu.element;
+                            
+                            // Calculate position of item relative to menu
+                            var position = focused.position().top;
+                            var menuHeight = menuElement.height();
+                            
+                            // Check if the item is outside viewable area
+                            if (position < 0) {
+                                // Scroll up if item is above visible area
+                                menuElement.scrollTop(menuElement.scrollTop() + position);
+                            } else if (position + focused.height() > menuHeight) {
+                                // Scroll down if item is below visible area
+                                menuElement.scrollTop(menuElement.scrollTop() + position - menuHeight + focused.height());
+                            }
+                        }
+                    });
+                }
+            }
         };
+        
         $("#csuburb").autocomplete(client_config);
+        
+        // Fix for clicking on whitespace - delegated event handler
+        $(document).on('mousedown', '.ui-menu-item', function(e) {
+            if (e.which === 1 && !$(this).hasClass('ui-state-disabled')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Delay slightly to avoid recursion, then simulate a proper selection
+                setTimeout(function() {
+                    $(e.currentTarget).find('.ui-menu-item-wrapper').trigger('click');
+                }, 10);
+            }
+        });
 
         var site_config = {
             source: function(request, response) {
+
+                response([{ label: "Loading...", value: "" }]);
+
                 $.ajax({
                     url: "includes/vic/suburb_vic.php", 
                     dataType: "json", 
                     cache: false, 
                     type: "get", 
-                    data: {term: request.term}
-                }).done(function(data) {
-                    response(data);
+                    data: {term: request.term},
+                    success: function(data) {
+                        // Check if data is empty or only contains the error placeholder
+                        if (!data.length || (data.length === 1 && data[0].suburb === 'Error')) {
+                            response([{ label: "No matches found", value: "" }]);
+                        } else {
+                            response(data);
+                        }
+                    },
+                    error: function() {
+                        // Show error message in dropdown
+                        response([{ label: "Error loading data", value: "" }]);
+                    }
                 });
             }, 
             select: function(event, ui) {
@@ -943,8 +1025,35 @@ $('#ibtn').click(function(){
                 $("#ssuburbpostcode").val(ui.item.suburb_postcode);
                 $("#ssuburb_id").val(ui.item.cf_id);
             },
-            minLength:2
+            minLength:2,
+            open: function() {
+                // Add event handler after the menu is created
+                var autocomplete = $(this).data("autocomplete") || $(this).data("ui-autocomplete");
+                if (autocomplete && autocomplete.menu && autocomplete.menu.element) {
+                    // Add scroll handling for keyboard navigation
+                    autocomplete.menu.element.on("menufocus", function(event, ui) {
+                        var focused = ui.item;
+                        if (focused && focused.length) {
+                            var menuElement = autocomplete.menu.element;
+                            
+                            // Calculate position of item relative to menu
+                            var position = focused.position().top;
+                            var menuHeight = menuElement.height();
+                            
+                            // Check if the item is outside viewable area
+                            if (position < 0) {
+                                // Scroll up if item is above visible area
+                                menuElement.scrollTop(menuElement.scrollTop() + position);
+                            } else if (position + focused.height() > menuHeight) {
+                                // Scroll down if item is below visible area
+                                menuElement.scrollTop(menuElement.scrollTop() + position - menuHeight + focused.height());
+                            }
+                        }
+                    });
+                }
+            }
         };
+
         $("#ssuburb").autocomplete(site_config);
 
         $("#csuburbstate").keypress(function() {
@@ -1644,38 +1753,43 @@ echo "</select></label>";
        ?> 
 
         <script type="text/javascript">
-    $('.form_datetime').datetimepicker({
-        //language:  'en',
-        weekStart: 1,
-        todayBtn:  1,
-    autoclose: 1,
-    todayHighlight: 1,
-    startView: 2,
-    forceParse: 0,
-        showMeridian: 1
-    });
-  $('.form_date').datetimepicker({
-        language:  'en',
-        weekStart: 1,
-        todayBtn:  1,
-    autoclose: 1,
-    todayHighlight: 1,
-    startView: 2,
-    minView: 2,
-    forceParse: 0
-    });
-  $('.form_time').datetimepicker({
-        language:  'en',
-        weekStart: 1,
-        todayBtn:  1,
-    autoclose: 1,
-    todayHighlight: 1,
-    startView: 1,
-    minView: 0,
-    maxView: 1,
-    forceParse: 0
-    });
-</script> 
+
+        const isEdit = <?php echo $is_edit; ?>;
+
+        if(isEdit == 0){
+          $('.form_datetime').datetimepicker({
+              // language:  'en',
+              weekStart: 1,
+              todayBtn:  1,
+          autoclose: 1,
+          todayHighlight: 1,
+          startView: 2,
+          forceParse: 0,
+              showMeridian: 1
+          });
+        }
+        $('.form_date').datetimepicker({
+              language:  'en',
+              weekStart: 1,
+              todayBtn:  1,
+          autoclose: 1,
+          todayHighlight: 1,
+          startView: 2,
+          minView: 2,
+          forceParse: 0
+          });
+        $('.form_time').datetimepicker({
+              language:  'en',
+              weekStart: 1,
+              todayBtn:  1,
+          autoclose: 1,
+          todayHighlight: 1,
+          startView: 1,
+          minView: 0,
+          maxView: 1,
+          forceParse: 0
+          });
+      </script> 
       </div>
     </div>
   </div>
