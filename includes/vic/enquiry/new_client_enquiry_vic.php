@@ -879,12 +879,15 @@ $('#csuburb').change(function(){
 
 
 $('#bsbtn').click(function(){
-        if($("#uploadme").val()=='') {
-            $("#checkfile").val('No');
-        } else {
+    if($("#uploadme").val()=='') {
+        $("#checkfile").val('No');
+    } else {
       $("#checkfile").val('Yes');
     }
-    
+    if($("#dtp_appointment").val()=='') {
+        $(".fc-tbx").css('opacity', 0);
+        $(".fc-tbx").show();
+    }
     });
 
 $('#ibtn').click(function(){
@@ -912,6 +915,32 @@ $('#ibtn').click(function(){
 </style>
 <script type="text/javascript">
     $(document).ready(function() {
+      function handleAutocompleteOpen() {
+        var autocomplete = $(this).data("autocomplete") || $(this).data("ui-autocomplete");
+        if (autocomplete && autocomplete.menu && autocomplete.menu.element) {
+            // Add scroll handling for keyboard navigation
+            autocomplete.menu.element.on("menufocus", function(event, ui) {
+                var focused = ui.item;
+                if (focused && focused.length) {
+                    var menuElement = autocomplete.menu.element;
+
+                    // Calculate position of item relative to menu
+                    var position = focused.position().top;
+                    var menuHeight = menuElement.height();
+
+                    // Check if the item is outside viewable area
+                    if (position < 0) {
+                        // Scroll up if item is above visible area
+                        menuElement.scrollTop(menuElement.scrollTop() + position);
+                    } else if (position + focused.height() > menuHeight) {
+                        // Scroll down if item is below visible area
+                        menuElement.scrollTop(menuElement.scrollTop() + position - menuHeight + focused.height());
+                    }
+                }
+            });
+        }
+      }
+
         var client_config = {
             source: function(request, response) {
                 // Show loading indicator directly in the dropdown
@@ -951,32 +980,7 @@ $('#ibtn').click(function(){
                 }
             },
             minLength: 2,
-            open: function() {
-                // Add event handler after the menu is created
-                var autocomplete = $(this).data("autocomplete") || $(this).data("ui-autocomplete");
-                if (autocomplete && autocomplete.menu && autocomplete.menu.element) {
-                    // Add scroll handling for keyboard navigation
-                    autocomplete.menu.element.on("menufocus", function(event, ui) {
-                        var focused = ui.item;
-                        if (focused && focused.length) {
-                            var menuElement = autocomplete.menu.element;
-                            
-                            // Calculate position of item relative to menu
-                            var position = focused.position().top;
-                            var menuHeight = menuElement.height();
-                            
-                            // Check if the item is outside viewable area
-                            if (position < 0) {
-                                // Scroll up if item is above visible area
-                                menuElement.scrollTop(menuElement.scrollTop() + position);
-                            } else if (position + focused.height() > menuHeight) {
-                                // Scroll down if item is below visible area
-                                menuElement.scrollTop(menuElement.scrollTop() + position - menuHeight + focused.height());
-                            }
-                        }
-                    });
-                }
-            }
+            open: handleAutocompleteOpen
         };
         
         $("#csuburb").autocomplete(client_config);
@@ -1026,32 +1030,7 @@ $('#ibtn').click(function(){
                 $("#ssuburb_id").val(ui.item.cf_id);
             },
             minLength:2,
-            open: function() {
-                // Add event handler after the menu is created
-                var autocomplete = $(this).data("autocomplete") || $(this).data("ui-autocomplete");
-                if (autocomplete && autocomplete.menu && autocomplete.menu.element) {
-                    // Add scroll handling for keyboard navigation
-                    autocomplete.menu.element.on("menufocus", function(event, ui) {
-                        var focused = ui.item;
-                        if (focused && focused.length) {
-                            var menuElement = autocomplete.menu.element;
-                            
-                            // Calculate position of item relative to menu
-                            var position = focused.position().top;
-                            var menuHeight = menuElement.height();
-                            
-                            // Check if the item is outside viewable area
-                            if (position < 0) {
-                                // Scroll up if item is above visible area
-                                menuElement.scrollTop(menuElement.scrollTop() + position);
-                            } else if (position + focused.height() > menuHeight) {
-                                // Scroll down if item is below visible area
-                                menuElement.scrollTop(menuElement.scrollTop() + position - menuHeight + focused.height());
-                            }
-                        }
-                    });
-                }
-            }
+            open: handleAutocompleteOpen
         };
 
         $("#ssuburb").autocomplete(site_config);
@@ -1741,10 +1720,10 @@ echo "</select></label>";
        echo '<input type=\'hidden\' id=\'usermail\' name=\'usermail\' value=\''.$userEmail.'\' readonly>';?>
         <div class="input-group date form_datetime col-md-5" data-date-format="<?php echo JS_DFORMAT." @ HH:ii P"; ?>" data-link-field="dtp_appointment" style="display:inline-block">
           <label class='input'><span id='date-entered'>Appointment: </span>
-            <input type="text" id="iappointment" name="iappointment" class="form-control" value="<?php echo $client['fappointmentdate'] ?>" readonly>
+            <input type="text" id="iappointment" name="iappointment" class="form-control validate['required']" value="<?php echo $client['fappointmentdate'] ?>" readonly>
           </label>
           <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span> </div>
-        <input type="hidden" id="dtp_appointment" name="dtp_appointment" value="<?php echo $client['appointmentdate'] ?>" />
+        <input type="hidden" id="dtp_appointment" name="dtp_appointment" value="<?php echo $client['appointmentdate'] ?>" required />
         <br/>
 
        <?php
@@ -1766,6 +1745,8 @@ echo "</select></label>";
           startView: 2,
           forceParse: 0,
               showMeridian: 1
+          }).on('changeDate', function(ev){
+            $('.fc-tbx').fadeOut('fast');
           });
         }
         $('.form_date').datetimepicker({
