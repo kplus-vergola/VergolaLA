@@ -232,7 +232,7 @@ if(isset($user->groups['10'])){
 
       $sql = "
           UPDATE ver_chronoforms_data_clientpersonal_vic SET 
-              appointmentdate = '". $temp_appointment_date . "', 
+              followup_appointmentdate = '". $temp_appointment_date . "', 
               qdelivered = '". $temp_date_delivered . "', 
               next_followup = '". $temp_next_followup_date . "', 
               date_contract_signed = '". $temp_date_contract_signed . "', 
@@ -243,7 +243,7 @@ if(isset($user->groups['10'])){
   } else {
       $sql = "
           UPDATE ver_chronoforms_data_clientpersonal_vic SET 
-              appointmentdate = '". $temp_appointment_date . "', 
+              followup_appointmentdate = '". $temp_appointment_date . "', 
               qdelivered = '". $temp_date_delivered . "', 
               next_followup = '". $temp_next_followup_date . "', 
               date_contract_signed = '". $temp_date_contract_signed . "', 
