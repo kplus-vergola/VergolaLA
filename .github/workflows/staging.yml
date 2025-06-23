@@ -22,4 +22,5 @@ jobs:
           git branch -a
           git fetch -a
           git checkout -b staging origin/staging
+          
           git pull origin staging
