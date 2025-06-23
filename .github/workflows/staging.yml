@@ -23,4 +23,3 @@ jobs:
           git fetch -a
           git checkout -b staging origin/staging
           git pull origin staging
-        shell: '"C:\\Program Files\\PowerShell\\6.0.0.17\\powershell.exe" -Command'
