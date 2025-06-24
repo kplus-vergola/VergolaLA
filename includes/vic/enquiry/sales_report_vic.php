@@ -1653,50 +1653,9 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
             <ul id='to_do_list' class='list-table'  style='margin:0 0; width: 100%;  display:inline-block;vertical-align: top; font-size:12px;'>
             ";
 
-            $sql = "SELECT c.datelodged, c.pid, c.clientid, c.status, c.client_mobile AS mobile, repident AS rep_id,   
-                c.appointmentdate, c.client_firstname, c.client_lastname, 
-                c.qdelivered, c.next_followup, c.is_first_appointment, c.followup_appointmentdate,
-                n.content AS note 
-            FROM ver_chronoforms_data_clientpersonal_vic AS c
-            LEFT JOIN (
-                SELECT * 
-                FROM (
-                    SELECT * FROM ver_chronoforms_data_notes_vic 
-                    ORDER BY cf_id DESC
-                ) AS t 
-                GROUP BY clientid  
-            ) AS n ON n.clientid = c.clientid
-            WHERE 
-                c.deleted_at IS NULL 
-                AND repident = '{$user->RepID}'
-                AND c.appointmentdate IS NOT NULL
-                AND c.appointmentdate != '0000-00-00'
-                AND (c.status NOT IN ('Won', 'Lost', 'Not Interested') OR c.status IS NULL)
-                AND (c.date_contract_signed IS NULL OR c.date_contract_signed = '0000-00-00')
-                AND
-                IF (
-                    c.followup_appointmentdate IS NULL OR c.followup_appointmentdate = '0000-00-00',
-                    DATE(c.appointmentdate) <= CURDATE(),
-                    DATE(c.followup_appointmentdate) <= CURDATE()
-                    )
-                AND (
-                    c.qdelivered IS NULL
-                    OR c.qdelivered = '0000-00-00'
-                    OR (
-                        c.qdelivered IS NOT NULL
-                        AND c.qdelivered != '0000-00-00'
-                        AND DATE(c.qdelivered) <= CURDATE()
-                    )
-                )
-                AND (
-                    c.next_followup IS NULL
-                    OR c.next_followup = '0000-00-00'
-                    OR (
-                        c.next_followup IS NOT NULL
-                        AND c.next_followup != '0000-00-00'
-                        AND DATE(c.next_followup) <= CURDATE()
-                    )
-                )";
+                $sql = "SELECT c.datelodged, c.pid, c.clientid, repident AS rep_id,  c.appointmentdate,  c.client_firstname, c.client_lastname, c.qdelivered, c.next_followup, c.is_first_appointment, n.content AS note FROM ver_chronoforms_data_clientpersonal_vic  AS c
+     LEFT JOIN (SELECT * FROM (SELECT * FROM ver_chronoforms_data_notes_vic ORDER BY cf_id desc) as t GROUP BY clientid  ) as n ON n.clientid=c.clientid
+     WHERE c.deleted_at IS NULL AND repident='{$user->RepID}' AND (appointmentdate IS NOT NULL OR next_followup IS NOT NULL) AND if(next_followup IS NULL,DATE(appointmentdate)<=DATE(NOW()), DATE(next_followup)<=DATE(NOW())) AND (c.status!='Won' OR c.status!='Lost') AND c.date_contract_signed IS NULL ";
 
                 $fResult = mysql_query($sql);
                 $total_records1 = mysql_num_rows($fResult);
@@ -1706,11 +1665,6 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
 
                 $fResult = mysql_query($sql);
                 $i=0;
-
-                function isEmptyDate($date) {
-                    return !isset($date) || $date === '' || $date === '0000-00-00' || $date === '0000-00-00 00:00:00';
-                }  
-
                 while ($l = mysql_fetch_assoc($fResult)) {
 
                     if($i==0){$to_do_list .= "<li class='li-header'>
@@ -1721,25 +1675,28 @@ function get_cons_kpi_color_sign($n=0,$n_warning=0){
                     $client_status = "Initial Appointment";
                     $due_date = "";
 
-                    if (isEmptyDate($l['qdelivered']) && isEmptyDate($l['next_followup'])) {
-                        $client_status = "Initial Appointment";
-                        $phpdate = isEmptyDate($l['followup_appointmentdate']) ? strtotime($l['appointmentdate']) : strtotime($l['followup_appointmentdate']);
-                        $due_date = date(PHP_DFORMAT, $phpdate);
+                    if(empty($l['qdelivered'])==true && empty($l['next_followup'])==true){
+                            $client_status = "Initial Appointment";
+                            $phpdate = strtotime( $l['appointmentdate'] );
+                            $due_date = date( PHP_DFORMAT, $phpdate );
+                            //error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+
                     }
-                    else if (!isEmptyDate($l['qdelivered']) && isEmptyDate($l['next_followup'])) {
-                        $client_status = "Quote Delivered";
-                        $phpdate = strtotime($l['qdelivered']);
-                        $due_date = date(PHP_DFORMAT, $phpdate);
+
+                    if(empty($l['qdelivered'])==true && isset($l['next_followup'])){
+                            $client_status = "Initial Appointment";
+                            $phpdate = strtotime( $l['next_followup'] );
+                            $due_date = date( PHP_DFORMAT, $phpdate );
+                            //error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+
                     }
-                    else if (isEmptyDate($l['qdelivered']) && !isEmptyDate($l['next_followup'])) {
-                        $client_status = "Followup";
-                        $phpdate = strtotime($l['next_followup']);
-                        $due_date = date(PHP_DFORMAT, $phpdate);
-                    }
-                    else if (!isEmptyDate($l['qdelivered']) && !isEmptyDate($l['next_followup'])) {
-                        $client_status = "Followup";
-                        $phpdate = strtotime($l['next_followup']);
-                        $due_date = date(PHP_DFORMAT, $phpdate);
+
+                    if(isset($l['qdelivered']) && isset($l['next_followup'])){
+                            $client_status = "Followup";
+                            $phpdate = strtotime( $l['next_followup'] );
+                            $due_date = date( PHP_DFORMAT, $phpdate );
+                            //error_log("inside 1..", 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
+
                     }
 
 
@@ -3129,7 +3086,7 @@ $current_erector_index = -1;
 var installer_list_prevmon = [
 <?php
 
-    $sql = "SELECT c.cf_id, cp.clientid, CONCAT(coalesce(cp.client_firstname,''),' ',coalesce(cp.client_lastname,''),' ',coalesce(cp.builder_name,'')) as customer_name, cp.site_suburb, cv.erectors_name, cv.erectors_name2, c.projectid, cv.install_date, cv.schedule_completion, c.contractdate, c.total_cost,  DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate FROM ver_chronoforms_data_contract_vergola_vic as cv JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid WHERE cv.install_date BETWEEN DATE_FORMAT(DATE_SUB(CURRENT_DATE(), INTERVAL 2 MONTH),'%Y-%m-01') AND NOW() AND   cv.erectors_name != '' AND cv.schedule_completion IS NOT NULL  ";
+    $sql = "SELECT c.cf_id, cp.clientid, CONCAT(coalesce(cp.client_firstname,''),' ',coalesce(cp.client_lastname,''),' ',coalesce(cp.builder_name,'')) as customer_name, cp.client_suburb, cv.erectors_name, cv.erectors_name2, c.projectid, cv.install_date, cv.schedule_completion, c.contractdate, c.total_cost,  DATE_FORMAT(cv.contractdate,'%Y-%m-%e') as fcontractdate FROM ver_chronoforms_data_contract_vergola_vic as cv JOIN ver_chronoforms_data_contract_list_vic AS c ON c.projectid=cv.projectid JOIN ver_chronoforms_data_clientpersonal_vic AS cp ON cp.clientid=cv.quoteid WHERE cv.install_date BETWEEN DATE_FORMAT(DATE_SUB(CURRENT_DATE(), INTERVAL 2 MONTH),'%Y-%m-01') AND NOW() AND   cv.erectors_name != '' AND cv.schedule_completion IS NOT NULL  ";
     //error_log(" sql: ".$sql, 3,'C:\\xampp\htdocs\\vergola_contract_system_v4_vic\\my-error.log');
     $qResult = mysql_query($sql);
     $obj = ""; $j=1;
@@ -3144,7 +3101,7 @@ var installer_list_prevmon = [
         }
 
         $obj .= "{";
-            $obj .= "title:'".addslashes($r["erectors_name"])."".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["site_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ',";
+            $obj .= "title:'".addslashes($r["erectors_name"])."".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ',";
             $obj .= "start:'{$r['install_date']}',";
             $obj .= "end:'{$r['schedule_completion']} 20:00:00',";
             // $obj .= "color:color_list[{$j}],";
@@ -3172,7 +3129,7 @@ var installer_list_curmon = [
             CONCAT('#',HEX(c.cf_id * 15/16 + 15)) AS hex_color,
             cp.clientid,
             CONCAT(coalesce(cp.client_firstname,''), ' ', coalesce(cp.client_lastname,''), ' ', coalesce(cp.builder_name,'')) as customer_name,
-            cp.site_suburb,
+            cp.client_suburb,
             cv.erectors_name,
             cv.erectors_name2,    
             cv.fix2_start_erectors_name,
@@ -3257,7 +3214,7 @@ var installer_list_curmon = [
         }
         
         $obj .= "{";
-            $obj .= "title:'".addslashes($r["erectors_name"])." ".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["site_suburb"])." - $".number_format($r["total_cost"],2,".",",")."',";
+            $obj .= "title:'".addslashes($r["erectors_name"])." ".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")."',";
             $obj .= "start:'{$r['install_date']}',";
             $obj .= "end:'{$r['schedule_completion']} 20:00:00',";
             // $obj .= "color:color_list[{$j}],";
@@ -3282,7 +3239,7 @@ var installer_list_curmon = [
             }
             
             $obj .= "{";
-                $obj .= "title:'".addslashes($r["fix2_start_erectors_name"])." ".(strlen($r['fix2_end_erectors_name'])>0?' & '.addslashes($r["fix2_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["site_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
+                $obj .= "title:'".addslashes($r["fix2_start_erectors_name"])." ".(strlen($r['fix2_end_erectors_name'])>0?' & '.addslashes($r["fix2_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
                 $obj .= "start:'{$r['sched_install_date_fix2_start']}',";
                 $obj .= "end:'{$r['sched_install_date_fix2_end']} 20:00:00',";
                 // $obj .= "color:color_list[{$j}],";
@@ -3306,7 +3263,7 @@ var installer_list_curmon = [
             }
 
             $obj .= "{";
-                $obj .= "title:'".addslashes($r["fix3_start_erectors_name"])." ".(strlen($r['fix3_end_erectors_name'])>0?' & '.addslashes($r["fix3_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["site_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
+                $obj .= "title:'".addslashes($r["fix3_start_erectors_name"])." ".(strlen($r['fix3_end_erectors_name'])>0?' & '.addslashes($r["fix3_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
                 $obj .= "start:'{$r['sched_install_date_fix3_start']}',";
                 $obj .= "end:'{$r['sched_install_date_fix3_end']} 20:00:00',";
                 // $obj .= "color:color_list[{$j}],";
@@ -3336,7 +3293,7 @@ var installer_list_nextmon = [
             CONCAT('#',HEX(c.cf_id * 15/16 + 15)) AS hex_color,
             cp.clientid,
             CONCAT(coalesce(cp.client_firstname,''), ' ', coalesce(cp.client_lastname,''), ' ', coalesce(cp.builder_name,'')) as customer_name,
-            cp.site_suburb,
+            cp.client_suburb,
             cv.erectors_name,
             cv.erectors_name2,
             cv.fix2_start_erectors_name,
@@ -3413,7 +3370,7 @@ var installer_list_nextmon = [
         if ($r["sched_install_date_fix2_visible"] == 'Yes'){
             $if_fix = '(Fix 2)';
             $obj .= "{";
-                $obj .= "title:'".addslashes($r["fix2_start_erectors_name"])." ".(strlen($r['fix2_end_erectors_name'])>0?' & '.addslashes($r["fix2_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["site_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
+                $obj .= "title:'".addslashes($r["fix2_start_erectors_name"])." ".(strlen($r['fix2_end_erectors_name'])>0?' & '.addslashes($r["fix2_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
                 $obj .= "start:'{$r['sched_install_date_fix2_start']}',";
                 $obj .= "end:'{$r['sched_install_date_fix2_end']} 20:00:00',";
                 // $obj .= "color:color_list[{$j}],";
@@ -3427,7 +3384,7 @@ var installer_list_nextmon = [
         if ($r["sched_install_date_fix3_visible"] == 'Yes'){
             $if_fix = '(Fix 3)';
             $obj .= "{";
-                $obj .= "title:'".addslashes($r["fix3_start_erectors_name"])." ".(strlen($r['fix3_end_erectors_name'])>0?' & '.addslashes($r["fix3_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["site_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
+                $obj .= "title:'".addslashes($r["fix3_start_erectors_name"])." ".(strlen($r['fix3_end_erectors_name'])>0?' & '.addslashes($r["fix3_end_erectors_name"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ". $if_fix ."',";
                 $obj .= "start:'{$r['sched_install_date_fix3_start']}',";
                 $obj .= "end:'{$r['sched_install_date_fix3_end']} 20:00:00',";
                 // $obj .= "color:color_list[{$j}],";
@@ -3440,7 +3397,7 @@ var installer_list_nextmon = [
         }
         
         $obj .= "{";
-            $obj .= "title:'".addslashes($r["erectors_name"])."".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["site_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ',";
+            $obj .= "title:'".addslashes($r["erectors_name"])."".(strlen($r['erectors_name2'])>0?' & '.addslashes($r["erectors_name2"]):'')." - ".addslashes($r["customer_name"])." (".$r["clientid"]."), ".addslashes($r["client_suburb"])." - $".number_format($r["total_cost"],2,".",",")." ',";
             $obj .= "start:'{$r['install_date']}',";
             $obj .= "end:'{$r['schedule_completion']} 20:00:00',";
             // $obj .= "color:color_list[{$j}],";
