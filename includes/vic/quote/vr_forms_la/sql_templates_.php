@@ -367,67 +367,51 @@ $sql_template_retrieve_item_list_hide_costing = "
 ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 */
 $sql_template_retrieve_vr_form_items_config_list = "
- SELECT
-    ic.id,
-    ic.vr_type_ref_name,
-    ic.vr_type_display_name,
-    ic.vr_section_ref_name,
-    ic.vr_section_display_name,
-    ic.vr_subsection_ref_name,
-    ic.vr_subsection_display_name,
-    ic.vr_item_ref_name,
-    iv.description AS 'vr_item_display_name',
-    ic.vr_item_display_name_input_type,
-    ic.vr_item_webbing,
-    ic.vr_item_webbing_input_type,
-    ic.vr_item_colour,
-    ic.vr_item_colour_input_type,
-    ic.vr_item_finish,
-    ic.vr_item_finish_input_type,
-    iv.uom AS 'vr_item_uom',
-    ic.vr_item_uom_input_type,
-    iv.rrp AS 'vr_item_unit_price',
-    ic.vr_item_unit_price_input_type,
-    ic.vr_item_qty,
-    ic.vr_item_qty_input_type,
-    ic.vr_item_length_feet,
-    ic.vr_item_length_feet_input_type,
-    ic.vr_item_length_inch,
-    ic.vr_item_length_inch_input_type,
-    ic.vr_item_length_fraction,
-    ic.vr_item_length_fraction_input_type,
-    ic.vr_item_rrp,
-    ic.vr_item_rrp_input_type,
-    iv.photo AS 'vr_item_image',
-    ic.vr_item_image_input_type,
-    ic.vr_item_config_internal_ref_name,
-    ic.vr_item_adhoc,
-    ic.vr_record_index,
-    ic.STATUS,
-    iv.hide_from_costing AS 'vr_item_hide_costing' 
- FROM
-    
-    tblvrformitemsconfig ic
-    LEFT JOIN ver_chronoforms_data_inventory_vic iv ON ic.vr_item_ref_name = iv.inventoryid COLLATE utf8_unicode_ci 
- WHERE
-    ic.vr_type_ref_name = '[VR_TYPE_REF_NAME]' 
-
-    AND ic.STATUS IN ( 'active', 'hidden' ) 
- --     AND vr_section_ref_name = 'Guttering' 
-    AND vr_item_config_internal_ref_name != 'gutter_lining' 
- ORDER BY
-    FIELD (ic.vr_section_display_name, 'Framework', 'Fittings', 'Gutters', 'Flashing', 'Downpipe', 'Vergola System', 'Misc Items', 'Extras', 'Disbursements'),
---    vr_item_config_internal_ref_name,
-     (CASE WHEN ic.vr_section_ref_name ='Guttering' THEN ic.vr_item_config_internal_ref_name ELSE ic.display_order END) ASC,
-CASE   
-   WHEN vr_item_display_name = 'Vergola Gutter Lining' THEN
-   1 ELSE 0 
-   END
-   -- , id ASC 
---   END WHILE,
---   ic.display_order
- LIMIT 1000;
-  ";
+    SELECT 
+        ic.vr_type_ref_name, 
+        ic.vr_type_display_name, 
+        ic.vr_section_ref_name, 
+        ic.vr_section_display_name, 
+        ic.vr_subsection_ref_name, 
+        ic.vr_subsection_display_name, 
+        ic.vr_item_ref_name, 
+        iv.description AS 'vr_item_display_name', 
+        ic.vr_item_display_name_input_type, 
+        ic.vr_item_webbing, 
+        ic.vr_item_webbing_input_type, 
+        ic.vr_item_colour, 
+        ic.vr_item_colour_input_type, 
+        ic.vr_item_finish, 
+        ic.vr_item_finish_input_type, 
+        iv.uom AS 'vr_item_uom', 
+        ic.vr_item_uom_input_type, 
+        iv.rrp AS 'vr_item_unit_price', 
+        ic.vr_item_unit_price_input_type, 
+        ic.vr_item_qty, 
+        ic.vr_item_qty_input_type, 
+        ic.vr_item_length_feet, 
+        ic.vr_item_length_feet_input_type, 
+        ic.vr_item_length_inch, 
+        ic.vr_item_length_inch_input_type, 
+        ic.vr_item_length_fraction, 
+        ic.vr_item_length_fraction_input_type, 
+        ic.vr_item_rrp, 
+        ic.vr_item_rrp_input_type, 
+        iv.photo AS 'vr_item_image', 
+        ic.vr_item_image_input_type, 
+        ic.vr_item_config_internal_ref_name, 
+        ic.vr_item_adhoc, 
+        ic.vr_record_index, 
+        ic.status
+        ,iv.hide_from_costing AS 'vr_item_hide_costing' 
+    FROM tblvrformitemsconfig ic 
+        LEFT JOIN ver_chronoforms_data_inventory_vic iv 
+            ON ic.vr_item_ref_name = iv.inventoryid COLLATE utf8_unicode_ci 
+    WHERE ic.vr_type_ref_name = '[VR_TYPE_REF_NAME]' 
+    AND ic.status IN ('active', 'hidden') 
+    ORDER BY ic.display_order 
+    LIMIT 1000;
+";
 
 
 /*

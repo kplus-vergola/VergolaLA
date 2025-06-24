@@ -1577,23 +1577,6 @@ body.dashboard #contentarea {/*background:#fff url(../images/dashboard-bg.jpg) n
 .updatepopup  img {width:400px;}
 
 /** Custom Menu **/
-.menu .item107 .floatck,
-.menu .item169 .floatck,
-.menu .item170 .floatck,
-.menu .item166 .floatck,
-.menu .item198 .floatck,
-.menu .item212 .floatck {
-    display: none;
-}
-div#maximenuck ul.maximenuck li.level1.parent.item107>a,
-div#maximenuck ul.maximenuck li.level1.parent.item169>a,
-div#maximenuck ul.maximenuck li.level1.parent.item170>a,
-div#maximenuck ul.maximenuck li.level1.parent.item166>a,
-div#maximenuck ul.maximenuck li.level1.parent.item198>a,
-div#maximenuck ul.maximenuck li.level1.parent.item212>a {
-    background: none;
-}
-
-div#maximenuck ul.maximenuck li div.floatck {
-    padding-top: 0px !important;
-}
+.menu .item107 .floatck, .menu .item169 .floatck, .menu .item170 .floatck, .menu .item166 .floatck {display:none;}
+div#maximenuck ul.maximenuck li.level1.parent.item107 > a, div#maximenuck ul.maximenuck li.level1.parent.item169 > a, div#maximenuck ul.maximenuck li.level1.parent.item170 > a, div#maximenuck ul.maximenuck li.level1.parent.item166 > a {background:none;}
+div#maximenuck ul.maximenuck li div.floatck {padding-top:0px!important;}
